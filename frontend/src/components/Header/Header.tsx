@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import NavItem from './NavItem';
-
+import Image from '../../assets/images/logo.png';
 const HeaderContainer = styled.header`
   width: 100%;
   background-color: #f8f9fa;
@@ -24,9 +24,11 @@ const Nav = styled.nav`
 `;
 
 const Header = () => {
+  const logo = <img src={Image} alt="로고" width={200} height={70}></img>;
+
   return (
     <HeaderContainer>
-      <Logo>Sejong University</Logo>
+      <Logo>{logo}</Logo>
       <Nav>
         <NavItem title="학과" />
         <NavItem title="대학" />
