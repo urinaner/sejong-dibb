@@ -15,3 +15,23 @@ export const Button = styled.button<{ primary?: boolean }>`
     background-color: ${({ primary }) => (primary ? '#0056b3' : '#e6e6e6')};
   }
 `;
+
+export const Footer = styled.footer``;
+
+export const FooterContainer = styled.footer`
+  display: flex;
+`;
+
+export const SightMap = styled.div`
+  display: flex;
+`;
+
+export const SightMapHeader = styled.footer`
+  margin-right: 20px;
+`;
+
+export const SightMapContent = styled.footer``;
+
+export const Address = styled.div``;
+
+export const Copyright = styled.div``;
