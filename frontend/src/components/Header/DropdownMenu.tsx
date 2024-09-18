@@ -21,13 +21,16 @@ const MenuItem = styled.div`
   }
 `;
 
-const DropdownMenu = () => {
+interface DropdownMenuProps {
+  items: string[];
+}
+
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ items }) => {
   return (
     <Menu>
-      <MenuItem>학과소개</MenuItem>
-      <MenuItem>교수소개</MenuItem>
-      <MenuItem>조직도</MenuItem>
-      {/* 추가 메뉴 아이템 */}
+      {items.map((item, index) => (
+        <MenuItem key={index}>{item}</MenuItem>
+      ))}
     </Menu>
   );
 };

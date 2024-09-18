@@ -13,9 +13,10 @@ const Item = styled.div`
 
 interface NavItemProps {
   title: string;
+  menuItems: string[];
 }
 
-const NavItem: React.FC<NavItemProps> = ({ title }) => {
+const NavItem: React.FC<NavItemProps> = ({ title, menuItems }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ const NavItem: React.FC<NavItemProps> = ({ title }) => {
       onMouseLeave={() => setIsOpen(false)}
     >
       {title}
-      {isOpen && <DropdownMenu />}
+      {isOpen && <DropdownMenu items={menuItems} />}
     </Item>
   );
 };
