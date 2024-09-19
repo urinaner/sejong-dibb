@@ -1,12 +1,19 @@
 import React from 'react';
-import * as S from './styles/style';
+import styled from 'styled-components';
 import Header from './components/Header/Header';
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 전체 페이지 높이 설정 */
+`;
 
 function App() {
   return (
     <>
-      <Header />
-      <div className="App">초기 세팅</div>
+      <PageContainer>
+        <Header />
+      </PageContainer>
     </>
   );
 }

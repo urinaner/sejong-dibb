@@ -1,31 +1,21 @@
-// NavItem.tsx
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import DropdownMenu from './DropdownMenu';
-
-const Item = styled.div`
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #e9ecef;
-  }
-`;
+import React from 'react';
+import { Item } from '../../styles/HeaderStyles';
 
 interface NavItemProps {
   title: string;
-  menuItems: string[];
+  isActive: boolean;
+  onClick: (event: React.MouseEvent) => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ title, menuItems }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const NavItem: React.FC<NavItemProps> = ({ title, isActive, onClick }) => {
   return (
-    <Item
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <Item onClick={onClick} className="nav-item">
       {title}
-      {isOpen && <DropdownMenu items={menuItems} />}
+      {isActive && (
+        <div className="dropdown-menu">
+          {/* 드롭다운 메뉴 콘텐츠를 여기에 넣습니다 */}
+        </div>
+      )}
     </Item>
   );
 };

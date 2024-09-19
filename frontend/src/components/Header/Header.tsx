@@ -1,53 +1,50 @@
-// Header.tsx
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import { HeaderContainer, Logo, Nav } from '../../styles/HeaderStyles';
 import NavItem from './NavItem';
 import Image from '../../assets/images/logo.png';
 
-const HeaderContainer = styled.header`
-  width: 100%;
-  background-color: #f8f9fa;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0.5rem;
-`;
-
-const Logo = styled.div`
-  padding: 0.5rem 0;
-  padding-left: 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  padding-right: 3rem;
-`;
-
-const Header = () => {
+const Header: React.FC = () => {
   const logo = <img src={Image} alt="로고" width={250} height={80}></img>;
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleNavItemClick = (index: number, event: React.MouseEvent) => {
+    event.stopPropagation(); // 버블링 방지
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      if (activeIndex !== null) {
+        setActiveIndex(null);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [activeIndex]);
+
+  const navItems = [
+    { title: '학과', menuItems: ['학과소개', '교수소개', '조직도'] },
+    { title: '대학', menuItems: ['학부교과과정', '입학/장학'] },
+    { title: '대학원', menuItems: ['소개', '교과과정'] },
+    { title: '발행소식', menuItems: ['공지사항', '세미나', '연구 논문'] },
+    { title: '세미나실 예약', menuItems: ['세미나실 예약'] },
+  ];
 
   return (
     <HeaderContainer>
       <Logo>{logo}</Logo>
       <Nav>
-        <NavItem title="학과" menuItems={['학과소개', '교수소개', '조직도']} />
-        <NavItem title="대학" menuItems={['학부교과과정', '입학/장학']} />
-        <NavItem title="대학원" menuItems={['교과과정', '학사/규정']} />
-        <NavItem
-          title="바융소식"
-          menuItems={[
-            '학부 공지사항',
-            '대학원 공지사항',
-            '세미나',
-            '연구 논문',
-            '채용공고',
-          ]}
-        />
-        <NavItem title="세미나실 예약" menuItems={['세미나실 예약']} />
-        {/* 추가 메뉴 아이템 */}
+        {navItems.map((item, index) => (
+          <NavItem
+            key={index}
+            title={item.title}
+            isActive={activeIndex === index}
+            onClick={(event) => handleNavItemClick(index, event)}
+          />
+        ))}
       </Nav>
     </HeaderContainer>
   );
