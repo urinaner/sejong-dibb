@@ -61,13 +61,13 @@ function Footer() {
         <span>
           Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
         </span>
-        <span>
+        <button style={{ background: 'none', border: 'none' }}>
           <img
             src="/adminLoginBtn.svg"
             alt=""
             style={{ marginRight: '60px', cursor: 'pointer' }}
           />
-        </span>
+        </button>
       </S.Copyright>
     </S.Footer>
   );

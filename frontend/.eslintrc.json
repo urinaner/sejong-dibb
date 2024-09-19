@@ -5,5 +5,9 @@
   ],
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": true, "endOfLine": "auto" }]
-  }
+  },
+  "parser": "@babel/eslint-parser",
+  "plugins": ["@typescript-eslint"],
+  "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+  "excludedFiles": ["*.html"]
 }
