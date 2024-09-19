@@ -16,22 +16,45 @@ export const Button = styled.button<{ primary?: boolean }>`
   }
 `;
 
-export const Footer = styled.footer``;
+export const Footer = styled.footer`
+  padding: 40px;
+  background-color: #d7e8ff;
+`;
 
-export const FooterContainer = styled.footer`
+export const FooterContainer = styled.div`
   display: flex;
+`;
+
+export const Address = styled.div`
+  flex: 1 0 0;
+  font-size: 16px;
+  font-weight: 400;
 `;
 
 export const SightMap = styled.div`
   display: flex;
+  flex: 2 0 0;
+  cursor: pointer;
 `;
 
-export const SightMapHeader = styled.footer`
+export const SightMapHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   margin-right: 20px;
+  font-size: 20px;
 `;
 
-export const SightMapContent = styled.footer``;
+export const SightMapContent = styled.a`
+  font-size: 16px;
+  margin-top: 16px;
+`;
 
-export const Address = styled.div``;
-
-export const Copyright = styled.div``;
+export const Copyright = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid grey;
+  margin-top: 36px;
+  padding-top: 36px;
+  font-weight: 500;
+`;
