@@ -1,29 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { HeaderContainer, Logo, Nav } from '../../styles/HeaderStyles';
 import NavItem from './NavItem';
 import Image from '../../assets/images/logo.png';
 
 const Header: React.FC = () => {
   const logo = <img src={Image} alt="로고" width={250} height={80}></img>;
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  const handleNavItemClick = (index: number, event: React.MouseEvent) => {
-    event.stopPropagation(); // 버블링 방지
-    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
-
-  useEffect(() => {
-    const handleDocumentClick = () => {
-      if (activeIndex !== null) {
-        setActiveIndex(null);
-      }
-    };
-
-    document.addEventListener('click', handleDocumentClick);
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, [activeIndex]);
 
   const navItems = [
     { title: '학과', menuItems: ['학과소개', '교수소개', '조직도'] },
@@ -38,12 +19,7 @@ const Header: React.FC = () => {
       <Logo>{logo}</Logo>
       <Nav>
         {navItems.map((item, index) => (
-          <NavItem
-            key={index}
-            title={item.title}
-            isActive={activeIndex === index}
-            onClick={(event) => handleNavItemClick(index, event)}
-          />
+          <NavItem key={index} title={item.title} menuItems={item.menuItems} />
         ))}
       </Nav>
     </HeaderContainer>

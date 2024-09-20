@@ -27,7 +27,7 @@ export const Menu = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  z-index: 1; // 다른 요소 위에 메뉴가 나타나도록 설정
+  z-index: 1;
 `;
 
 export const MenuItem = styled.div`
@@ -43,19 +43,16 @@ export const Nav = styled.nav`
   align-items: center;
   padding: 1rem;
   padding-bottom: 0;
-  padding-right: 5rem;
+  padding-right: 4rem;
   padding-top: 2rem;
   position: relative; // 상대적인 위치를 적용해 드롭다운과의 관계 설정
 `;
 
 export const Item = styled.div`
-  padding: 0.5rem 2.5rem;
+  padding: 0.5rem 3rem;
   padding-bottom: 0;
   cursor: pointer;
   position: relative; // 드롭다운 메뉴를 이 안에 절대 위치시킬 수 있게 설정
   width: auto; // 고정된 넓이가 없도록 설정
   height: 100%;
-  &:hover {
-    background-color: #f1f1f1; // 마우스 호버 시 배경색 변경
-  }
 `;
