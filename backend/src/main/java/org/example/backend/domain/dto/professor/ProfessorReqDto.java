@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateProfessorDto {
+public class ProfessorReqDto {
 
     @ApiModelProperty(value = "교수 고유 아이디", example = "54321")
     private String name;
