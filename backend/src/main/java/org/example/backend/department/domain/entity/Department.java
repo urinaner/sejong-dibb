@@ -3,7 +3,6 @@ package org.example.backend.department.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.department.domain.dto.Department.DepartmentDto;
 import org.example.backend.professor.domain.entity.Professor;
 
 import java.util.List;
@@ -44,32 +43,5 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
     private List<Professor> professors;
-
-    public static Department toSaveEntity(DepartmentDto departmentDTO) {
-        Department departmentEntity = new Department();
-        departmentEntity.setKoreanName(departmentDTO.getKoreanName());
-        departmentEntity.setEnglishName(departmentDTO.getEnglishName());
-        departmentEntity.setIntro(departmentDTO.getIntro());
-        departmentEntity.setPhoneN(departmentDTO.getPhoneN());
-        departmentEntity.setLocation(departmentDTO.getLocation());
-        departmentEntity.setEducationalObjective(departmentDTO.getEducationalObjective());
-        departmentEntity.setWorkHour(departmentDTO.getWorkHour());
-        departmentEntity.setMap(departmentDTO.getMap());
-        return departmentEntity;
-    }
-
-    public static Department toUpdateEntity(DepartmentDto departmentDTO) {
-        Department departmentEntity = new Department();
-        departmentEntity.setKoreanName(departmentDTO.getKoreanName());
-        departmentEntity.setEnglishName(departmentDTO.getEnglishName());
-        departmentEntity.setIntro(departmentDTO.getIntro());
-        departmentEntity.setPhoneN(departmentDTO.getPhoneN());
-        departmentEntity.setLocation(departmentDTO.getLocation());
-        departmentEntity.setEducationalObjective(departmentDTO.getEducationalObjective());
-        departmentEntity.setWorkHour(departmentDTO.getWorkHour());
-        departmentEntity.setMap(departmentDTO.getMap());
-        return departmentEntity;
-    }
-
 
 }
