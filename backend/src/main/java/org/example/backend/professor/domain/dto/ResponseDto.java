@@ -1,4 +1,4 @@
-package org.example.backend.domain.dto;
+package org.example.backend.professor.domain.dto;
 
 import lombok.Builder;
 import lombok.Getter;

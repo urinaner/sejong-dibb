@@ -1,8 +1,8 @@
-package org.example.backend.domain.dto.Department;
+package org.example.backend.department.domain.dto.Department;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.backend.domain.entity.Department;
+import org.example.backend.department.domain.entity.Department;
 
 @Data
 @NoArgsConstructor

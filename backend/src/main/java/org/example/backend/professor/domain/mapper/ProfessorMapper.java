@@ -1,8 +1,8 @@
-package org.example.backend.domain.mapper;
+package org.example.backend.professor.domain.mapper;
 
-import org.example.backend.domain.dto.professor.ProfessorReqDto;
-import org.example.backend.domain.dto.professor.ProfessorResDto;
-import org.example.backend.domain.entity.Professor;
+import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
+import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
+import org.example.backend.professor.domain.entity.Professor;
 import org.mapstruct.Mapper;
 
 @Mapper

@@ -1,14 +1,14 @@
-package org.example.backend.domain.dto.professor;
+package org.example.backend.professor.domain.dto.professor;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-public class ProfessorReqDto {
-
+public class ProfessorResDto {
     @ApiModelProperty(value = "교수 고유 아이디", example = "54321")
+    private Long id;
+
+    @ApiModelProperty(value = "교수 이름", example = "김세종")
     private String name;
 
     @ApiModelProperty(value = "교수 전공", example = "신경생물학")

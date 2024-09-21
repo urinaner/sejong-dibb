@@ -1,11 +1,11 @@
-package org.example.backend.controller;
+package org.example.backend.department.controller;
 
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.domain.dto.Department.DepartmentDto;
-import org.example.backend.domain.entity.Department;
-import org.example.backend.service.DepartmentService;
+import org.example.backend.department.domain.dto.Department.DepartmentDto;
+import org.example.backend.department.domain.entity.Department;
+import org.example.backend.department.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
