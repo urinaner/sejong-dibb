@@ -49,6 +49,7 @@ public class ProfessorService {
         return professorMapper.toProfessorDto(professor);
     }
 
+    @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
         Professor professor = findProfessorById(professorId);
         professorMapper.updateProfessorFromDto(professorReqDto, professor);
