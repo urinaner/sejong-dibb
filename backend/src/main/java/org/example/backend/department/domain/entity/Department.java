@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.department.domain.dto.Department.DepartmentDto;
+import org.example.backend.professor.domain.entity.Professor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,6 +41,9 @@ public class Department {
 
     @Column(name = "map")
     private String map;
+
+    @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
+    private List<Professor> professors;
 
     public static Department toSaveEntity(DepartmentDto departmentDTO) {
         Department departmentEntity = new Department();

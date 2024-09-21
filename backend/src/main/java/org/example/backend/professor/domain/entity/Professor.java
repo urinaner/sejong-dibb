@@ -3,6 +3,7 @@ package org.example.backend.professor.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.department.domain.entity.Department;
 
 @Entity
 @Getter
@@ -38,4 +39,8 @@ public class Professor {
 
     @Column(name = "profileImage")
     private String profileImage;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 }
