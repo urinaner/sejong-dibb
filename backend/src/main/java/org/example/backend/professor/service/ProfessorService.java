@@ -1,11 +1,11 @@
-package org.example.backend.service;
+package org.example.backend.professor.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.domain.dto.professor.ProfessorReqDto;
-import org.example.backend.domain.dto.professor.ProfessorResDto;
-import org.example.backend.domain.entity.Professor;
-import org.example.backend.domain.mapper.ProfessorMapper;
-import org.example.backend.repository.ProfessorRepository;
+import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
+import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
+import org.example.backend.professor.domain.entity.Professor;
+import org.example.backend.professor.domain.mapper.ProfessorMapper;
+import org.example.backend.professor.repository.ProfessorRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

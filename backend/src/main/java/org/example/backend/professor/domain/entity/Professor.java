@@ -1,4 +1,4 @@
-package org.example.backend.domain.entity;
+package org.example.backend.professor.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

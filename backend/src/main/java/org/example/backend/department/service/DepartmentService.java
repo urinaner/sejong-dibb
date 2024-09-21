@@ -1,9 +1,9 @@
-package org.example.backend.service;
+package org.example.backend.department.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.domain.dto.Department.DepartmentDto;
-import org.example.backend.domain.entity.Department;
-import org.example.backend.repository.DepartmentRepository;
+import org.example.backend.department.domain.dto.Department.DepartmentDto;
+import org.example.backend.department.domain.entity.Department;
+import org.example.backend.department.repository.DepartmentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
