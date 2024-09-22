@@ -7,20 +7,45 @@ import {
   MenuItem,
 } from '../../styles/HeaderStyles';
 import NavItem from './NavItem';
-import DropdownMenu from './DropdownMenu';
-import Image from '../../assets/images/logo.png';
+import { ReactComponent as LogoIcon } from '../../assets/images/sejong-icon.svg';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
-  const logo = <img src={Image} alt="로고" width={250} height={80}></img>;
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, width: 0 });
 
+  // 수정된 URI 설계에 따른 navItems 배열
   const navItems = [
-    { title: '학과', menuItems: ['학과소개', '교수소개', '조직도'] },
-    { title: '대학', menuItems: ['학부교과과정', '입학/장학'] },
-    { title: '대학원', menuItems: ['소개', '교과과정'] },
-    { title: '발행소식', menuItems: ['공지사항', '세미나', '연구 논문'] },
-    { title: '세미나실 예약', menuItems: ['세미나실 예약'] },
+    {
+      title: '학과',
+      path: '/about',
+      menuItems: [
+        { name: '학과소개', path: '/about' },
+        { name: '교수소개', path: '/about/faculty' },
+        { name: '조직도', path: '/about/organization' },
+      ],
+    },
+    {
+      title: '대학',
+      path: '/undergraduate',
+      menuItems: [
+        { name: '교과과정', path: '/undergraduate/curriculum' },
+        { name: '입학/장학', path: '/undergraduate/admissions' },
+      ],
+    },
+    {
+      title: '대학원',
+      path: '/graduate',
+      menuItems: [
+        { name: '교과과정', path: '/graduate/curriculum' },
+        { name: '입학/장학', path: '/graduate/admissions' },
+      ],
+    },
+    {
+      title: '세미나실 예약',
+      path: '/seminar-rooms',
+      menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/book' }],
+    },
   ];
 
   const handleNavItemMouseEnter = (
@@ -41,20 +66,30 @@ const Header: React.FC = () => {
 
   return (
     <HeaderContainer onMouseLeave={handleMouseLeave}>
-      <Logo>{logo}</Logo>
+      <Logo>
+        <Link to="/">
+          <LogoIcon width="50px" height="auto" />
+          <span>세종대학교 바이오융합전공</span> {/* h1을 span으로 대체 */}
+        </Link>
+      </Logo>
       <Nav>
         {navItems.map((item, index) => (
           <NavItem
             key={index}
             title={item.title}
+            path={item.path}
             onMouseEnter={(e) => handleNavItemMouseEnter(index, e)}
           />
         ))}
       </Nav>
       {activeIndex !== null && (
-        <Menu style={{ top: menuPosition.top }}>
-          {navItems[activeIndex].menuItems.map((item, index) => (
-            <MenuItem key={index}>{item}</MenuItem>
+        <Menu>
+          {navItems[activeIndex].menuItems.map((subItem, index) => (
+            <MenuItem key={index}>
+              <Link to={subItem.path} style={{ textDecoration: 'none' }}>
+                {subItem.name}
+              </Link>
+            </MenuItem>
           ))}
         </Menu>
       )}

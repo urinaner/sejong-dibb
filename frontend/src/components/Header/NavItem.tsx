@@ -1,17 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Item } from '../../styles/HeaderStyles';
 
 interface NavItemProps {
   title: string;
-  onMouseEnter: React.MouseEventHandler<HTMLDivElement>; // 타입 정의 추가
+  path: string;
+  onMouseEnter: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ title, onMouseEnter }) => {
+const NavItem: React.FC<NavItemProps> = ({ title, path, onMouseEnter }) => {
   return (
-    <Item onMouseEnter={onMouseEnter} className="nav-item">
-      {' '}
-      {title}
-    </Item>
+    <Link to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Item onMouseEnter={onMouseEnter} className="nav-item">
+        {title}
+      </Item>
+    </Link>
   );
 };
 

@@ -1,21 +1,27 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, MenuItem } from '../../styles/HeaderStyles';
 
 interface DropdownMenuProps {
   position: {
     left: number;
   };
-  items: string[];
+  items: { name: string; path: string }[]; // 아이템의 이름과 경로를 함께 관리
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ position, items }) => {
   return (
-    <Menu style={{ left: position.left, transform: 'translateX(-50%)' }}>
-      {' '}
-      {/* 이 부분에서 자식 요소를 중앙 정렬 */}
+    <Menu>
       {items.map((item, index) => (
-        <MenuItem key={index}>{item}</MenuItem>
-      ))}{' '}
+        <MenuItem key={index}>
+          <Link
+            to={item.path}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            {item.name}
+          </Link>
+        </MenuItem>
+      ))}
     </Menu>
   );
 };

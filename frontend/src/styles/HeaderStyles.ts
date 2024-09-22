@@ -1,42 +1,55 @@
-// src/styles/HeaderStyles.ts
 import styled from 'styled-components';
-
 export const HeaderContainer = styled.header`
-  position: relative; // 위치 기준 설정
+  position: relative;
   width: 100%;
-  min-width: 100vw; // 최소 너비를 뷰포트 너비로 설정
   background-color: #f8f9fa;
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
-  padding-left: 3rem;
-  padding-bottom: -10;
-  box-sizing: border-box; // 패딩과 보더가 너비에 포함되도록 설정
+  padding: 1rem 3rem;
+  box-sizing: border-box;
   margin: 0;
 `;
 
 export const Logo = styled.div`
-  padding: 0.5rem 0;
-  font-size: 1.5rem;
-  font-weight: bold;
+  display: flex; /* 수평 정렬을 위해 flexbox 사용 */
+  align-items: center; /* 로고와 텍스트를 수직으로 중앙 정렬 */
+
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* 링크의 밑줄을 제거 */
+    color: inherit; /* 텍스트 색상 유지 */
+  }
+
+  svg {
+    width: 50px; /* 로고의 크기 조정 */
+    height: auto;
+    margin-right: 10px; /* 로고와 텍스트 사이의 간격 추가 */
+  }
+
+  span {
+    font-size: 1.5rem; /* 텍스트 크기 설정 */
+    font-weight: bold;
+    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+  }
 `;
 
 export const Menu = styled.div`
   position: absolute;
-  top: 0;
+  top: 100%;
   left: 0;
   right: 0;
   background-color: rgba(255, 255, 255, 0.95);
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: center; /* 항목들 사이에 공간을 균등하게 배분 */
-  width: 100vw;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 `;
 
 export const MenuItem = styled.div`
-  padding: 1rem;
+  padding: 1rem 2rem;
   cursor: pointer;
   &:hover {
     background-color: #f1f1f1;
@@ -47,19 +60,17 @@ export const MenuItem = styled.div`
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  padding: 1rem;
-  padding-bottom: 0;
-  padding-right: 4rem;
-  padding-top: 2rem;
-  position: relative; // 상대적인 위치를 적용해 드롭다운과의 관계 설정
+  justify-content: space-around;
+  padding: 1rem 4rem;
+  width: 100%;
 `;
 
 export const Item = styled.div`
-  display: flex;
-  padding: 1rem 3rem;
-  padding-bottom: 0;
+  padding: 1rem 2rem;
   cursor: pointer;
-  position: relative; // 드롭다운 메뉴를 이 안에 절대 위치시킬 수 있게 설정
-  width: auto; // 고정된 넓이가 없도록 설정
-  height: 100%;
+  position: relative;
+  text-align: center;
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `;
