@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 export const HeaderContainer = styled.header`
   position: relative;
   width: 100%;
@@ -8,6 +9,13 @@ export const HeaderContainer = styled.header`
   padding: 1rem 3rem;
   box-sizing: border-box;
   margin: 0;
+
+  /* 반응형 설정: 모바일에서 수직 정렬 */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
 `;
 
 export const Logo = styled.div`
@@ -25,12 +33,22 @@ export const Logo = styled.div`
     width: 50px; /* 로고의 크기 조정 */
     height: auto;
     margin-right: 10px; /* 로고와 텍스트 사이의 간격 추가 */
+
+    /* 모바일에서 로고 크기 축소 */
+    @media (max-width: 768px) {
+      width: 40px;
+    }
   }
 
   span {
     font-size: 1.5rem; /* 텍스트 크기 설정 */
     font-weight: bold;
     white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+
+    /* 모바일에서 텍스트 크기 축소 */
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
+    }
   }
 `;
 
@@ -46,6 +64,11 @@ export const Menu = styled.div`
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+
+  /* 모바일에서 메뉴 항목들이 수직으로 나열되도록 */
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const MenuItem = styled.div`
@@ -55,6 +78,11 @@ export const MenuItem = styled.div`
     background-color: #f1f1f1;
   }
   text-align: center;
+
+  /* 모바일에서 메뉴 항목의 패딩과 글자 크기를 줄임 */
+  @media (max-width: 768px) {
+    padding: 0.8rem 1.5rem;
+  }
 `;
 
 export const Nav = styled.nav`
@@ -63,6 +91,12 @@ export const Nav = styled.nav`
   justify-content: space-around;
   padding: 1rem 4rem;
   width: 100%;
+
+  /* 모바일에서 네비게이션 메뉴가 수직으로 배치되도록 설정 */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 1rem;
+  }
 `;
 
 export const Item = styled.div`
@@ -72,5 +106,10 @@ export const Item = styled.div`
   text-align: center;
   &:hover {
     background-color: #f1f1f1;
+  }
+
+  /* 모바일에서 네비게이션 항목 크기 축소 */
+  @media (max-width: 768px) {
+    padding: 0.8rem 1.5rem;
   }
 `;

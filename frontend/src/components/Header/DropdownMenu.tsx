@@ -9,7 +9,7 @@ interface DropdownMenuProps {
   items: { name: string; path: string }[]; // 아이템의 이름과 경로를 함께 관리
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ position, items }) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ items }) => {
   return (
     <Menu>
       {items.map((item, index) => (
