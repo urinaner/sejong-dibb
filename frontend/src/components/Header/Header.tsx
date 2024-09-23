@@ -27,24 +27,42 @@ const Header: React.FC = () => {
     },
     {
       title: '대학',
-      path: '/undergraduate',
+      path: '/undergraduate/curriculum',
       menuItems: [
-        { name: '교과과정', path: '/undergraduate/curriculum' },
-        { name: '입학/장학', path: '/undergraduate/admissions' },
+        { name: '학부교과과정', path: '/undergraduate/curriculum' },
+        {
+          name: '입학/장학 (학사/입학)',
+          path: '/undergraduate/admission-scholarship',
+        },
       ],
     },
     {
       title: '대학원',
-      path: '/graduate',
+      path: '/graduate/overview',
       menuItems: [
+        { name: '소개', path: '/graduate/overview' },
         { name: '교과과정', path: '/graduate/curriculum' },
-        { name: '입학/장학', path: '/graduate/admissions' },
+      ],
+    },
+    {
+      title: '바융소식',
+      path: '/news',
+      menuItems: [
+        { name: '공지사항', path: '/news' },
+        { name: '세미나', path: '/news' },
+        { name: '연구 논문', path: '/news' },
+        { name: '공지 사항 조회', path: '/news' },
+        { name: '연구 논문 조회', path: '/news' },
+        { name: '세미나실 예약', path: '/news' },
+        { name: '세미나 조회', path: '/news' },
       ],
     },
     {
       title: '세미나실 예약',
-      path: '/seminar-rooms',
-      menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/book' }],
+      path: '/seminar-rooms/reservation',
+      menuItems: [
+        { name: '세미나실 예약', path: '/seminar-rooms/reservation' },
+      ],
     },
   ];
 
