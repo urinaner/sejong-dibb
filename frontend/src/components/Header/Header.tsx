@@ -5,16 +5,14 @@ import {
   Nav,
   Menu,
   MenuItem,
+  StyledLink,
 } from '../../styles/HeaderStyles';
 import NavItem from './NavItem';
 import { ReactComponent as LogoIcon } from '../../assets/images/sejong-icon.svg';
-import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, width: 0 });
 
-  // 수정된 URI 설계에 따른 navItems 배열
   const navItems = [
     {
       title: '학과',
@@ -66,16 +64,8 @@ const Header: React.FC = () => {
     },
   ];
 
-  const handleNavItemMouseEnter = (
-    index: number,
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => {
+  const handleNavItemMouseEnter = (index: number) => {
     setActiveIndex(index);
-    const rect = event.currentTarget.getBoundingClientRect();
-    setMenuPosition({
-      top: rect.bottom,
-      width: rect.width,
-    });
   };
 
   const handleMouseLeave = () => {
@@ -85,10 +75,10 @@ const Header: React.FC = () => {
   return (
     <HeaderContainer onMouseLeave={handleMouseLeave}>
       <Logo>
-        <Link to="/">
+        <StyledLink to="/">
           <LogoIcon width="50px" height="auto" />
           <span>세종대학교 바이오융합전공</span> {/* h1을 span으로 대체 */}
-        </Link>
+        </StyledLink>
       </Logo>
       <Nav>
         {navItems.map((item, index) => (
@@ -96,7 +86,7 @@ const Header: React.FC = () => {
             key={index}
             title={item.title}
             path={item.path}
-            onMouseEnter={(e) => handleNavItemMouseEnter(index, e)}
+            onMouseEnter={() => handleNavItemMouseEnter(index)}
           />
         ))}
       </Nav>
@@ -104,9 +94,7 @@ const Header: React.FC = () => {
         <Menu>
           {navItems[activeIndex].menuItems.map((subItem, index) => (
             <MenuItem key={index}>
-              <Link to={subItem.path} style={{ textDecoration: 'none' }}>
-                {subItem.name}
-              </Link>
+              <StyledLink to={subItem.path}>{subItem.name}</StyledLink>
             </MenuItem>
           ))}
         </Menu>

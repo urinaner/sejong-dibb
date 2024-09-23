@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const HeaderContainer = styled.header`
   position: relative;
@@ -117,5 +118,18 @@ export const Item = styled.div`
   /* 모바일에서 네비게이션 항목 크기 더 축소 */
   @media (max-width: 768px) {
     padding: 0.4rem 0.8rem;
+  }
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: #333; /* Hover 시 텍스트 색상 */
+  }
+
+  &:active {
+    color: #555; /* Active 상태에서 텍스트 색상 */
   }
 `;
