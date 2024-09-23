@@ -7,7 +7,17 @@
     "prettier/prettier": ["error", { "singleQuote": true, "endOfLine": "auto" }]
   },
   "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+    }
+  },
   "plugins": ["@typescript-eslint"],
-  "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
-  "excludedFiles": ["*.html"]
+  "ignorePatterns": ["*.html"], // HTML 파일 무시
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"]
+    }
+  ]
 }

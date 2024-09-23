@@ -9,7 +9,7 @@ function Footer() {
           <p
             style={{
               fontSize: '32px',
-              fontWeight: '500',
+              fontWeight: '600',
               margin: '0 0 20px 0',
             }}
           >

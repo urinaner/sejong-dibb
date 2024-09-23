@@ -28,7 +28,8 @@ export const FooterContainer = styled.div`
 export const Address = styled.div`
   flex: 1 0 0;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans';
 `;
 
 export const SightMap = styled.div`
@@ -43,11 +44,15 @@ export const SightMapHeader = styled.div`
   flex-grow: 1;
   margin-right: 20px;
   font-size: 20px;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 600;
 `;
 
 export const SightMapContent = styled.a`
   font-size: 16px;
+  font-weight: 300;
   margin-top: 16px;
+  font-family: 'Noto Sans';
 `;
 
 export const Copyright = styled.div`
@@ -56,5 +61,5 @@ export const Copyright = styled.div`
   border-top: 1px solid grey;
   margin-top: 36px;
   padding-top: 36px;
-  font-weight: 500;
+  font-weight: 600;
 `;
