@@ -1,15 +1,28 @@
-import React from 'react';
-import * as S from './styles/style';
-import Footer from './components/Footer';
+import styled from 'styled-components';
+import Header from './components/Header/Header';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Index from './pages/Index/Index';
+import Footer from './components/Footer/Footer';
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 전체 페이지 높이 설정 */
+`;
 
 function App() {
   return (
-    <>
-      <div className="App">초기 세팅</div>
-      <S.Button>스타일드 컴포넌트 테스트</S.Button>
-      <S.Button primary>기본 버튼</S.Button>
-      <Footer />
-    </>
+    <Router>
+      <PageContainer>
+        <Header />
+        <Routes>
+          {' '}
+          {/* Route는 반드시 Routes로 감싸야 합니다 */}
+          <Route path="/" element={<Index />} />
+        </Routes>
+        <Footer />
+      </PageContainer>
+    </Router>
   );
 }
 
