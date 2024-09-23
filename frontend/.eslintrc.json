@@ -1,9 +1,30 @@
 {
   "extends": [
     "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
   ],
   "rules": {
-    "prettier/prettier": ["error", { "singleQuote": true, "endOfLine": "auto" }]
-  }
+    "prettier/prettier": [
+      "error",
+      { "singleQuote": true, "endOfLine": "auto" }
+    ],
+    "react/react-in-jsx-scope": "off", // React 17 이상에서는 이 규칙을 꺼야 합니다
+    "react/jsx-uses-react": "off", // React 자동 변환 설정으로 인해 필요 없음
+    "react/jsx-uses-vars": "error" // JSX 내에서 사용된 변수를 인식하게 설정
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+    }
+  },
+  "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["*.html"], // HTML 파일 무시
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"]
+    }
+  ]
 }

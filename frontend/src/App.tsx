@@ -1,8 +1,8 @@
-import React from 'react';
 import styled from 'styled-components';
 import Header from './components/Header/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index/Index';
+import Footer from './components/Footer/Footer';
 
 const PageContainer = styled.div`
   display: flex;
@@ -20,6 +20,7 @@ function App() {
           {/* Route는 반드시 Routes로 감싸야 합니다 */}
           <Route path="/" element={<Index />} />
         </Routes>
+        <Footer />
       </PageContainer>
     </Router>
   );
