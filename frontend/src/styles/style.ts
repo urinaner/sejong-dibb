@@ -17,12 +17,28 @@ export const Button = styled.button<{ primary?: boolean }>`
 `;
 
 export const Footer = styled.footer`
+  width: 100%;
   padding: 40px;
   background-color: #d7e8ff;
+
+  /* 1180px 미만일 때 */
+  @media (max-width: 1180px) {
+    width: 1180px;
+  }
+
+  /* 휴대폰 */
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const FooterContainer = styled.div`
   display: flex;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const Address = styled.div`
@@ -30,12 +46,20 @@ export const Address = styled.div`
   font-size: 16px;
   font-weight: 500;
   font-family: 'Plus Jakarta Sans';
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const SightMap = styled.div`
   display: flex;
   flex: 2 0 0;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const SightMapHeader = styled.div`
@@ -46,6 +70,10 @@ export const SightMapHeader = styled.div`
   font-size: 20px;
   font-family: 'Noto Serif KR', serif;
   font-weight: 600;
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 export const SightMapContent = styled.a`
