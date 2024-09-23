@@ -9,12 +9,14 @@ export const HeaderContainer = styled.header`
   padding: 1rem 3rem;
   box-sizing: border-box;
   margin: 0;
+  z-index: 1000; /* 헤더가 최상단에 유지되도록 설정 */
 
-  /* 반응형 설정: 모바일에서 수직 정렬 */
+  /* 반응형 설정: 모바일에서 수직 정렬 및 스크롤 가능 */
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    overflow-x: auto; /* 헤더를 가로 스크롤 가능하게 설정 */
   }
 `;
 
@@ -37,6 +39,7 @@ export const Logo = styled.div`
     /* 모바일에서 로고 크기 축소 */
     @media (max-width: 768px) {
       width: 40px;
+      margin-right: 0; /* 로고 옆에 간격 없애기 */
     }
   }
 
@@ -45,9 +48,9 @@ export const Logo = styled.div`
     font-weight: bold;
     white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
 
-    /* 모바일에서 텍스트 크기 축소 */
+    /* 모바일에서 텍스트 숨기기 */
     @media (max-width: 768px) {
-      font-size: 1.2rem;
+      display: none; /* 텍스트를 숨기고 아이콘만 표시 */
     }
   }
 `;
@@ -68,6 +71,8 @@ export const Menu = styled.div`
   /* 모바일에서 메뉴 항목들이 수직으로 나열되도록 */
   @media (max-width: 768px) {
     flex-direction: column;
+    max-height: 50vh; /* 메뉴의 최대 높이를 제한하여 스크롤 가능하게 설정 */
+    overflow-y: auto; /* 세로 스크롤 가능하게 설정 */
   }
 `;
 
@@ -96,6 +101,7 @@ export const Nav = styled.nav`
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 1rem;
+    overflow-x: auto; /* 네비게이션 메뉴가 가로로 스크롤되도록 설정 */
   }
 `;
 
