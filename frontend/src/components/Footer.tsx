@@ -6,15 +6,7 @@ function Footer() {
     <S.Footer>
       <S.FooterContainer>
         <S.Address>
-          <p
-            style={{
-              fontSize: '32px',
-              fontWeight: '600',
-              margin: '0 0 20px 0',
-            }}
-          >
-            세종대학교
-          </p>
+          <S.AddressTitle>세종대학교</S.AddressTitle>
           바이오융합공학전공
           <br />
           Tel : 02) 3408-3334
@@ -22,40 +14,7 @@ function Footer() {
           서울특별시 광진구 능동로 209 (군자동) 충무관 103A
           <br />
         </S.Address>
-        <S.SightMap>
-          <S.SightMapHeader>
-            학과
-            <br />
-            <S.SightMapContent>학과소개</S.SightMapContent>
-            <S.SightMapContent>조직도</S.SightMapContent>
-            <S.SightMapContent>교수소개</S.SightMapContent>
-          </S.SightMapHeader>
-          <S.SightMapHeader>
-            대학
-            <br />
-            <S.SightMapContent>학사안내</S.SightMapContent>
-            <S.SightMapContent>학부교과과정</S.SightMapContent>
-            <S.SightMapContent>입학/장학</S.SightMapContent>
-          </S.SightMapHeader>
-          <S.SightMapHeader>
-            대학원
-            <br />
-            <S.SightMapContent>소개</S.SightMapContent>
-            <S.SightMapContent>교과과정</S.SightMapContent>
-            <S.SightMapContent>학칙/규정</S.SightMapContent>
-          </S.SightMapHeader>
-          <S.SightMapHeader>
-            바융소식
-            <br />
-            <S.SightMapContent>공지사항</S.SightMapContent>
-            <S.SightMapContent>세미나</S.SightMapContent>
-            <S.SightMapContent>연구논문</S.SightMapContent>
-          </S.SightMapHeader>
-          <S.SightMapHeader>
-            세미나실 예약
-            <br />
-          </S.SightMapHeader>
-        </S.SightMap>
+        <S.SightMap>{renderSightMapSections()}</S.SightMap>
       </S.FooterContainer>
       <S.Copyright>
         <span>
@@ -71,6 +30,42 @@ function Footer() {
       </S.Copyright>
     </S.Footer>
   );
+}
+
+// SightMap 섹션 렌더링
+function renderSightMapSections() {
+  const sections = [
+    {
+      title: '학과',
+      contents: ['학과소개', '조직도', '교수소개'],
+    },
+    {
+      title: '대학',
+      contents: ['학사안내', '학부교과과정', '입학/장학'],
+    },
+    {
+      title: '대학원',
+      contents: ['소개', '교과과정', '학칙/규정'],
+    },
+    {
+      title: '바융소식',
+      contents: ['공지사항', '세미나', '연구논문'],
+    },
+    {
+      title: '세미나실 예약',
+      contents: [],
+    },
+  ];
+
+  return sections.map((section, index) => (
+    <S.SightMapHeader key={index}>
+      {section.title}
+      <br />
+      {section.contents.map((content, idx) => (
+        <S.SightMapContent key={idx}>{content}</S.SightMapContent>
+      ))}
+    </S.SightMapHeader>
+  ));
 }
 
 export default Footer;

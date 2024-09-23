@@ -52,6 +52,12 @@ export const Address = styled.div`
   }
 `;
 
+export const AddressTitle = styled.div`
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+`;
+
 export const SightMap = styled.div`
   display: flex;
   flex: 2 0 0;
