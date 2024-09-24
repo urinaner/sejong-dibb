@@ -3,6 +3,7 @@ import Header from './components/Header/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
+import SignIn from './pages/Auth/SignIn';
 
 const PageContainer = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ function App() {
           {' '}
           {/* Route는 반드시 Routes로 감싸야 합니다 */}
           <Route path="/" element={<Index />} />
+          <Route path="/signin" element={<SignIn />} />
         </Routes>
         <Footer />
       </PageContainer>
