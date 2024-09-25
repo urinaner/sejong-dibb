@@ -8,6 +8,12 @@ import {
   ActionButtons,
   LinkButton,
 } from '../../styles/SignInStyle';
+import axios from 'axios';
+
+interface LoginResponse {
+  token: string;
+  exprisesIn: number;
+}
 
 const SignIn: React.FC = () => {
   const [id, setId] = useState('');
