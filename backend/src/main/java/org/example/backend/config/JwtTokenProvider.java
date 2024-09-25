@@ -1,13 +1,12 @@
-package kr.leco.global.config;
+package org.example.backend.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import kr.leco.domain.sso.dto.SsoUserDto;
-import kr.leco.domain.user.dto.TokenDto;
-import kr.leco.domain.user.entity.User;
-import kr.leco.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.admin.domain.dto.TokenDto;
+import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.admin.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 
@@ -28,7 +27,6 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String BEARER_TYPE = "Bearer";
-//    private static final String AUTHORITIES_KEY = "auth";
 
     private static final String ROLE_KEY = "role";
 
@@ -41,9 +39,9 @@ public class JwtTokenProvider {
     private long refreshTokenValidityInMilliseconds;
 
     private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
+    private final AdminRepository userRepository; // TODO
 
-    public String getPayload(String token){
+    public String getPayload(String token) {
         log.info("JwtTokenProvider getPayload");
         try {
             return Jwts.parserBuilder()
@@ -54,7 +52,7 @@ public class JwtTokenProvider {
                     .getSubject();
         } catch (ExpiredJwtException e) {
             return e.getClaims().getSubject();
-        } catch (JwtException e){
+        } catch (JwtException e) {
             throw new RuntimeException("유효하지 않은 토큰 입니다");
         }
     }
@@ -95,8 +93,7 @@ public class JwtTokenProvider {
     public TokenDto generateTokenDto(Authentication authentication) {
         log.info("JwtTokenProvider generateTokenDto");
 
-        User user = findUserByLoginId(authentication.getName());
-        String role = user.getRole();
+        Admin user = findUserByLoginId(authentication.getName());
 
         long now = (new Date()).getTime();
 
@@ -104,7 +101,6 @@ public class JwtTokenProvider {
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(ROLE_KEY, role)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
@@ -114,7 +110,6 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(ROLE_KEY, role)
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
@@ -128,41 +123,9 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    private User findUserByLoginId(String loginId) {
+    private Admin findUserByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException("Member id: " + loginId + " can't found."));
-    }
-
-
-    public TokenDto generateSsoTokenDto(SsoUserDto ssoUserDto) {
-        log.info("JwtTokenProvider generateSsoTokenDto");
-
-        long now = (new Date()).getTime();
-
-        Date accessTokenExpiresIn = new Date(now + accessTokenValidityInMilliseconds);
-
-        String accessToken = Jwts.builder()
-                .setSubject(ssoUserDto.getLoginId())
-                .claim(ROLE_KEY, ssoUserDto.getRole())
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        Date refreshTokenExpiresIn = new Date(now + refreshTokenValidityInMilliseconds);
-        String refreshToken = Jwts.builder()
-                .setSubject(ssoUserDto.getLoginId())
-                .claim(ROLE_KEY, ssoUserDto.getRole())
-                .setExpiration(refreshTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        return TokenDto.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .accessTokenExpiresTime(accessTokenExpiresIn.getTime())
-                .refreshToken(refreshToken)
-                .refreshTokenExpiresTime(refreshTokenExpiresIn.getTime())
-                .build();
     }
 
     public Long getExpiration(String accessToken) {
