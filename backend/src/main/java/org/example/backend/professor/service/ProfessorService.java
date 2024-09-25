@@ -5,10 +5,14 @@ import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.domain.mapper.ProfessorMapper;
+import org.example.backend.professor.exception.ProfessorException;
+import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +68,6 @@ public class ProfessorService {
 
     private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)
-                .orElseThrow(() -> new IllegalArgumentException("교수 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
     }
 }
