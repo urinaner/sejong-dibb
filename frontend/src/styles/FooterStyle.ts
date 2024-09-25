@@ -8,13 +8,14 @@ export const Footer = styled.footer`
 
   /* 1180px 미만일 때 */
   @media (max-width: 1180px) {
-    width: 1180px;
+    width: 100%;
   }
 
   /* 휴대폰 */
   @media (max-width: 768px) {
     width: 100%;
   }
+  box-sizing: border-box;
 `;
 
 export const FooterContainer = styled.div`
@@ -24,6 +25,7 @@ export const FooterContainer = styled.div`
     display: flex;
     flex-direction: column;
   }
+  box-sizing: border-box;
 `;
 
 export const Address = styled.div`
