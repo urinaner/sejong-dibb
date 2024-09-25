@@ -12,36 +12,42 @@ export const Container = styled.div`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  width: 400px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  padding: 40px;
+  align-items: center;
+  width: 90%;
+  max-width: 500px; // 최대 폼 너비 제한
+  padding: 20px;
   background-color: white;
   border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box; // 패딩이 너비에 포함되도록 설정
 `;
 
 export const Title = styled.h2`
   font-size: 24px;
   color: #333;
   text-align: center;
-  margin-bottom: 30px;
 `;
 
 export const Input = styled.input`
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
+  width: calc(100% - 20px); // 모든 패딩 공간을 뺀 순수 너비
   font-size: 16px;
 `;
 
 export const Button = styled.button`
   background-color: #0056b3;
   color: white;
-  padding: 15px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 10px;
+  width: 100%;
+  margin: 0;
+  margin-bottom: 2%;
+
   transition: background-color 0.3s;
 
   &:hover {
@@ -49,20 +55,12 @@ export const Button = styled.button`
   }
 `;
 
-export const CheckboxContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-export const CheckboxLabel = styled.label`
-  margin-left: 10px;
-  font-size: 14px;
-`;
-
 export const ActionButtons = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 `;
 
 export const LinkButton = styled(Button)`
@@ -70,4 +68,6 @@ export const LinkButton = styled(Button)`
   &:hover {
     background-color: #555;
   }
+  width: 49%;
+  margin: 0;
 `;
