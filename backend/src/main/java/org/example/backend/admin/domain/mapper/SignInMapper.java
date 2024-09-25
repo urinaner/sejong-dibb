@@ -1,15 +1,17 @@
 package org.example.backend.admin.domain.mapper;
 
-import org.example.backend.admin.domain.dto.AdminReqDto;
+import org.example.backend.admin.domain.dto.AdminResDto;
+import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.dto.SingInResDto;
+import org.example.backend.admin.domain.dto.TokenDto;
+import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
-import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 
-public interface LogInMapper {
-    SingInResDto toEntity(SingInResDto singInResDto);
+public interface SignInMapper {
+    Admin toEntity(SignInReqDto signInReqDto);
 
-    SingInResDto toProfessorDto(Professor professor);
+    AdminResDto toAdminResDto(Admin admin);
 
-    void updateProfessorFromDto(ProfessorReqDto professorReqDto, Professor professor);
+    SingInResDto toSingInResDto(TokenDto tokenDto, AdminResDto adminResDto);
 }
