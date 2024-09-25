@@ -6,6 +6,9 @@ import {
   Button,
   CheckboxContainer,
   CheckboxLabel,
+  Title,
+  ActionButtons,
+  LinkButton,
 } from '../../styles/SignInStyle';
 
 const SignIn: React.FC = () => {
@@ -20,6 +23,7 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
+        <Title>바이오융합전공 로그인</Title>
         <Input
           type="text"
           placeholder="ID"
@@ -37,8 +41,10 @@ const SignIn: React.FC = () => {
           <CheckboxLabel>아이디 저장</CheckboxLabel>
         </CheckboxContainer>
         <Button type="submit">로그인</Button>
-        <Button>회원가입</Button>
-        <Button>아이디/비밀번호 찾기</Button>
+        <ActionButtons>
+          <LinkButton>회원가입</LinkButton>
+          <LinkButton>아이디/비밀번호 찾기</LinkButton>
+        </ActionButtons>
       </Form>
     </Container>
   );
