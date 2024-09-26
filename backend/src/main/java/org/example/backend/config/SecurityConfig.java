@@ -35,8 +35,7 @@ public class SecurityConfig {
                         authRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/user/**", "/api/test").permitAll()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new JwtAuthenticationFilter(jwtTokenProvider))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
