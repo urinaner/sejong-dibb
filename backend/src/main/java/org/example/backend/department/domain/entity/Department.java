@@ -43,5 +43,4 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
     private List<Professor> professors;
-
 }
