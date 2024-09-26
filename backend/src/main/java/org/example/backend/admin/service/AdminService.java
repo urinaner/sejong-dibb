@@ -22,6 +22,7 @@ public class AdminService {
 
     private final AdminRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenBlackListService tokenBlacklistService;
     private final AuthenticationManagerBuilder managerBuilder;
     private final PasswordEncoder passwordEncoder;
     private static final String BEARER_TYPE = "Bearer";
@@ -49,18 +50,28 @@ public class AdminService {
 
     public void signOut(AccessTokenReq accessTokenReq) {
         String accessToken = accessTokenReq.getAccessToken();
+
+        // 토큰이 없거나 잘못된 형식이면 예외 발생
         if (accessToken == null || !accessToken.startsWith(BEARER_TYPE)) {
             throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 유효하지 않은 토큰
         }
+
+        // "Bearer " 접두사를 제거하여 실제 토큰 값만 추출
         accessToken = accessToken.replace(BEARER_TYPE, "").trim();
 
+        // 토큰 검증
         if (!jwtTokenProvider.validateToken(accessToken)) {
             throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 토큰 검증 실패
         }
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        Admin user = (Admin) authentication.getPrincipal();
-        user.logOut();
-        userRepository.save(user);
+        // JWT 토큰의 만료 시간 가져오기
+        long expirationTimeInMillis = jwtTokenProvider.getExpiration(accessToken);
+
+        // 현재 시간에서 만료 시간까지 남은 시간 계산
+        long remainingExpirationTimeInMillis = expirationTimeInMillis - System.currentTimeMillis();
+
+
+        // 블랙리스트에 토큰 추가
+        tokenBlacklistService.addToBlacklist(accessToken, remainingExpirationTimeInMillis);
     }
 }
