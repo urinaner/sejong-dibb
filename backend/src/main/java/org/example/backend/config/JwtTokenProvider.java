@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.dto.TokenDto;
 import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.admin.repository.AdminRepository;
+import org.example.backend.admin.service.TokenBlackListService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,10 +28,9 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String BEARER_TYPE = "Bearer";
-
     private static final String ROLE_KEY = "role";
-
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final TokenBlackListService tokenBlackListService;
 
     @Value("${jwt.access-token.expire-length}")
     private long accessTokenValidityInMilliseconds;
@@ -43,6 +43,7 @@ public class JwtTokenProvider {
 
     public String getPayload(String token) {
         log.info("JwtTokenProvider getPayload");
+
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -59,6 +60,11 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         log.info("JwtTokenProvider validateToken");
+
+        if (tokenBlackListService.isTokenBlacklisted(token)) {
+            return false;
+        }
+
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(key)

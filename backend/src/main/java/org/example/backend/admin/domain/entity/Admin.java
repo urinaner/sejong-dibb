@@ -28,13 +28,6 @@ public class Admin {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "is_logged_out")
-    private boolean isLoggedOut;
-
     @OneToMany(mappedBy = "admin")
     private List<Department> departments;
-
-    public void logOut() {
-        this.isLoggedOut = true;
-    }
 }
