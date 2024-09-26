@@ -3,7 +3,6 @@ package org.example.backend.department.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.professor.domain.entity.Professor;
 
 import java.util.List;
@@ -44,8 +43,4 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
     private List<Professor> professors;
-
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private Admin admin;
 }
