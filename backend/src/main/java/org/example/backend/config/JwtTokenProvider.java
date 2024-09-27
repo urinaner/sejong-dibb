@@ -28,7 +28,6 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String BEARER_TYPE = "Bearer";
-    private static final String ROLE_KEY = "role";
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     private final TokenBlackListService tokenBlackListService;
 
