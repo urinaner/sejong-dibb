@@ -1,4 +1,4 @@
-package org.example.backend.config;
+package org.example.backend.global.config;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.NullValuePropertyMappingStrategy;

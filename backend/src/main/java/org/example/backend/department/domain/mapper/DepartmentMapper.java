@@ -1,6 +1,6 @@
 package org.example.backend.department.domain.mapper;
 
-import org.example.backend.config.CentralMapperConfig;
+import org.example.backend.global.config.CentralMapperConfig;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.department.domain.dto.Department.DepartmentResDto;
 import org.example.backend.department.domain.entity.Department;

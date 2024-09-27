@@ -1,4 +1,4 @@
-package org.example.backend.config;
+package org.example.backend.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package org.example.backend.config;
+package org.example.backend.global.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

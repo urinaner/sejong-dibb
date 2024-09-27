@@ -1,6 +1,6 @@
 package org.example.backend.professor.domain.mapper;
 
-import org.example.backend.config.CentralMapperConfig;
+import org.example.backend.global.config.CentralMapperConfig;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
