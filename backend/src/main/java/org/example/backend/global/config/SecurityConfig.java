@@ -26,7 +26,10 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new JwtAuthenticationFilter(jwtTokenProvider, authenticationManager);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
@@ -38,7 +41,8 @@ public class SecurityConfig {
                         authRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/user/**", "/api/test").permitAll()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)  // jwtAuthenticationFilter 호출
+                .addFilter(new JwtAuthenticationFilter(jwtTokenProvider, authenticationManager))  // 새로운 필터 추가
                 .addFilter(new JwtAuthenticationFilter(jwtTokenProvider, authenticationManager))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
