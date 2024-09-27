@@ -6,9 +6,8 @@ import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.dto.TokenDto;
 import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.admin.repository.AdminRepository;
-import org.example.backend.config.JwtTokenProvider;
+import org.example.backend.global.config.JwtTokenProvider;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,9 +36,10 @@ public class AdminService {
             throw new ServiceException("StatusCode.NOT_VALID_LOGIN_ID_OR_PASSWORD"); // TODO
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+        // JWT 토큰 생성 전에 인증 정보를 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(loginRequestDto.getLoginId());
 
+        // 인증 정보를 바탕으로 JWT 토큰 생성
         return jwtTokenProvider.generateTokenDto(authentication);
     }
 

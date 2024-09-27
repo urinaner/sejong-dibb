@@ -13,7 +13,8 @@ import java.util.List;
 @Table(name = "admin")
 public class Admin {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "login_id", nullable = false)
@@ -28,6 +29,7 @@ public class Admin {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "admin")
+    @OneToMany()
+    @JoinColumn(name = "admin_id")
     private List<Department> departments;
 }
