@@ -8,20 +8,47 @@ import {
   ActionButtons,
   LinkButton,
 } from '../../styles/SignInStyle';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 interface LoginResponse {
   token: string;
   exprisesIn: number;
 }
 
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const loginData = { id: id, pw: password };
     console.log('Login with:', id, password);
+
+    try {
+      const response: AxiosResponse<LoginResponse> =
+        await axios.post<LoginResponse>('/api/login', loginData);
+
+      // 응답 데이터 처리
+      if (response.status === 200) {
+        console.log('로그인 성공:', response.data);
+        return response.data; // 성공 시 반환
+      }
+
+      console.error('로그인 실패: 잘못된 응답 상태 코드', response.status);
+      return null; // 실패 시 null 반환
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('로그인 실패: 서버 오류', error.response?.data);
+      } else {
+        console.error('로그인 실패: 네트워크 오류 또는 기타 문제', error);
+      }
+      return null; // 실패 시 null 반환
+    }
   };
 
   return (
