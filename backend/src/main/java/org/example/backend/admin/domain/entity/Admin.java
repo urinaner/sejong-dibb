@@ -28,6 +28,7 @@ public class Admin {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "admin")
+    @OneToMany()
+    @JoinColumn(name = "admin_id")
     private List<Department> departments;
 }
