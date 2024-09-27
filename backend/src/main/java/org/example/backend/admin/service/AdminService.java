@@ -37,9 +37,10 @@ public class AdminService {
             throw new ServiceException("StatusCode.NOT_VALID_LOGIN_ID_OR_PASSWORD"); // TODO
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+        // JWT 토큰 생성 전에 인증 정보를 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(loginRequestDto.getLoginId());
 
+        // 인증 정보를 바탕으로 JWT 토큰 생성
         return jwtTokenProvider.generateTokenDto(authentication);
     }
 
