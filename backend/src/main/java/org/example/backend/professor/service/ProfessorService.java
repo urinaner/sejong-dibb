@@ -33,17 +33,17 @@ public class ProfessorService {
 
     private void validateUserRequiredFields(ProfessorReqDto dto) {
         if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new IllegalArgumentException("이름은 필수 입력값입니다.");
+            throw new ProfessorException(ProfessorExceptionType.REQUIRED_NAME);
         }
     }
 
     private void validateUserUniqueFields(ProfessorReqDto dto) {
         if (professorRepository.existsByPhoneN(dto.getPhoneN())) {
-            throw new IllegalArgumentException("전화번호가 이미 존재합니다.");
+            throw new ProfessorException(ProfessorExceptionType.DUPLICATE_PHONE);
         }
 
         if (professorRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("이메일이 이미 존재합니다.");
+            throw new ProfessorException(ProfessorExceptionType.DUPLICATE_EMAIL);
         }
     }
 
