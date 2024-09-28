@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from '../../styles/FooterStyle';
+import { Link } from 'react-router-dom'; // React Router의 Link 컴포넌트 추가
 
 function Footer() {
   return (
@@ -20,13 +21,15 @@ function Footer() {
         <span>
           Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
         </span>
-        <button style={{ background: 'none', border: 'none' }}>
-          <img
-            src="/adminLoginBtn.svg"
-            alt=""
-            style={{ marginRight: '60px', cursor: 'pointer' }}
-          />
-        </button>
+        <Link to="/signin">
+          <button style={{ background: 'none', border: 'none' }}>
+            <img
+              src="/adminLoginBtn.svg"
+              alt=""
+              style={{ marginRight: '60px', cursor: 'pointer' }}
+            />
+          </button>
+        </Link>
       </S.Copyright>
     </S.Footer>
   );

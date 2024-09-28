@@ -1,21 +1,6 @@
 // styles.ts
 import styled from 'styled-components';
 
-// 테스트용 버튼 스타일 정의
-export const Button = styled.button<{ primary?: boolean }>`
-  background-color: ${({ primary }) => (primary ? '#007BFF' : '#FFF')};
-  color: ${({ primary }) => (primary ? '#FFF' : '#007BFF')};
-  border: 2px solid #007bff;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ primary }) => (primary ? '#0056b3' : '#e6e6e6')};
-  }
-`;
-
 export const Footer = styled.footer`
   width: 100%;
   padding: 40px;
@@ -23,13 +8,14 @@ export const Footer = styled.footer`
 
   /* 1180px 미만일 때 */
   @media (max-width: 1180px) {
-    width: 1180px;
+    width: 100%;
   }
 
   /* 휴대폰 */
   @media (max-width: 768px) {
     width: 100%;
   }
+  box-sizing: border-box;
 `;
 
 export const FooterContainer = styled.div`
@@ -39,6 +25,7 @@ export const FooterContainer = styled.div`
     display: flex;
     flex-direction: column;
   }
+  box-sizing: border-box;
 `;
 
 export const Address = styled.div`
