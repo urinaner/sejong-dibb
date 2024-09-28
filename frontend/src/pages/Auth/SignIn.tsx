@@ -31,11 +31,12 @@ const SignIn: React.FC = () => {
 
     try {
       const response: AxiosResponse<LoginResponse> =
-        await axios.post<LoginResponse>('/api/login', loginData);
+        await axios.post<LoginResponse>('/api/admin/signin', loginData);
 
       // 응답 데이터 처리
       if (response.status === 200) {
         console.log('로그인 성공:', response.data);
+        alert('로그인 성공!');
         return response.data; // 성공 시 반환
       }
 
