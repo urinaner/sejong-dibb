@@ -5,10 +5,13 @@ import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.department.domain.dto.Department.DepartmentResDto;
 import org.example.backend.department.domain.entity.Department;
 import org.example.backend.department.domain.mapper.DepartmentMapper;
+import org.example.backend.department.exception.DepartmentException;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.example.backend.department.exception.DepartmentExceptionType.NOT_FOUND_DEPARTMENT;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +49,6 @@ public class DepartmentService {
 
     private Department findDepartmentById(Long departmentId) {
         return departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new IllegalArgumentException("부서 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new DepartmentException(NOT_FOUND_DEPARTMENT));
     }
-
 }
