@@ -33,21 +33,22 @@ public class AdminService {
     @Transactional
     public TokenDto signIn(SignInReqDto loginRequestDto) {
         Admin user = userRepository.findByLoginId(loginRequestDto.getLoginId())
-                .orElseThrow(() -> new AdminException(AdminExceptionType.NOT_FOUND_ADMIN));
+                .orElseThrow(() -> new ServiceException("StatusCode.USER_NOT_FOUND")); // TODO
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            throw new AdminException(AdminExceptionType.NOT_VALID_PASSWORD);
+            throw new ServiceException("StatusCode.NOT_VALID_LOGIN_ID_OR_PASSWORD"); // TODO
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+        // JWT 토큰 생성 전에 인증 정보를 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(loginRequestDto.getLoginId());
 
+        // 인증 정보를 바탕으로 JWT 토큰 생성
         return jwtTokenProvider.generateTokenDto(authentication);
     }
 
     public Admin findByLoginID(String loginId) {
         return userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new AdminException(AdminExceptionType.NOT_FOUND_ADMIN));
+                .orElseThrow(() -> new ServiceException("StatusCode.USER_NOT_FOUND")); // TODO
     }
 
     public void signOut(AccessTokenReq accessTokenReq) {
@@ -55,7 +56,7 @@ public class AdminService {
 
         // 토큰이 없거나 잘못된 형식이면 예외 발생
         if (accessToken == null || !accessToken.startsWith(BEARER_TYPE)) {
-            throw new AdminException(AdminExceptionType.INVALID_ACCESS_TOKEN);
+            throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 유효하지 않은 토큰
         }
 
         // "Bearer " 접두사를 제거하여 실제 토큰 값만 추출
@@ -63,7 +64,7 @@ public class AdminService {
 
         // 토큰 검증
         if (!jwtTokenProvider.validateToken(accessToken)) {
-            throw new AdminException(AdminExceptionType.INVALID_ACCESS_TOKEN);
+            throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 토큰 검증 실패
         }
 
         // JWT 토큰의 만료 시간 가져오기
