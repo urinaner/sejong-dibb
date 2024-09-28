@@ -5,10 +5,14 @@ import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.domain.mapper.ProfessorMapper;
+import org.example.backend.professor.exception.ProfessorException;
+import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 @Service
 @RequiredArgsConstructor
@@ -29,17 +33,17 @@ public class ProfessorService {
 
     private void validateUserRequiredFields(ProfessorReqDto dto) {
         if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new IllegalArgumentException("이름은 필수 입력값입니다.");
+            throw new ProfessorException(ProfessorExceptionType.REQUIRED_NAME);
         }
     }
 
     private void validateUserUniqueFields(ProfessorReqDto dto) {
         if (professorRepository.existsByPhoneN(dto.getPhoneN())) {
-            throw new IllegalArgumentException("전화번호가 이미 존재합니다.");
+            throw new ProfessorException(ProfessorExceptionType.DUPLICATE_PHONE);
         }
 
         if (professorRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("이메일이 이미 존재합니다.");
+            throw new ProfessorException(ProfessorExceptionType.DUPLICATE_EMAIL);
         }
     }
 
@@ -66,6 +70,6 @@ public class ProfessorService {
 
     private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)
-                .orElseThrow(() -> new IllegalArgumentException("교수 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
     }
 }
