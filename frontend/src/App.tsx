@@ -5,7 +5,7 @@ import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
 import Modal from './components/Modal/Modal';
-import { useState, useEffect } from 'react';
+import useModal from './components/Modal/useModal';
 
 const PageContainer = styled.div`
   display: flex;
@@ -14,22 +14,7 @@ const PageContainer = styled.div`
 `;
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden'; // 모달이 열리면 스크롤 막음
-    } else {
-      document.body.style.overflow = 'auto'; // 모달이 닫히면 스크롤 복원
-    }
-
-    // 언마운트 시 스크롤 복원
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isModalOpen]);
+  const { isModalOpen, openModal, closeModal } = useModal(); // 커스텀 훅 사용
 
   return (
     <Router>
