@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.dto.AccessTokenReq;
 import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.service.AdminService;
-import org.example.backend.global.config.JWTUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
