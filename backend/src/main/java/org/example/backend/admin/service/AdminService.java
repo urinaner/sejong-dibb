@@ -6,10 +6,7 @@ import org.example.backend.admin.domain.dto.AccessTokenReq;
 import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.admin.repository.AdminRepository;
-import org.example.backend.global.config.JWTUtil;
-import org.example.backend.global.config.LoginFilter;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +20,6 @@ public class AdminService {
     private final AdminRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private static final String BEARER_TYPE = "Bearer";
-    private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
 
     @Transactional(readOnly = false)
     public void joinProcess(SignInReqDto joinDTO) {
@@ -49,13 +44,6 @@ public class AdminService {
         userRepository.save(admin);
     }
 
-
-//    @Transactional
-//    public void signIn(SignInReqDto loginRequestDto) {
-//        LoginFilter loginFilter = new LoginFilter(authenticationManager, jwtUtil);
-//        loginFilter.attemptAuthentication(loginRequestDto);
-//    }
-
     public Admin findByLoginID(String loginId) {
         return userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new ServiceException("StatusCode.USER_NOT_FOUND222")); // TODO
@@ -69,9 +57,4 @@ public class AdminService {
             throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 유효하지 않은 토큰
         }
     }
-
-//    public Admin findByUserName(String username) {
-//        return userRepository.findByUsername(username)
-//                .orElseThrow(() -> new ServiceException("StatusCode.USER_NOT_FOUND11")); // TODO
-//    }
 }
