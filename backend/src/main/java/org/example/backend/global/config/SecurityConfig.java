@@ -1,6 +1,9 @@
 package org.example.backend.global.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.jwt.JWTFilter;
+import org.example.backend.jwt.JWTUtil;
+import org.example.backend.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +44,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("SecurityConfig.filterChain");
+
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        loginFilter.setFilterProcessesUrl("/api/admin/login");
+
+
         //csrf disable
         http
                 .csrf((auth) -> auth.disable());
@@ -63,7 +71,7 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http
