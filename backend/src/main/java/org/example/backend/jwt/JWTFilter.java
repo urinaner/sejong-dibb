@@ -36,7 +36,7 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorization == null || !authorization.startsWith("Bearer ")) {
 
             System.out.println("token null");
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // 다음 필터로 요청을 넘기는 역할
 
             //조건이 해당되면 메소드 종료 (필수)
             return;
@@ -48,12 +48,13 @@ public class JWTFilter extends OncePerRequestFilter {
         if (jwtUtil.isExpired(token)) {
 
             System.out.println("token expired");
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // 다음 필터로 요청을 넘기는 역할
 
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
+        // ------------ jwt 인증 성공 ------------
 
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
@@ -67,6 +68,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
 
+        // ------------ 사용자 정보(권한 등)를 담은 authToken을 저장 ------------
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
