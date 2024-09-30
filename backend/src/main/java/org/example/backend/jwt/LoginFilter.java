@@ -47,13 +47,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String username = customUserDetails.getUsername();
 
+        // ------------ 권한 찾기 ------------
+        // authentication 인증된 사용자 객체
+        // getAuthorities() : 해당 사용자에게 부여된 권한(들)을 반환 (<- 여러개 일 수 있음: Collection<? extends GrantedAuthority>)
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        // iterator() : Collection의 요소들을 하나씩 반환하는 반복자를 반환
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        // iterator.next(): 첫 번째 권한 가져오기
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 60*60*10L);
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10L);
 
         response.addHeader("Authorization", "Bearer " + token);
     }
