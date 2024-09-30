@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
