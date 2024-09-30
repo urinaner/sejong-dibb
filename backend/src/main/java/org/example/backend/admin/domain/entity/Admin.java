@@ -15,8 +15,10 @@ import java.util.List;
 @Table(name = "admin")
 public class Admin {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @Column(name = "login_id")
