@@ -30,15 +30,37 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("LoginFilter.attemptAuthentication");
+
+        // 클라이언트가 보낸 username과 password를 추출
         String username = obtainUsername(request);
         String password = obtainPassword(request);
+        log.info("username: " + username);
 
-        System.out.println(username);
+        // 요청 헤더에서 JWT가 존재하는지 확인
+        String authorization = request.getHeader("Authorization");
 
+        // JWT 토큰이 존재하면 (즉, 로그인을 이미 한 상태에서 다시 로그인 요청이 들어왔을 때)
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            // JWT가 존재하는 경우, JWT에서 username 추출
+            String token = authorization.split(" ")[1];
+            String tokenUsername = jwtUtil.getUsername(token);
+
+            log.info("tokenUsername: " + tokenUsername);
+
+            // 클라이언트가 보낸 username과 JWT의 username이 일치하는지 확인
+            if (!username.equals(tokenUsername)) {
+                log.error("Username in the form does not match the username in the token");
+                throw new AuthenticationException("Username mismatch") {};
+            }
+        } else {
+            log.info("No Authorization header found. Proceeding with standard login.");
+        }
+
+        // AuthenticationManager를 통해 username과 password로 인증 시도
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
-
         return authenticationManager.authenticate(authToken);
     }
+
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
