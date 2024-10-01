@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
+import { AuthProvider } from './context/AuthContext';
 
 const PageContainer = styled.div`
   display: flex;
@@ -14,16 +15,18 @@ const PageContainer = styled.div`
 function App() {
   return (
     <Router>
-      <PageContainer>
-        <Header />
-        <Routes>
-          {' '}
-          {/* Route는 반드시 Routes로 감싸야 합니다 */}
-          <Route path="/" element={<Index />} />
-          <Route path="/signin" element={<SignIn />} />
-        </Routes>
-        <Footer />
-      </PageContainer>
+      <AuthProvider>
+        <PageContainer>
+          <Header />
+          <Routes>
+            {' '}
+            {/* Route는 반드시 Routes로 감싸야 합니다 */}
+            <Route path="/" element={<Index />} />
+            <Route path="/signin" element={<SignIn />} />
+          </Routes>
+          <Footer />
+        </PageContainer>
+      </AuthProvider>
     </Router>
   );
 }
