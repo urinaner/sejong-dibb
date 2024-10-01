@@ -9,6 +9,7 @@
       "error",
       { "singleQuote": true, "endOfLine": "auto" }
     ],
+    "react/prop-types": "off", // prop-types 규칙 비활성화
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
     "react/jsx-uses-vars": "error"
