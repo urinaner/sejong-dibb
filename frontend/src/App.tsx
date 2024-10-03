@@ -5,6 +5,8 @@ import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
 import { AuthProvider } from './context/AuthContext';
+import { ModalProvider } from './context/ModalContext';
+import Modal from './components/Modal/Modal';
 
 const PageContainer = styled.div`
   display: flex;
@@ -15,18 +17,21 @@ const PageContainer = styled.div`
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <PageContainer>
-          <Header />
-          <Routes>
-            {' '}
-            {/* Route는 반드시 Routes로 감싸야 합니다 */}
-            <Route path="/" element={<Index />} />
-            <Route path="/signin" element={<SignIn />} />
-          </Routes>
-          <Footer />
-        </PageContainer>
-      </AuthProvider>
+      <ModalProvider>
+        <AuthProvider>
+          <PageContainer>
+            <Header />
+            <Routes>
+              {' '}
+              {/* Route는 반드시 Routes로 감싸야 합니다 */}
+              <Route path="/" element={<Index />} />
+              <Route path="/signin" element={<SignIn />} />
+            </Routes>
+            <Footer />
+            <Modal />
+          </PageContainer>
+        </AuthProvider>
+      </ModalProvider>
     </Router>
   );
 }
