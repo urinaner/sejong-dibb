@@ -27,12 +27,12 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <ModalWrapper isModalOpen={isOpen}>
-      <ModalContent>
-        {children}
-        <CloseButton onClick={onClose}>닫기</CloseButton>
-      </ModalContent>
-    </ModalWrapper>
+      <ModalWrapper isModalOpen={isOpen}>
+        <ModalContent>
+          {children}
+          <CloseButton onClick={onClose}>닫기</CloseButton>
+        </ModalContent>
+      </ModalWrapper>
   );
 }
 

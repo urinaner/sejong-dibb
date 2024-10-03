@@ -9,7 +9,7 @@ import {
   LinkButton,
 } from '../../styles/SignInStyle';
 import Modal from '../../components/Modal/Modal';
-import useModal from '../../components/Modal/useModal';
+import useModal from '../../hook/useModal';
 import { AuthContext } from '../../context/AuthContext';
 import { AxiosError } from 'axios';
 
