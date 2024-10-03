@@ -1,6 +1,7 @@
 package org.example.backend.department.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.department.domain.dto.Department.DepartmentResDto;
 import org.example.backend.department.domain.entity.Department;
@@ -20,7 +21,9 @@ public class DepartmentService {
 
     @Transactional
     public Long saveDepartment(DepartmentReqDto departmentReqDto) {
+        System.out.println("fff");
         Department department = departmentMapper.toEntity(departmentReqDto);
+        System.out.println("hi"+ department.getKoreanName());
         departmentRepository.save(department);
         return department.getDepartmentId();
     }

@@ -7,7 +7,7 @@ import org.example.backend.department.domain.entity.Department;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = CentralMapperConfig.class)
+@Mapper(config = CentralMapperConfig.class, componentModel = "spring")
 public interface DepartmentMapper {
 
     Department toEntity(DepartmentReqDto departmentReqDto);
