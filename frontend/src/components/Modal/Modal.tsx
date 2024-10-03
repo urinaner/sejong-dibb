@@ -1,39 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   ModalWrapper,
   ModalContent,
   CloseButton,
 } from '../../styles/ModalStyle';
+import { useModalContext } from '../../context/ModalContext';
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+const Modal: React.FC = () => {
+  const { isModalOpen, closeModal, modalContent } = useModalContext(); // 모달 컨텍스트에서 상태와 콘텐츠 가져오기
 
-function Modal({ isOpen, onClose, children }: ModalProps) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'; // 모달이 열리면 스크롤 막기
-    } else {
-      document.body.style.overflow = 'auto'; // 모달이 닫히면 스크롤 복원
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto'; // 언마운트 시 스크롤 복원
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  if (!isModalOpen) return null; // 모달이 열리지 않았으면 렌더링하지 않음
 
   return (
-      <ModalWrapper isModalOpen={isOpen}>
-        <ModalContent>
-          {children}
-          <CloseButton onClick={onClose}>닫기</CloseButton>
-        </ModalContent>
-      </ModalWrapper>
+    <ModalWrapper isModalOpen={isModalOpen}>
+      <ModalContent>
+        {modalContent} {/* 모달 콘텐츠 렌더링 */}
+        <CloseButton onClick={closeModal}>닫기</CloseButton>
+      </ModalContent>
+    </ModalWrapper>
   );
-}
+};
 
 export default Modal;
