@@ -21,9 +21,7 @@ public class DepartmentService {
 
     @Transactional
     public Long saveDepartment(DepartmentReqDto departmentReqDto) {
-        System.out.println("fff");
         Department department = departmentMapper.toEntity(departmentReqDto);
-        System.out.println("hi"+ department.getKoreanName());
         departmentRepository.save(department);
         return department.getDepartmentId();
     }
