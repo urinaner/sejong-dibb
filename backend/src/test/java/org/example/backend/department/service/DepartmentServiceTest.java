@@ -1,9 +1,7 @@
 package org.example.backend.department.service;
 
-import org.assertj.core.api.Assertions;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.department.domain.dto.Department.DepartmentResDto;
-import org.example.backend.department.domain.entity.Department;
 import org.example.backend.department.domain.mapper.DepartmentMapper;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
