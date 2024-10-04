@@ -19,13 +19,22 @@ function Hyperlink() {
         <Hyperlinks href="https://ipsi.sejong.ac.kr/" target="_blank">
           <img src="/admission-guide.svg" alt="입학" />
         </Hyperlinks>
-        <Hyperlinks>
+        <Hyperlinks
+          href="http://www.sejong.ac.kr/unilife/program_01.html"
+          target="_blank"
+        >
           <img src="/bachelor-guide.svg" alt="학사" />
         </Hyperlinks>
-        <Hyperlinks>
+        <Hyperlinks
+          href="http://www.sejong.ac.kr/unilife/newscholarship.html"
+          target="_blank"
+        >
           <img src="/scholarship-guide.svg" alt="장학금" />
         </Hyperlinks>
-        <Hyperlinks>
+        <Hyperlinks
+          href="https://sjpt.sejong.ac.kr/main/view/Login/doSsoLogin.do?p="
+          target="_blank"
+        >
           <img src="/academic-guide.svg" alt="학적" />
         </Hyperlinks>
       </HyperlinksContainer>

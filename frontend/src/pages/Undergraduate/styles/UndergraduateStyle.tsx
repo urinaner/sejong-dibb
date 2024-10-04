@@ -16,7 +16,7 @@ export const Information = styled.div`
   width: 80%;
   height: 30%;
   border-radius: 24px;
-  font-family: 'Noto Sans KR';
+  font-family: 'Noto Sans KR', serif;
   font-weight: 600;
   font-size: 22px;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
@@ -24,10 +24,13 @@ export const Information = styled.div`
 
 export const HyperlinksContainer = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 export const Hyperlinks = styled.a`
+  display: flex;
+  justify-content: center;
+  width: 120px;
   background: none;
   border: none;
-  width: 120px;
 `;
