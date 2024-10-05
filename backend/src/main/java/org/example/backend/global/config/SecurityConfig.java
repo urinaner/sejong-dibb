@@ -87,7 +87,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
                                 "/login", "/", "/api/admin/join",
-                                "/v3/api-docs", "/swagger*/**" // Swagger 관련 경로 추가
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger*/**" // Swagger 관련 경로 추가
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
