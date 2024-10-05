@@ -7,7 +7,7 @@ import org.example.backend.professor.domain.entity.Professor;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = CentralMapperConfig.class)
+@Mapper(config = CentralMapperConfig.class, componentModel = "spring")
 public interface ProfessorMapper {
 
     Professor toEntity(ProfessorReqDto professorReqDto);
