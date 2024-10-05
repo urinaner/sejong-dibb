@@ -1,23 +1,41 @@
 package org.example.backend.professor.domain.mapper;
 
+import jakarta.transaction.Transactional;
+import org.example.backend.department.domain.entity.Department;
+import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@Transactional
 class ProfessorMapperTest {
 
-    @Autowired
-    private ProfessorMapper professorMapper;
+    @Autowired private ProfessorMapper professorMapper;
+    @Autowired private DepartmentRepository departmentRepository;
+
+    private static Department department;
+    @BeforeEach
+    void setUp() {
+        department = new Department();
+        department.setKoreanName("컴퓨터공학과" + UUID.randomUUID().toString());  // 유니크한 이름으로 변경
+        departmentRepository.save(department);
+    }
+
+    @AfterEach
+    void tearDown() {
+        departmentRepository.deleteAll();  // 테스트 후 데이터 삭제
+    }
 
     @Test
     @DisplayName("ProfessorReqDto를 Professor로 매핑 테스트")
@@ -27,9 +45,10 @@ class ProfessorMapperTest {
         dto.setName("홍길동");
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("hong1@example.com");
+        dto.setDepartmentId(department.getDepartmentId());
 
         // when: DTO를 엔티티로 매핑
-        Professor entity = professorMapper.toEntity(dto);
+        Professor entity = professorMapper.toEntity(dto, departmentRepository);
 
         System.out.println(entity.getName());
         System.out.println(entity.getPhoneN());
@@ -49,9 +68,10 @@ class ProfessorMapperTest {
         ProfessorReqDto dto = new ProfessorReqDto();
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("hong1@example.com");
+        dto.setDepartmentId(department.getDepartmentId());
 
         // when: DTO를 엔티티로 매핑
-        Professor entity = professorMapper.toEntity(dto);
+        Professor entity = professorMapper.toEntity(dto, departmentRepository);
 
         System.out.println(entity.getName());
         System.out.println(entity.getPhoneN());
@@ -103,9 +123,10 @@ class ProfessorMapperTest {
         ProfessorReqDto dto = new ProfessorReqDto();
         dto.setPhoneN(changePhoneN);
         dto.setEmail(changeEmail);
+        dto.setDepartmentId(1L);
 
         // when: DTO를 엔티티로 매핑
-        professorMapper.updateProfessorFromDto(dto, entity);
+        professorMapper.updateProfessorFromDto(dto, entity, departmentRepository);
 
         System.out.println(entity.getName());
         System.out.println(entity.getPhoneN());
