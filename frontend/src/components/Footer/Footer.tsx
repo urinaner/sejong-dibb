@@ -40,23 +40,40 @@ function renderSightMapSections() {
   const sections = [
     {
       title: '학과',
-      contents: ['학과소개', '조직도', '교수소개'],
+      contents: [
+        { name: '학과소개', link: '/about' },
+        { name: '조직도', link: '/about/faculty' },
+        { name: '교수소개', link: '/about/organization' },
+      ],
     },
     {
       title: '대학',
-      contents: ['학사안내', '학부교과과정', '입학/장학'],
+      contents: [
+        { name: '학사안내', link: '/undergraduate/curriculum' },
+        { name: '학부교과과정', link: '/undergraduate/curriculum' },
+        { name: '입학/장학', link: '/undergraduate/admission-scholarship' },
+      ],
     },
     {
       title: '대학원',
-      contents: ['소개', '교과과정', '학칙/규정'],
+      contents: [
+        { name: '소개', link: '/graduate/overview' },
+        { name: '교과과정', link: '/graduate/curriculum' },
+        { name: '학칙/규정', link: '/graduate/rules' },
+        // 헤더에는 학칙/규정이 없음
+      ],
     },
     {
       title: '바융소식',
-      contents: ['공지사항', '세미나', '연구논문'],
+      contents: [
+        { name: '공지사항', link: '/news' },
+        { name: '세미나', link: '/news' },
+        { name: '연구논문', link: '/news' },
+      ],
     },
     {
       title: '세미나실 예약',
-      contents: [],
+      contents: [{ name: '예약 페이지', link: '/seminar-rooms/reservation' }],
     },
   ];
 
@@ -65,7 +82,9 @@ function renderSightMapSections() {
       {section.title}
       <br />
       {section.contents.map((content, idx) => (
-        <S.SightMapContent key={idx}>{content}</S.SightMapContent>
+        <Link to={content.link} key={idx}>
+          <S.SightMapContent>{content.name}</S.SightMapContent>
+        </Link>
       ))}
     </S.SightMapHeader>
   ));
