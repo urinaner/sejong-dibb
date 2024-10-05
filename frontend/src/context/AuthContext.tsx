@@ -4,7 +4,7 @@ import axios from 'axios';
 interface AuthContextType {
   user: string | null;
   isAuthenticated: boolean;
-  signin: (userEmail: string, password: string) => Promise<void>;
+  signin: (userId: string, password: string) => Promise<void>;
   signout: () => void;
 }
 
@@ -21,10 +21,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const signin = async (userEmail: string, password: string) => {
+  const signin = async (userId: string, password: string) => {
     try {
       const response = await axios.post('/api/login', {
-        email: userEmail,
+        email: userId,
         password: password,
       });
 
@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const token = response.data.token;
 
       // 로그인 성공 시 사용자 정보 업데이트
-      setUser(userEmail);
+      setUser(userId);
       setIsAuthenticated(true);
 
       // 받은 JWT 토큰을 로컬 스토리지 등에 저장

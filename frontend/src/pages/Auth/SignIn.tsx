@@ -22,15 +22,15 @@ const SignIn: React.FC = () => {
   }
 
   const { signin, isAuthenticated } = authContext; // 정확한 signin 및 isAuthenticated 사용
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const loginData = { email: email, pw: password };
+    const loginData = { id: id, pw: password };
 
     try {
-      await signin(loginData.email, loginData.pw);
+      await signin(loginData.id, loginData.pw);
       openModal(
         <div>
           <h2>로그인 성공</h2>
@@ -63,8 +63,8 @@ const SignIn: React.FC = () => {
         <Input
           type="text"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={id}
+          onChange={(e) => setId(e.target.value)}
         />
         <Input
           type="password"
