@@ -29,8 +29,8 @@ public class ProfessorService {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
         Professor professor = professorMapper.toEntity(professorReqDto, departmentRepository);
-        professorRepository.save(professor);
-        return professor.getId();
+        Professor savedProfessor = professorRepository.save(professor);
+        return savedProfessor.getId();
     }
 
     private void validateUserRequiredFields(ProfessorReqDto dto) {
