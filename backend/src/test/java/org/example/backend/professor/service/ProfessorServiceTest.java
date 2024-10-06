@@ -24,7 +24,6 @@ class ProfessorServiceTest {
     @Autowired ProfessorService professorService;
     @Autowired ProfessorRepository professorRepository;
     @Autowired DepartmentRepository departmentRepository;
-    ProfessorException professorException;
 
     @Test
     @DisplayName("교수 저장 테스트")
