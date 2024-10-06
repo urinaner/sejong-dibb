@@ -21,14 +21,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("CustomUserDetailsService.loadUserByUsername");
+        log.info("CustomUserDetailsService.loadUserByUsername: {}", username);
+
         Admin userData = userRepository.findByUsername(username);
 
         if (userData != null) {
-
             return new CustomUserDetails(userData);
         }
 
-        return null;
+        // 사용자가 존재하지 않을 경우 예외 던지기
+        throw new UsernameNotFoundException("User not found with username: " + username);
     }
 }
