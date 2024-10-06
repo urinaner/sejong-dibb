@@ -15,16 +15,19 @@ public interface ProfessorMapper {
     ProfessorMapper INSTANCE = Mappers.getMapper(ProfessorMapper.class);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "department", expression = "java(mapDepartment(professorReqDto.getDepartmentId(), departmentRepository))")
+    @Mapping(target = "department", expression = "java(mapDepartment(professorReqDto.getDepartmentId(), null, departmentRepository))")
     Professor toEntity(ProfessorReqDto professorReqDto, @Context DepartmentRepository departmentRepository);
 
     ProfessorResDto toProfessorDto(Professor professor);
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "department", expression = "java(mapDepartment(professorReqDto.getDepartmentId(), departmentRepository))")
+    @Mapping(target = "department", expression = "java(mapDepartment(professorReqDto.getDepartmentId(), professor.getDepartment(), departmentRepository))")
     void updateProfessorFromDto(ProfessorReqDto professorReqDto, @MappingTarget Professor professor, @Context DepartmentRepository departmentRepository);
 
     // Long을 Department로 매핑하는 헬퍼 메서드 추가
-    default Department mapDepartment(Long departmentId, @Context DepartmentRepository departmentRepository) {
+    default Department mapDepartment(Long departmentId, Department currentDepartment, @Context DepartmentRepository departmentRepository) {
+        if (departmentId == null) {
+            return currentDepartment;
+        }
         return departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Department not found with id " + departmentId));
     }
