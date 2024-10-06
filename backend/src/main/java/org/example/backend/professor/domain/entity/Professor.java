@@ -1,18 +1,19 @@
 package org.example.backend.professor.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.department.domain.entity.Department;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @Table(name = "professor")
 public class Professor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "professor_id")
     private Long id;
 

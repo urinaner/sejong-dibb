@@ -35,7 +35,7 @@ public class ProfessorController {
 
     @ApiOperation(value = "교수 정보 업데이트 API", notes = "교수 정보 업데이트")
     @PostMapping("/{professorId}")
-    public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "prfessorId") Long professorId, @RequestBody ProfessorReqDto professorReqDto) {
+    public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "professorId") Long professorId, @RequestBody ProfessorReqDto professorReqDto) {
         ProfessorResDto professorResDto = professorService.updateProfessor(professorId, professorReqDto);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }

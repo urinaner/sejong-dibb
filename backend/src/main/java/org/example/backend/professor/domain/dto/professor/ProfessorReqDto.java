@@ -31,4 +31,7 @@ public class ProfessorReqDto {
 
     @ApiModelProperty(value = "교수 프로필 이미지", example = "https://www.sju.ac.kr/professor/example/profile.jpg")
     private String profileImage;
+
+    @ApiModelProperty(value = "교수 학과 고유 아이디", example = "12345")
+    private Long departmentId;
 }
