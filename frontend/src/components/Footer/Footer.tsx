@@ -40,6 +40,7 @@ function renderSightMapSections() {
   const sections = [
     {
       title: '학과',
+      titleLink: '/about',
       contents: [
         { name: '학과소개', link: '/about' },
         { name: '조직도', link: '/about/faculty' },
@@ -48,23 +49,26 @@ function renderSightMapSections() {
     },
     {
       title: '대학',
+      titleLink: '/undergraduate/curriculum',
       contents: [
-        { name: '학사안내', link: '/undergraduate/curriculum' },
+        { name: '학사안내', link: '/college/guide' },
         { name: '학부교과과정', link: '/undergraduate/curriculum' },
         { name: '입학/장학', link: '/undergraduate/admission-scholarship' },
       ],
     },
     {
       title: '대학원',
+      titleLink: '/graduate/overview',
       contents: [
         { name: '소개', link: '/graduate/overview' },
         { name: '교과과정', link: '/graduate/curriculum' },
         { name: '학칙/규정', link: '/graduate/rules' },
-        // 헤더에는 학칙/규정이 없음
+        // 학칙/규정은 헤더에 없음
       ],
     },
     {
       title: '바융소식',
+      titleLink: '/news',
       contents: [
         { name: '공지사항', link: '/news' },
         { name: '세미나', link: '/news' },
@@ -73,18 +77,19 @@ function renderSightMapSections() {
     },
     {
       title: '세미나실 예약',
+      titleLink: '/seminar-rooms/reservation',
       contents: [{ name: '예약 페이지', link: '/seminar-rooms/reservation' }],
     },
   ];
 
   return sections.map((section, index) => (
     <S.SightMapHeader key={index}>
-      {section.title}
+      <S.StyledLink to={section.titleLink}>{section.title}</S.StyledLink>
       <br />
       {section.contents.map((content, idx) => (
-        <Link to={content.link} key={idx}>
+        <S.StyledLink to={content.link} key={idx}>
           <S.SightMapContent>{content.name}</S.SightMapContent>
-        </Link>
+        </S.StyledLink>
       ))}
     </S.SightMapHeader>
   ));
