@@ -1,5 +1,6 @@
 // styles.ts
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const Footer = styled.footer`
   width: 100%;
@@ -83,4 +84,10 @@ export const Copyright = styled.div`
   margin-top: 36px;
   padding-top: 36px;
   font-weight: 600;
+`;
+
+// 기본 스타일을 없앤 Link 컴포넌트
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `;

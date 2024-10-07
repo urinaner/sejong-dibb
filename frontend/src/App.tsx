@@ -5,8 +5,10 @@ import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
 import { AuthProvider } from './context/AuthContext';
+import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
+
 
 const PageContainer = styled.div`
   display: flex;
@@ -22,10 +24,13 @@ function App() {
           <PageContainer>
             <Header />
             <Routes>
-              {' '}
               {/* Route는 반드시 Routes로 감싸야 합니다 */}
               <Route path="/" element={<Index />} />
               <Route path="/signin" element={<SignIn />} />
+                <Route
+                    path="/undergraduate/admission-scholarship"
+                    element={<Hyperlink />}
+                />
             </Routes>
             <Footer />
             <Modal />
