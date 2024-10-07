@@ -1,10 +1,13 @@
 package org.example.backend.admin.domain.entity;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 public class CustomUserDetails implements UserDetails {
     private final Admin admin;
 
@@ -14,7 +17,19 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null; // 필요한 경우 권한 설정
+        log.info("CustomUserDetails.getAuthorities");
+        Collection<GrantedAuthority> collection = new ArrayList<>();
+
+        collection.add(new GrantedAuthority() {
+
+            @Override
+            public String getAuthority() {
+
+                return admin.getRole();
+            }
+        });
+
+        return collection;
     }
 
     @Override

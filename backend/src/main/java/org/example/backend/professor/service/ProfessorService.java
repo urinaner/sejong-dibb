@@ -1,6 +1,7 @@
 package org.example.backend.professor.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
@@ -21,14 +22,15 @@ public class ProfessorService {
 
     private final ProfessorMapper professorMapper = Mappers.getMapper(ProfessorMapper.class);
     private final ProfessorRepository professorRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto) {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
-        Professor professor = professorMapper.toEntity(professorReqDto);
-        professorRepository.save(professor);
-        return professor.getId();
+        Professor professor = professorMapper.toEntity(professorReqDto, departmentRepository);
+        Professor savedProfessor = professorRepository.save(professor);
+        return savedProfessor.getId();
     }
 
     private void validateUserRequiredFields(ProfessorReqDto dto) {
@@ -57,7 +59,7 @@ public class ProfessorService {
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
         Professor professor = findProfessorById(professorId);
 
-        professorMapper.updateProfessorFromDto(professorReqDto, professor);
+        professorMapper.updateProfessorFromDto(professorReqDto, professor, departmentRepository);
 
         professorRepository.save(professor);
         return professorMapper.toProfessorDto(professor);

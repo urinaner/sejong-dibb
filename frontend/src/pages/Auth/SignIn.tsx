@@ -8,13 +8,13 @@ import {
   ActionButtons,
   LinkButton,
 } from '../../styles/SignInStyle';
-import Modal from '../../components/Modal/Modal';
-import useModal from '../../components/Modal/useModal';
 import { AuthContext } from '../../context/AuthContext';
 import { AxiosError } from 'axios';
+import { useModalContext } from '../../context/ModalContext'; // 모달 컨텍스트 가져오기
 
 const SignIn: React.FC = () => {
   const authContext = useContext(AuthContext);
+  const { openModal, closeModal } = useModalContext(); // 모달 컨텍스트 사용
 
   if (!authContext) {
     // AuthContext가 없을 경우에 대한 처리 (null 또는 undefined)
@@ -22,28 +22,36 @@ const SignIn: React.FC = () => {
   }
 
   const { signin, isAuthenticated } = authContext; // 정확한 signin 및 isAuthenticated 사용
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const { isModalOpen, openModal, closeModal } = useModal();
-  const [modalMessage, setModalMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const loginData = { email: email, pw: password };
+    const loginData = { id: id, pw: password };
 
     try {
-      await signin(loginData.email, loginData.pw);
-      setModalMessage('로그인 성공!');
-      openModal();
+      await signin(loginData.id, loginData.pw);
+      openModal(
+        <div>
+          <h2>로그인 성공</h2>
+          <p>환영합니다! 로그인에 성공했습니다.</p>
+        </div>,
+      );
     } catch (error) {
       if (error instanceof AxiosError) {
-        setModalMessage(
-          `로그인 실패: ${error.response?.data || '서버 오류 발생'}`,
+        openModal(
+          <div>
+            <h2>로그인 실패</h2>
+            <p>{error.response?.data || '서버 오류가 발생했습니다.'}</p>
+          </div>,
         );
-        openModal();
       } else {
-        setModalMessage('로그인 실패: 네트워크 오류 발생');
-        openModal();
+        openModal(
+          <div>
+            <h2>로그인 실패</h2>
+            <p>네트워크 오류가 발생했습니다.</p>
+          </div>,
+        );
       }
     }
   };
@@ -55,8 +63,8 @@ const SignIn: React.FC = () => {
         <Input
           type="text"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={id}
+          onChange={(e) => setId(e.target.value)}
         />
         <Input
           type="password"
@@ -70,12 +78,6 @@ const SignIn: React.FC = () => {
           <LinkButton>회원가입</LinkButton>
         </ActionButtons>
       </Form>
-
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          {modalMessage}
-        </Modal>
-      )}
     </Container>
   );
 };

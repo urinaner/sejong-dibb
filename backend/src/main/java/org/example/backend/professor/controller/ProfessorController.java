@@ -2,6 +2,7 @@ package org.example.backend.professor.controller;
 
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "교수", description = "교수 API")
 @RequestMapping("/api/professor")
 public class ProfessorController {
 
@@ -33,7 +35,7 @@ public class ProfessorController {
 
     @ApiOperation(value = "교수 정보 업데이트 API", notes = "교수 정보 업데이트")
     @PostMapping("/{professorId}")
-    public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "prfessorId") Long professorId, @RequestBody ProfessorReqDto professorReqDto) {
+    public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "professorId") Long professorId, @RequestBody ProfessorReqDto professorReqDto) {
         ProfessorResDto professorResDto = professorService.updateProfessor(professorId, professorReqDto);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
