@@ -8,7 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
-
+import Overview from './pages/Department/Overview/Overview';
 
 const PageContainer = styled.div`
   display: flex;
@@ -27,10 +27,11 @@ function App() {
               {/* Route는 반드시 Routes로 감싸야 합니다 */}
               <Route path="/" element={<Index />} />
               <Route path="/signin" element={<SignIn />} />
-                <Route
-                    path="/undergraduate/admission-scholarship"
-                    element={<Hyperlink />}
-                />
+              <Route
+                path="/undergraduate/admission-scholarship"
+                element={<Hyperlink />}
+              />
+              <Route path="/department/overview" element={<Overview />} />
             </Routes>
             <Footer />
             <Modal />
