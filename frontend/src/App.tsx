@@ -9,6 +9,7 @@ import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
 import Overview from './pages/About/About';
+import mainImage from './assets/images/main_picture.svg';
 
 const PageContainer = styled.div`
   display: flex;
@@ -25,6 +26,12 @@ const ContentWrapper = styled.main`
   padding: 20px;
 `;
 
+const MainImage = styled.img`
+  width: 100%;
+  max-width: 1440px;
+  height: auto;
+`;
+
 function App() {
   return (
     <Router>
@@ -32,6 +39,7 @@ function App() {
         <AuthProvider>
           <PageContainer>
             <Header />
+            <MainImage src={mainImage} alt="Main Visual" />
             <ContentWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
