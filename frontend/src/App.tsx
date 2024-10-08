@@ -8,7 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
-import Overview from './pages/Department/Overview/Overview';
+import Overview from './pages/About/About';
 
 const PageContainer = styled.div`
   display: flex;
@@ -31,7 +31,7 @@ function App() {
                 path="/undergraduate/admission-scholarship"
                 element={<Hyperlink />}
               />
-              <Route path="/department/overview" element={<Overview />} />
+              <Route path="/about" element={<Overview />} />
             </Routes>
             <Footer />
             <Modal />
