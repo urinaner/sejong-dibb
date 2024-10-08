@@ -16,6 +16,15 @@ const PageContainer = styled.div`
   min-height: 100vh; /* 전체 페이지 높이 설정 */
 `;
 
+const ContentWrapper = styled.main`
+  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
+
 function App() {
   return (
     <Router>
@@ -23,16 +32,17 @@ function App() {
         <AuthProvider>
           <PageContainer>
             <Header />
-            <Routes>
-              {/* Route는 반드시 Routes로 감싸야 합니다 */}
-              <Route path="/" element={<Index />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route
-                path="/undergraduate/admission-scholarship"
-                element={<Hyperlink />}
-              />
-              <Route path="/about" element={<Overview />} />
-            </Routes>
+            <ContentWrapper>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route
+                  path="/undergraduate/admission-scholarship"
+                  element={<Hyperlink />}
+                />
+                <Route path="/about" element={<Overview />} />
+              </Routes>
+            </ContentWrapper>
             <Footer />
             <Modal />
           </PageContainer>
