@@ -5,62 +5,118 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 40px 20px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  background-color: #ffffff;
 `;
 
 export const Content = styled.div`
   text-align: center;
   padding: 20px;
+  width: 100%;
 `;
 
 export const Title = styled.h2`
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 30px;
 `;
 
 export const Description = styled.p`
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  color: #666;
+  font-size: 1.2rem;
+  margin-bottom: 50px;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 50px;
 `;
 
 export const InfoSection = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  gap: 30px;
   width: 100%;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-between;
-  }
 `;
 
 export const InfoCard = styled.div`
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  max-width: 480px;
+  padding: 30px;
+  border: none;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
 `;
 
 export const InfoTitle = styled.h3`
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-bottom: 3px solid currentColor;
+  padding-bottom: 12px;
 `;
 
-export const InfoDescription = styled.p`
-  font-size: 1rem;
+export const MarkdownContainer = styled.div`
   line-height: 1.6;
-  color: #555;
+  font-size: 1rem;
+  text-align: left;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+  }
+
+  p {
+    margin: 0.8em 0;
+  }
+
+  ul,
+  ol {
+    margin: 1em 0;
+    padding-left: 1.2em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+  }
+
+  blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 4px solid #ccc;
+    font-style: italic;
+    background-color: #f9f9f9;
+  }
+
+  code {
+    background-color: #f5f5f5;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  pre {
+    background-color: #f5f5f5;
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
 `;
