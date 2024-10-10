@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
+
 import Overview from './pages/About/About';
 import mainImage from './assets/images/main_picture.svg';
 
