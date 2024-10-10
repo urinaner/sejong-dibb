@@ -9,10 +9,28 @@ import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
 
+import Overview from './pages/About/About';
+import mainImage from './assets/images/main_picture.svg';
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* 전체 페이지 높이 설정 */
+`;
+
+const ContentWrapper = styled.main`
+  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
+
+const MainImage = styled.img`
+  width: 100%;
+  max-width: 1440px;
+  height: auto;
 `;
 
 function App() {
@@ -22,15 +40,18 @@ function App() {
         <AuthProvider>
           <PageContainer>
             <Header />
-            <Routes>
-              {/* Route는 반드시 Routes로 감싸야 합니다 */}
-              <Route path="/" element={<Index />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route
-                path="/undergraduate/admission-scholarship"
-                element={<Hyperlink />}
-              />
-            </Routes>
+            <MainImage src={mainImage} alt="Main Visual" />
+            <ContentWrapper>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route
+                  path="/undergraduate/admission-scholarship"
+                  element={<Hyperlink />}
+                />
+                <Route path="/about" element={<Overview />} />
+              </Routes>
+            </ContentWrapper>
             <Footer />
             <Modal />
           </PageContainer>
