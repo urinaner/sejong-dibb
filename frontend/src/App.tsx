@@ -5,11 +5,12 @@ import Index from './pages/Index/Index';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
 import { AuthProvider } from './context/AuthContext';
-import Hyperlink from './pages/Undergraduate/Hyperlink';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal/Modal';
 
+import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
+import Faculty from './pages/About/Faculty';
 import mainImage from './assets/images/main_picture.svg';
 
 const PageContainer = styled.div`
@@ -50,6 +51,7 @@ function App() {
                   element={<Hyperlink />}
                 />
                 <Route path="/about" element={<Overview />} />
+                <Route path="/about/faculty" element={<Faculty />} />
               </Routes>
             </ContentWrapper>
             <Footer />

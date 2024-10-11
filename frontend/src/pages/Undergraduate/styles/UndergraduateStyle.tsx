@@ -13,8 +13,9 @@ export const Information = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 60%;
+  width: fit-content;
   height: 30%;
+  padding: 40px 220px;
   white-space: nowrap;
   border-radius: 24px;
   font-family: 'Noto Sans KR', serif;
