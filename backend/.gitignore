@@ -24,6 +24,8 @@ application.properties
 *.iml
 *.ipr
 *.properties
+*.yml
+
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
