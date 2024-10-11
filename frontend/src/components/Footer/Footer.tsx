@@ -43,8 +43,8 @@ function renderSightMapSections() {
       titleLink: '/about',
       contents: [
         { name: '학과소개', link: '/about' },
-        { name: '조직도', link: '/about/faculty' },
-        { name: '교수소개', link: '/about/organization' },
+        { name: '조직도', link: '/about/organization' },
+        { name: '교수소개', link: '/about/faculty' },
       ],
     },
     {
