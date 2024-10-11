@@ -20,16 +20,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("CustomUserDetailsService.loadUserByUsername: {}", username);
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        log.info("CustomUserDetailsService.loadUserByLoginId: {}", loginId);
 
-        Admin userData = userRepository.findByUsername(username);
+        Admin userData = userRepository.findByLoginId(loginId);
 
         if (userData != null) {
             return new CustomUserDetails(userData);
         }
 
         // 사용자가 존재하지 않을 경우 예외 던지기
-        throw new UsernameNotFoundException("User not found with username: " + username);
+        throw new UsernameNotFoundException("User not found with loginId: " + loginId);
     }
 }
