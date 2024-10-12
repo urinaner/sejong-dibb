@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         `try to sign in as username: :${userName} password: ${password}`,
       );
       const response = await axios.post(`${apiUrl}/api/admin/login`, {
-        username: userName,
+        userId: userName,
         password: password,
       });
 
