@@ -2,12 +2,14 @@ package org.example.backend.board.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.backend.department.domain.entity.Department;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Board {
 
     @Id
