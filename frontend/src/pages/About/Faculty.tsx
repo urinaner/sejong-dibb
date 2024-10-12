@@ -4,7 +4,6 @@ import {
   ProfessorInfo,
   ProfessorName,
   ProfessorTitle,
-  HorizontalBar,
   InfoGroup,
   InfoItem,
   Highlight,
@@ -25,14 +24,14 @@ function Faculty() {
       </ProfessorInfo>
 
       {/* 학력과 연락처 */}
-      <InfoGroup>
-        <Highlight>학력</Highlight>
+      <InfoGroup style={{ marginTop: '0' }}>
+        <Highlight style={{ marginTop: '0' }}>학력</Highlight>
         <img src="/horizontalBar.svg" alt="horizontal bar" />
         <InfoItem>학사: 학사 대학/전공명</InfoItem>
         <InfoItem>석사: 석사 대학/전공명</InfoItem>
         <InfoItem>박사: 박사 대학/전공명</InfoItem>
 
-        <Highlight style={{ marginTop: '40px' }}>연락처</Highlight>
+        <Highlight>연락처</Highlight>
         <img src="/horizontalBar.svg" alt="horizontal bar" />
         <InfoItem>전화번호: 02-3408-0000</InfoItem>
         <InfoItem>이메일: 0000@sejong.ac.kr</InfoItem>

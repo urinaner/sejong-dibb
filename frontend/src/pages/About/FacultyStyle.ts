@@ -6,6 +6,7 @@ export const ProfessorCard = styled.div`
   padding: 20px;
   width: fit-content;
   margin: 20px auto;
+  font-family: 'Noto Sans KR';
 `;
 
 export const ProfessorImage = styled.img`
@@ -25,15 +26,16 @@ export const ProfessorInfo = styled.div`
 `;
 
 export const ProfessorName = styled.h2`
+  margin: 0 0 20px 0;
   font-size: 24px;
-  margin: 0;
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 export const ProfessorTitle = styled.p`
-  font-size: 16px;
   margin: 4px 0;
-  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  /* color: #666; */
 `;
 
 export const HorizontalBar = styled.svg`
@@ -53,6 +55,6 @@ export const InfoItem = styled.p`
 `;
 
 export const Highlight = styled.p`
-  margin: 0 0 -4px 0;
-  font-weight: 600;
+  margin: 40px 0 -4px 0;
+  font-weight: 400;
 `;
