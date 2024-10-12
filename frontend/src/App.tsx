@@ -29,9 +29,13 @@ const ContentWrapper = styled.main`
 `;
 
 const MainImage = styled.img`
-  width: 100%;
-  max-width: 1440px;
-  height: auto;
+  width: 100vw; /* 전체 화면 너비 */
+  height: 100vh; /* 전체 화면 높이 */
+  object-fit: cover; /* 이미지 비율을 유지하며 화면을 덮도록 설정 */
+  //position: absolute; /* 다른 콘텐츠 위에 위치하도록 설정 */
+  top: 0;
+  left: 0;
+  z-index: -1; /* 이미지가 다른 콘텐츠 뒤로 가도록 설정 */
 `;
 
 function App() {
