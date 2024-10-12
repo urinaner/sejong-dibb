@@ -27,7 +27,7 @@ public class SwaggerConfig {
                 .components(new Components())
                 .path("/api/admin/login", new PathItem().post(new Operation()
                         .summary("Admin login")
-                        .description("로그인 기능은 Spring Security 기본 로그인 기능을 따르며, form-data 형식으로 로그인 ID와 비밀번호를 전송합니다. 선택적으로 Bearer 형식의 JWT 토큰을 포함할 수 있습니다.")
+                        .description("로그인 기능은 Spring Security 기본 로그인 기능을 따라 form-data 형식으로 로그인 ID와 비밀번호를 전송. 선택적으로 Bearer 형식의 JWT 토큰을 포함")
                         .requestBody(new RequestBody().content(new Content().addMediaType("multipart/form-data",
                                 new MediaType().schema(new Schema<>()
                                         .type("object")
@@ -38,7 +38,7 @@ public class SwaggerConfig {
                                 .name("Authorization")
                                 .in("header")
                                 .required(false) // 필수가 아님
-                                .description("Bearer 형식의 JWT 토큰 (선택 사항)"))
+                                .description("Bearer 형식의 JWT 토큰 (필수 X)"))
                         .responses(new ApiResponses()
                                 .addApiResponse("200", new ApiResponse()
                                         .description("로그인 성공")
