@@ -33,7 +33,6 @@ public class SwaggerConfig {
                                         .type("object")
                                         .addProperty("loginId", new Schema<String>().type("string").description("로그인 ID"))
                                         .addProperty("password", new Schema<String>().type("string").description("비밀번호"))))))
-                        // 선택적인 Authorization 헤더에 선택적이라는 설명을 추가
                         .addParametersItem(new Parameter()
                                 .name("Authorization")
                                 .in("header")
