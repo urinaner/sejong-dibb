@@ -8,7 +8,6 @@ interface AuthContextType {
   signout: () => void;
 }
 
-// 초기값 정의
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
@@ -20,36 +19,43 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+  const [error, setError] = useState<string | null>(null);
+  const apiUrl = 'http://172.16.67.246:8080';
 
   const signin = async (userName: string, password: string) => {
+    if (!userName || !password) {
+      console.error('아이디와 비밀번호가 필요합니다.');
+      setError('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+
     try {
       console.log(
-        `try to sign in as username: :${userName} password: ${password}`,
+        `로그인 시도 중 - loginId: ${userName}, password: ${password}`,
       );
-      const response = await axios.post(`${apiUrl}/api/admin/login`, {
-        userId: userName,
-        password: password,
+
+      // FormData 객체 생성 및 필드 추가
+      const formData = new FormData();
+      formData.append('loginId', userName);
+      formData.append('password', password);
+
+      // axios를 이용한 multipart/form-data 형식의 POST 요청
+      const response = await axios.post(`${apiUrl}/api/admin/login`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      // 서버에서 토큰을 받아온다
-      const authorizationHeader = response.headers['authorization']; // 헤더에서 'authorization' 추출
-      const token = authorizationHeader && authorizationHeader.split(' ')[1]; // 'Bearer' 제거 후 JWT 토큰만 추출
+      const authorizationHeader = response.headers['authorization'];
+      const token = authorizationHeader && authorizationHeader.split(' ')[1];
 
-      // if (!token) {
-      //   throw new Error('JWT 토큰을 찾을 수 없습니다.');
-      // }
-
-      // 로그인 성공 시 사용자 정보 업데이트
       setUser(userName);
       setIsAuthenticated(true);
-
-      console.log('저장할 JWT토큰:', token);
-      // 받은 JWT 토큰을 로컬 스토리지 등에 저장
+      setError(null);
       localStorage.setItem('token', token);
-    } catch (error) {
+    } catch (error: any) {
       console.error('로그인 실패:', error);
-      // 오류가 발생하면 예외를 던져서 상위에서 처리할 수 있도록 함
+      setError(error.response?.data?.message || '로그인 실패');
       throw error;
     }
   };
@@ -68,6 +74,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>
+      {children}
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+    </AuthContext.Provider>
   );
 };
