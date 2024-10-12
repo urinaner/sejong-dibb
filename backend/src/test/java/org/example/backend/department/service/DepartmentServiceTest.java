@@ -72,8 +72,6 @@ class DepartmentServiceTest {
         // when
         departmentService.deleteDepartment(saveId);
         // then
-        assertThatThrownBy(() -> departmentService.getDepartment(saveId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("부서 정보가 존재하지 않습니다.");
+        assertThat(departmentRepository.existsByKoreanName("컴퓨터공학과")).isFalse();
     }
 }
