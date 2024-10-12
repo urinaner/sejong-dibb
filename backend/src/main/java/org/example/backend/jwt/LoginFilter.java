@@ -1,6 +1,7 @@
 package org.example.backend.jwt;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -28,13 +30,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
+    protected String obtainUsername(HttpServletRequest request) {
+        // 기본적으로 'username'을 사용하던 것을 'loginId'로 변경
+        return request.getParameter("loginId");
+    }
+
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("LoginFilter.attemptAuthentication");
 
         // 클라이언트가 보낸 username과 password를 추출
-        String username = obtainUsername(request);
+        String loginId = obtainUsername(request);
         String password = obtainPassword(request);
-        log.info("username: " + username);
+        log.info("loginId: " + loginId);
 
         // 요청 헤더에서 JWT가 존재하는지 확인
         String authorization = request.getHeader("Authorization");
@@ -43,21 +51,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if (authorization != null && authorization.startsWith("Bearer ")) {
             // JWT가 존재하는 경우, JWT에서 username 추출
             String token = authorization.split(" ")[1];
-            String tokenUsername = jwtUtil.getUsername(token);
+            String tokenLoginId = jwtUtil.getLoginId(token);
 
-            log.info("tokenUsername: " + tokenUsername);
+            log.info("tokenLoginId: " + tokenLoginId);
 
             // 클라이언트가 보낸 username과 JWT의 username이 일치하는지 확인
-            if (!username.equals(tokenUsername)) {
-                log.error("Username in the form does not match the username in the token");
-                throw new AuthenticationException("Username mismatch") {};
+            if (!loginId.equals(tokenLoginId)) {
+                log.error("LoginId in the form does not match the loginId in the token");
+                throw new AuthenticationException("loginId mismatch") {};
             }
         } else {
             log.info("No Authorization header found. Proceeding with standard login.");
         }
 
-        // AuthenticationManager를 통해 username과 password로 인증 시도
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+        // AuthenticationManager를 통해 loginId와 password로 인증 시도
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, password, null);
         return authenticationManager.authenticate(authToken);
     }
 
@@ -67,7 +75,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("LoginFilter.successfulAuthentication");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String loginId = customUserDetails.getUsername();
 
         // ------------ 권한 찾기 ------------
         // authentication 인증된 사용자 객체
@@ -80,14 +88,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10L);
+        String token = jwtUtil.createJwt(loginId, role, 60 * 60 * 10L);
 
         response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException, ServletException, IOException {
+        log.info("LoginFilter.unsuccessfulAuthentication - failed: {}", failed.getMessage());
 
-        response.setStatus(401);
+        // 실패 핸들러 호출
+        getFailureHandler().onAuthenticationFailure(request, response, failed);
     }
 }

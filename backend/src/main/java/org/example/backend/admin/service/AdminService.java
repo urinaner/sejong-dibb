@@ -23,30 +23,25 @@ public class AdminService {
 
     @Transactional(readOnly = false)
     public void joinProcess(SignInReqDto joinDTO) {
-        String username = joinDTO.getUsername();
+        String loginId = joinDTO.getLoginId();
         String password = joinDTO.getPassword();
 
-        log.info("username: " + username);
+        log.info("loginId: " + loginId);
         log.info("password: " + password);
 
-        Boolean isExist = userRepository.existsByUsername(username);
+        Boolean isExist = userRepository.existsByLoginId(loginId);
 
         if (isExist) {
             return;
         }
 
         Admin admin = Admin.builder()
-                .username(username)
+                .loginId(loginId)
                 .password(bCryptPasswordEncoder.encode(password))
                 .role("ROLE_ADMIN")
                 .build();
 
         userRepository.save(admin);
-    }
-
-    public Admin findByLoginID(String loginId) {
-        return userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new ServiceException("StatusCode.USER_NOT_FOUND222")); // TODO
     }
 
     public void signOut(AccessTokenReq accessTokenReq) {

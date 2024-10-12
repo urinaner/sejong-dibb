@@ -56,11 +56,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // ------------ jwt 인증 성공 ------------
 
-        String username = jwtUtil.getUsername(token);
+        String loginId = jwtUtil.getLoginId(token);
         String role = jwtUtil.getRole(token);
 
         Admin admin = new Admin();
-        admin.setUsername(username);
+        admin.setUsername(loginId);
         admin.setPassword("temppassword");
         admin.setRole(role);
 

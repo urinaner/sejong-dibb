@@ -52,6 +52,7 @@ public class SecurityConfig {
 
         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
         loginFilter.setFilterProcessesUrl("/api/admin/login");
+        loginFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
         http
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
