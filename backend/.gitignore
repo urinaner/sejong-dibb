@@ -24,7 +24,7 @@ application.properties
 *.iml
 *.ipr
 *.properties
-*.yml
+.env
 
 out/
 !**/src/main/**/out/

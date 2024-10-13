@@ -6,24 +6,35 @@ import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
+import org.example.backend.professor.service.ProfessorService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class ProfessorServiceTest {
 
     @MockBean
     private ProfessorRepository professorRepository;
 
-    @InjectMocks
+    @Autowired
     private ProfessorService professorService;
+
+    @BeforeEach
+    void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     @DisplayName("교수 저장 테스트")
