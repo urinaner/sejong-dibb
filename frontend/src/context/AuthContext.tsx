@@ -1,5 +1,6 @@
 import { createContext, useState, ReactNode } from 'react';
 import axios from 'axios';
+import { apiEndpoints } from '../config/apiConfig';
 
 interface AuthContextType {
   user: string | null;
@@ -20,7 +21,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const apiUrl = 'http://172.16.67.246:8080';
 
   const signin = async (userName: string, password: string) => {
     if (!userName || !password) {
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       formData.append('password', password);
 
       // axios를 이용한 multipart/form-data 형식의 POST 요청
-      const response = await axios.post(`${apiUrl}/api/admin/login`, formData, {
+      const response = await axios.post(apiEndpoints.admin.login, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
