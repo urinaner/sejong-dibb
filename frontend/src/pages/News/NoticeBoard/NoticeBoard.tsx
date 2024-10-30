@@ -70,6 +70,37 @@ const Pagination: React.FC<PaginationProps> = ({
 
 const NoticeBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
+  // const [notices, setNotices] = React.useState<NoticeItem[]>([]);
+  // const [totalPages, setTotalPages] = React.useState(0);
+  // const [loading, setLoading] = React.useState(false);
+
+  // const fetchNotices = async (page: number) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get('/api/notices', {
+  //       params: {
+  //         page,
+  //         pageSize: 10
+  //       }
+  //     });
+  //
+  //     setNotices(response.data.data.notices);
+  //     setTotalPages(response.data.data.pagination.totalPages);
+  //   } catch (error) {
+  //     console.error('Failed to fetch notices:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // React.useEffect(() => {
+  //   fetchNotices(currentPage);
+  // }, [currentPage]);
+  //
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
+  // api fetch 로직 임시 구현
 
   const noticeData: NoticeItem[] = [
     {
