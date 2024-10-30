@@ -12,6 +12,7 @@ import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
 import Faculty from './pages/About/Faculty';
 import mainImage from './assets/images/main_picture.svg';
+import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
 
 const PageContainer = styled.div`
   display: flex;
@@ -56,6 +57,7 @@ function App() {
                 />
                 <Route path="/about" element={<Overview />} />
                 <Route path="/about/faculty" element={<Faculty />} />
+                <Route path="/news/noticeboard" element={<NoticeBoard />} />
               </Routes>
             </ContentWrapper>
             <Footer />
