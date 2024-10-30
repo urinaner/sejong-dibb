@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HeaderContainer,
   Logo,
@@ -12,6 +12,16 @@ import { ReactComponent as LogoIcon } from '../../assets/images/sejong-icon.svg'
 
 const Header: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navItems = [
     {
@@ -65,11 +75,21 @@ const Header: React.FC = () => {
   ];
 
   const handleNavItemMouseEnter = (index: number) => {
-    setActiveIndex(index);
+    if (!isMobile) {
+      setActiveIndex(index);
+    }
+  };
+
+  const handleNavItemClick = (index: number) => {
+    if (isMobile) {
+      setActiveIndex(activeIndex === index ? null : index);
+    }
   };
 
   const handleMouseLeave = () => {
-    setActiveIndex(null);
+    if (!isMobile) {
+      setActiveIndex(null);
+    }
   };
 
   return (
@@ -77,7 +97,7 @@ const Header: React.FC = () => {
       <Logo>
         <StyledLink to="/">
           <LogoIcon width="50px" height="auto" />
-          <span>세종대학교 바이오융합전공</span> {/* h1을 span으로 대체 */}
+          <span>세종대학교 바이오융합전공</span>
         </StyledLink>
       </Logo>
       <Nav>
@@ -87,6 +107,7 @@ const Header: React.FC = () => {
             title={item.title}
             path={item.path}
             onMouseEnter={() => handleNavItemMouseEnter(index)}
+            onClick={() => handleNavItemClick(index)}
           />
         ))}
       </Nav>
