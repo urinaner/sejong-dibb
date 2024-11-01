@@ -32,7 +32,10 @@ const SignIn: React.FC = () => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+    if (context?.isAuthenticated) {
+      navigate('/');
+    }
+  }, [context?.isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

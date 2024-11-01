@@ -11,203 +11,113 @@ import {
   NoticeTag,
   NewTag,
   TitleLink,
-  PaginationContainer,
-  PageButton,
   ViewCount,
   ErrorMessage,
   LoadingSpinner,
 } from './NoticeBoardStyle';
-
-// API 엔드포인트 설정
-const API_URL = process.env.REACT_APP_API_URL;
-const API_ENDPOINTS = {
-  board: {
-    list: `${API_URL}/api/board`,
-    create: `${API_URL}/api/board`,
-    get: (id: number) => `${API_URL}/api/board/${id}`,
-    update: (id: number) => `${API_URL}/api/board/${id}`,
-    delete: (id: number) => `${API_URL}/api/board/${id}`,
-  },
-};
-
-// 타입 정의
-type NoticeType = '전체' | '학부' | '대학원' | '선택' | '공지';
+import { apiEndpoints } from '../../../config/apiConfig';
 
 interface NoticeItem {
   id: number;
-  type: NoticeType;
+  type: string;
   title: string;
   department: string;
   date: string;
   views: number;
   isNew?: boolean;
-  content?: string;
 }
 
-interface BoardReqDto {
-  type: NoticeType;
-  title: string;
-  department: string;
-  content?: string;
-}
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-interface ApiResponse<T> {
-  content: T[];
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
-}
-
-// 페이지네이션 컴포넌트
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
-  const getPageRange = () => {
-    const range = 2;
-    let start = Math.max(1, currentPage - range);
-    let end = Math.min(totalPages, currentPage + range);
-
-    if (currentPage <= range) {
-      end = Math.min(totalPages, range * 2 + 1);
-    } else if (currentPage >= totalPages - range) {
-      start = Math.max(1, totalPages - range * 2);
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
-
-  return (
-    <PaginationContainer>
-      <PageButton onClick={() => onPageChange(1)} disabled={currentPage === 1}>
-        {'<<'}
-      </PageButton>
-      <PageButton
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        {'<'}
-      </PageButton>
-
-      {getPageRange().map((page) => (
-        <PageButton
-          key={page}
-          isActive={currentPage === page}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </PageButton>
-      ))}
-
-      <PageButton
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        {'>'}
-      </PageButton>
-      <PageButton
-        onClick={() => onPageChange(totalPages)}
-        disabled={currentPage === totalPages}
-      >
-        {'>>'}
-      </PageButton>
-    </PaginationContainer>
-  );
-};
+// 더미 데이터
+const DUMMY_NOTICES: NoticeItem[] = Array.from({ length: 20 }, (_, index) => ({
+  id: index + 1,
+  type:
+    index % 5 === 0 ? '공지' : ['전체', '학부', '대학원', '선택'][index % 4],
+  title: `[${index % 5 === 0 ? '공지사항' : '일반'}] 테스트 게시글 ${index + 1}`,
+  department: `테스트학과 ${(index % 3) + 1}`,
+  date: new Date(2024, 0, index + 1).toISOString().split('T')[0],
+  views: Math.floor(Math.random() * 1000),
+  isNew: index < 5, // 최근 5개 게시글에 NEW 표시
+}));
 
 const NoticeBoard: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [notices, setNotices] = useState<NoticeItem[]>([]);
+  const [notices, setNotices] = useState<NoticeItem[]>(DUMMY_NOTICES);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState(1);
-  const [selectedType, setSelectedType] = useState<NoticeType>('전체');
+  const [selectedType, setSelectedType] = useState('전체');
 
-  // API 호출 함수들
-  const fetchNotices = async (page: number, type: NoticeType = '전체') => {
+  // API 연동 코드 (주석 처리)
+  /*
+  const fetchNotices = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<ApiResponse<NoticeItem>>(
-        `${API_ENDPOINTS.board.list}?page=${page - 1}&size=10&type=${type}`,
+      const encodedType = encodeURIComponent(selectedType);
+      const response = await axios.get<NoticeItem[]>(
+        `${apiEndpoints.board.list}`,
       );
-      const { content, totalPages } = response.data;
 
-      // NEW 태그 처리 (7일 이내 게시물)
       const now = new Date();
-      const processedContent = content.map((notice) => ({
+      const processedNotices = response.data.map((notice) => ({
         ...notice,
         isNew:
           now.getTime() - new Date(notice.date).getTime() <=
           7 * 24 * 60 * 60 * 1000,
       }));
 
-      setNotices(processedContent);
-      setTotalPages(totalPages);
-    } catch (error) {
+      setNotices(processedNotices);
+    } catch (error: any) {
       console.error('Failed to fetch notices:', error);
-      setError('게시글을 불러오는데 실패했습니다.');
+      let errorMessage = '게시글을 불러오는데 실패했습니다.';
+
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            errorMessage = '로그인이 필요합니다.';
+            break;
+          case 403:
+            errorMessage = '접근 권한이 없습니다.';
+            break;
+          default:
+            errorMessage =
+              error.response.data?.message || '서버 오류가 발생했습니다.';
+        }
+      }
+
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+  */
+
+  // 더미 데이터를 사용한 필터링 함수
+  const filterNotices = (type: string) => {
+    setLoading(true);
+    try {
+      const filtered =
+        type === '전체'
+          ? DUMMY_NOTICES
+          : DUMMY_NOTICES.filter((notice) => notice.type === type);
+      setNotices(filtered);
+      setError(null);
+    } catch (error) {
+      setError('데이터 필터링 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }
   };
 
-  const createNotice = async (noticeData: BoardReqDto) => {
-    try {
-      await axios.post(API_ENDPOINTS.board.create, noticeData);
-      await fetchNotices(currentPage, selectedType);
-    } catch (error) {
-      console.error('Failed to create notice:', error);
-      throw error;
-    }
-  };
-
-  const updateNotice = async (id: number, noticeData: BoardReqDto) => {
-    try {
-      await axios.post(API_ENDPOINTS.board.update(id), noticeData);
-      await fetchNotices(currentPage, selectedType);
-    } catch (error) {
-      console.error('Failed to update notice:', error);
-      throw error;
-    }
-  };
-
-  const deleteNotice = async (id: number) => {
-    try {
-      await axios.delete(API_ENDPOINTS.board.delete(id));
-      await fetchNotices(currentPage, selectedType);
-    } catch (error) {
-      console.error('Failed to delete notice:', error);
-      throw error;
-    }
-  };
-
-  // 페이지 변경 핸들러
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   // 타입 필터 변경 핸들러
-  const handleTypeChange = (type: NoticeType) => {
+  const handleTypeChange = (type: string) => {
     setSelectedType(type);
-    setCurrentPage(1);
   };
 
-  // 데이터 로딩
+  // 선택된 타입이 변경될 때마다 필터링 적용
   useEffect(() => {
-    fetchNotices(currentPage, selectedType);
-  }, [currentPage, selectedType]);
+    filterNotices(selectedType);
+  }, [selectedType]);
 
-  const NOTICE_TYPES: NoticeType[] = ['전체', '학부', '대학원', '선택'];
+  const NOTICE_TYPES = ['전체', '학부', '대학원', '선택'];
 
   return (
     <Container>
@@ -266,12 +176,6 @@ const NoticeBoard: React.FC = () => {
           </tbody>
         </Table>
       )}
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
     </Container>
   );
 };

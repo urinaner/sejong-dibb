@@ -24,6 +24,7 @@ export const apiEndpoints = {
     get: `${API_URL}/api/`, // 메인 엔드포인트
   },
   board: {
+    list: `${API_URL}/api/board`, // list 엔드포인트 추가
     create: `${API_URL}/api/board`,
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,

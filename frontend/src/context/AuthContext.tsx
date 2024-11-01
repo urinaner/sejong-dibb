@@ -105,27 +105,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
     }
   };
-
-  const signout = async () => {
+  const signout = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        await axios.post(apiEndpoints.admin.signOut, null, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      if (!token) {
+        // 이미 로그아웃된 상태면 바로 상태만 변경
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
       }
+
+      // 로그아웃 API 호출
+      await axios.post(apiEndpoints.admin.signOut);
     } catch (error) {
-      console.error('로그아웃 중 오류 발생:', error);
+      console.error('Logout error:', error);
     } finally {
+      // 로컬 스토리지 클리어 및 상태 초기화
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
       setUser(null);
       setIsAuthenticated(false);
+
+      // 로그인 페이지로 이동
+      window.location.href = '/signin';
     }
-  };
+  }, []);
+
+  // axios 인터셉터 수정
+  useEffect(() => {
+    let isLoggingOut = false;
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (
+          (error.response?.status === 401 || error.response?.status === 403) &&
+          !isLoggingOut
+        ) {
+          isLoggingOut = true;
+          await signout();
+          isLoggingOut = false;
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, [signout]);
 
   // axios 인터셉터 설정
   useEffect(() => {
