@@ -60,12 +60,66 @@ export const AnnouncementAndSeminar = styled.section`
   flex: 45%;
   width: 90%;
   margin-right: 100px;
-  background-color: tomato;
+
+  display: flex;
+  flex-direction: column;
 `;
 
-export const AnnouncementContainer = styled.div``;
+export const AnnouncementContainer = styled.div`
+  background-color: aqua;
+  flex: 2;
+`;
 
-export const SeminarContainer = styled.div``;
+export const SeminarContainer = styled.div`
+  flex: 1;
+  display: flex;
+
+  button {
+    flex: 1;
+    border-radius: 0;
+    border: none;
+    color: white;
+    font-family: 'Noto Sans KR';
+    cursor: pointer;
+
+    p {
+      margin: 16px 0 16px 0;
+    }
+  }
+
+  // 세미나 정보
+  button:first-of-type {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 24px;
+    padding-left: 30px;
+    background-color: #3271c7;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      text-align: left; /* 텍스트 왼쪽 정렬 */
+    }
+
+    img {
+      position: relative;
+      left: 80%;
+      bottom: 15%;
+    }
+  }
+
+  // 세미나실 예약
+  button:last-of-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px 0 24px;
+    font-size: 22px;
+    background-color: #358bbf;
+  }
+`;
 
 export const ShortcutContainer = styled.section`
   flex: 45%;

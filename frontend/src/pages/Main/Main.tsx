@@ -11,7 +11,7 @@ import {
   ContentWrapper,
 } from './MainStyle';
 
-// 임시 데이터
+// 더미 데이터
 const paper = [
   {
     title: '연구 논문1',
@@ -70,7 +70,7 @@ function Main(): JSX.Element {
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        {/* map 써서 논문 4개 띄우기 (더미 데이터) */}
+        {/* 더미 데이터 */}
         <div style={{ display: 'flex' }}>
           {paper.map((item) => (
             <Paper key={item.title}>
@@ -85,9 +85,27 @@ function Main(): JSX.Element {
       <ContentWrapper>
         {/* 공지사항, 세미나 */}
         <AnnouncementAndSeminar>
-          공지사항, 세미나
-          <AnnouncementContainer></AnnouncementContainer>
-          <SeminarContainer></SeminarContainer>
+          <AnnouncementContainer>공지사항</AnnouncementContainer>
+          <SeminarContainer>
+            <button>
+              <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
+              <p style={{ fontSize: '16px', fontWeight: '700' }}>
+                최신 세미나 제목
+              </p>
+              <div style={{ fontSize: '14px', fontWeight: '300' }}>
+                최신 세미나 담당자
+                <br />
+                최신 세미나 일정
+                <br />
+                최신 세미나 진행 장소
+              </div>
+              <img src="info.svg" />
+            </button>
+            <button>
+              <span style={{ marginRight: '20px' }}>세미나실 예약</span>
+              <img src="/whiteCalendarIcon.svg" />
+            </button>
+          </SeminarContainer>
         </AnnouncementAndSeminar>
 
         {/* 바로가기 */}
