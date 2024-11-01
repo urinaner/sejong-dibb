@@ -10,12 +10,13 @@ import org.example.backend.department.domain.entity.Department;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "board")
 public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
-    private Long boardId;
+    private Long id;
 
     @Column(name = "title")
     private String title;
