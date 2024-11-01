@@ -1,41 +1,22 @@
 package org.example.backend.department.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.backend.ControllerTestSupport;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.department.domain.dto.Department.DepartmentResDto;
-import org.example.backend.department.service.DepartmentService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
-@SuppressWarnings("NonAsciiCharacters")
-class DepartmentControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private DepartmentService departmentService;
-
-    @Autowired
-    private ObjectMapper objectMapper; // JSON 직렬화를 위한 ObjectMapper
+class DepartmentControllerTest extends ControllerTestSupport {
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    void 부서_상세_조회() throws Exception {
+    @DisplayName("부서 상세 조회")
+    void getDepartmentDetails() throws Exception {
         // Given
         DepartmentResDto resDto = new DepartmentResDto();
         resDto.setKoreanName("컴퓨터공학과");
@@ -52,8 +33,8 @@ class DepartmentControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    void 부서_생성() throws Exception {
+    @DisplayName("부서 생성")
+    void createDepartment() throws Exception {
         // Given
         DepartmentReqDto reqDto = new DepartmentReqDto();
         reqDto.setKoreanName("컴퓨터공학과");
@@ -66,14 +47,14 @@ class DepartmentControllerTest {
         // When & Then
         mockMvc.perform(post("/api/departments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reqDto))) // JSON 변환
+                        .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$").value(createdId));
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    void 부서_수정() throws Exception {
+    @DisplayName("부서 수정")
+    void updateDepartment() throws Exception {
         // Given
         DepartmentReqDto reqDto = new DepartmentReqDto();
         reqDto.setKoreanName("수정된 컴퓨터공학과");
@@ -89,14 +70,14 @@ class DepartmentControllerTest {
         // When & Then
         mockMvc.perform(put("/api/departments/" + departmentId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reqDto))) // JSON 변환
+                        .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.koreanName").value("수정된 컴퓨터공학과"));
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    void 부서_삭제() throws Exception {
+    @DisplayName("부서 삭제")
+    void deleteDepartment() throws Exception {
         // Given
         Long departmentId = 1L;
 
