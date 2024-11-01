@@ -4,7 +4,6 @@ import org.example.backend.department.domain.mapper.DepartmentMapper;
 import org.example.backend.professor.domain.mapper.ProfessorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
