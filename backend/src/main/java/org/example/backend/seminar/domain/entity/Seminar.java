@@ -15,7 +15,7 @@ public class Seminar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seminar_id", nullable = false)
-    private Long seminarId;
+    private Long id;
 
     @Column(name = "name")
     private String name;
