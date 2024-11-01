@@ -1,5 +1,5 @@
-// NoticeBoard.tsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Container,
   Navigation,
@@ -14,17 +14,41 @@ import {
   PaginationContainer,
   PageButton,
   ViewCount,
+  ErrorMessage,
+  LoadingSpinner,
 } from './NoticeBoardStyle';
 
-// ... 기존 인터페이스 정의 유지
+// API 엔드포인트 설정
+const API_URL = process.env.REACT_APP_API_URL;
+const API_ENDPOINTS = {
+  board: {
+    list: `${API_URL}/api/board`,
+    create: `${API_URL}/api/board`,
+    get: (id: number) => `${API_URL}/api/board/${id}`,
+    update: (id: number) => `${API_URL}/api/board/${id}`,
+    delete: (id: number) => `${API_URL}/api/board/${id}`,
+  },
+};
+
+// 타입 정의
+type NoticeType = '전체' | '학부' | '대학원' | '선택' | '공지';
+
 interface NoticeItem {
   id: number;
-  type: string;
+  type: NoticeType;
   title: string;
   department: string;
   date: string;
   views: number;
   isNew?: boolean;
+  content?: string;
+}
+
+interface BoardReqDto {
+  type: NoticeType;
+  title: string;
+  department: string;
+  content?: string;
 }
 
 interface PaginationProps {
@@ -33,40 +57,25 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-// 더미 데이터 배열 - 실제로는 별도 파일로 분리하는 것을 추천
-const DUMMY_NOTICES: NoticeItem[] = Array.from({ length: 55 }, (_, index) => ({
-  id: index + 1,
-  type: index % 5 === 0 ? '공지' : '전체',
-  title: `[공지사항] 테스트 게시글 제목 ${index + 1}`,
-  department: `테스트학과 ${(index % 3) + 1}`,
-  date: new Date(2024, 0, index + 1).toISOString().split('T')[0],
-  views: Math.floor(Math.random() * 1000),
-  isNew: index < 5, // 최근 5개 게시글에 NEW 표시
-}));
+interface ApiResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+}
 
-// 페이지네이션 로직을 위한 유틸리티 함수
-const paginateData = (
-  data: NoticeItem[],
-  currentPage: number,
-  itemsPerPage: number,
-) => {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return data.slice(startIndex, endIndex);
-};
-
+// 페이지네이션 컴포넌트
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
 }) => {
-  // 페이지 번호 범위 계산 (현재 페이지 주변 5개 페이지만 표시)
   const getPageRange = () => {
-    const range = 2; // 현재 페이지 양쪽으로 보여줄 페이지 수
+    const range = 2;
     let start = Math.max(1, currentPage - range);
     let end = Math.min(totalPages, currentPage + range);
 
-    // 페이지 범위가 시작 또는 끝에 가까울 때 조정
     if (currentPage <= range) {
       end = Math.min(totalPages, range * 2 + 1);
     } else if (currentPage >= totalPages - range) {
@@ -118,50 +127,106 @@ const NoticeBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedType, setSelectedType] = useState<NoticeType>('전체');
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(DUMMY_NOTICES.length / ITEMS_PER_PAGE);
-
-  // 데이터 로딩을 시뮬레이션하는 함수
-  const fetchNotices = async (page: number) => {
+  // API 호출 함수들
+  const fetchNotices = async (page: number, type: NoticeType = '전체') => {
     setLoading(true);
+    setError(null);
     try {
-      // 실제 API 호출을 시뮬레이션하기 위한 인위적인 지연
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await axios.get<ApiResponse<NoticeItem>>(
+        `${API_ENDPOINTS.board.list}?page=${page - 1}&size=10&type=${type}`,
+      );
+      const { content, totalPages } = response.data;
 
-      // 페이지에 해당하는 데이터만 잘라서 반환
-      const paginatedData = paginateData(DUMMY_NOTICES, page, ITEMS_PER_PAGE);
-      setNotices(paginatedData);
+      // NEW 태그 처리 (7일 이내 게시물)
+      const now = new Date();
+      const processedContent = content.map((notice) => ({
+        ...notice,
+        isNew:
+          now.getTime() - new Date(notice.date).getTime() <=
+          7 * 24 * 60 * 60 * 1000,
+      }));
+
+      setNotices(processedContent);
+      setTotalPages(totalPages);
     } catch (error) {
       console.error('Failed to fetch notices:', error);
+      setError('게시글을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
     }
   };
 
-  // 페이지 변경 시 데이터 로딩
-  useEffect(() => {
-    fetchNotices(currentPage);
-  }, [currentPage]);
+  const createNotice = async (noticeData: BoardReqDto) => {
+    try {
+      await axios.post(API_ENDPOINTS.board.create, noticeData);
+      await fetchNotices(currentPage, selectedType);
+    } catch (error) {
+      console.error('Failed to create notice:', error);
+      throw error;
+    }
+  };
 
+  const updateNotice = async (id: number, noticeData: BoardReqDto) => {
+    try {
+      await axios.post(API_ENDPOINTS.board.update(id), noticeData);
+      await fetchNotices(currentPage, selectedType);
+    } catch (error) {
+      console.error('Failed to update notice:', error);
+      throw error;
+    }
+  };
+
+  const deleteNotice = async (id: number) => {
+    try {
+      await axios.delete(API_ENDPOINTS.board.delete(id));
+      await fetchNotices(currentPage, selectedType);
+    } catch (error) {
+      console.error('Failed to delete notice:', error);
+      throw error;
+    }
+  };
+
+  // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // 페이지 상단으로 스크롤
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // 타입 필터 변경 핸들러
+  const handleTypeChange = (type: NoticeType) => {
+    setSelectedType(type);
+    setCurrentPage(1);
+  };
+
+  // 데이터 로딩
+  useEffect(() => {
+    fetchNotices(currentPage, selectedType);
+  }, [currentPage, selectedType]);
+
+  const NOTICE_TYPES: NoticeType[] = ['전체', '학부', '대학원', '선택'];
 
   return (
     <Container>
       <Navigation>
-        <NavButton isActive>전체</NavButton>
-        <NavButton>학부</NavButton>
-        <NavButton>대학원</NavButton>
-        <NavButton>선택</NavButton>
-        <NavButton>검색</NavButton>
+        {NOTICE_TYPES.map((type) => (
+          <NavButton
+            key={type}
+            isActive={selectedType === type}
+            onClick={() => handleTypeChange(type)}
+          >
+            {type}
+          </NavButton>
+        ))}
       </Navigation>
 
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
+        <LoadingSpinner>Loading...</LoadingSpinner>
       ) : (
         <Table>
           <thead>
@@ -184,7 +249,11 @@ const NoticeBoard: React.FC = () => {
                   )}
                 </Td>
                 <Td>
-                  <TitleLink>
+                  <TitleLink
+                    onClick={() =>
+                      (window.location.href = `/notice/${notice.id}`)
+                    }
+                  >
                     {notice.title}
                     {notice.isNew && <NewTag>NEW</NewTag>}
                   </TitleLink>

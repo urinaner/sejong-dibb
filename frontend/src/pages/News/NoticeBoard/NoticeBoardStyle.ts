@@ -133,3 +133,19 @@ export const ResponsiveTable = styled(Table)`
     }
   }
 `;
+
+export const ErrorMessage = styled.div`
+  color: #ff4444;
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: #ffeeee;
+  border-radius: 4px;
+`;
+
+export const LoadingSpinner = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+`;
