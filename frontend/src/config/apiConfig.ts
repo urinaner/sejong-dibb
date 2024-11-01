@@ -23,6 +23,12 @@ export const apiEndpoints = {
   main: {
     get: `${API_URL}/api/`, // 메인 엔드포인트
   },
+  board: {
+    create: `${API_URL}/api/board`,
+    get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
+    update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
+    delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
+  },
 };
 
 // 기본 API URL도 필요에 따라 export
