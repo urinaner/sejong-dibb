@@ -1,5 +1,6 @@
 package org.example.backend.professor.repository;
 
+import org.example.backend.IntegrationTestSupport;
 import org.example.backend.department.domain.entity.Department;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
@@ -19,12 +20,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
 @Transactional
-class ProfessorRepositoryTest {
+class ProfessorRepositoryTest extends IntegrationTestSupport {
 
-    @Autowired private ProfessorMapper professorMapper;
     @Autowired private ProfessorRepository professorRepository;
     @Autowired private DepartmentRepository departmentRepository;
 

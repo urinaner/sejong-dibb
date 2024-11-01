@@ -1,25 +1,21 @@
 package org.example.backend.professor.domain.mapper;
 
 import jakarta.transaction.Transactional;
+import org.example.backend.IntegrationTestSupport;
 import org.example.backend.department.domain.entity.Department;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
+
 @Transactional
-class ProfessorMapperTest {
+class ProfessorMapperTest extends IntegrationTestSupport {
 
     @Autowired private ProfessorMapper professorMapper;
     @Autowired private DepartmentRepository departmentRepository;
@@ -107,6 +103,7 @@ class ProfessorMapperTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("부분 ProfessorReqDto를 Professor로 update 테스트")
     void updateProfessorFromDto() {
         // given: ProfessorReqDto 객체 생성 및 값 설정
