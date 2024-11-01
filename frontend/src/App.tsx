@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Header from './components/Header/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index/Index';
+import Main from './pages/Main/Main';
 import Footer from './components/Footer/Footer';
 import SignIn from './pages/Auth/SignIn';
 import { AuthProvider } from './context/AuthContext';
@@ -49,6 +50,7 @@ function App() {
             <ContentWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/main" element={<Main />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route
                   path="/undergraduate/admission-scholarship"
