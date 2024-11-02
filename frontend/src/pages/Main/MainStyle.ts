@@ -12,7 +12,7 @@ export const PaperContainer = styled.section`
 `;
 
 export const Title = styled.div`
-  margin: 20px 0 40px 0;
+  margin: 50px 0 40px 0;
   font-size: 30px;
   font-weight: 700;
   color: #5d5a88;
@@ -54,20 +54,66 @@ export const ContentWrapper = styled.section`
   display: flex;
   justify-content: space-around;
   margin-top: 48px;
+  margin-bottom: 50px;
 `;
 
 export const AnnouncementAndSeminar = styled.section`
   flex: 45%;
   width: 90%;
   margin-right: 100px;
+  font-family: 'Noto Sans KR';
 
   display: flex;
   flex-direction: column;
 `;
 
 export const AnnouncementContainer = styled.div`
-  background-color: aqua;
   flex: 2;
+
+  p {
+    font-size: 22px;
+  }
+`;
+
+export const TabContainer = styled.div`
+  display: flex;
+`;
+
+interface TabButtonProps {
+  isActive: boolean;
+}
+
+export const TabButton = styled.button<TabButtonProps>`
+  flex: 1;
+  padding: 12px 0 12px 0;
+  background: ${({ isActive }) => (isActive ? '#D7E8FF' : '#F1F1F3')};
+  border: ${({ isActive }) => (isActive ? '1px solid #65B2D3' : 'none')};
+  font-family: 'Noto Sans KR';
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.5s;
+`;
+
+export const ContentContainer = styled.div`
+  margin-top: 8px;
+`;
+
+export const AnnouncementItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e3e5;
+  cursor: pointer;
+
+  img {
+    margin: 0 8px 0 20px;
+  }
+
+  span {
+    font-size: 15px;
+    font-weight: 400;
+  }
 `;
 
 export const SeminarContainer = styled.div`

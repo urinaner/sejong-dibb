@@ -9,7 +9,17 @@ import {
   Paper,
   Shortcut,
   ContentWrapper,
+  TabContainer,
+  TabButton,
+  ContentContainer,
+  AnnouncementItem,
 } from './MainStyle';
+import { useState } from 'react';
+
+interface Announcement {
+  title: string;
+  date: string;
+}
 
 // 더미 데이터
 const paper = [
@@ -30,6 +40,37 @@ const paper = [
     content: '연구 논문4 초반 내용',
   },
 ];
+
+const announcements: { [key: string]: Announcement[] } = {
+  학부: [
+    { title: '공지사항', date: '2024.00.00' },
+    { title: '공지사항', date: '2024.00.00' },
+    { title: '공지사항', date: '2024.00.00' },
+    { title: '공지사항', date: '2024.00.00' },
+    { title: '공지사항', date: '2024.00.00' },
+  ],
+  대학원: [
+    { title: '대학원 공지사항', date: '2024.00.00' },
+    { title: '대학원 공지사항', date: '2024.00.00' },
+    { title: '대학원 공지사항', date: '2024.00.00' },
+    { title: '대학원 공지사항', date: '2024.00.00' },
+    { title: '대학원 공지사항', date: '2024.00.00' },
+  ],
+  취업: [
+    { title: '취업 공지사항', date: '2024.00.00' },
+    { title: '취업 공지사항', date: '2024.00.00' },
+    { title: '취업 공지사항', date: '2024.00.00' },
+    { title: '취업 공지사항', date: '2024.00.00' },
+    { title: '취업 공지사항', date: '2024.00.00' },
+  ],
+  장학: [
+    { title: '장학 공지사항', date: '2024.00.00' },
+    { title: '장학 공지사항', date: '2024.00.00' },
+    { title: '장학 공지사항', date: '2024.00.00' },
+    { title: '장학 공지사항', date: '2024.00.00' },
+    { title: '장학 공지사항', date: '2024.00.00' },
+  ],
+};
 
 const links = [
   {
@@ -65,6 +106,9 @@ const links = [
 ];
 
 function Main(): JSX.Element {
+  const [activeTab, setActiveTab] =
+    useState<keyof typeof announcements>('학부');
+
   return (
     <MainContainer>
       {/* 연구논문 */}
@@ -85,8 +129,33 @@ function Main(): JSX.Element {
       <ContentWrapper>
         {/* 공지사항, 세미나 */}
         <AnnouncementAndSeminar>
-          <AnnouncementContainer>공지사항</AnnouncementContainer>
+          <AnnouncementContainer>
+            <p>공지사항</p>
+            <TabContainer>
+              {Object.keys(announcements).map((tab) => (
+                <TabButton
+                  key={tab}
+                  isActive={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </TabButton>
+              ))}
+            </TabContainer>
+            <ContentContainer>
+              {announcements[activeTab].map((announcement, index) => (
+                <AnnouncementItem key={index}>
+                  <span>
+                    <img src="/bullet.svg" />
+                    <span>{announcement.title}</span>
+                  </span>
+                  <span>{announcement.date}</span>
+                </AnnouncementItem>
+              ))}
+            </ContentContainer>
+          </AnnouncementContainer>
           <SeminarContainer>
+            {/* TODO: 링크 연결이 필요하면 넣기 */}
             <button>
               <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
               <p style={{ fontSize: '16px', fontWeight: '700' }}>
@@ -101,6 +170,7 @@ function Main(): JSX.Element {
               </div>
               <img src="info.svg" />
             </button>
+            {/* TODO: 세미나실 링크 연결하기 */}
             <button>
               <span style={{ marginRight: '20px' }}>세미나실 예약</span>
               <img src="/whiteCalendarIcon.svg" />
