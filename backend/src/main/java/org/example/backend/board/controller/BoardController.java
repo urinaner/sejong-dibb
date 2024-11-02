@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.board.service.BoardService;
-import org.example.backend.professor.domain.dto.ResponseDto;
+import org.example.backend.common.exception.dto.ResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
