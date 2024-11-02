@@ -1,9 +1,7 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const MainContainer = styled.div`
-  /* display: flex;
-  flex-direction: column; */
-`;
+export const MainContainer = styled.div``;
 
 export const PaperContainer = styled.section`
   display: flex;
@@ -120,8 +118,16 @@ export const SeminarContainer = styled.div`
   flex: 1;
   display: flex;
 
-  button {
+  // 세미나 정보
+  button:first-of-type {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 24px;
+    padding: 0 30px;
+    background-color: #3271c7;
+
     border-radius: 0;
     border: none;
     color: white;
@@ -131,17 +137,6 @@ export const SeminarContainer = styled.div`
     p {
       margin: 16px 0 16px 0;
     }
-  }
-
-  // 세미나 정보
-  button:first-of-type {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-right: 24px;
-    padding-left: 30px;
-    background-color: #3271c7;
 
     div {
       display: flex;
@@ -151,20 +146,32 @@ export const SeminarContainer = styled.div`
 
     img {
       position: relative;
-      left: 80%;
+      left: 90%;
       bottom: 15%;
     }
   }
+`;
 
-  // 세미나실 예약
-  button:last-of-type {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px 0 24px;
-    font-size: 22px;
-    background-color: #358bbf;
+// 세미나실 예약
+export const SeminarRoomReservation = styled(Link)`
+  flex: 1;
+  border-radius: 0;
+  border: none;
+  color: white;
+  font-family: 'Noto Sans KR';
+  cursor: pointer;
+
+  p {
+    margin: 16px 0 16px 0;
   }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px 0 24px;
+  font-size: 22px;
+  background-color: #358bbf;
+  text-decoration: none;
 `;
 
 export const ShortcutContainer = styled.section`
@@ -206,6 +213,3 @@ export const Shortcut = styled.div`
     cursor: pointer;
   }
 `;
-
-// export const PaperContainer = styled.div``;
-// export const PaperContainer = styled.div``;

@@ -13,6 +13,7 @@ import {
   TabButton,
   ContentContainer,
   AnnouncementItem,
+  SeminarRoomReservation,
 } from './MainStyle';
 import { useState } from 'react';
 
@@ -170,11 +171,10 @@ function Main(): JSX.Element {
               </div>
               <img src="info.svg" />
             </button>
-            {/* TODO: 세미나실 링크 연결하기 */}
-            <button>
+            <SeminarRoomReservation to="/seminar-rooms/reservation">
               <span style={{ marginRight: '20px' }}>세미나실 예약</span>
               <img src="/whiteCalendarIcon.svg" />
-            </button>
+            </SeminarRoomReservation>
           </SeminarContainer>
         </AnnouncementAndSeminar>
 
