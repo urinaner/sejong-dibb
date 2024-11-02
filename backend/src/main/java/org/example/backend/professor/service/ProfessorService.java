@@ -9,7 +9,10 @@ import org.example.backend.professor.domain.mapper.ProfessorMapper;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
+import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +58,10 @@ public class ProfessorService {
         return professorMapper.toProfessorDto(professor);
     }
 
+    public Page<ProfessorResDto> getAllBoards(Pageable pageable) {
+        return professorRepository.findAll(pageable)
+                .map(professorMapper::toProfessorDto);
+    }
     @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
         Professor professor = findProfessorById(professorId);
