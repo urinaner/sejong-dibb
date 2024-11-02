@@ -1,30 +1,16 @@
 package org.example.backend.professor.controller;
 
+import org.example.backend.ControllerTestSupport;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
-import org.example.backend.professor.service.ProfessorService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProfessorController.class)
-@AutoConfigureMockMvc(addFilters = false)
-class ProfessorControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private ProfessorService professorService;
+class ProfessorControllerTest extends ControllerTestSupport {
 
     @Test
     void createProfessor() throws Exception {
