@@ -39,7 +39,7 @@ public class ProfessorController {
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "모든 논문 조회 API", notes = "모든 논문의 리스트 반환")
+    @ApiOperation(value = "모든 교수 조회 API", notes = "모든 교수의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ProfessorResDto>> getAllBoards(Pageable pageable) {
         Page<ProfessorResDto> professorResDto = professorService.getAllBoards(pageable);
