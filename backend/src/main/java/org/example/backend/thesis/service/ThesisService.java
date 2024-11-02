@@ -3,6 +3,7 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
@@ -12,6 +13,8 @@ import org.example.backend.thesis.exception.ThesisException;
 import org.example.backend.thesis.exception.ThesisExceptionType;
 import org.example.backend.thesis.repository.ThesisRepository;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,10 @@ public class ThesisService {
         Thesis thesis = findThesisById(thesisId);
 
         return thesisMapper.toThesisDto(thesis);
+    }
+    public Page<ThesisResDto> getAllBoards(Pageable pageable) {
+        return thesisRepository.findAll(pageable)
+                .map(thesisMapper::toThesisDto);
     }
 
     @Transactional
