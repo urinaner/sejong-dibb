@@ -102,7 +102,7 @@ const links = [
   {
     icon: '/walletIcon.svg',
     title: '교내 양식',
-    link: '', // TODO: 추가하기
+    link: 'https://board.sejong.ac.kr/boardlist.do?bbsConfigFK=692',
   },
 ];
 
