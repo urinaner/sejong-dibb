@@ -15,7 +15,7 @@ public class Thesis {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "thesis_id", nullable = false)
-    private Long thesisId;
+    private Long id;
 
     @Column(name = "author")
     private String author;

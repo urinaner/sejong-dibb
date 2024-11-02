@@ -9,6 +9,7 @@ import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
