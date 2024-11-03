@@ -12,7 +12,7 @@ import {
   ProfileButton,
   ProfileDropdown,
   ProfileItem,
-} from '../../styles/HeaderStyles';
+} from './HeaderStyles';
 import NavItem from './NavItem';
 import { ReactComponent as LogoIcon } from '../../assets/images/sejong-icon.svg';
 import { ReactComponent as UserIcon } from '../../assets/images/user-icon.svg';

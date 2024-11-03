@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import * as S from '../../styles/FooterStyle';
+import * as S from './FooterStyle';
 import { ReactComponent as AdminIcon } from '../../assets/images/user-icon.svg';
 
 function Footer() {
