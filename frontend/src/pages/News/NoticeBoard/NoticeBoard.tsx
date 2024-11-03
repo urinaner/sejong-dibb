@@ -38,6 +38,35 @@ interface ApiResponse {
   data: NoticeItem[];
 }
 
+// 더미 데이터 생성 함수
+const generateDummyNotices = (
+  page: number,
+  size: number,
+  type: string,
+): ApiResponse => {
+  const totalItems = 23; // 전체 아이템 수
+  const totalPages = Math.ceil(totalItems / size);
+  const startIndex = page * size;
+
+  const dummyData = Array.from(
+    { length: Math.min(size, totalItems - startIndex) },
+    (_, index) => ({
+      id: startIndex + index + 1,
+      title: `[${type === '전체' ? '공지사항' : type}] 테스트 게시글 ${startIndex + index + 1}`,
+      content: `게시글 내용 ${startIndex + index + 1}`,
+      viewCount: Math.floor(Math.random() * 100),
+      writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
+    }),
+  );
+
+  return {
+    message: '조회성공',
+    page: page,
+    totalPage: totalPages,
+    data: dummyData,
+  };
+};
+
 const NoticeBoard: React.FC = () => {
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -53,9 +82,17 @@ const NoticeBoard: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
+      // API 호출 코드 (주석 처리)
+      /*
       const response = await axios.get<ApiResponse>(
         apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
       );
+      */
+
+      // 더미 데이터 사용
+      const response = {
+        data: generateDummyNotices(page, pageInfo.size, selectedType),
+      };
 
       setNotices(response.data.data);
       setPageInfo({
