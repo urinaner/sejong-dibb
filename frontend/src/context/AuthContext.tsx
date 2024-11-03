@@ -35,6 +35,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => setError(null);
 
+  useEffect(() => {
+    const initializeAuth = () => {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+
+      if (token && savedUser) {
+        setUser(savedUser);
+        setIsAuthenticated(true);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      }
+    };
+
+    initializeAuth();
+  }, []);
+
   const signin = async (userName: string, password: string) => {
     if (!userName || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
@@ -109,7 +124,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        // 이미 로그아웃된 상태면 바로 상태만 변경
         setUser(null);
         setIsAuthenticated(false);
         return;
@@ -120,28 +134,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // 로컬 스토리지 클리어 및 상태 초기화
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
       setUser(null);
       setIsAuthenticated(false);
-
-      // 로그인 페이지로 이동
       window.location.href = '/signin';
     }
   }, []);
 
-  // axios 인터셉터 수정
   useEffect(() => {
     let isLoggingOut = false;
 
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       async (error) => {
+        // 토큰 만료 등의 인증 에러일 때만 로그아웃
         if (
-          (error.response?.status === 401 || error.response?.status === 403) &&
-          !isLoggingOut
+          !isLoggingOut &&
+          error.response?.status === 401 &&
+          error.response?.data?.message?.includes('만료')
         ) {
           isLoggingOut = true;
           await signout();
@@ -156,7 +168,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [signout]);
 
-  // axios 인터셉터 설정
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
@@ -169,19 +180,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       (error) => Promise.reject(error),
     );
 
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          await signout();
-        }
-        return Promise.reject(error);
-      },
-    );
-
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
     };
   }, []);
 
