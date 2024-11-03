@@ -24,7 +24,17 @@ export const apiEndpoints = {
     get: `${API_URL}/api/`, // 메인 엔드포인트
   },
   board: {
-    list: `${API_URL}/api/board`, // list 엔드포인트 추가
+    list: `${API_URL}/api/board`, // 기본 list 엔드포인트
+    listWithPage: (page: number, size: number, type?: string) => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      });
+      if (type && type !== '전체') {
+        params.append('type', type);
+      }
+      return `${API_URL}/api/board?${params.toString()}`;
+    },
     create: `${API_URL}/api/board`,
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
