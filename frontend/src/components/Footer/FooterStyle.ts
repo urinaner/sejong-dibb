@@ -113,7 +113,10 @@ export const AdminButton = styled.button`
   padding: 0.5rem;
   color: inherit;
 
-  img,
+  img {
+    width: 8vw;
+    height: 3vh;
+  }
   svg {
     width: 24px;
     height: 24px;
