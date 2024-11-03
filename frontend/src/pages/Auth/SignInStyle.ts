@@ -1,16 +1,15 @@
 import styled from 'styled-components';
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  min-height: calc(100vh - 64px); // 헤더 높이(64px)를 제외한 높이
   background-color: #f5f6f7;
-  position: absolute;
-  top: 0;
-  left: 0;
+  padding: 40px 20px;
+  margin-top: 64px; // 헤더 높이만큼 마진
+  box-sizing: border-box;
 `;
 
 export const Form = styled.form`
@@ -22,7 +21,11 @@ export const Form = styled.form`
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-top: -60px; // 헤더 높이만큼 상단 여백 조정
+
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -85,6 +88,11 @@ export const ActionButtons = styled.div`
   justify-content: space-between;
   gap: 10px;
   width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 export const LinkButton = styled(Button)`
@@ -92,9 +100,14 @@ export const LinkButton = styled(Button)`
   background-color: #6c757d;
   font-size: 14px;
   margin-bottom: 0;
+  padding: 10px;
 
   &:hover {
     background-color: #5a6268;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
