@@ -20,13 +20,13 @@ const PageContainer = styled.div`
   overflow-x: hidden;
 `;
 
-const ContentWrapper = styled.main`
+const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 20px;
+  justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
+  padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -34,37 +34,40 @@ const ContentWrapper = styled.main`
   z-index: 1;
 `;
 
-const MainImage = styled.img<{ isHomePage: boolean }>`
+const MainImage = styled.img<{ isHomePage: boolean; hide: boolean }>`
   width: 100%;
   height: ${(props) => (props.isHomePage ? '60vh' : '30vh')};
   object-fit: cover;
   margin-bottom: ${(props) => (props.isHomePage ? '40px' : '20px')};
   transition: height 0.3s ease;
+  display: ${(props) => (props.hide ? 'none' : 'block')};
 `;
 
-const MainImageWrapper = styled.div`
+const MainImageWrapper = styled.div<{ hide: boolean }>`
   width: 100%;
   position: relative;
   overflow: hidden;
-  margin-top: 60px;
+  display: ${(props) => (props.hide ? 'none' : 'block')};
 `;
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-};
 
 function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isAuthPage =
+    location.pathname === '/signin' || location.pathname === '/signup';
 
   return (
     <PageContainer>
       <Header />
-      <MainImageWrapper>
-        <MainImage src={mainImage} alt="Main Visual" isHomePage={isHomePage} />
+      <MainImageWrapper hide={isAuthPage}>
+        <MainImage
+          src={mainImage}
+          alt="Main Visual"
+          isHomePage={isHomePage}
+          hide={isAuthPage}
+        />
       </MainImageWrapper>
-      <ContentWrapper>
+      <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/signin" element={<SignIn />} />

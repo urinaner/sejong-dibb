@@ -1,4 +1,6 @@
-import React, { useState, useContext } from 'react';
+// SignIn.tsx
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Form,
@@ -7,64 +9,54 @@ import {
   Button,
   ActionButtons,
   LinkButton,
-} from '../../styles/SignInStyle';
+  ErrorMessage,
+} from './SignInStyle';
 import { AuthContext } from '../../context/AuthContext';
-import { AxiosError } from 'axios';
 import { useModalContext } from '../../context/ModalContext';
 
 const SignIn: React.FC = () => {
-  const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+  const context = useContext(AuthContext);
   const { openModal } = useModalContext();
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!authContext) {
-    throw new Error('AuthContext가 정의되지 않았습니다.');
+  if (!context) {
+    throw new Error('Auth context is undefined');
   }
 
-  const { signin, isAuthenticated } = authContext;
+  const { signin, isAuthenticated, error, clearError } = context;
 
-  const [loginId, setLoginId] = useState(''); // loginId로 변경
-  const [password, setPassword] = useState('');
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+    if (context?.isAuthenticated) {
+      navigate('/');
+    }
+  }, [context?.isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearError();
 
-    if (!loginId || !password) {
-      // loginId 확인
-      openModal(
-        <div>
-          <h2>입력 오류</h2>
-          <p>아이디와 비밀번호를 모두 입력해주세요.</p>
-        </div>,
-      );
-      return;
-    }
+    if (isSubmitting) return;
 
     try {
-      console.log('로그인 시도 중...', { loginId, password });
-      await signin(loginId, password); // loginId로 전송
+      setIsSubmitting(true);
+      await signin(loginId, password);
 
       openModal(
         <div>
           <h2>로그인 성공</h2>
-          <p>환영합니다! 로그인에 성공했습니다.</p>
+          <p>환영합니다!</p>
         </div>,
       );
-    } catch (error: any) {
-      const errorMessage =
-        error instanceof AxiosError
-          ? error.response?.data?.message || '서버 오류가 발생했습니다.'
-          : '네트워크 오류가 발생했습니다.';
-
-      openModal(
-        <div>
-          <h2>로그인 실패</h2>
-          <p>
-            {typeof errorMessage === 'string'
-              ? errorMessage
-              : '알 수 없는 오류입니다.'}
-          </p>
-        </div>,
-      );
+    } catch (err) {
+      console.error('Login failed:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -72,22 +64,39 @@ const SignIn: React.FC = () => {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Title>관리자 로그인</Title>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <Input
           type="text"
-          placeholder="ID"
-          value={loginId} // loginId 상태 사용
-          onChange={(e) => setLoginId(e.target.value)} // loginId 상태 변경 함수
+          placeholder="아이디"
+          value={loginId}
+          onChange={(e) => setLoginId(e.target.value)}
+          disabled={isSubmitting}
         />
         <Input
           type="password"
-          placeholder="PW"
+          placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={isSubmitting}
         />
-        <Button type="submit">로그인</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? '로그인 중...' : '로그인'}
+        </Button>
         <ActionButtons>
-          <LinkButton>아이디/비밀번호 찾기</LinkButton>
-          <LinkButton>회원가입</LinkButton>
+          <LinkButton
+            type="button"
+            onClick={() => navigate('/find-account')}
+            disabled={isSubmitting}
+          >
+            아이디/비밀번호 찾기
+          </LinkButton>
+          <LinkButton
+            type="button"
+            onClick={() => navigate('/signup')}
+            disabled={isSubmitting}
+          >
+            회원가입
+          </LinkButton>
         </ActionButtons>
       </Form>
     </Container>

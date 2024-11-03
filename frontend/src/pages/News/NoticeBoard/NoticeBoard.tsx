@@ -1,5 +1,6 @@
-// NoticeBoard.tsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { apiEndpoints } from '../../../config/apiConfig';
 import {
   Container,
   Navigation,
@@ -11,198 +12,247 @@ import {
   NoticeTag,
   NewTag,
   TitleLink,
+  ViewCount,
+  ErrorMessage,
+  LoadingSpinner,
   PaginationContainer,
   PageButton,
-  ViewCount,
 } from './NoticeBoardStyle';
 
-// ... 기존 인터페이스 정의 유지
 interface NoticeItem {
   id: number;
-  type: string;
   title: string;
-  department: string;
-  date: string;
-  views: number;
-  isNew?: boolean;
+  content: string;
+  viewCount: number;
+  writer: string;
 }
 
-interface PaginationProps {
+interface PageInfo {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  size: number;
 }
 
-// 더미 데이터 배열 - 실제로는 별도 파일로 분리하는 것을 추천
-const DUMMY_NOTICES: NoticeItem[] = Array.from({ length: 55 }, (_, index) => ({
-  id: index + 1,
-  type: index % 5 === 0 ? '공지' : '전체',
-  title: `[공지사항] 테스트 게시글 제목 ${index + 1}`,
-  department: `테스트학과 ${(index % 3) + 1}`,
-  date: new Date(2024, 0, index + 1).toISOString().split('T')[0],
-  views: Math.floor(Math.random() * 1000),
-  isNew: index < 5, // 최근 5개 게시글에 NEW 표시
-}));
+interface ApiResponse {
+  message: string;
+  page: number;
+  totalPage: number;
+  data: NoticeItem[];
+}
 
-// 페이지네이션 로직을 위한 유틸리티 함수
-const paginateData = (
-  data: NoticeItem[],
-  currentPage: number,
-  itemsPerPage: number,
-) => {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return data.slice(startIndex, endIndex);
-};
+// 더미 데이터 생성 함수
+const generateDummyNotices = (
+  page: number,
+  size: number,
+  type: string,
+): ApiResponse => {
+  const totalItems = 23; // 전체 아이템 수
+  const totalPages = Math.ceil(totalItems / size);
+  const startIndex = page * size;
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
-  // 페이지 번호 범위 계산 (현재 페이지 주변 5개 페이지만 표시)
-  const getPageRange = () => {
-    const range = 2; // 현재 페이지 양쪽으로 보여줄 페이지 수
-    let start = Math.max(1, currentPage - range);
-    let end = Math.min(totalPages, currentPage + range);
-
-    // 페이지 범위가 시작 또는 끝에 가까울 때 조정
-    if (currentPage <= range) {
-      end = Math.min(totalPages, range * 2 + 1);
-    } else if (currentPage >= totalPages - range) {
-      start = Math.max(1, totalPages - range * 2);
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
-
-  return (
-    <PaginationContainer>
-      <PageButton onClick={() => onPageChange(1)} disabled={currentPage === 1}>
-        {'<<'}
-      </PageButton>
-      <PageButton
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        {'<'}
-      </PageButton>
-
-      {getPageRange().map((page) => (
-        <PageButton
-          key={page}
-          isActive={currentPage === page}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </PageButton>
-      ))}
-
-      <PageButton
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        {'>'}
-      </PageButton>
-      <PageButton
-        onClick={() => onPageChange(totalPages)}
-        disabled={currentPage === totalPages}
-      >
-        {'>>'}
-      </PageButton>
-    </PaginationContainer>
+  const dummyData = Array.from(
+    { length: Math.min(size, totalItems - startIndex) },
+    (_, index) => ({
+      id: startIndex + index + 1,
+      title: `[${type === '전체' ? '공지사항' : type}] 테스트 게시글 ${startIndex + index + 1}`,
+      content: `게시글 내용 ${startIndex + index + 1}`,
+      viewCount: Math.floor(Math.random() * 100),
+      writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
+    }),
   );
+
+  return {
+    message: '조회성공',
+    page: page,
+    totalPage: totalPages,
+    data: dummyData,
+  };
 };
 
 const NoticeBoard: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState('전체');
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    currentPage: 0,
+    totalPages: 0,
+    size: 5,
+  });
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(DUMMY_NOTICES.length / ITEMS_PER_PAGE);
-
-  // 데이터 로딩을 시뮬레이션하는 함수
-  const fetchNotices = async (page: number) => {
+  const fetchNotices = async (page = 0) => {
     setLoading(true);
+    setError(null);
     try {
-      // 실제 API 호출을 시뮬레이션하기 위한 인위적인 지연
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // API 호출 코드 (주석 처리)
+      /*
+      const response = await axios.get<ApiResponse>(
+        apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
+      );
+      */
 
-      // 페이지에 해당하는 데이터만 잘라서 반환
-      const paginatedData = paginateData(DUMMY_NOTICES, page, ITEMS_PER_PAGE);
-      setNotices(paginatedData);
-    } catch (error) {
+      // 더미 데이터 사용
+      const response = {
+        data: generateDummyNotices(page, pageInfo.size, selectedType),
+      };
+
+      setNotices(response.data.data);
+      setPageInfo({
+        currentPage: response.data.page,
+        totalPages: response.data.totalPage,
+        size: pageInfo.size,
+      });
+    } catch (error: any) {
       console.error('Failed to fetch notices:', error);
+      let errorMessage = '게시글을 불러오는데 실패했습니다.';
+
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            errorMessage = '로그인이 필요합니다.';
+            break;
+          case 403:
+            errorMessage = '접근 권한이 없습니다.';
+            break;
+          default:
+            errorMessage =
+              error.response.data?.message || '서버 오류가 발생했습니다.';
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // 페이지 변경 시 데이터 로딩
-  useEffect(() => {
-    fetchNotices(currentPage);
-  }, [currentPage]);
+  const handleTypeChange = (type: string) => {
+    setSelectedType(type);
+    setPageInfo((prev) => ({ ...prev, currentPage: 0 }));
+  };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // 페이지 상단으로 스크롤
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 0 && newPage < pageInfo.totalPages) {
+      fetchNotices(newPage);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotices(pageInfo.currentPage);
+  }, [selectedType]);
+
+  const NOTICE_TYPES = ['전체', '학부', '대학원', '선택'];
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(
+      0,
+      pageInfo.currentPage - Math.floor(maxVisiblePages / 2),
+    );
+    const endPage = Math.min(
+      pageInfo.totalPages - 1,
+      startPage + maxVisiblePages - 1,
+    );
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(0, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <PageButton
+          key={i}
+          onClick={() => handlePageChange(i)}
+          isActive={i === pageInfo.currentPage}
+        >
+          {i + 1}
+        </PageButton>,
+      );
+    }
+
+    return (
+      <PaginationContainer>
+        <PageButton
+          onClick={() => handlePageChange(0)}
+          disabled={pageInfo.currentPage === 0}
+        >
+          <span>⟪</span>
+        </PageButton>
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
+          disabled={pageInfo.currentPage === 0}
+        >
+          <span>⟨</span>
+        </PageButton>
+        {pages}
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
+          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
+        >
+          <span>⟩</span>
+        </PageButton>
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.totalPages - 1)}
+          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
+        >
+          <span>⟫</span>
+        </PageButton>
+      </PaginationContainer>
+    );
   };
 
   return (
     <Container>
       <Navigation>
-        <NavButton isActive>전체</NavButton>
-        <NavButton>학부</NavButton>
-        <NavButton>대학원</NavButton>
-        <NavButton>선택</NavButton>
-        <NavButton>검색</NavButton>
+        {NOTICE_TYPES.map((type) => (
+          <NavButton
+            key={type}
+            isActive={selectedType === type}
+            onClick={() => handleTypeChange(type)}
+          >
+            {type}
+          </NavButton>
+        ))}
       </Navigation>
 
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
-      ) : (
-        <Table>
-          <thead>
-            <tr>
-              <Th>분류</Th>
-              <Th>제목</Th>
-              <Th>작성자</Th>
-              <Th>등록일</Th>
-              <Th style={{ textAlign: 'right' }}>조회수</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {notices.map((notice) => (
-              <Tr key={notice.id}>
-                <Td>
-                  {notice.type === '공지' ? (
-                    <NoticeTag>공지</NoticeTag>
-                  ) : (
-                    notice.type
-                  )}
-                </Td>
-                <Td>
-                  <TitleLink>
-                    {notice.title}
-                    {notice.isNew && <NewTag>NEW</NewTag>}
-                  </TitleLink>
-                </Td>
-                <Td>{notice.department}</Td>
-                <Td>{notice.date}</Td>
-                <ViewCount>{notice.views.toLocaleString()}</ViewCount>
-              </Tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      {loading ? (
+        <LoadingSpinner>Loading...</LoadingSpinner>
+      ) : (
+        <>
+          <Table>
+            <thead>
+              <tr>
+                <Th>번호</Th>
+                <Th>제목</Th>
+                <Th>작성자</Th>
+                <Th style={{ textAlign: 'right' }}>조회수</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {notices.map((notice) => (
+                <Tr key={notice.id}>
+                  <Td>{notice.id}</Td>
+                  <Td>
+                    <TitleLink
+                      onClick={() =>
+                        (window.location.href = `/notice/${notice.id}`)
+                      }
+                    >
+                      {notice.title}
+                    </TitleLink>
+                  </Td>
+                  <Td>{notice.writer}</Td>
+                  <ViewCount>{notice.viewCount.toLocaleString()}</ViewCount>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+          {renderPagination()}
+        </>
+      )}
     </Container>
   );
 };

@@ -68,9 +68,9 @@ function renderSightMapSections() {
     },
     {
       title: '바융소식',
-      titleLink: '/News',
+      titleLink: '/news/noticeboard',
       contents: [
-        { name: '공지사항', link: '/News' },
+        { name: '공지사항', link: '/news/noticeboard' },
         { name: '세미나', link: '/News' },
         { name: '연구논문', link: '/News' },
       ],

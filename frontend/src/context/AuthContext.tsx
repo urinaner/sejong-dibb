@@ -1,12 +1,22 @@
-import { createContext, useState, ReactNode } from 'react';
+// src/context/AuthContext.tsx
+import {
+  createContext,
+  useState,
+  useCallback,
+  useEffect,
+  ReactNode,
+} from 'react';
 import axios from 'axios';
 import { apiEndpoints } from '../config/apiConfig';
 
 interface AuthContextType {
   user: string | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
   signin: (userName: string, password: string) => Promise<void>;
-  signout: () => void;
+  signout: () => Promise<void>;
+  clearError: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -20,14 +30,19 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const clearError = () => setError(null);
 
   const signin = async (userName: string, password: string) => {
     if (!userName || !password) {
-      console.error('아이디와 비밀번호가 필요합니다.');
       setError('아이디와 비밀번호를 입력해주세요.');
-      return;
+      throw new Error('아이디와 비밀번호가 필요합니다.');
     }
+
+    setIsLoading(true);
+    clearError();
 
     try {
       console.log(
@@ -49,34 +64,138 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const authorizationHeader = response.headers['authorization'];
       const token = authorizationHeader && authorizationHeader.split(' ')[1];
 
+      if (!token) {
+        throw new Error('인증 토큰을 받지 못했습니다.');
+      }
+
+      // 토큰 저장
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', userName);
+
+      // axios 기본 설정 업데이트
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
       setUser(userName);
       setIsAuthenticated(true);
       setError(null);
-      localStorage.setItem('token', token);
     } catch (error: any) {
       console.error('로그인 실패:', error);
-      setError(error.response?.data?.message || '로그인 실패');
+      let errorMessage = '로그인에 실패했습니다.';
+
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            errorMessage = '잘못된 요청입니다.';
+            break;
+          case 401:
+            errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
+            break;
+          case 403:
+            errorMessage = '접근이 거부되었습니다.';
+            break;
+          default:
+            errorMessage =
+              error.response.data?.message || '서버 오류가 발생했습니다.';
+        }
+      }
+
+      setError(errorMessage);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
+  const signout = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // 이미 로그아웃된 상태면 바로 상태만 변경
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
+      }
 
-  const signout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('token');
-  };
+      // 로그아웃 API 호출
+      await axios.post(apiEndpoints.admin.signOut);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // 로컬 스토리지 클리어 및 상태 초기화
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+      setUser(null);
+      setIsAuthenticated(false);
 
-  const authValue: AuthContextType = {
+      // 로그인 페이지로 이동
+      window.location.href = '/signin';
+    }
+  }, []);
+
+  // axios 인터셉터 수정
+  useEffect(() => {
+    let isLoggingOut = false;
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (
+          (error.response?.status === 401 || error.response?.status === 403) &&
+          !isLoggingOut
+        ) {
+          isLoggingOut = true;
+          await signout();
+          isLoggingOut = false;
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, [signout]);
+
+  // axios 인터셉터 설정
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('token');
+        if (token && config.headers) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error),
+    );
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          await signout();
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
+
+  const value = {
     user,
     isAuthenticated,
+    isLoading,
+    error,
     signin,
     signout,
+    clearError,
   };
 
-  return (
-    <AuthContext.Provider value={authValue}>
-      {children}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthProvider;

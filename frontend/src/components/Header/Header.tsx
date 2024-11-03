@@ -54,7 +54,7 @@ const Header: React.FC = () => {
     },
     {
       title: '바융소식',
-      path: '/News',
+      path: '/news/noticeboard',
       menuItems: [
         { name: '공지사항', path: '/news/noticeboard' },
         { name: '세미나', path: '/news' },
