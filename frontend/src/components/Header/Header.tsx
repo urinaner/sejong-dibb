@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import {
   HeaderContainer,
   Logo,
@@ -6,13 +8,21 @@ import {
   Menu,
   MenuItem,
   StyledLink,
+  ProfileSection,
+  ProfileButton,
+  ProfileDropdown,
+  ProfileItem,
 } from '../../styles/HeaderStyles';
 import NavItem from './NavItem';
 import { ReactComponent as LogoIcon } from '../../assets/images/sejong-icon.svg';
+import { ReactComponent as UserIcon } from '../../assets/images/user-icon.svg';
 
 const Header: React.FC = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -92,6 +102,18 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleProfileClick = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleSignOut = async () => {
+    if (auth?.signout) {
+      await auth.signout();
+      setIsProfileOpen(false);
+      navigate('/signin');
+    }
+  };
+
   return (
     <HeaderContainer onMouseLeave={handleMouseLeave}>
       <Logo>
@@ -110,6 +132,22 @@ const Header: React.FC = () => {
             onClick={() => handleNavItemClick(index)}
           />
         ))}
+        {auth?.isAuthenticated && (
+          <ProfileSection>
+            <ProfileButton onClick={handleProfileClick}>
+              <UserIcon />
+              {!isMobile && <span>{auth.user}</span>}
+            </ProfileButton>
+            {isProfileOpen && (
+              <ProfileDropdown>
+                <ProfileItem>
+                  <span>관리자: {auth.user}</span>
+                </ProfileItem>
+                <ProfileItem onClick={handleSignOut}>로그아웃</ProfileItem>
+              </ProfileDropdown>
+            )}
+          </ProfileSection>
+        )}
       </Nav>
       {activeIndex !== null && (
         <Menu>

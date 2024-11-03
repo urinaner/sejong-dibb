@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import * as S from '../../styles/FooterStyle';
-import { Link } from 'react-router-dom'; // React Router의 Link 컴포넌트 추가
+import { ReactComponent as AdminIcon } from '../../assets/images/user-icon.svg';
 
 function Footer() {
+  const auth = useContext(AuthContext);
+
   return (
     <S.Footer>
       <S.FooterContainer>
@@ -21,21 +25,27 @@ function Footer() {
         <span>
           Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
         </span>
-        <Link to="/signin">
-          <button style={{ background: 'none', border: 'none' }}>
-            <img
-              src="/adminLoginBtn.svg"
-              alt=""
-              style={{ marginRight: '60px', cursor: 'pointer' }}
-            />
-          </button>
-        </Link>
+        {auth?.isAuthenticated ? (
+          <S.AdminSection>
+            <span>관리자: {auth.user}</span>
+            <S.AdminButton onClick={auth.signout}>
+              <AdminIcon />
+              로그아웃
+            </S.AdminButton>
+          </S.AdminSection>
+        ) : (
+          <Link to="/signin">
+            <S.AdminButton>
+              <img src="/adminLoginBtn.svg" alt="관리자 로그인" />
+            </S.AdminButton>
+          </Link>
+        )}
       </S.Copyright>
     </S.Footer>
   );
 }
 
-// SightMap 섹션 렌더링
+// SightMap 섹션 렌더링 (기존 코드 유지)
 function renderSightMapSections() {
   const sections = [
     {
@@ -63,7 +73,6 @@ function renderSightMapSections() {
         { name: '소개', link: '/graduate/overview' },
         { name: '교과과정', link: '/graduate/curriculum' },
         { name: '학칙/규정', link: '/graduate/rules' },
-        // 학칙/규정은 헤더에 없음
       ],
     },
     {
