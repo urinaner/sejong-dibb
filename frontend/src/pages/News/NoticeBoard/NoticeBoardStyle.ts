@@ -4,6 +4,11 @@ interface StyledButtonProps {
   isActive?: boolean;
 }
 
+const media = {
+  mobile: '@media(max-width: 768px)',
+  tablet: '@media(max-width: 1024px)',
+};
+
 export const Container = styled.div`
   max-width: 1400px;
   width: 95%;
@@ -93,36 +98,65 @@ export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-top: 40px;
   padding: 20px 0;
 `;
 
 export const PageButton = styled.button<StyledButtonProps>`
-  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 8px;
   font-size: 1rem;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  background: ${(props) => (props.isActive ? '#1a202c' : 'white')};
-  color: ${(props) => (props.isActive ? 'white' : 'inherit')};
+  background: ${(props) => (props.isActive ? '#2D3748' : 'white')};
+  color: ${(props) => (props.isActive ? 'white' : '#4A5568')};
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 40px;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? '#1a202c' : '#f7fafc')};
+    background-color: ${(props) => (props.isActive ? '#2D3748' : '#EDF2F7')};
+    border-color: ${(props) => (props.isActive ? '#2D3748' : '#CBD5E0')};
   }
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+    background-color: #edf2f7;
+    color: #a0aec0;
+    border-color: #e2e8f0;
+  }
+
+  // 처음, 마지막 버튼 스타일
+  &:first-child,
+  &:last-child {
+    font-weight: bold;
+  }
+
+  // 이전, 다음 버튼 스타일
+  &:nth-child(2),
+  &:nth-last-child(2) {
+    font-weight: bold;
+  }
+
+  // 활성화된 페이지 버튼에 그림자 효과 추가
+  ${(props) =>
+    props.isActive &&
+    `
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  `}
+
+  ${media.mobile} {
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+    padding: 6px;
   }
 `;
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-};
 
 export const ResponsiveTable = styled(Table)`
   ${media.mobile} {

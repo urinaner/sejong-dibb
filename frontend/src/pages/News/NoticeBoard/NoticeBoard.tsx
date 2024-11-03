@@ -15,6 +15,8 @@ import {
   ViewCount,
   ErrorMessage,
   LoadingSpinner,
+  PaginationContainer,
+  PageButton,
 } from './NoticeBoardStyle';
 
 interface NoticeItem {
@@ -159,52 +161,44 @@ const NoticeBoard: React.FC = () => {
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button
+        <PageButton
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 mx-1 rounded ${
-            i === pageInfo.currentPage
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200'
-          }`}
+          isActive={i === pageInfo.currentPage}
         >
           {i + 1}
-        </button>,
+        </PageButton>,
       );
     }
 
     return (
-      <div className="flex justify-center items-center mt-4">
-        <button
+      <PaginationContainer>
+        <PageButton
           onClick={() => handlePageChange(0)}
           disabled={pageInfo.currentPage === 0}
-          className="px-3 py-1 mx-1 rounded bg-gray-200 disabled:opacity-50"
         >
-          처음
-        </button>
-        <button
+          <span>⟪</span>
+        </PageButton>
+        <PageButton
           onClick={() => handlePageChange(pageInfo.currentPage - 1)}
           disabled={pageInfo.currentPage === 0}
-          className="px-3 py-1 mx-1 rounded bg-gray-200 disabled:opacity-50"
         >
-          이전
-        </button>
+          <span>⟨</span>
+        </PageButton>
         {pages}
-        <button
+        <PageButton
           onClick={() => handlePageChange(pageInfo.currentPage + 1)}
           disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-          className="px-3 py-1 mx-1 rounded bg-gray-200 disabled:opacity-50"
         >
-          다음
-        </button>
-        <button
+          <span>⟩</span>
+        </PageButton>
+        <PageButton
           onClick={() => handlePageChange(pageInfo.totalPages - 1)}
           disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-          className="px-3 py-1 mx-1 rounded bg-gray-200 disabled:opacity-50"
         >
-          마지막
-        </button>
-      </div>
+          <span>⟫</span>
+        </PageButton>
+      </PaginationContainer>
     );
   };
 
