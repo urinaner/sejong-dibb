@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    container_name: dibb-db-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: dibb2024
+      MYSQL_DATABASE: dibb
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    networks:
+      - dev-network
+
+  backend:
+    container_name: dibb-backend-container-dev
+    build: .
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker-dev  # dev 환경 설정을 사용
+      SPRING_DATASOURCE_URL: jdbc:mysql://dibb-db-dev:3306/dibb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: dibb2024
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  db-data:

@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Modal from './components/Modal/Modal';
-import Index from './pages/Index/Index';
+import Main from './pages/Main/Main';
 import SignIn from './pages/Auth/SignIn';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
@@ -69,7 +69,7 @@ function AppContent() {
       </MainImageWrapper>
       <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Main />} />
           <Route path="/signin" element={<SignIn />} />
           <Route
             path="/undergraduate/admission-scholarship"

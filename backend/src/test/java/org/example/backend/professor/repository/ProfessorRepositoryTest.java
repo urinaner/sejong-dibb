@@ -1,30 +1,21 @@
 package org.example.backend.professor.repository;
 
+import org.example.backend.IntegrationTestSupport;
 import org.example.backend.department.domain.entity.Department;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.entity.Professor;
-import org.example.backend.professor.domain.mapper.ProfessorMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
 @Transactional
-class ProfessorRepositoryTest {
+class ProfessorRepositoryTest extends IntegrationTestSupport {
 
-    @Autowired private ProfessorMapper professorMapper;
     @Autowired private ProfessorRepository professorRepository;
     @Autowired private DepartmentRepository departmentRepository;
 
