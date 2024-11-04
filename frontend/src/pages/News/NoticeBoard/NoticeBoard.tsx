@@ -84,17 +84,10 @@ const NoticeBoard: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      // API 호출 코드 (주석 처리)
-      /*
+      // 인터셉터가 자동으로 토큰을 추가함
       const response = await axios.get<ApiResponse>(
         apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
       );
-      */
-
-      // 더미 데이터 사용
-      const response = {
-        data: generateDummyNotices(page, pageInfo.size, selectedType),
-      };
 
       setNotices(response.data.data);
       setPageInfo({
@@ -119,7 +112,6 @@ const NoticeBoard: React.FC = () => {
               error.response.data?.message || '서버 오류가 발생했습니다.';
         }
       }
-
       setError(errorMessage);
     } finally {
       setLoading(false);
