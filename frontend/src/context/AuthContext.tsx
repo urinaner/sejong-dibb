@@ -34,59 +34,65 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => setError(null);
 
-  // signout 함수를 먼저 정의
-  const signout = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setUser(null);
-        setIsAuthenticated(false);
-        return;
-      }
-
-      // 로그아웃 API 호출
-      await axios.post(apiEndpoints.admin.signOut);
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
+  // 인증 상태 설정 함수
+  const setAuthState = (token: string | null, userName: string | null) => {
+    if (token && userName) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', userName);
+      axios.defaults.headers.common['Authorization'] = token;
+      setUser(userName);
+      setIsAuthenticated(true);
+    } else {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
       setUser(null);
       setIsAuthenticated(false);
+    }
+  };
+
+  const signout = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setAuthState(null, null);
+        return;
+      }
+
+      await axios.post(apiEndpoints.admin.signOut);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setAuthState(null, null);
       window.location.href = '/signin';
     }
   }, []);
 
-  // 인증 초기화 및 인터셉터 설정을 하나의 useEffect로 통합
   useEffect(() => {
     const initializeAuth = () => {
       const token = localStorage.getItem('token');
       const savedUser = localStorage.getItem('user');
-
       if (token && savedUser) {
-        setUser(savedUser);
-        setIsAuthenticated(true);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setAuthState(token, savedUser);
       }
     };
 
     let isLoggingOut = false;
 
-    // 요청 인터셉터
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem('token');
         if (token && config.headers) {
-          config.headers['Authorization'] = `Bearer ${token}`;
-          config.headers['Content-Type'] = 'application/json';
+          config.headers['Authorization'] = token;
+          if (config.headers['Content-Type'] !== 'multipart/form-data') {
+            config.headers['Content-Type'] = 'application/json';
+          }
         }
         return config;
       },
       (error) => Promise.reject(error),
     );
 
-    // 응답 인터셉터
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -99,62 +105,43 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       },
     );
 
-    // 초기화 실행
     initializeAuth();
 
-    // 클린업 함수
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
-  }, [signout]); // signout만 의존성으로 유지
+  }, [signout]);
 
-  // signin 함수는 그대로 유지
   const signin = async (userName: string, password: string) => {
     if (!userName || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
-      throw new Error('아이디와 비밀번호가 필요합니다.');
+      return;
     }
 
     setIsLoading(true);
     clearError();
 
     try {
-      console.log(
-        `로그인 시도 중 - loginId: ${userName}, password: ${password}`,
-      );
-
-      // FormData 객체 생성 및 필드 추가
       const formData = new FormData();
       formData.append('loginId', userName);
       formData.append('password', password);
 
-      // axios를 이용한 multipart/form-data 형식의 POST 요청
       const response = await axios.post(apiEndpoints.admin.login, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      const authorizationHeader = response.headers['authorization'];
-      const token = authorizationHeader && authorizationHeader.split(' ')[1];
+      const token = response.headers['authorization'];
 
       if (!token) {
         throw new Error('인증 토큰을 받지 못했습니다.');
       }
 
-      // 토큰 저장
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', userName);
-
-      // axios 기본 설정 업데이트
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      setUser(userName);
-      setIsAuthenticated(true);
+      setAuthState(token, userName);
       setError(null);
     } catch (error: any) {
-      console.error('로그인 실패:', error);
       let errorMessage = '로그인에 실패했습니다.';
 
       if (error.response) {
@@ -193,3 +180,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthProvider;

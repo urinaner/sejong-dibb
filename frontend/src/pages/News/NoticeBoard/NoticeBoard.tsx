@@ -18,6 +18,9 @@ import {
   PaginationContainer,
   PageButton,
 } from './NoticeBoardStyle';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../../context/AuthContext';
 
 interface NoticeItem {
   id: number;
@@ -79,12 +82,19 @@ const NoticeBoard: React.FC = () => {
     totalPages: 0,
     size: 5,
   });
+  const navigate = useNavigate();
 
   const fetchNotices = async (page = 0) => {
     setLoading(true);
     setError(null);
+
     try {
-      // 인터셉터가 자동으로 토큰을 추가함
+      // 토큰 존재 여부 확인
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('인증이 필요합니다.');
+      }
+
       const response = await axios.get<ApiResponse>(
         apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
       );
@@ -99,11 +109,14 @@ const NoticeBoard: React.FC = () => {
       console.error('Failed to fetch notices:', error);
       let errorMessage = '게시글을 불러오는데 실패했습니다.';
 
+      if (error.message === '인증이 필요합니다.') {
+        // 로그인 페이지로 리다이렉트
+        navigate('/signin');
+        return;
+      }
+
       if (error.response) {
         switch (error.response.status) {
-          case 401:
-            errorMessage = '로그인이 필요합니다.';
-            break;
           case 403:
             errorMessage = '접근 권한이 없습니다.';
             break;
