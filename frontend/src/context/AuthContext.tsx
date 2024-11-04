@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import {
   createContext,
   useState,
@@ -35,51 +34,114 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => setError(null);
 
+  // 인증 상태 설정 함수
+  const setAuthState = (token: string | null, userName: string | null) => {
+    if (token && userName) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', userName);
+      axios.defaults.headers.common['Authorization'] = token;
+      setUser(userName);
+      setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+      setUser(null);
+      setIsAuthenticated(false);
+    }
+  };
+
+  const signout = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setAuthState(null, null);
+        return;
+      }
+
+      await axios.post(apiEndpoints.admin.signOut);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setAuthState(null, null);
+      window.location.href = '/signin';
+    }
+  }, []);
+
+  useEffect(() => {
+    const initializeAuth = () => {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+      if (token && savedUser) {
+        setAuthState(token, savedUser);
+      }
+    };
+
+    let isLoggingOut = false;
+
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('token');
+        if (token && config.headers) {
+          config.headers['Authorization'] = token;
+          if (config.headers['Content-Type'] !== 'multipart/form-data') {
+            config.headers['Content-Type'] = 'application/json';
+          }
+        }
+        return config;
+      },
+      (error) => Promise.reject(error),
+    );
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (!isLoggingOut && error.response?.status === 401) {
+          isLoggingOut = true;
+          await signout();
+          isLoggingOut = false;
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    initializeAuth();
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, [signout]);
+
   const signin = async (userName: string, password: string) => {
     if (!userName || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
-      throw new Error('아이디와 비밀번호가 필요합니다.');
+      return;
     }
 
     setIsLoading(true);
     clearError();
 
     try {
-      console.log(
-        `로그인 시도 중 - loginId: ${userName}, password: ${password}`,
-      );
-
-      // FormData 객체 생성 및 필드 추가
       const formData = new FormData();
       formData.append('loginId', userName);
       formData.append('password', password);
 
-      // axios를 이용한 multipart/form-data 형식의 POST 요청
       const response = await axios.post(apiEndpoints.admin.login, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      const authorizationHeader = response.headers['authorization'];
-      const token = authorizationHeader && authorizationHeader.split(' ')[1];
+      const token = response.headers['authorization'];
 
       if (!token) {
         throw new Error('인증 토큰을 받지 못했습니다.');
       }
 
-      // 토큰 저장
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', userName);
-
-      // axios 기본 설정 업데이트
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      setUser(userName);
-      setIsAuthenticated(true);
+      setAuthState(token, userName);
       setError(null);
     } catch (error: any) {
-      console.error('로그인 실패:', error);
       let errorMessage = '로그인에 실패했습니다.';
 
       if (error.response) {
@@ -105,85 +167,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
     }
   };
-  const signout = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        // 이미 로그아웃된 상태면 바로 상태만 변경
-        setUser(null);
-        setIsAuthenticated(false);
-        return;
-      }
-
-      // 로그아웃 API 호출
-      await axios.post(apiEndpoints.admin.signOut);
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      // 로컬 스토리지 클리어 및 상태 초기화
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      delete axios.defaults.headers.common['Authorization'];
-      setUser(null);
-      setIsAuthenticated(false);
-
-      // 로그인 페이지로 이동
-      window.location.href = '/signin';
-    }
-  }, []);
-
-  // axios 인터셉터 수정
-  useEffect(() => {
-    let isLoggingOut = false;
-
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (
-          (error.response?.status === 401 || error.response?.status === 403) &&
-          !isLoggingOut
-        ) {
-          isLoggingOut = true;
-          await signout();
-          isLoggingOut = false;
-        }
-        return Promise.reject(error);
-      },
-    );
-
-    return () => {
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, [signout]);
-
-  // axios 인터셉터 설정
-  useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('token');
-        if (token && config.headers) {
-          config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
-
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          await signout();
-        }
-        return Promise.reject(error);
-      },
-    );
-
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, []);
 
   const value = {
     user,

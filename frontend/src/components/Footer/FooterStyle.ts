@@ -91,3 +91,38 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
 `;
+
+export const AdminSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #333;
+
+  span {
+    font-size: 0.9rem;
+  }
+`;
+
+export const AdminButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  color: inherit;
+
+  img {
+    width: 8vw;
+    height: 3vh;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;

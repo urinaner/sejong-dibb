@@ -148,3 +148,61 @@ export const StyledLink = styled(Link)`
     color: #000;
   }
 `;
+
+export const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: 2rem;
+
+  @media (max-width: 768px) {
+    margin-left: 1rem;
+  }
+`;
+
+export const ProfileButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    color: #000;
+  }
+`;
+
+export const ProfileDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 1000;
+`;
+
+export const ProfileItem = styled.div`
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;

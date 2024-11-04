@@ -1,6 +1,6 @@
 // NavItem.tsx
 import React from 'react';
-import { Item, StyledLink } from '../../styles/HeaderStyles';
+import { Item, StyledLink } from './HeaderStyles';
 
 interface NavItemProps {
   title: string;

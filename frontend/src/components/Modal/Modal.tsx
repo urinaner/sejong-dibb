@@ -3,7 +3,7 @@ import {
   ModalWrapper,
   ModalContent,
   CloseButton,
-} from '../../styles/ModalStyle';
+} from '../../context/ModalStyle';
 import { useModalContext } from '../../context/ModalContext';
 
 const Modal: React.FC = () => {
