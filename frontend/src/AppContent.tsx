@@ -79,7 +79,7 @@ function AppContent() {
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Faculty />} />
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
-          <Route path="/notice/:id" element={<NoticeDetail />} />
+          <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
         </Routes>
       </ContentWrapper>
       <Footer />
