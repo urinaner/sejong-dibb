@@ -5,11 +5,15 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: calc(100vh - 64px); // 헤더 높이(64px)를 제외한 높이
-  background-color: #f5f6f7;
-  padding: 40px 20px;
-  margin-top: 64px; // 헤더 높이만큼 마진
+  min-height: calc(100vh - 64px);
+  margin-top: 64px;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
   box-sizing: border-box;
+  z-index: 10;
 `;
 
 export const Form = styled.form`
@@ -90,8 +94,9 @@ export const ActionButtons = styled.div`
   width: 100%;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 8px;
+    padding: 30px 20px;
+    max-width: calc(100% - 40px); // 변경: 양쪽 여백 고려
+    margin: 20px; // 추가: 모바일에서 여백 추가
   }
 `;
 
