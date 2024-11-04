@@ -11,6 +11,7 @@ import Overview from './pages/About/About';
 import Faculty from './pages/About/Faculty';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
 import mainImage from './assets/images/main_picture.svg';
+import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
 
 const PageContainer = styled.div`
   display: flex;
@@ -78,6 +79,7 @@ function AppContent() {
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Faculty />} />
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
+          <Route path="/notice/:id" element={<NoticeDetail />} />
         </Routes>
       </ContentWrapper>
       <Footer />
