@@ -36,8 +36,9 @@ public class Board {
     @Column(name = "create_date")
     private String createDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private String category;
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)

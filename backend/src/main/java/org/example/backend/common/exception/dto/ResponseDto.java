@@ -1,4 +1,4 @@
-package org.example.backend.professor.domain.dto;
+package org.example.backend.common.exception.dto;
 
 import lombok.*;
 

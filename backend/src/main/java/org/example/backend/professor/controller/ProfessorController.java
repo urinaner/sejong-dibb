@@ -4,12 +4,17 @@ package org.example.backend.professor.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.exception.dto.ResponseDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.service.ProfessorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +36,13 @@ public class ProfessorController {
     public ResponseEntity<ProfessorResDto> getProfessor(@PathVariable(name = "professorId") Long professorId) {
         ProfessorResDto professorResDto = professorService.getProfessor(professorId);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "모든 교수 조회 API", notes = "모든 교수의 리스트 반환")
+    @GetMapping
+    public ResponseDto<List<ProfessorResDto>> getAllBoards(Pageable pageable) {
+        Page<ProfessorResDto> professorResDto = professorService.getAllBoards(pageable);
+        return ResponseDto.ok(professorResDto.getNumber(), professorResDto.getTotalPages(), professorResDto.getContent());
     }
 
     @ApiOperation(value = "교수 정보 업데이트 API", notes = "교수 정보 업데이트")
