@@ -28,6 +28,8 @@ interface NoticeItem {
   content: string;
   viewCount: number;
   writer: string;
+  createDate: string;
+  category: string;
 }
 
 interface PageInfo {
@@ -43,25 +45,37 @@ interface ApiResponse {
   data: NoticeItem[];
 }
 
-// 더미 데이터 생성 함수
+const NOTICE_TYPES = ['전체', '학부', '대학원'];
+
+// 더미데이터 생성 함수
 const generateDummyNotices = (
   page: number,
   size: number,
   type: string,
 ): ApiResponse => {
-  const totalItems = 23; // 전체 아이템 수
+  const totalItems = 23;
   const totalPages = Math.ceil(totalItems / size);
   const startIndex = page * size;
 
   const dummyData = Array.from(
     { length: Math.min(size, totalItems - startIndex) },
-    (_, index) => ({
-      id: startIndex + index + 1,
-      title: `[${type === '전체' ? '공지사항' : type}] 테스트 게시글 ${startIndex + index + 1}`,
-      content: `게시글 내용 ${startIndex + index + 1}`,
-      viewCount: Math.floor(Math.random() * 100),
-      writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
-    }),
+    (_, index) => {
+      const id = startIndex + index + 1;
+      const category =
+        type === '전체'
+          ? ['학부', '대학원'][Math.floor(Math.random() * 2)]
+          : type;
+
+      return {
+        id: id,
+        title: `${category} 공지사항 ${id}`,
+        content: `게시글 내용 ${id}`,
+        viewCount: Math.floor(Math.random() * 100),
+        writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
+        createDate: new Date(2024, 0, id).toISOString().split('T')[0],
+        category: category,
+      };
+    },
   );
 
   return {
@@ -73,6 +87,9 @@ const generateDummyNotices = (
 };
 
 const NoticeBoard: React.FC = () => {
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,14 +99,13 @@ const NoticeBoard: React.FC = () => {
     totalPages: 0,
     size: 5,
   });
-  const navigate = useNavigate();
 
   const fetchNotices = async (page = 0) => {
     setLoading(true);
     setError(null);
 
     try {
-      // 토큰 존재 여부 확인
+      /* API 호출 코드 주석처리
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('인증이 필요합니다.');
@@ -98,6 +114,12 @@ const NoticeBoard: React.FC = () => {
       const response = await axios.get<ApiResponse>(
         apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
       );
+      */
+
+      // 더미 데이터 사용
+      const response = {
+        data: generateDummyNotices(page, pageInfo.size, selectedType),
+      };
 
       setNotices(response.data.data);
       setPageInfo({
@@ -107,10 +129,10 @@ const NoticeBoard: React.FC = () => {
       });
     } catch (error: any) {
       console.error('Failed to fetch notices:', error);
-      let errorMessage = '게시글을 불러오는데 실패했습니다.';
+      const errorMessage = '게시글을 불러오는데 실패했습니다.';
 
+      /* 에러 처리 코드 주석처리
       if (error.message === '인증이 필요합니다.') {
-        // 로그인 페이지로 리다이렉트
         navigate('/signin');
         return;
       }
@@ -125,6 +147,8 @@ const NoticeBoard: React.FC = () => {
               error.response.data?.message || '서버 오류가 발생했습니다.';
         }
       }
+      */
+
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -143,10 +167,14 @@ const NoticeBoard: React.FC = () => {
   };
 
   useEffect(() => {
+    // 컴포넌트 마운트 시 인증 상태 확인
+    if (!auth?.isAuthenticated) {
+      navigate('/signin');
+      return;
+    }
+
     fetchNotices(pageInfo.currentPage);
   }, [selectedType]);
-
-  const NOTICE_TYPES = ['전체', '학부', '대학원', '선택'];
 
   const renderPagination = () => {
     const pages = [];
@@ -233,6 +261,7 @@ const NoticeBoard: React.FC = () => {
                 <Th>번호</Th>
                 <Th>제목</Th>
                 <Th>작성자</Th>
+                <Th>등록일</Th>
                 <Th style={{ textAlign: 'right' }}>조회수</Th>
               </tr>
             </thead>
@@ -242,14 +271,13 @@ const NoticeBoard: React.FC = () => {
                   <Td>{notice.id}</Td>
                   <Td>
                     <TitleLink
-                      onClick={() =>
-                        (window.location.href = `/notice/${notice.id}`)
-                      }
+                      onClick={() => navigate(`/news/noticeboard/${notice.id}`)}
                     >
                       {notice.title}
                     </TitleLink>
                   </Td>
                   <Td>{notice.writer}</Td>
+                  <Td>{notice.createDate}</Td>
                   <ViewCount>{notice.viewCount.toLocaleString()}</ViewCount>
                 </Tr>
               ))}
