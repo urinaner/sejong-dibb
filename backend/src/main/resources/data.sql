@@ -1,3 +1,10 @@
+DELETE FROM department;
+DELETE FROM professor;
+DELETE FROM seminar;
+DELETE FROM thesis;
+DELETE FROM board;
+DELETE FROM admin;
+
 -- Department 더미 데이터 (1개)
 INSERT INTO department (department_id, korean_name, english_name, intro, phone, location, educational_objective, work_hour, map)
 VALUES (1, '컴퓨터공학과', 'Computer Engineering', '컴퓨터공학과 소개', '010-1234-5678', '본관 101호', '컴퓨터 공학 인재 양성', '9:00 - 18:00', 'https://example.com/map');
