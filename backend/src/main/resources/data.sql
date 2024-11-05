@@ -6,9 +6,16 @@ ALTER TABLE seminar AUTO_INCREMENT = 1;
 ALTER TABLE thesis AUTO_INCREMENT = 1;
 ALTER TABLE board AUTO_INCREMENT = 1;
 
--- Department 더미 데이터 (1개)
-INSERT INTO Department (department_id, educationalObjective, englishName, intro, koreanName, location, map, phone, workHour)
-VALUES (1, '컴퓨터 공학 인재 양성', 'Computer Engineering', '컴퓨터공학과 소개', '컴퓨터공학과', '본관 101호', 'https://example.com/map', '010-1234-5678', '9:00 - 18:00');
+UPDATE Department
+SET educationalObjective = '컴퓨터 공학 인재 양성',
+    englishName = 'Computer Engineering',
+    intro = '컴퓨터공학과 소개',
+    koreanName = '컴퓨터공학과',
+    location = '본관 101호',
+    map = 'https://example.com/map',
+    phone = '010-1234-5678',
+    workHour = '9:00 - 18:00'
+WHERE department_id = 1;
 
 -- Admin 더미 데이터 (1개)
 INSERT INTO admin (id, login_id, password, username, email, role)
@@ -71,4 +78,3 @@ VALUES
     (10, '열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt', '2024-01-10', 'graduate', 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
-
