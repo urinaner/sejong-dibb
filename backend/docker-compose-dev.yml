@@ -6,17 +6,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: dibb2024
       MYSQL_DATABASE: dibb
-      MYSQL_CHARSET: utf8mb4
-      MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
       - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
-      - ./backup.sql:/docker-entrypoint-initdb.d/1-backup.sql  # 테이블 생성 SQL
-      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2-data.sql  # 데이터 삽입 SQL
+      - ./backup.sql:/docker-entrypoint-initdb.d/1-backup.sql
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2-data.sql
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --lower_case_table_names=1  # 테이블명 대소문자 구분 비활성화
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdibb2024"]
       interval: 5s
