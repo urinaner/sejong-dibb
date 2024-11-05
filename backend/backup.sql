@@ -196,3 +196,54 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2024-10-11 16:04:22
+
+-- Seminar 테이블 생성
+CREATE TABLE IF NOT EXISTS `seminar` (
+  `seminar_id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `writer` varchar(255) DEFAULT NULL,
+  `place` varchar(255) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `speaker` varchar(255) DEFAULT NULL,
+  `company` varchar(255) DEFAULT NULL,
+  `department_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`seminar_id`),
+  KEY `FK_seminar_department` (`department_id`),
+  CONSTRAINT `FK_seminar_department` FOREIGN KEY (`department_id`) REFERENCES `Department` (`department_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Thesis 테이블 생성
+CREATE TABLE IF NOT EXISTS `thesis` (
+  `thesis_id` bigint NOT NULL AUTO_INCREMENT,
+  `author` varchar(255) DEFAULT NULL,
+  `journal` varchar(255) DEFAULT NULL,
+  `content` text,
+  `link` varchar(255) DEFAULT NULL,
+  `publication_date` date DEFAULT NULL,
+  `thesis_image` varchar(255) DEFAULT NULL,
+  `publication_collection` varchar(255) DEFAULT NULL,
+  `publication_issue` varchar(255) DEFAULT NULL,
+  `publication_page` varchar(255) DEFAULT NULL,
+  `issn` varchar(20) DEFAULT NULL,
+  `professor_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`thesis_id`),
+  KEY `FK_thesis_professor` (`professor_id`),
+  CONSTRAINT `FK_thesis_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`professor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Board 테이블 생성
+CREATE TABLE IF NOT EXISTS `board` (
+  `board_id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text,
+  `view_count` int DEFAULT '0',
+  `writer` varchar(255) DEFAULT NULL,
+  `file` varchar(255) DEFAULT NULL,
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `category` varchar(50) DEFAULT NULL,
+  `department_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`board_id`),
+  KEY `FK_board_department` (`department_id`),
+  CONSTRAINT `FK_board_department` FOREIGN KEY (`department_id`) REFERENCES `Department` (`department_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

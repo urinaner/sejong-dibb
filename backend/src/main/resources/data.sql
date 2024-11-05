@@ -1,8 +1,8 @@
-DELETE FROM department;
-DELETE FROM professor;
-DELETE FROM seminar;
-DELETE FROM thesis;
 DELETE FROM board;
+DELETE FROM thesis;
+DELETE FROM seminar;
+DELETE FROM professor;
+DELETE FROM department;
 DELETE FROM admin;
 
 -- Department 더미 데이터 (1개)
