@@ -10,19 +10,21 @@ services:
       - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
-      - ./backup.sql:/docker-entrypoint-initdb.d/1-backup.sql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
       - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      - --lower_case_table_names=1  # 테이블명 대소문자 구분 비활성화
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdibb2024"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - --skip-character-set-client-handshake
+      - --default-authentication-plugin=mysql_native_password
     networks:
-      - dev-network
+      - dibb-network
 
   backend:
     container_name: dibb-backend-container-dev
@@ -31,21 +33,22 @@ services:
       - "8082:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker-dev
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dibb?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dibb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: dibb2024
-      SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
+      SPRING_SQL_INIT_MODE: always
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./src:/app/src
     networks:
-      - dev-network
+      - dibb-network
 
 networks:
-  dev-network:
+  dibb-network:
     driver: bridge
 
 volumes:

@@ -1,28 +1,20 @@
-SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM board;
+DELETE FROM thesis;
+DELETE FROM seminar;
+DELETE FROM professor;
+DELETE FROM department;
+DELETE FROM admin;
 
-ALTER TABLE Department AUTO_INCREMENT = 1;
-ALTER TABLE professor AUTO_INCREMENT = 1;
-ALTER TABLE seminar AUTO_INCREMENT = 1;
-ALTER TABLE thesis AUTO_INCREMENT = 1;
-ALTER TABLE board AUTO_INCREMENT = 1;
+-- Department 더미 데이터 (1개)
+INSERT INTO department (department_id, korean_name, english_name, intro, phone, location, educational_objective, work_hour, map)
+VALUES (1, '컴퓨터공학과', 'Computer Engineering', '컴퓨터공학과 소개', '010-1234-5678', '본관 101호', '컴퓨터 공학 인재 양성', '9:00 - 18:00', 'https://example.com/map');
 
-UPDATE Department
-SET educationalObjective = '컴퓨터 공학 인재 양성',
-    englishName = 'Computer Engineering',
-    intro = '컴퓨터공학과 소개',
-    koreanName = '컴퓨터공학과',
-    location = '본관 101호',
-    map = 'https://example.com/map',
-    phone = '010-1234-5678',
-    workHour = '9:00 - 18:00'
-WHERE department_id = 1;
-
--- -- Admin 더미 데이터 (1개)
--- INSERT INTO admin (id, login_id, password, username, email, role)
--- VALUES (1, 'admin01', 'password123', '관리자', 'admin@example.com', 'ADMIN');
+-- Admin 더미 데이터 (1개)
+INSERT INTO admin (id, login_id, password, username, email, role)
+VALUES (1, 'admin01', 'password123', '관리자', 'admin@example.com', 'ADMIN');
 
 -- Professor 더미 데이터 (10개)
-INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profileImage, department_id)
+INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profile_image, department_id)
 VALUES
     (1, '교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg', 1),
     (2, '교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg', 1),
@@ -76,5 +68,3 @@ VALUES
     (8, '여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', '2024-01-08', 'scholarship', 1),
     (9, '아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', '2024-01-09', 'undergraduate', 1),
     (10, '열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt', '2024-01-10', 'graduate', 1);
-
-SET FOREIGN_KEY_CHECKS = 1;
