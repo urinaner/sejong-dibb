@@ -17,9 +17,9 @@ SET educationalObjective = '컴퓨터 공학 인재 양성',
     workHour = '9:00 - 18:00'
 WHERE department_id = 1;
 
--- Admin 더미 데이터 (1개)
-INSERT INTO admin (id, login_id, password, username, email, role)
-VALUES (1, 'admin01', 'password123', '관리자', 'admin@example.com', 'ADMIN');
+-- -- Admin 더미 데이터 (1개)
+-- INSERT INTO admin (id, login_id, password, username, email, role)
+-- VALUES (1, 'admin01', 'password123', '관리자', 'admin@example.com', 'ADMIN');
 
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profileImage, department_id)
