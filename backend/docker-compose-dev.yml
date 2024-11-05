@@ -6,19 +6,24 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: dibb2024
       MYSQL_DATABASE: dibb
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
       - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
-      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
-    networks:
-      - dev-network
+      - ./backup.sql:/docker-entrypoint-initdb.d/1-backup.sql  # 테이블 생성 SQL
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/2-data.sql  # 데이터 삽입 SQL
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdibb2024"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+    networks:
+      - dev-network
 
   backend:
     container_name: dibb-backend-container-dev
@@ -27,14 +32,11 @@ services:
       - "8082:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker-dev
-      SPRING_DATASOURCE_URL: jdbc:mysql://dibb-db-dev:3306/dibb?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dibb?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: dibb2024
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
-      SPRING_JPA_SHOW_SQL: "true"
-      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
-      SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
     depends_on:
       db:
         condition: service_healthy
@@ -42,7 +44,6 @@ services:
       - ./src:/app/src
     networks:
       - dev-network
-    restart: unless-stopped
 
 networks:
   dev-network:
