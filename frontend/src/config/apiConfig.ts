@@ -25,14 +25,12 @@ export const apiEndpoints = {
   },
   board: {
     list: `${API_URL}/api/board`, // 기본 list 엔드포인트
-    listWithPage: (page: number, size: number, type?: string) => {
+    listWithPage: (page: number, size: number, sort: string = 'title') => {
       const params = new URLSearchParams({
         page: page.toString(),
         size: size.toString(),
+        sort: sort, // sort 파라미터를 항상 포함
       });
-      if (type && type !== '전체') {
-        params.append('type', type);
-      }
       return `${API_URL}/api/board?${params.toString()}`;
     },
     create: `${API_URL}/api/board`,
