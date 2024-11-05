@@ -11,6 +11,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
+      -
     networks:
       - dev-network
 
