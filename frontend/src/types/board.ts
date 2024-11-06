@@ -1,4 +1,3 @@
-// types/board.ts
 export interface BoardReqDto {
   type: string;
   title: string;
@@ -32,15 +31,4 @@ export interface BoardPost {
   createDate: string;
   category: string;
   departmentId: number;
-}
-
-export interface BoardFormProps {
-  initialData?: BoardPost;
-  onSubmit: (data: BoardPost) => void;
-  isEdit?: boolean;
-}
-
-export interface EditorProps {
-  content: string;
-  onChange: (content: string) => void;
 }
