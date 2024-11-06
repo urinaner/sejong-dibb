@@ -40,5 +40,4 @@ export const apiEndpoints = {
   },
 };
 
-// 기본 API URL도 필요에 따라 export
 export default API_URL;
