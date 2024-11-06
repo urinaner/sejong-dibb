@@ -22,3 +22,25 @@ export interface NoticeForm {
   content: string;
   category: string;
 }
+
+export interface BoardPost {
+  title: string;
+  content: string;
+  viewCount: number;
+  writer: string;
+  file: string;
+  createDate: string;
+  category: string;
+  departmentId: number;
+}
+
+export interface BoardFormProps {
+  initialData?: BoardPost;
+  onSubmit: (data: BoardPost) => void;
+  isEdit?: boolean;
+}
+
+export interface EditorProps {
+  content: string;
+  onChange: (content: string) => void;
+}
