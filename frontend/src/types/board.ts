@@ -16,3 +16,9 @@ export interface BoardResDto {
   isNew?: boolean;
   content?: string;
 }
+
+export interface NoticeForm {
+  title: string;
+  content: string;
+  category: string;
+}
