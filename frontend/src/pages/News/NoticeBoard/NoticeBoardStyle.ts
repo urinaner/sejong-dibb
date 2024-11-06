@@ -36,6 +36,33 @@ export const NavButton = styled.button<StyledButtonProps>`
   }
 `;
 
+export const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+`;
+
+export const WriteButton = styled.button`
+  padding: 12px 24px;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #2c5282;
+  }
+
+  ${media.mobile} {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+`;
+
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;

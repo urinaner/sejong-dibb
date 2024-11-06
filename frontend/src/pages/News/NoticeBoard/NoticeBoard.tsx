@@ -17,6 +17,8 @@ import {
   LoadingSpinner,
   PaginationContainer,
   PageButton,
+  WriteButton,
+  HeaderContainer,
 } from './NoticeBoardStyle';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
@@ -237,17 +239,22 @@ const NoticeBoard: React.FC = () => {
 
   return (
     <Container>
-      <Navigation>
-        {NOTICE_TYPES.map((type) => (
-          <NavButton
-            key={type}
-            isActive={selectedType === type}
-            onClick={() => handleTypeChange(type)}
-          >
-            {type}
-          </NavButton>
-        ))}
-      </Navigation>
+      <HeaderContainer>
+        <Navigation>
+          {NOTICE_TYPES.map((type) => (
+            <NavButton
+              key={type}
+              isActive={selectedType === type}
+              onClick={() => handleTypeChange(type)}
+            >
+              {type}
+            </NavButton>
+          ))}
+        </Navigation>
+        <WriteButton onClick={() => navigate('/news/noticeboard/create')}>
+          글쓰기
+        </WriteButton>
+      </HeaderContainer>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
