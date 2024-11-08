@@ -26,6 +26,7 @@ export const ModalWrapper = styled.div<{ isModalOpen: boolean }>`
   background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
   justify-content: center;
   align-items: center;
+  z-index: 50;
   ${({ isModalOpen }) =>
     isModalOpen &&
     css`
