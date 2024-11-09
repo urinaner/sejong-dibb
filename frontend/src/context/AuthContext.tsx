@@ -39,13 +39,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (token && userName) {
       localStorage.setItem('token', token);
       localStorage.setItem('user', userName);
-      axios.defaults.headers.common['Authorization'] = token;
       setUser(userName);
       setIsAuthenticated(true);
     } else {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      delete axios.defaults.headers.common['Authorization'];
       setUser(null);
       setIsAuthenticated(false);
     }
@@ -81,13 +79,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
+        // 게시판 관련 공개 API는 토큰을 추가하지 않음
+        const isPublicBoardEndpoint =
+          config.url?.includes('/api/board') &&
+          (config.method === 'get' || config.method === 'GET');
+
         const token = localStorage.getItem('token');
-        if (token && config.headers) {
+
+        if (token && config.headers && !isPublicBoardEndpoint) {
           config.headers['Authorization'] = token;
-          if (config.headers['Content-Type'] !== 'multipart/form-data') {
-            config.headers['Content-Type'] = 'application/json';
-          }
         }
+
+        // Content-Type 설정 (multipart/form-data가 아닌 경우에만)
+        if (
+          config.headers &&
+          config.headers['Content-Type'] !== 'multipart/form-data'
+        ) {
+          config.headers['Content-Type'] = 'application/json';
+        }
+
+        // XSRF 토큰 관련 설정 제거
+        if (config.headers) {
+          delete config.headers['X-XSRF-TOKEN'];
+        }
+
         return config;
       },
       (error) => Promise.reject(error),
@@ -96,7 +111,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       async (error) => {
-        if (!isLoggingOut && error.response?.status === 401) {
+        // 게시판 관련 공개 API의 401/403 에러는 무시
+        const isPublicBoardEndpoint =
+          error.config?.url?.includes('/api/board') &&
+          (error.config?.method === 'get' || error.config?.method === 'GET');
+
+        if (
+          !isLoggingOut &&
+          error.response?.status === 401 &&
+          !isPublicBoardEndpoint
+        ) {
           isLoggingOut = true;
           await signout();
           isLoggingOut = false;
