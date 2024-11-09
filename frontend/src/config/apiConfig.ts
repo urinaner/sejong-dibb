@@ -23,11 +23,14 @@ export const apiEndpoints = {
   },
   board: {
     list: `${API_URL}/api/board`,
-    listWithPage: (page: number, size: number) => {
+    listWithPage: (page: number, size: number, category?: string) => {
       const params = new URLSearchParams({
         page: page.toString(),
         size: size.toString(),
       });
+      if (category) {
+        params.append('category', category);
+      }
       return `${API_URL}/api/board?${params.toString()}`;
     },
     create: `${API_URL}/api/board`,

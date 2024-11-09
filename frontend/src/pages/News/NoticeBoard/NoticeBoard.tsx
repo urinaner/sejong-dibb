@@ -41,6 +41,17 @@ const CATEGORY_MAP: { [key: string]: string } = {
 };
 const NOTICE_TYPES = ['전체', '학부', '대학원', '취업', '장학'];
 
+const REVERSE_CATEGORY_MAP: { [key: string]: string } = {
+  학부: 'undergraduate',
+  대학원: 'graduate',
+  취업: 'employment',
+  장학: 'scholarship',
+};
+
+const getEnglishCategory = (koreanType: string): string | undefined => {
+  return REVERSE_CATEGORY_MAP[koreanType];
+};
+
 interface PageInfo {
   currentPage: number;
   totalPages: number;
@@ -119,20 +130,11 @@ const NoticeBoard: React.FC = () => {
     setError(null);
 
     try {
-      // 카테고리 파라미터 추가
-      const params = new URLSearchParams({
-        page: page.toString(),
-        size: pageInfo.size.toString(),
-      });
-
-      /* 더미데이터 사용 코드
-      const response = {
-        data: generateDummyNotices(page, pageInfo.size, selectedType),
-      };
-      */
+      const category =
+        selectedType !== '전체' ? getEnglishCategory(selectedType) : undefined;
 
       const response = await axios.get<ApiResponse>(
-        `${apiEndpoints.board.listWithPage(page, pageInfo.size)}`,
+        apiEndpoints.board.listWithPage(page, pageInfo.size, category),
       );
 
       setNotices(response.data.data);
