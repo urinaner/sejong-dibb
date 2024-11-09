@@ -33,6 +33,14 @@ interface NoticeItem {
   file?: string;
 }
 
+const CATEGORY_MAP: { [key: string]: string } = {
+  undergraduate: '학부',
+  graduate: '대학원',
+  employment: '취업',
+  scholarship: '장학',
+};
+const NOTICE_TYPES = ['전체', '학부', '대학원', '취업', '장학'];
+
 interface PageInfo {
   currentPage: number;
   totalPages: number;
@@ -45,8 +53,6 @@ interface ApiResponse {
   totalPage: number;
   data: NoticeItem[];
 }
-
-const NOTICE_TYPES = ['전체', '학부', '대학원'];
 
 // 더미데이터 생성 함수 유지
 
@@ -103,6 +109,10 @@ const NoticeBoard: React.FC = () => {
     totalPages: 0,
     size: 5,
   });
+
+  const getCategoryLabel = (category: string): string => {
+    return CATEGORY_MAP[category] || category;
+  };
 
   const fetchNotices = async (page = 0) => {
     setLoading(true);
@@ -181,38 +191,7 @@ const NoticeBoard: React.FC = () => {
         </PageButton>,
       );
     }
-
-    return (
-      <PaginationContainer>
-        <PageButton
-          onClick={() => handlePageChange(0)}
-          disabled={pageInfo.currentPage === 0}
-        >
-          <span>⟪</span>
-        </PageButton>
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
-          disabled={pageInfo.currentPage === 0}
-        >
-          <span>⟨</span>
-        </PageButton>
-        {pages}
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
-          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-        >
-          <span>⟩</span>
-        </PageButton>
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.totalPages - 1)}
-          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-        >
-          <span>⟫</span>
-        </PageButton>
-      </PaginationContainer>
-    );
   };
-
   return (
     <Container>
       <HeaderContainer>
@@ -247,6 +226,7 @@ const NoticeBoard: React.FC = () => {
                 <Th>제목</Th>
                 <Th>작성자</Th>
                 <Th>등록일</Th>
+                <Th>카테고리</Th>
                 <Th style={{ textAlign: 'right' }}>조회수</Th>
               </tr>
             </thead>
@@ -263,6 +243,7 @@ const NoticeBoard: React.FC = () => {
                   </Td>
                   <Td>{notice.writer}</Td>
                   <Td>{notice.createDate}</Td>
+                  <Td>{getCategoryLabel(notice.category)}</Td>
                   <ViewCount>{notice.viewCount.toLocaleString()}</ViewCount>
                 </Tr>
               ))}
@@ -274,5 +255,4 @@ const NoticeBoard: React.FC = () => {
     </Container>
   );
 };
-
 export default NoticeBoard;
