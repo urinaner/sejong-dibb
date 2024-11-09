@@ -16,6 +16,7 @@ interface BoardDetail {
   category: string;
 }
 
+/*
 const generateDummyDetail = (id: string): BoardDetail => {
   const categoryTypes = ['학부', '대학원'];
   const category = categoryTypes[Math.floor(Math.random() * 2)];
@@ -31,6 +32,7 @@ const generateDummyDetail = (id: string): BoardDetail => {
     file: Math.random() > 0.5 ? '첨부파일.pdf' : undefined,
   };
 };
+*/
 
 const NoticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,16 +49,16 @@ const NoticeDetail: React.FC = () => {
       setError(null);
 
       try {
-        /* API 호출 코드 주석처리
+        //API 호출 코드 주석처리
+
         const response = await axios.get<BoardDetail>(
-          apiEndpoints.board.get(id)
+          apiEndpoints.board.get(id),
         );
         setPost(response.data);
-        */
 
         // 더미 데이터 사용
-        const dummyData = generateDummyDetail(id);
-        setPost(dummyData);
+        // const dummyData = generateDummyDetail(id);
+        // setPost(dummyData);
       } catch (error: any) {
         console.error('Failed to fetch post details:', error);
         setError('게시글을 불러오는데 실패했습니다.');
