@@ -16,6 +16,7 @@ interface BoardDetail {
   category: string;
 }
 
+// 더미데이터 생성 함수
 /*
 const generateDummyDetail = (id: string): BoardDetail => {
   const categoryTypes = ['학부', '대학원'];
@@ -49,16 +50,16 @@ const NoticeDetail: React.FC = () => {
       setError(null);
 
       try {
-        //API 호출 코드 주석처리
+        /* 더미데이터 사용 코드
+        const dummyData = generateDummyDetail(id);
+        setPost(dummyData);
+        */
 
         const response = await axios.get<BoardDetail>(
           apiEndpoints.board.get(id),
         );
-        setPost(response.data);
 
-        // 더미 데이터 사용
-        // const dummyData = generateDummyDetail(id);
-        // setPost(dummyData);
+        setPost(response.data);
       } catch (error: any) {
         console.error('Failed to fetch post details:', error);
         setError('게시글을 불러오는데 실패했습니다.');
@@ -66,6 +67,7 @@ const NoticeDetail: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchPostDetail();
   }, [id]);
 
