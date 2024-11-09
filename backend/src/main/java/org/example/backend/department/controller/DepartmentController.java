@@ -1,6 +1,7 @@
 package org.example.backend.department.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
@@ -25,7 +26,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping("/{id}")
-    @Schema(example = "부서 상세 조회")
+    @Operation(summary = "부서 조회", description = "부서 조회")
     public ResponseEntity<DepartmentResDto> getDepartment(
             @PathVariable Long id) {
         DepartmentResDto department = departmentService.getDepartment(id);
@@ -33,7 +34,7 @@ public class DepartmentController {
     }
 
     @PostMapping
-    @Schema(example = "신규 부서 생성")
+    @Operation(summary = "부서 생성", description = "부서 생성")
     public ResponseEntity<Long> createDepartment(
             @RequestBody DepartmentReqDto departmentReqDto) {
         Long createdDepartment = departmentService.saveDepartment(departmentReqDto);
@@ -41,7 +42,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    @Schema(example = "부서 정보 수정")
+    @Operation(summary = "부서 수정", description = "부서 수정")
     public ResponseEntity<DepartmentResDto> updateDepartment(
             @PathVariable Long id, @RequestBody DepartmentReqDto departmentReqDto) {
         DepartmentResDto updatedDepartment = departmentService.updateDepartment(id, departmentReqDto);
@@ -49,7 +50,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
-    @Schema(example = "부서 삭제")
+    @Operation(summary = "부서 삭제", description = "부서 삭제")
     public ResponseEntity<Void> deleteDepartment(
             @PathVariable Long id) {
         departmentService.deleteDepartment(id);
