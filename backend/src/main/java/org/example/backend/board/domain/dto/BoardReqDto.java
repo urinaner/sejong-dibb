@@ -1,6 +1,7 @@
 package org.example.backend.board.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,9 @@ public class BoardReqDto {
 
     @Schema(description = "게시판 내용", example = "이것은 게시판 내용입니다.", required = true)
     private String content;
+
+    @Schema(description = "게시판 작성자", example = "홍길동")
+    private String writer;
 
     @Schema(description = "첨부 파일", example = "file.pdf")
     private String file;
