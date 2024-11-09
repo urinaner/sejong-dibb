@@ -191,6 +191,36 @@ const NoticeBoard: React.FC = () => {
         </PageButton>,
       );
     }
+
+    return (
+      <PaginationContainer>
+        <PageButton
+          onClick={() => handlePageChange(0)}
+          disabled={pageInfo.currentPage === 0}
+        >
+          <span>⟪</span>
+        </PageButton>
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
+          disabled={pageInfo.currentPage === 0}
+        >
+          <span>⟨</span>
+        </PageButton>
+        {pages}
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
+          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
+        >
+          <span>⟩</span>
+        </PageButton>
+        <PageButton
+          onClick={() => handlePageChange(pageInfo.totalPages - 1)}
+          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
+        >
+          <span>⟫</span>
+        </PageButton>
+      </PaginationContainer>
+    );
   };
   return (
     <Container>
