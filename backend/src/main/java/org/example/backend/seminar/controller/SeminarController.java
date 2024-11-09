@@ -1,5 +1,6 @@
 package org.example.backend.seminar.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +24,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class SeminarController {
     private final SeminarService seminarService;
 
-    @Schema(description = "세미나 생성 API", example = "세미나 생성")
+    @Operation(summary = "세미나 생성 API", description = "세미나 생성")
     @PostMapping
     public ResponseEntity<Long> createSeminar(@RequestBody SeminarReqDto seminarReqDto) {
         Long seminarId = seminarService.saveSeminar(seminarReqDto);
         return new ResponseEntity<>(seminarId, HttpStatus.OK);
     }
 
-    @Schema(description = "세미나 상세 정보 반환 API", example = "세미나 상세 정보 반환")
+    @Operation(summary = "모든 세미나 조회 API", description = "모든 세미나의 리스트 반환")
     @GetMapping("/{seminarId}")
     public ResponseEntity<SeminarResDto> getSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         SeminarResDto seminarResDto = seminarService.getSeminar(seminarId);
         return new ResponseEntity<>(seminarResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "세미나 정보 업데이트 API", example = "세미나 정보 업데이트")
+    @Operation(summary = "세미나 정보 업데이트 API", description = "세미나 정보 업데이트")
     @PostMapping("/{seminarId}")
     public ResponseEntity<SeminarResDto> updateSeminar(@PathVariable(name = "seminarId") Long seminarId,
                                                        @RequestBody SeminarReqDto seminarReqDto) {
@@ -45,7 +46,7 @@ public class SeminarController {
         return new ResponseEntity<>(seminarResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "세미나 삭제 API", example = "세미나 삭제")
+    @Operation(summary = "세미나 삭제 API", description = "세미나 삭제")
     @DeleteMapping("/{seminarId}")
     public ResponseEntity<?> deleteSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         seminarService.deleteSeminar(seminarId);

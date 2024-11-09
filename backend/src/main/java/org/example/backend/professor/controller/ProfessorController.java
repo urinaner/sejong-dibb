@@ -1,7 +1,7 @@
 package org.example.backend.professor.controller;
 
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +29,21 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
 
-    @Schema(description = "교수 생성 API", example = "교수 생성")
+    @Operation(summary = "교수 생성 API", description = "교수 생성")
     @PostMapping
     public ResponseEntity<Long> createProfessor(@RequestBody ProfessorReqDto professorReqDto) {
         Long professorId = professorService.saveProfessor(professorReqDto);
         return new ResponseEntity<>(professorId, HttpStatus.OK);
     }
 
-    @Schema(description = "교수 상세 정보 반환 API", example = "교수 상세 정보 반환")
+    @Operation(summary = "교수 상세 정보 반환 API", description = "교수 상세 정보 반환")
     @GetMapping("/{professorId}")
     public ResponseEntity<ProfessorResDto> getProfessor(@PathVariable(name = "professorId") Long professorId) {
         ProfessorResDto professorResDto = professorService.getProfessor(professorId);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "모든 교수 조회 API", example = "모든 교수의 리스트 반환")
+    @Operation(summary = "모든 교수 조회 API", description = "모든 교수의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ProfessorResDto>> getAllBoards(Pageable pageable) {
         Page<ProfessorResDto> professorResDto = professorService.getAllBoards(pageable);
@@ -51,7 +51,7 @@ public class ProfessorController {
                 professorResDto.getContent());
     }
 
-    @Schema(description = "교수 정보 업데이트 API", example = "교수 정보 업데이트")
+    @Operation(summary = "교수 정보 업데이트 API", description = "교수 정보 업데이트")
     @PostMapping("/{professorId}")
     public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "professorId") Long professorId,
                                                            @RequestBody ProfessorReqDto professorReqDto) {
@@ -59,7 +59,7 @@ public class ProfessorController {
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "교수 삭제 API", example = "교수 삭제")
+    @Operation(summary = "교수 삭제 API", description = "교수 삭제")
     @DeleteMapping("/{professorId}")
     public ResponseEntity<?> deleteProfessor(@PathVariable(name = "professorId") Long professorId) {
         professorService.deleteProfessor(professorId);

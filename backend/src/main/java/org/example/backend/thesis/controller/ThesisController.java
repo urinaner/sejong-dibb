@@ -1,5 +1,6 @@
 package org.example.backend.thesis.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -28,28 +29,28 @@ public class ThesisController {
 
     private final ThesisService thesisService;
 
-    @Schema(description = "논문 생성 API", example = "논문 생성")
+    @Operation(summary = "논문 생성 API", description = "논문 생성")
     @PostMapping
     public ResponseEntity<Long> createThesis(@RequestBody ThesisReqDto thesisReqDto) {
         Long thesisId = thesisService.saveThesis(thesisReqDto);
         return new ResponseEntity<>(thesisId, HttpStatus.OK);
     }
 
-    @Schema(description = "논문 상세 정보 반환 API", example = "논문 상세 정보 반환")
+    @Operation(summary = "논문 상세 정보 반환 API", description = "논문 상세 정보 반환")
     @GetMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> getThesis(@PathVariable(name = "thesisId") Long thesisId) {
         ThesisResDto thesisResDto = thesisService.getThesis(thesisId);
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "모든 논문 조회 API", example = "모든 논문의 리스트 반환")
+    @Operation(summary = "모든 논문 조회 API", description = "모든 논문의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ThesisResDto>> getAllBoards(Pageable pageable) {
         Page<ThesisResDto> thesisResDtos = thesisService.getAllBoards(pageable);
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
-    @Schema(description = "논문 정보 업데이트 API", example = "논문 정보 업데이트")
+    @Operation(summary = "논문 정보 업데이트 API", description = "논문 정보 업데이트")
     @PostMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> updateThesis(@PathVariable(name = "thesisId") Long thesisId,
                                                      @RequestBody ThesisReqDto thesisReqDto) {
@@ -57,7 +58,7 @@ public class ThesisController {
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "논문 삭제 API", example = "논문 삭제")
+    @Operation(summary = "논문 삭제 API", description = "논문 삭제")
     @DeleteMapping("/{thesisId}")
     public ResponseEntity<?> deleteThesis(@PathVariable(name = "thesisId") Long thesisId) {
         thesisService.deleteThesis(thesisId);
