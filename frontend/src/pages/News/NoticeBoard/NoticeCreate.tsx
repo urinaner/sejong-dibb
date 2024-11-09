@@ -33,7 +33,6 @@ import axios from 'axios';
 interface PostFormData {
   title: string;
   content: string;
-  viewCount: number;
   writer: string;
   file: string;
   createDate: string;
@@ -115,44 +114,68 @@ const NoticeCreate: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('인증 토큰이 없습니다.');
-      }
+      // const token = localStorage.getItem('token');
+      // if (!token) {
+      //   throw new Error('인증 토큰이 없습니다.');
+      // }
 
-      const currentDate = new Date().toISOString();
+      const today = new Date();
+      const createDate = today.toISOString().split('T')[0];
 
-      // FormData 생성
-      const formData = new FormData();
-      formData.append('title', title.trim());
-      formData.append('content', content.trim());
-      formData.append('viewCount', '0');
-      formData.append('writer', auth.user);
-      formData.append('createDate', currentDate);
-      formData.append('category', category);
-      formData.append('departmentId', '0');
-
+      /*
+      let fileUrl = '';
       if (file) {
-        formData.append('file', file);
-      }
+        const fileFormData = new FormData();
+        fileFormData.append('file', file);
 
-      const response = await axios.post(apiEndpoints.board.create, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: token,
-        },
+        try {
+          // 파일 업로드 API 엔드포인트로 수정 필요
+          const fileResponse = await axios.post('/api/upload', fileFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: token,
+            },
+          });
+          fileUrl = fileResponse.data.fileUrl; // 서버에서 반환하는 파일 URL
+        } catch (error) {
+          console.error('File upload failed:', error);
+          throw new Error('파일 업로드에 실패했습니다.');
+        }
+      }
+      */
+
+      const postData = {
+        title: title.trim(),
+        content: content.trim(),
+        writer: auth.user,
+        file: 'file.pdf', // 업로드된 파일의 URL
+        createDate: createDate,
+        category: category,
+        departmentId: 1, // 기본값으로 1 설정
+      };
+      // 게시글 생성 요청
+      const response = await axios.post(apiEndpoints.board.create, postData, {
+        // headers: {
+        //   'Content-Type': 'application/json',
+        //   Authorization: token,
+        // },
       });
 
-      if (response.status !== 200 && response.status !== 201) {
+      if (response.status === 200 || response.status === 201) {
+        alert('게시글이 성공적으로 등록되었습니다.');
+        navigate('/news/noticeboard');
+      } else {
         throw new Error('게시글 작성에 실패했습니다.');
       }
-
-      alert('게시글이 성공적으로 등록되었습니다.');
-      navigate('/news/noticeboard');
     } catch (error) {
       console.error('Error posting article:', error);
       if (error instanceof Error && error.message === '인증 토큰이 없습니다.') {
         alert('로그인이 필요합니다.');
+      } else if (
+        error instanceof Error &&
+        error.message === '파일 업로드에 실패했습니다.'
+      ) {
+        alert('파일 업로드에 실패했습니다.');
       } else {
         alert('게시글 작성 중 오류가 발생했습니다.');
       }
