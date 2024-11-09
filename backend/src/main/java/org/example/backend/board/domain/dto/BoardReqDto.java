@@ -21,6 +21,9 @@ public class BoardReqDto {
     @Schema(description = "첨부 파일", example = "file.pdf")
     private String file;
 
+    @Schema(description = "게시판 생성일", example = "2024-11-09")
+    private String createDate;
+
     @Schema(description = "게시판 카테고리", example = "graduate")
     private String category;
 
