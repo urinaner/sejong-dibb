@@ -3,25 +3,28 @@ import React, {
   useRef,
   useMemo,
   useCallback,
-  useEffect,
   useContext,
 } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
 import {
-  PageWrapper,
-  ContentContainer,
-  HeaderSection,
-  BackButton,
+  Container,
+  ContentWrapper,
+  Header,
   FormSection,
   FormGroup,
   Label,
-  TitleInput,
-  CategorySelect,
+  Input,
+  Select,
   QuillWrapper,
   ButtonGroup,
   CancelButton,
   SubmitButton,
+  FileInputLabel,
+  FileInput,
+  FileList,
+  FileItem,
 } from './NoticeCreateStyle';
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
@@ -39,13 +42,14 @@ interface PostFormData {
 }
 
 const NoticeCreate: React.FC = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [category, setCategory] = useState<string>('announcement');
+  const [category, setCategory] = useState<string>('undergraduate');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
-  const auth = useContext(AuthContext); // AuthContext 사용
-  const [file, setFile] = useState<string>('');
+  const auth = useContext(AuthContext);
 
   if (!auth) {
     throw new Error('AuthContext must be used within AuthProvider');
@@ -69,25 +73,6 @@ const NoticeCreate: React.FC = () => {
           ['link', 'image'],
           ['clean'],
         ],
-        handlers: {
-          image: function () {
-            const input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-            input.click();
-
-            input.onchange = async () => {
-              const file = input.files?.[0];
-              if (file) {
-                try {
-                  // 이미지 업로드 로직
-                } catch (error) {
-                  console.error('Image upload failed:', error);
-                }
-              }
-            };
-          },
-        },
       },
     }),
     [],
@@ -137,23 +122,24 @@ const NoticeCreate: React.FC = () => {
 
       const currentDate = new Date().toISOString();
 
-      const postData: PostFormData = {
-        title: title.trim(),
-        content: content.trim(),
-        viewCount: 0,
-        writer: auth.user,
-        file: file,
-        createDate: currentDate,
-        category: category,
-        departmentId: 0,
-      };
+      // FormData 생성
+      const formData = new FormData();
+      formData.append('title', title.trim());
+      formData.append('content', content.trim());
+      formData.append('viewCount', '0');
+      formData.append('writer', auth.user);
+      formData.append('createDate', currentDate);
+      formData.append('category', category);
+      formData.append('departmentId', '0');
 
-      console.log(postData);
+      if (file) {
+        formData.append('file', file);
+      }
 
-      const response = await axios.post(apiEndpoints.board.create, postData, {
+      const response = await axios.post(apiEndpoints.board.create, formData, {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: token, // JWT 토큰 추가
+          'Content-Type': 'multipart/form-data',
+          Authorization: token,
         },
       });
 
@@ -162,11 +148,7 @@ const NoticeCreate: React.FC = () => {
       }
 
       alert('게시글이 성공적으로 등록되었습니다.');
-
-      setTitle('');
-      setContent('');
-      setCategory('announcement');
-      setFile('');
+      navigate('/news/noticeboard');
     } catch (error) {
       console.error('Error posting article:', error);
       if (error instanceof Error && error.message === '인증 토큰이 없습니다.') {
@@ -179,88 +161,100 @@ const NoticeCreate: React.FC = () => {
     }
   };
 
-  // 파일 업로드 처리 함수
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // 파일을 base64로 변환하거나 필요한 처리를 수행
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setFile(base64String);
-      };
-      reader.readAsDataURL(file);
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
     }
   };
 
+  const handleRemoveFile = () => {
+    setFile(null);
+  };
+
   return (
-    <PageWrapper>
-      <ContentContainer>
-        <HeaderSection>
+    <Container>
+      <ContentWrapper>
+        <Header>
           <h1>게시글 작성</h1>
-          <BackButton>← 목록으로</BackButton>
-        </HeaderSection>
+        </Header>
 
-        <form onSubmit={handleSubmit}>
-          <FormSection>
-            <FormGroup>
-              <Label>카테고리</Label>
-              <CategorySelect
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                {categories.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </CategorySelect>
-            </FormGroup>
+        <FormSection onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label>카테고리</Label>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </Select>
+          </FormGroup>
 
-            <FormGroup>
-              <Label>제목</Label>
-              <TitleInput
-                type="text"
-                placeholder="제목을 입력하세요"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </FormGroup>
+          <FormGroup>
+            <Label>제목</Label>
+            <Input
+              type="text"
+              placeholder="제목을 입력하세요"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </FormGroup>
 
-            <FormGroup>
-              <Label>첨부파일</Label>
-              <input
+          <FormGroup>
+            <Label>첨부파일</Label>
+            <FileInputLabel>
+              📎 파일 선택
+              <FileInput
                 type="file"
                 onChange={handleFileChange}
                 accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
               />
-            </FormGroup>
+            </FileInputLabel>
+            {file && (
+              <FileList>
+                <FileItem>
+                  {file.name}
+                  <button type="button" onClick={handleRemoveFile}>
+                    ×
+                  </button>
+                </FileItem>
+              </FileList>
+            )}
+          </FormGroup>
 
-            <FormGroup>
-              <Label>내용</Label>
-              <QuillWrapper>
-                <ReactQuill
-                  ref={quillRef}
-                  theme="snow"
-                  value={content}
-                  onChange={handleChange}
-                  modules={modules}
-                  formats={formats}
-                  placeholder="내용을 입력하세요"
-                />
-              </QuillWrapper>
-            </FormGroup>
-          </FormSection>
+          <FormGroup>
+            <Label>내용</Label>
+            <QuillWrapper>
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={content}
+                onChange={handleChange}
+                modules={modules}
+                formats={formats}
+                placeholder="내용을 입력하세요"
+              />
+            </QuillWrapper>
+          </FormGroup>
 
           <ButtonGroup>
-            <CancelButton type="button">취소</CancelButton>
+            <CancelButton
+              type="button"
+              onClick={() => navigate('/news/noticeboard')}
+            >
+              취소
+            </CancelButton>
             <SubmitButton type="submit" disabled={isSubmitting}>
               {isSubmitting ? '등록 중...' : '게시글 등록'}
             </SubmitButton>
           </ButtonGroup>
-        </form>
-      </ContentContainer>
-    </PageWrapper>
+        </FormSection>
+      </ContentWrapper>
+    </Container>
   );
 };
 
