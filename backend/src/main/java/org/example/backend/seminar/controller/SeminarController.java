@@ -1,6 +1,6 @@
 package org.example.backend.seminar.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
@@ -23,21 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class SeminarController {
     private final SeminarService seminarService;
 
-    @ApiOperation(value = "세미나 생성 API", notes = "세미나 생성")
+    @Schema(description = "세미나 생성 API", example = "세미나 생성")
     @PostMapping
     public ResponseEntity<Long> createSeminar(@RequestBody SeminarReqDto seminarReqDto) {
         Long seminarId = seminarService.saveSeminar(seminarReqDto);
         return new ResponseEntity<>(seminarId, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "세미나 상세 정보 반환 API", notes = "세미나 상세 정보 반환")
+    @Schema(description = "세미나 상세 정보 반환 API", example = "세미나 상세 정보 반환")
     @GetMapping("/{seminarId}")
     public ResponseEntity<SeminarResDto> getSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         SeminarResDto seminarResDto = seminarService.getSeminar(seminarId);
         return new ResponseEntity<>(seminarResDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "세미나 정보 업데이트 API", notes = "세미나 정보 업데이트")
+    @Schema(description = "세미나 정보 업데이트 API", example = "세미나 정보 업데이트")
     @PostMapping("/{seminarId}")
     public ResponseEntity<SeminarResDto> updateSeminar(@PathVariable(name = "seminarId") Long seminarId,
                                                        @RequestBody SeminarReqDto seminarReqDto) {
@@ -45,7 +45,7 @@ public class SeminarController {
         return new ResponseEntity<>(seminarResDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "세미나 삭제 API", notes = "세미나 삭제")
+    @Schema(description = "세미나 삭제 API", example = "세미나 삭제")
     @DeleteMapping("/{seminarId}")
     public ResponseEntity<?> deleteSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         seminarService.deleteSeminar(seminarId);
