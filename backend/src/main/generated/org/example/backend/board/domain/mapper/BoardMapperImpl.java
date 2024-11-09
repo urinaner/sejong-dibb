@@ -4,12 +4,13 @@ import javax.annotation.processing.Generated;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.board.domain.entity.Board;
+import org.example.backend.board.domain.entity.Category;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-01T12:09:27+0900",
+    date = "2024-11-09T13:53:21+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.4 (Eclipse Adoptium)"
 )
 @Component
@@ -25,11 +26,12 @@ public class BoardMapperImpl implements BoardMapper {
 
         board.setTitle( boardReqDto.getTitle() );
         board.setContent( boardReqDto.getContent() );
-        board.setViewCount( boardReqDto.getViewCount() );
         board.setWriter( boardReqDto.getWriter() );
         board.setFile( boardReqDto.getFile() );
         board.setCreateDate( boardReqDto.getCreateDate() );
-        board.setCategory( boardReqDto.getCategory() );
+        if ( boardReqDto.getCategory() != null ) {
+            board.setCategory( Enum.valueOf( Category.class, boardReqDto.getCategory() ) );
+        }
 
         board.setDepartment( mapDepartment(boardReqDto.getDepartmentId(), null, departmentRepository) );
 
@@ -51,7 +53,9 @@ public class BoardMapperImpl implements BoardMapper {
         boardResDto.setWriter( board.getWriter() );
         boardResDto.setFile( board.getFile() );
         boardResDto.setCreateDate( board.getCreateDate() );
-        boardResDto.setCategory( board.getCategory() );
+        if ( board.getCategory() != null ) {
+            boardResDto.setCategory( board.getCategory().name() );
+        }
 
         return boardResDto;
     }
@@ -68,7 +72,6 @@ public class BoardMapperImpl implements BoardMapper {
         if ( boardReqDto.getContent() != null ) {
             board.setContent( boardReqDto.getContent() );
         }
-        board.setViewCount( boardReqDto.getViewCount() );
         if ( boardReqDto.getWriter() != null ) {
             board.setWriter( boardReqDto.getWriter() );
         }
@@ -79,7 +82,7 @@ public class BoardMapperImpl implements BoardMapper {
             board.setCreateDate( boardReqDto.getCreateDate() );
         }
         if ( boardReqDto.getCategory() != null ) {
-            board.setCategory( boardReqDto.getCategory() );
+            board.setCategory( Enum.valueOf( Category.class, boardReqDto.getCategory() ) );
         }
 
         board.setDepartment( mapDepartment(boardReqDto.getDepartmentId(), board.getDepartment(), departmentRepository) );
