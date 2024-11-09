@@ -1,7 +1,5 @@
-// 환경 변수에서 API URL을 불러오는 방식
 const API_URL = process.env.REACT_APP_API_URL;
 
-// API 엔드포인트들을 객체로 관리
 export const apiEndpoints = {
   professor: {
     create: `${API_URL}/api/professor`,
@@ -21,15 +19,15 @@ export const apiEndpoints = {
     create: `${API_URL}/api/departments`,
   },
   main: {
-    get: `${API_URL}/api/`, // 메인 엔드포인트
+    get: `${API_URL}/api/`,
   },
   board: {
-    list: `${API_URL}/api/board`, // 기본 list 엔드포인트
-    listWithPage: (page: number, size: number, sort: string = 'title') => {
+    list: `${API_URL}/api/board`,
+    listWithPage: (page: number, size: number, sort = 'title') => {
       const params = new URLSearchParams({
         page: page.toString(),
         size: size.toString(),
-        sort: sort, // sort 파라미터를 항상 포함
+        sort,
       });
       return `${API_URL}/api/board?${params.toString()}`;
     },
