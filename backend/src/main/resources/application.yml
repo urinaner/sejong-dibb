@@ -38,6 +38,13 @@ spring:
     console:
       enabled: true
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
+
 ---
 spring:
   config:

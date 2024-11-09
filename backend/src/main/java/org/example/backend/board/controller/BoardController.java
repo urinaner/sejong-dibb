@@ -1,6 +1,6 @@
 package org.example.backend.board.controller;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,28 +27,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
     private final BoardService boardService;
 
-    @Schema(description = "게시판 생성 API", example = "게시판 생성")
+    @Operation(summary = "게시판 생성 API", description = "게시판 생성")
     @PostMapping
     public ResponseEntity<Long> createBoard(@RequestBody BoardReqDto boardReqDto) {
         Long boardId = boardService.saveBoard(boardReqDto);
         return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
 
-    @Schema(description = "모든 게시판 조회 API", example = "모든 게시판의 리스트 반환")
+    @Operation(summary = "모든 게시판 조회 API", description = "모든 게시판의 리스트 반환")
     @GetMapping
     public ResponseDto<List<BoardResDto>> getAllBoards(Pageable pageable) {
         Page<BoardResDto> boardList = boardService.getAllBoards(pageable);
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
 
-    @Schema(description = "게시판 상세 정보 반환 API", example = "게시판 상세 정보 반환")
+    @Operation(summary = "게시판 상세 정보 반환 API", description = "게시판 상세 정보 반환")
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResDto> getBoard(@PathVariable(name = "boardId") Long boardId) {
         BoardResDto boardResDto = boardService.getBoard(boardId);
         return new ResponseEntity<>(boardResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "게시판 정보 업데이트 API", example = "게시판 정보 업데이트")
+    @Operation(summary = "게시판 정보 업데이트 API", description = "게시판 정보 업데이트")
     @PostMapping("/{boardId}")
     public ResponseEntity<BoardResDto> updateBoard(@PathVariable(name = "boardId") Long boardId,
                                                    @RequestBody BoardReqDto boardReqDto) {
@@ -56,7 +56,7 @@ public class BoardController {
         return new ResponseEntity<>(boardResDto, HttpStatus.OK);
     }
 
-    @Schema(description = "게시판 삭제 API", example = "게시판 삭제")
+    @Operation(summary = "게시판 삭제 API", description = "게시판 삭제")
     @DeleteMapping("/{boardId}")
     public ResponseEntity<?> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
         boardService.deleteBoard(boardId);
