@@ -1,7 +1,8 @@
 package org.example.backend.thesis.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.exception.dto.ResponseDto;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "논문", description = "논문 API")
@@ -29,28 +28,28 @@ public class ThesisController {
 
     private final ThesisService thesisService;
 
-    @ApiOperation(value = "논문 생성 API", notes = "논문 생성")
+    @Schema(description = "논문 생성 API", example = "논문 생성")
     @PostMapping
     public ResponseEntity<Long> createThesis(@RequestBody ThesisReqDto thesisReqDto) {
         Long thesisId = thesisService.saveThesis(thesisReqDto);
         return new ResponseEntity<>(thesisId, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "논문 상세 정보 반환 API", notes = "논문 상세 정보 반환")
+    @Schema(description = "논문 상세 정보 반환 API", example = "논문 상세 정보 반환")
     @GetMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> getThesis(@PathVariable(name = "thesisId") Long thesisId) {
         ThesisResDto thesisResDto = thesisService.getThesis(thesisId);
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "모든 논문 조회 API", notes = "모든 논문의 리스트 반환")
+    @Schema(description = "모든 논문 조회 API", example = "모든 논문의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ThesisResDto>> getAllBoards(Pageable pageable) {
         Page<ThesisResDto> thesisResDtos = thesisService.getAllBoards(pageable);
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
-    @ApiOperation(value = "논문 정보 업데이트 API", notes = "논문 정보 업데이트")
+    @Schema(description = "논문 정보 업데이트 API", example = "논문 정보 업데이트")
     @PostMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> updateThesis(@PathVariable(name = "thesisId") Long thesisId,
                                                      @RequestBody ThesisReqDto thesisReqDto) {
@@ -58,7 +57,7 @@ public class ThesisController {
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "논문 삭제 API", notes = "논문 삭제")
+    @Schema(description = "논문 삭제 API", example = "논문 삭제")
     @DeleteMapping("/{thesisId}")
     public ResponseEntity<?> deleteThesis(@PathVariable(name = "thesisId") Long thesisId) {
         thesisService.deleteThesis(thesisId);
