@@ -11,8 +11,6 @@ public class BoardReqDto {
 
     private String content;
 
-    private int viewCount;
-
     private String writer;
 
     private String file;
