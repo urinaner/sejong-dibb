@@ -23,6 +23,10 @@ export const Title = styled.h1`
   font-weight: bold;
   margin-bottom: 1.5rem;
   color: #1a202c;
+
+  ${media.mobile} {
+    font-size: 1.5rem;
+  }
 `;
 
 export const MetaInfo = styled.div`
@@ -135,6 +139,7 @@ export const QuillContent = styled.div`
 
   ${media.mobile} {
     font-size: 1rem;
+    padding: 1.5rem 0;
   }
 `;
 
@@ -150,9 +155,20 @@ export const FileLink = styled.a`
   color: #3182ce;
   text-decoration: none;
   font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
-    text-decoration: underline;
+    background-color: #edf2f7;
+    border-color: #cbd5e0;
+    text-decoration: none;
+  }
+
+  ${media.mobile} {
+    font-size: 0.9rem;
   }
 `;
 
@@ -161,42 +177,122 @@ export const ButtonGroup = styled.div`
   justify-content: center;
   gap: 1rem;
   margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+
+  ${media.mobile} {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
 `;
 
 export const Button = styled.button`
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   background-color: white;
   color: #4a5568;
-  cursor: pointer;
   font-size: 1rem;
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #edf2f7;
+    background-color: #f7fafc;
     border-color: #cbd5e0;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
   ${media.mobile} {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     font-size: 0.9rem;
   }
 `;
 
+export const EditButton = styled(Button)`
+  background-color: #3182ce;
+  border-color: #3182ce;
+  color: white;
+
+  &:hover {
+    background-color: #2c5282;
+    border-color: #2c5282;
+  }
+`;
+
+export const DeleteButton = styled(Button)`
+  background-color: #e53e3e;
+  border-color: #e53e3e;
+  color: white;
+
+  &:hover {
+    background-color: #c53030;
+    border-color: #c53030;
+  }
+
+  &:disabled {
+    background-color: #fc8181;
+    border-color: #fc8181;
+  }
+`;
+
 export const Loading = styled.div`
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
   color: #4a5568;
   font-size: 1.1rem;
 `;
 
 export const Error = styled.div`
-  text-align: center;
+  margin: 2rem auto;
   padding: 1rem;
-  margin: 1rem 0;
+  max-width: 600px;
   background-color: #fff5f5;
-  color: #e53e3e;
+  color: #c53030;
   border-radius: 6px;
+  text-align: center;
   font-size: 1.1rem;
+  border: 1px solid #feb2b2;
+
+  ${media.mobile} {
+    font-size: 1rem;
+    margin: 1.5rem auto;
+  }
+`;
+
+// 새로운 상태 표시 컴포넌트
+export const StatusMessage = styled.div<{ type: 'success' | 'error' | 'info' }>`
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1rem;
+
+  ${(props) => {
+    switch (props.type) {
+      case 'success':
+        return `
+          background-color: #f0fff4;
+          color: #2f855a;
+          border: 1px solid #9ae6b4;
+        `;
+      case 'error':
+        return `
+          background-color: #fff5f5;
+          color: #c53030;
+          border: 1px solid #feb2b2;
+        `;
+      case 'info':
+        return `
+          background-color: #ebf8ff;
+          color: #2c5282;
+          border: 1px solid #90cdf4;
+        `;
+    }
+  }}
 `;
