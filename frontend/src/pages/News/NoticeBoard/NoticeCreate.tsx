@@ -97,7 +97,6 @@ const NoticeCreate: React.FC = () => {
   const handleChange = useCallback((content: string) => {
     setContent(content);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -106,79 +105,41 @@ const NoticeCreate: React.FC = () => {
       return;
     }
 
-    if (!auth.user) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
-
     try {
       setIsSubmitting(true);
-
-      // const token = localStorage.getItem('token');
-      // if (!token) {
-      //   throw new Error('인증 토큰이 없습니다.');
-      // }
-
-      const today = new Date();
-      const createDate = today.toISOString().split('T')[0];
-
-      /*
-      let fileUrl = '';
-      if (file) {
-        const fileFormData = new FormData();
-        fileFormData.append('file', file);
-
-        try {
-          // 파일 업로드 API 엔드포인트로 수정 필요
-          const fileResponse = await axios.post('/api/upload', fileFormData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: token,
-            },
-          });
-          fileUrl = fileResponse.data.fileUrl; // 서버에서 반환하는 파일 URL
-        } catch (error) {
-          console.error('File upload failed:', error);
-          throw new Error('파일 업로드에 실패했습니다.');
-        }
-      }
-      */
 
       const postData = {
         title: title.trim(),
         content: content.trim(),
-        writer: auth.user,
-        file: 'file.pdf', // 업로드된 파일의 URL
-        createDate: createDate,
+        writer: auth.user || 'admin', // 현재 로그인한 사용자 또는 기본값
+        file: file ? file.name : '', // 파일이 있는 경우 파일명, 없는 경우 빈 문자열
+        createDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식
         category: category,
-        departmentId: 1, // 기본값으로 1 설정
+        departmentId: 1,
       };
-      // 게시글 생성 요청
+
+      // 요청 데이터 확인
+      console.log('Request Data:', postData);
+
       const response = await axios.post(apiEndpoints.board.create, postData, {
-        // headers: {
-        //   'Content-Type': 'application/json',
-        //   Authorization: token,
-        // },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.status === 200 || response.status === 201) {
         alert('게시글이 성공적으로 등록되었습니다.');
         navigate('/news/noticeboard');
-      } else {
-        throw new Error('게시글 작성에 실패했습니다.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error posting article:', error);
-      if (error instanceof Error && error.message === '인증 토큰이 없습니다.') {
-        alert('로그인이 필요합니다.');
-      } else if (
-        error instanceof Error &&
-        error.message === '파일 업로드에 실패했습니다.'
-      ) {
-        alert('파일 업로드에 실패했습니다.');
-      } else {
-        alert('게시글 작성 중 오류가 발생했습니다.');
+
+      if (error.response) {
+        console.error('Error Status:', error.response.status);
+        console.error('Error Data:', error.response.data);
       }
+
+      alert('게시글 작성 중 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
     }
