@@ -113,6 +113,18 @@ const NoticeDetail: React.FC = () => {
             <S.Label>카테고리:</S.Label>
             <span>{CATEGORY_MAP[post.category] || post.category}</span>
           </S.MetaItem>
+          {auth?.isAuthenticated && (
+            <S.ActionButtons>
+              <S.EditButton
+                onClick={() => navigate(`/news/noticeboard/edit/${post.id}`)}
+              >
+                수정
+              </S.EditButton>
+              <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? '삭제중' : '삭제'}
+              </S.DeleteButton>
+            </S.ActionButtons>
+          )}
         </S.MetaInfo>
       </S.Header>
 

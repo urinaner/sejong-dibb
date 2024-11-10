@@ -35,6 +35,7 @@ export const MetaInfo = styled.div`
   gap: 2rem;
   color: #4a5568;
   font-size: 1.1rem;
+  position: relative;
 
   ${media.mobile} {
     gap: 1.5rem;
@@ -51,6 +52,23 @@ export const MetaItem = styled.div`
 export const Label = styled.span`
   font-weight: 600;
   color: #2d3748;
+`;
+
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  ${media.mobile} {
+    position: static;
+    transform: none;
+    margin-top: 1rem;
+    justify-content: flex-end;
+    width: 100%;
+  }
 `;
 
 export const QuillContent = styled.div`
@@ -130,7 +148,6 @@ export const QuillContent = styled.div`
     a {
       color: #3182ce;
       text-decoration: none;
-
       &:hover {
         text-decoration: underline;
       }
@@ -174,31 +191,35 @@ export const FileLink = styled.a`
 
 export const ButtonGroup = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid #e2e8f0;
 
   ${media.mobile} {
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.375rem;
   }
 `;
 
+// 기본 버튼 스타일
 export const Button = styled.button`
-  padding: 0.75rem 1.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
   background-color: white;
-  color: #4a5568;
-  font-size: 1rem;
+  color: #333;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  min-width: 80px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
 
   &:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e0;
+    background-color: #f8f9fa;
   }
 
   &:disabled {
@@ -207,35 +228,39 @@ export const Button = styled.button`
   }
 
   ${media.mobile} {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.9rem;
+    padding: 0.375rem 0.75rem;
+    min-width: 70px;
+    height: 32px;
   }
 `;
 
+// 수정 버튼
 export const EditButton = styled(Button)`
-  background-color: #3182ce;
-  border-color: #3182ce;
-  color: white;
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  color: #333;
 
   &:hover {
-    background-color: #2c5282;
-    border-color: #2c5282;
+    background-color: #e9ecef;
+    border-color: #ccc;
   }
 `;
 
+// 삭제 버튼
 export const DeleteButton = styled(Button)`
-  background-color: #e53e3e;
-  border-color: #e53e3e;
-  color: white;
+  background-color: white;
+  border-color: #ddd;
+  color: #dc3545;
 
   &:hover {
-    background-color: #c53030;
-    border-color: #c53030;
+    background-color: #fff5f5;
+    border-color: #dc3545;
   }
 
   &:disabled {
-    background-color: #fc8181;
-    border-color: #fc8181;
+    background-color: #ffe3e3;
+    border-color: #ffc9c9;
+    color: #fa5252;
   }
 `;
 
@@ -265,7 +290,6 @@ export const Error = styled.div`
   }
 `;
 
-// 새로운 상태 표시 컴포넌트
 export const StatusMessage = styled.div<{ type: 'success' | 'error' | 'info' }>`
   margin: 1rem 0;
   padding: 1rem;
