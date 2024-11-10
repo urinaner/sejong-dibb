@@ -4,6 +4,8 @@ import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
 import * as S from './NoticeDetailStyle';
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
+import 'react-quill/dist/quill.snow.css';
 
 interface BoardDetail {
   id: number;
@@ -15,25 +17,6 @@ interface BoardDetail {
   file?: string;
   category: string;
 }
-
-// 더미데이터 생성 함수
-/*
-const generateDummyDetail = (id: string): BoardDetail => {
-  const categoryTypes = ['학부', '대학원'];
-  const category = categoryTypes[Math.floor(Math.random() * 2)];
-
-  return {
-    id: parseInt(id),
-    title: `${category} 공지사항 ${id}`,
-    content: `게시글 내용 ${id}\n\n이것은 더미 데이터로 생성된 게시글 내용입니다.\n첫 번째 문단입니다.\n\n두 번째 문단입니다.\n\n세 번째 문단은 조금 더 길게 작성되어 있습니다. 게시글의 내용이 여러 줄에 걸쳐 표시되는 것을 테스트하기 위한 내용입니다.`,
-    writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
-    createDate: new Date(2024, 0, parseInt(id)).toISOString().split('T')[0],
-    viewCount: Math.floor(Math.random() * 100),
-    category: category,
-    file: Math.random() > 0.5 ? '첨부파일.pdf' : undefined,
-  };
-};
-*/
 
 const NoticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,11 +33,6 @@ const NoticeDetail: React.FC = () => {
       setError(null);
 
       try {
-        /* 더미데이터 사용 코드
-        const dummyData = generateDummyDetail(id);
-        setPost(dummyData);
-        */
-
         const response = await axios.get<BoardDetail>(
           apiEndpoints.board.get(id),
         );
@@ -70,6 +48,12 @@ const NoticeDetail: React.FC = () => {
 
     fetchPostDetail();
   }, [id]);
+
+  const createMarkup = (content: string) => {
+    return {
+      __html: DOMPurify.sanitize(content),
+    };
+  };
 
   if (loading) return <S.Loading>Loading...</S.Loading>;
   if (error) return <S.Error>{error}</S.Error>;
@@ -99,7 +83,10 @@ const NoticeDetail: React.FC = () => {
         </S.MetaInfo>
       </S.Header>
 
-      <S.Content>{post.content}</S.Content>
+      <S.QuillContent
+        className="ql-editor"
+        dangerouslySetInnerHTML={createMarkup(post.content)}
+      />
 
       {post.file && (
         <S.FileSection>
