@@ -29,6 +29,7 @@ import {
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
+import { useModalContext } from '../../../context/ModalContext';
 
 interface PostFormData {
   title: string;
@@ -49,6 +50,7 @@ const NoticeCreate: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const auth = useContext(AuthContext);
+  const { openModal, closeModal } = useModalContext();
 
   if (!auth) {
     throw new Error('AuthContext must be used within AuthProvider');
@@ -101,7 +103,7 @@ const NoticeCreate: React.FC = () => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim() || !category) {
-      alert('제목, 내용, 카테고리를 모두 입력해주세요.');
+      openModal('제목, 내용, 카테고리를 모두 입력해주세요.');
       return;
     }
 
@@ -128,7 +130,7 @@ const NoticeCreate: React.FC = () => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert('게시글이 성공적으로 등록되었습니다.');
+        openModal(<h1>게시글이 성공적으로 등록되었습니다.</h1>);
         navigate('/news/noticeboard');
       }
     } catch (error: any) {
@@ -139,7 +141,7 @@ const NoticeCreate: React.FC = () => {
         console.error('Error Data:', error.response.data);
       }
 
-      alert('게시글 작성 중 오류가 발생했습니다.');
+      openModal(<h1>게시글 작성 중 오류가 발생했습니다.</h1>);
     } finally {
       setIsSubmitting(false);
     }
