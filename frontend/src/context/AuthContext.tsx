@@ -79,17 +79,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
-        // 게시판 관련 공개 API는 토큰을 추가하지 않음
-        const isPublicBoardEndpoint =
-          config.url?.includes('/api/board') &&
-          (config.method === 'get' || config.method === 'GET');
-
-        const token = localStorage.getItem('token');
-
-        if (token && config.headers && !isPublicBoardEndpoint) {
-          config.headers['Authorization'] = token;
-        }
-
         // Content-Type 설정 (multipart/form-data가 아닌 경우에만)
         if (
           config.headers &&
