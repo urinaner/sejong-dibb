@@ -4,6 +4,11 @@ export const apiEndpoints = {
   professor: {
     create: `${API_URL}/api/professor`,
     get: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
+    listWithPage: (page: number, size: number) =>
+      `${API_URL}/api/professor?${new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      })}`,
     update: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
     delete: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
   },
