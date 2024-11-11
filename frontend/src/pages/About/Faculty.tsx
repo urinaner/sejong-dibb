@@ -1,16 +1,12 @@
-// Faculty.tsx
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import {
-  Phone,
-  Mail,
-  Globe,
-  MapPin,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as S from './FacultyStyle';
 import { apiEndpoints } from '../../config/apiConfig';
+import ProfessorCard from './ProfessorCard';
+import axios from 'axios';
+
+const ITEMS_PER_PAGE = 10;
+const DEFAULT_PROFILE_IMAGE = '/professor_example.jpg';
 
 interface Professor {
   id: number;
@@ -31,9 +27,6 @@ interface ApiResponse {
   data: Professor[];
 }
 
-const ITEMS_PER_PAGE = 10;
-const DEFAULT_PROFILE_IMAGE = 'https://via.placeholder.com/200'; // 기본 프로필 이미지 경로
-
 const Faculty = () => {
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -41,7 +34,7 @@ const Faculty = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchProfessors = async (page: number) => {
+  const fetchProfessors = useCallback(async (page: number) => {
     try {
       setLoading(true);
       const response = await axios.get<ApiResponse>(
@@ -64,22 +57,28 @@ const Faculty = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProfessors(currentPage);
-  }, [currentPage]);
+  }, [currentPage, fetchProfessors]);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      if (newPage >= 0 && newPage < totalPages) {
+        setCurrentPage(newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    },
+    [totalPages],
+  );
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
-  };
+  const handleImageError = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
+    },
+    [],
+  );
 
   if (loading) {
     return (
@@ -99,67 +98,12 @@ const Faculty = () => {
         <>
           <S.ProfessorList>
             {professors.map((professor) => (
-              <S.ProfessorCard key={professor.id}>
-                <S.ImageSection>
-                  <S.ProfessorImage
-                    src={DEFAULT_PROFILE_IMAGE}
-                    alt={`${professor.name} 교수`}
-                    onError={handleImageError}
-                    loading="lazy"
-                  />
-                </S.ImageSection>
-
-                <S.InfoSection>
-                  <S.MainInfo>
-                    <S.ProfessorName>{professor.name}</S.ProfessorName>
-                    <S.Position>{professor.position}</S.Position>
-                    <S.Major>{professor.major}</S.Major>
-                  </S.MainInfo>
-
-                  <S.ContactInfo>
-                    <S.InfoTitle>연락처</S.InfoTitle>
-                    <S.InfoList>
-                      {professor.phoneN && (
-                        <S.InfoItem>
-                          <Phone />
-                          <span>전화번호: {professor.phoneN}</span>
-                        </S.InfoItem>
-                      )}
-
-                      {professor.email && (
-                        <S.InfoItem>
-                          <Mail />
-                          <span>이메일: </span>
-                          <S.Link href={`mailto:${professor.email}`}>
-                            {professor.email}
-                          </S.Link>
-                        </S.InfoItem>
-                      )}
-
-                      {professor.homepage && (
-                        <S.InfoItem>
-                          <Globe />
-                          <span>홈페이지: </span>
-                          <S.Link
-                            href={professor.homepage}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {professor.homepage}
-                          </S.Link>
-                        </S.InfoItem>
-                      )}
-
-                      {professor.lab && (
-                        <S.InfoItem>
-                          <MapPin />
-                          <span>연구실: {professor.lab}</span>
-                        </S.InfoItem>
-                      )}
-                    </S.InfoList>
-                  </S.ContactInfo>
-                </S.InfoSection>
-              </S.ProfessorCard>
+              <ProfessorCard
+                key={professor.id}
+                professor={professor}
+                onImageError={handleImageError}
+                defaultImage={DEFAULT_PROFILE_IMAGE}
+              />
             ))}
           </S.ProfessorList>
 

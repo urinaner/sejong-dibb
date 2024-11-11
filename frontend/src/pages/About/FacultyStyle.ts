@@ -1,4 +1,3 @@
-// FacultyStyles.ts
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -19,14 +18,14 @@ export const Title = styled.h1`
 export const ProfessorList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 `;
 
 export const ProfessorCard = styled.div`
   display: flex;
   background: white;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 100%;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -43,7 +42,7 @@ export const ProfessorCard = styled.div`
 export const ImageSection = styled.div`
   flex-shrink: 0;
   width: 200px;
-  height: 200px;
+  height: 240px;
   background: #f5f5f5;
   position: relative;
 
@@ -57,7 +56,7 @@ export const ProfessorImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
 `;
 
 export const InfoSection = styled.div`
@@ -105,6 +104,11 @@ export const Major = styled.p`
 
 export const ContactInfo = styled.div`
   flex: 2;
+  min-width: 300px;
+
+  @media (max-width: 768px) {
+    min-width: 100%;
+  }
 `;
 
 export const InfoTitle = styled.h3`
@@ -130,11 +134,11 @@ export const InfoItem = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 14px;
   color: #666666;
+  padding: 4px 0;
 
   svg {
-    width: 18px;
-    height: 18px;
     color: #1a73e8;
+    min-width: 18px;
   }
 `;
 
@@ -142,6 +146,7 @@ export const Link = styled.a`
   color: inherit;
   text-decoration: none;
   transition: color 0.2s;
+  word-break: break-all;
 
   &:hover {
     color: #1a73e8;
