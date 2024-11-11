@@ -9,14 +9,14 @@ import {
   Th,
   Td,
   Tr,
-  NoticeTag,
-  NewTag,
   TitleLink,
   ViewCount,
   ErrorMessage,
   LoadingSpinner,
   PaginationContainer,
   PageButton,
+  WriteButton,
+  HeaderContainer,
 } from './NoticeBoardStyle';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
@@ -28,7 +28,29 @@ interface NoticeItem {
   content: string;
   viewCount: number;
   writer: string;
+  createDate: string;
+  category: string;
+  file?: string;
 }
+
+const CATEGORY_MAP: { [key: string]: string } = {
+  undergraduate: '학부',
+  graduate: '대학원',
+  employment: '취업',
+  scholarship: '장학',
+};
+const NOTICE_TYPES = ['전체', '학부', '대학원', '취업', '장학'];
+
+const REVERSE_CATEGORY_MAP: { [key: string]: string } = {
+  학부: 'undergraduate',
+  대학원: 'graduate',
+  취업: 'employment',
+  장학: 'scholarship',
+};
+
+const getEnglishCategory = (koreanType: string): string | undefined => {
+  return REVERSE_CATEGORY_MAP[koreanType];
+};
 
 interface PageInfo {
   currentPage: number;
@@ -43,25 +65,37 @@ interface ApiResponse {
   data: NoticeItem[];
 }
 
-// 더미 데이터 생성 함수
+// 더미데이터 생성 함수 유지
+
+/*
 const generateDummyNotices = (
-  page: number,
-  size: number,
-  type: string,
+    page: number,
+    size: number,
+    type: string,
 ): ApiResponse => {
-  const totalItems = 23; // 전체 아이템 수
+  const totalItems = 23;
   const totalPages = Math.ceil(totalItems / size);
   const startIndex = page * size;
 
   const dummyData = Array.from(
-    { length: Math.min(size, totalItems - startIndex) },
-    (_, index) => ({
-      id: startIndex + index + 1,
-      title: `[${type === '전체' ? '공지사항' : type}] 테스트 게시글 ${startIndex + index + 1}`,
-      content: `게시글 내용 ${startIndex + index + 1}`,
-      viewCount: Math.floor(Math.random() * 100),
-      writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
-    }),
+      { length: Math.min(size, totalItems - startIndex) },
+      (_, index) => {
+        const id = startIndex + index + 1;
+        const category =
+            type === '전체'
+                ? ['학부', '대학원'][Math.floor(Math.random() * 2)]
+                : type;
+
+        return {
+          id: id,
+          title: `${category} 공지사항 ${id}`,
+          content: `게시글 내용 ${id}`,
+          viewCount: Math.floor(Math.random() * 100),
+          writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
+          createDate: new Date(2024, 0, id).toISOString().split('T')[0],
+          category: category,
+        };
+      },
   );
 
   return {
@@ -71,8 +105,12 @@ const generateDummyNotices = (
     data: dummyData,
   };
 };
+*/
 
 const NoticeBoard: React.FC = () => {
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,21 +120,21 @@ const NoticeBoard: React.FC = () => {
     totalPages: 0,
     size: 5,
   });
-  const navigate = useNavigate();
+
+  const getCategoryLabel = (category: string): string => {
+    return CATEGORY_MAP[category] || category;
+  };
 
   const fetchNotices = async (page = 0) => {
     setLoading(true);
     setError(null);
 
     try {
-      // 토큰 존재 여부 확인
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('인증이 필요합니다.');
-      }
+      const category =
+        selectedType !== '전체' ? getEnglishCategory(selectedType) : undefined;
 
       const response = await axios.get<ApiResponse>(
-        apiEndpoints.board.listWithPage(page, pageInfo.size, selectedType),
+        apiEndpoints.board.listWithPage(page, pageInfo.size, category),
       );
 
       setNotices(response.data.data);
@@ -107,25 +145,7 @@ const NoticeBoard: React.FC = () => {
       });
     } catch (error: any) {
       console.error('Failed to fetch notices:', error);
-      let errorMessage = '게시글을 불러오는데 실패했습니다.';
-
-      if (error.message === '인증이 필요합니다.') {
-        // 로그인 페이지로 리다이렉트
-        navigate('/signin');
-        return;
-      }
-
-      if (error.response) {
-        switch (error.response.status) {
-          case 403:
-            errorMessage = '접근 권한이 없습니다.';
-            break;
-          default:
-            errorMessage =
-              error.response.data?.message || '서버 오류가 발생했습니다.';
-        }
-      }
-      setError(errorMessage);
+      setError('게시글을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -145,8 +165,6 @@ const NoticeBoard: React.FC = () => {
   useEffect(() => {
     fetchNotices(pageInfo.currentPage);
   }, [selectedType]);
-
-  const NOTICE_TYPES = ['전체', '학부', '대학원', '선택'];
 
   const renderPagination = () => {
     const pages = [];
@@ -206,20 +224,26 @@ const NoticeBoard: React.FC = () => {
       </PaginationContainer>
     );
   };
-
   return (
     <Container>
-      <Navigation>
-        {NOTICE_TYPES.map((type) => (
-          <NavButton
-            key={type}
-            isActive={selectedType === type}
-            onClick={() => handleTypeChange(type)}
-          >
-            {type}
-          </NavButton>
-        ))}
-      </Navigation>
+      <HeaderContainer>
+        <Navigation>
+          {NOTICE_TYPES.map((type) => (
+            <NavButton
+              key={type}
+              isActive={selectedType === type}
+              onClick={() => handleTypeChange(type)}
+            >
+              {type}
+            </NavButton>
+          ))}
+        </Navigation>
+        {auth?.isAuthenticated && (
+          <WriteButton onClick={() => navigate('/news/noticeboard/create')}>
+            글쓰기
+          </WriteButton>
+        )}
+      </HeaderContainer>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
@@ -233,6 +257,8 @@ const NoticeBoard: React.FC = () => {
                 <Th>번호</Th>
                 <Th>제목</Th>
                 <Th>작성자</Th>
+                <Th>등록일</Th>
+                <Th>카테고리</Th>
                 <Th style={{ textAlign: 'right' }}>조회수</Th>
               </tr>
             </thead>
@@ -242,14 +268,14 @@ const NoticeBoard: React.FC = () => {
                   <Td>{notice.id}</Td>
                   <Td>
                     <TitleLink
-                      onClick={() =>
-                        (window.location.href = `/notice/${notice.id}`)
-                      }
+                      onClick={() => navigate(`/news/noticeboard/${notice.id}`)}
                     >
                       {notice.title}
                     </TitleLink>
                   </Td>
                   <Td>{notice.writer}</Td>
+                  <Td>{notice.createDate}</Td>
+                  <Td>{getCategoryLabel(notice.category)}</Td>
                   <ViewCount>{notice.viewCount.toLocaleString()}</ViewCount>
                 </Tr>
               ))}
@@ -261,5 +287,4 @@ const NoticeBoard: React.FC = () => {
     </Container>
   );
 };
-
 export default NoticeBoard;
