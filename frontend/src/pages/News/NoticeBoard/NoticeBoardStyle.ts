@@ -9,115 +9,163 @@ const media = {
   tablet: '@media(max-width: 1024px)',
 };
 
+// 세종대학교 컬러 상수
+const colors = {
+  primary: '#B71C1C', // 세종대 메인 레드
+  primaryDark: '#8B0000', // 더 진한 레드
+  primaryLight: '#D32F2F', // 더 밝은 레드
+  hover: '#F5F5F5', // 호버시 밝은 회색
+};
+
 export const Container = styled.div`
   max-width: 1400px;
   width: 95%;
   margin: 0 auto;
   padding: 40px 20px;
+
+  ${media.mobile} {
+    padding: 20px 10px;
+  }
+`;
+
+export const HeaderContainer = styled.div`
+  margin-bottom: 30px;
 `;
 
 export const Navigation = styled.nav`
   display: flex;
-  border-bottom: 2px solid #e2e8f0;
-  margin-bottom: 30px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid ${colors.primary};
+`;
+
+export const NavButtonGroup = styled.div`
+  display: flex;
 `;
 
 export const NavButton = styled.button<StyledButtonProps>`
   padding: 12px 32px;
   font-size: 1.1rem;
   border: none;
-  background: ${(props) => (props.isActive ? '#1a202c' : 'transparent')};
-  color: ${(props) => (props.isActive ? 'white' : 'inherit')};
+  background: ${(props) => (props.isActive ? colors.primary : 'transparent')};
+  color: ${(props) => (props.isActive ? 'white' : '#333')};
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease-in-out;
+  position: relative;
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? '#1a202c' : '#f7fafc')};
+    background-color: ${(props) =>
+      props.isActive ? colors.primaryDark : colors.hover};
+    color: ${(props) => (props.isActive ? 'white' : colors.primary)};
   }
-`;
 
-export const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-`;
-
-export const WriteButton = styled.button`
-  padding: 12px 24px;
-  background-color: #3182ce;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #2c5282;
-  }
+  ${(props) =>
+    props.isActive &&
+    `
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: ${colors.primary};
+    }
+  `}
 
   ${media.mobile} {
     padding: 10px 20px;
-    font-size: 0.9rem;
+    font-size: 1rem;
+  }
+`;
+
+export const WriteButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-width: 80px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  margin-right: 1rem;
+
+  &:hover {
+    background-color: #f8f9fa;
+    border-color: #ccc;
+  }
+
+  ${media.mobile} {
+    padding: 0.375rem 0.75rem;
+    min-width: 70px;
+    height: 32px;
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
   }
 `;
 
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  background-color: #fff;
 `;
 
 export const Th = styled.th`
   padding: 16px 24px;
   text-align: left;
-  border-bottom: 2px solid #e2e8f0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   font-weight: 600;
+  color: #333;
+  background-color: #f8f9fa;
+
+  ${media.mobile} {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const Td = styled.td`
   padding: 16px 24px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #ddd;
   line-height: 1.5;
+
+  ${media.mobile} {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const Tr = styled.tr`
   &:hover {
-    background-color: #f8fafc;
+    background-color: #f8f9fa;
   }
 `;
 
 export const ViewCount = styled.td`
   text-align: right;
   padding: 16px 24px;
-  border-bottom: 1px solid #e2e8f0;
-`;
+  border-bottom: 1px solid #ddd;
 
-export const NoticeTag = styled.span`
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: #e53e3e;
-  color: white;
-  border-radius: 9999px;
-  font-size: 0.95rem;
-`;
-
-export const NewTag = styled.span`
-  display: inline-block;
-  margin-left: 12px;
-  padding: 4px 10px;
-  background-color: #3182ce;
-  color: white;
-  border-radius: 4px;
-  font-size: 0.85rem;
+  ${media.mobile} {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const TitleLink = styled.span`
   cursor: pointer;
   font-weight: 500;
+  color: #333;
+
   &:hover {
-    color: #3182ce;
+    color: #666;
   }
 `;
 
@@ -128,61 +176,81 @@ export const PaginationContainer = styled.div`
   gap: 8px;
   margin-top: 40px;
   padding: 20px 0;
+
+  ${media.mobile} {
+    gap: 4px;
+    margin-top: 20px;
+    padding: 10px 0;
+  }
 `;
 
 export const PageButton = styled.button<StyledButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 8px;
-  font-size: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background: ${(props) => (props.isActive ? '#2D3748' : 'white')};
-  color: ${(props) => (props.isActive ? 'white' : '#4A5568')};
+  min-width: 36px;
+  height: 36px;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  border: 1px solid ${(props) => (props.isActive ? '#666' : '#ddd')};
+  background: ${(props) => (props.isActive ? '#666' : 'white')};
+  color: ${(props) => (props.isActive ? 'white' : '#333')};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: ${(props) => (props.isActive ? '#2D3748' : '#EDF2F7')};
-    border-color: ${(props) => (props.isActive ? '#2D3748' : '#CBD5E0')};
+    background-color: ${(props) => (props.isActive ? '#555' : '#f8f9fa')};
+    border-color: #666;
   }
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
-    background-color: #edf2f7;
-    color: #a0aec0;
-    border-color: #e2e8f0;
-  }
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    border-color: #dee2e6;
 
-  // 처음, 마지막 버튼 스타일
-  &:first-child,
-  &:last-child {
-    font-weight: bold;
+    &:hover {
+      background-color: #f8f9fa;
+      color: #adb5bd;
+      border-color: #dee2e6;
+    }
   }
-
-  // 이전, 다음 버튼 스타일
-  &:nth-child(2),
-  &:nth-last-child(2) {
-    font-weight: bold;
-  }
-
-  // 활성화된 페이지 버튼에 그림자 효과 추가
-  ${(props) =>
-    props.isActive &&
-    `
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  `}
 
   ${media.mobile} {
-    min-width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-    padding: 6px;
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
   }
+`;
+
+export const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border-radius: 4px;
+  font-size: 1rem;
+  border: 1px solid #feb2b2;
+`;
+
+export const LoadingSpinner = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+`;
+
+export const EmptyMessage = styled.div`
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  font-size: 1.1rem;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin: 1rem 0;
 `;
 
 export const ResponsiveTable = styled(Table)`
@@ -193,20 +261,4 @@ export const ResponsiveTable = styled(Table)`
       padding: 12px 16px;
     }
   }
-`;
-
-export const ErrorMessage = styled.div`
-  color: #ff4444;
-  text-align: center;
-  padding: 1rem;
-  margin: 1rem 0;
-  background-color: #ffeeee;
-  border-radius: 4px;
-`;
-
-export const LoadingSpinner = styled.div`
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  font-size: 1.1rem;
 `;

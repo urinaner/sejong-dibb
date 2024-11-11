@@ -13,6 +13,7 @@ import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
 import mainImage from './assets/images/main_picture.svg';
 import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
 import NoticeCreate from './pages/News/NoticeBoard/NoticeCreate';
+import NoticeEdit from './pages/News/NoticeBoard/NoticeEdit';
 
 const PageContainer = styled.div`
   display: flex;
@@ -82,6 +83,7 @@ function AppContent() {
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/news/noticeboard/create" element={<NoticeCreate />} />
+          <Route path="/news/noticeboard/edit/:id" element={<NoticeEdit />} />
         </Routes>
       </ContentWrapper>
       <Footer />

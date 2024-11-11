@@ -154,83 +154,104 @@ export const QuillWrapper = styled.div`
 
 export const ButtonGroup = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  justify-content: flex-end; // 오른쪽 정렬로 변경
+  gap: 0.5rem; // 간격 축소
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid #e2e8f0;
 
   ${media.mobile} {
-    padding-top: 20px;
+    gap: 0.375rem;
   }
 `;
 
+// 기본 버튼 스타일
 export const Button = styled.button`
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #333;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  min-width: 80px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 
   ${media.mobile} {
-    padding: 10px 20px;
-    font-size: 0.95rem;
+    padding: 0.375rem 0.75rem;
+    min-width: 70px;
+    height: 32px;
   }
 `;
 
 export const CancelButton = styled(Button)`
   background-color: white;
-  border: 1px solid #e2e8f0;
-  color: #4a5568;
+  border-color: #ddd;
+  color: #333;
 
   &:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e0;
+    background-color: #f8f9fa;
+    border-color: #ccc;
   }
 `;
 
 export const SubmitButton = styled(Button)`
-  background-color: #3182ce;
-  border: none;
-  color: white;
+  background-color: white;
+  border-color: #ddd;
+  color: #333;
 
   &:hover {
-    background-color: #2c5282;
+    background-color: #f8f9fa;
+    border-color: #ccc;
   }
 
   &:disabled {
-    background-color: #a0aec0;
-    cursor: not-allowed;
+    background-color: #f1f3f5;
+    border-color: #ddd;
+    color: #adb5bd;
   }
-`;
-
-export const FileInput = styled.input`
-  display: none;
 `;
 
 export const FileInputLabel = styled.label`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 0.5rem 1rem;
   background-color: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #4a5568;
-  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  color: #333;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  height: 36px;
+  font-weight: 500;
 
   &:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e0;
+    background-color: #f8f9fa;
+    border-color: #ccc;
   }
 
   ${media.mobile} {
-    padding: 10px 14px;
-    font-size: 0.9rem;
+    padding: 0.375rem 0.75rem;
+    height: 32px;
   }
+`;
+
+export const FileInput = styled.input`
+  display: none;
 `;
 
 export const FileList = styled.div`
@@ -243,20 +264,27 @@ export const FileItem = styled.div`
   justify-content: space-between;
   padding: 8px 12px;
   background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border: 1px solid #ddd;
   font-size: 0.9rem;
-  color: #4a5568;
+  color: #333;
 
   button {
     background: none;
     border: none;
-    color: #e53e3e;
+    color: #495057;
     cursor: pointer;
     padding: 4px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
 
     &:hover {
-      color: #c53030;
+      background-color: #e9ecef;
+      color: #212529;
     }
   }
 `;
