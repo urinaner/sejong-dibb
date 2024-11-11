@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { ChevronLeft, ChevronRight, Edit, Plus } from 'lucide-react';
 import * as S from './FacultyStyle';
 import { apiEndpoints } from '../../../config/apiConfig';
 import ProfessorCard from './ProfessorCard';
+import { AuthContext } from '../../../context/AuthContext';
+import Button from '../../../common/Button/Button';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const ITEMS_PER_PAGE = 10;
@@ -28,11 +31,15 @@ interface ApiResponse {
 }
 
 const Faculty = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const isAuthenticated = auth?.isAuthenticated ?? false;
 
   const fetchProfessors = useCallback(async (page: number) => {
     try {
@@ -59,10 +66,6 @@ const Faculty = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchProfessors(currentPage);
-  }, [currentPage, fetchProfessors]);
-
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (newPage >= 0 && newPage < totalPages) {
@@ -80,60 +83,114 @@ const Faculty = () => {
     [],
   );
 
-  if (loading) {
+  const handleAddProfessor = useCallback(() => {
+    navigate('/professor/create');
+  }, [navigate]);
+
+  const handleEditProfessor = useCallback(
+    (id: number) => {
+      navigate(`/professor/edit/${id}`);
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    fetchProfessors(currentPage);
+  }, [currentPage, fetchProfessors]);
+
+  const renderProfessorList = () => {
+    return professors.map((professor) => (
+      <S.ProfessorCardWrapper key={professor.id}>
+        <ProfessorCard
+          professor={professor}
+          onImageError={handleImageError}
+          defaultImage={DEFAULT_PROFILE_IMAGE}
+        />
+        {isAuthenticated && (
+          <S.EditButtonContainer>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => handleEditProfessor(professor.id)}
+            >
+              <Edit size={14} style={{ marginRight: '4px' }} />
+              수정
+            </Button>
+          </S.EditButtonContainer>
+        )}
+      </S.ProfessorCardWrapper>
+    ));
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
     return (
-      <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
+      <S.PaginationWrapper>
+        <S.PaginationButton
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+          aria-label="이전 페이지"
+        >
+          <ChevronLeft />
+        </S.PaginationButton>
+
+        <S.PageNumber>
+          {currentPage + 1} / {totalPages}
+        </S.PageNumber>
+
+        <S.PaginationButton
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages - 1}
+          aria-label="다음 페이지"
+        >
+          <ChevronRight />
+        </S.PaginationButton>
+      </S.PaginationWrapper>
     );
-  }
+  };
 
-  if (error) {
-    return <S.ErrorContainer>{error}</S.ErrorContainer>;
-  }
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
+      );
+    }
 
-  return (
-    <S.Container>
-      <S.Title>교수진 소개</S.Title>
+    if (error) {
+      return <S.ErrorContainer>{error}</S.ErrorContainer>;
+    }
 
-      {professors.length > 0 ? (
-        <>
-          <S.ProfessorList>
-            {professors.map((professor) => (
-              <ProfessorCard
-                key={professor.id}
-                professor={professor}
-                onImageError={handleImageError}
-                defaultImage={DEFAULT_PROFILE_IMAGE}
-              />
-            ))}
-          </S.ProfessorList>
-
-          <S.PaginationWrapper>
-            <S.PaginationButton
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 0}
-              aria-label="이전 페이지"
-            >
-              <ChevronLeft />
-            </S.PaginationButton>
-
-            <S.PageNumber>
-              {currentPage + 1} / {totalPages}
-            </S.PageNumber>
-
-            <S.PaginationButton
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages - 1}
-              aria-label="다음 페이지"
-            >
-              <ChevronRight />
-            </S.PaginationButton>
-          </S.PaginationWrapper>
-        </>
-      ) : (
+    if (professors.length === 0) {
+      return (
         <S.EmptyStateContainer>
           등록된 교수진 정보가 없습니다.
         </S.EmptyStateContainer>
-      )}
+      );
+    }
+
+    return (
+      <>
+        <S.ProfessorList>{renderProfessorList()}</S.ProfessorList>
+        {renderPagination()}
+      </>
+    );
+  };
+
+  return (
+    <S.Container>
+      <S.HeaderContainer>
+        <S.Title>교수진 소개</S.Title>
+        {isAuthenticated && (
+          <S.ActionButtons>
+            <Button variant="primary" onClick={handleAddProfessor}>
+              <Plus size={18} style={{ marginRight: '4px' }} />
+              교수 추가
+            </Button>
+          </S.ActionButtons>
+        )}
+      </S.HeaderContainer>
+      {renderContent()}
     </S.Container>
   );
 };
