@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as S from './FacultyStyle';
-import { apiEndpoints } from '../../config/apiConfig';
+import { apiEndpoints } from '../../../config/apiConfig';
 import ProfessorCard from './ProfessorCard';
 import axios from 'axios';
 

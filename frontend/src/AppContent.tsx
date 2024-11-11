@@ -8,7 +8,7 @@ import Main from './pages/Main/Main';
 import SignIn from './pages/Auth/SignIn';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
-import Faculty from './pages/About/Faculty';
+import Faculty from './pages/About/Faculty/Faculty';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
 import mainImage from './assets/images/main_picture.svg';
 import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
