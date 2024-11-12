@@ -89,7 +89,7 @@ const Faculty = () => {
 
   const handleEditProfessor = useCallback(
     (id: number) => {
-      navigate(`/professor/edit/${id}`);
+      navigate(`/about/faculty/edit/${id}`);
     },
     [navigate],
   );
