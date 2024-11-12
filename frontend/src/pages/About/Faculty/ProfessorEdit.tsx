@@ -245,7 +245,7 @@ const ProfessorEdit: React.FC = () => {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => navigate('/faculty')}
+            onClick={() => navigate('/about/faculty')}
             disabled={saving}
           >
             취소

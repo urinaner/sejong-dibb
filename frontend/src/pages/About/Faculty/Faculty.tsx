@@ -84,7 +84,7 @@ const Faculty = () => {
   );
 
   const handleAddProfessor = useCallback(() => {
-    navigate('/professor/create');
+    navigate('/about/faculty/create');
   }, [navigate]);
 
   const handleEditProfessor = useCallback(
