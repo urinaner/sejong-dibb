@@ -105,12 +105,13 @@ export const AnnouncementItem = styled.div`
   cursor: pointer;
 
   img {
-    margin: 0 8px 0 20px;
+    margin: 0 8px 0 8px;
   }
 
   span {
     font-size: 15px;
     font-weight: 400;
+    margin-right: 8px;
   }
 `;
 

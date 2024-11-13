@@ -20,8 +20,13 @@ import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
 
 interface Announcement {
+  category: string;
+  createDate: string;
+  // file: string;
+  id: number;
   title: string;
-  date: string;
+  viewCount: number;
+  writer: string;
 }
 
 interface Paper {
@@ -37,36 +42,36 @@ interface Paper {
   thesisImage: string;
 }
 
-const announcements: { [key: string]: Announcement[] } = {
-  학부: [
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-  ],
-  대학원: [
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-  ],
-  취업: [
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-  ],
-  장학: [
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-  ],
-};
+// const announcements: { [key: string]: Announcement[] } = {
+//   학부: [
+//     { title: '공지사항', date: '2024.00.00' },
+//     { title: '공지사항', date: '2024.00.00' },
+//     { title: '공지사항', date: '2024.00.00' },
+//     { title: '공지사항', date: '2024.00.00' },
+//     { title: '공지사항', date: '2024.00.00' },
+//   ],
+//   대학원: [
+//     { title: '대학원 공지사항', date: '2024.00.00' },
+//     { title: '대학원 공지사항', date: '2024.00.00' },
+//     { title: '대학원 공지사항', date: '2024.00.00' },
+//     { title: '대학원 공지사항', date: '2024.00.00' },
+//     { title: '대학원 공지사항', date: '2024.00.00' },
+//   ],
+//   취업: [
+//     { title: '취업 공지사항', date: '2024.00.00' },
+//     { title: '취업 공지사항', date: '2024.00.00' },
+//     { title: '취업 공지사항', date: '2024.00.00' },
+//     { title: '취업 공지사항', date: '2024.00.00' },
+//     { title: '취업 공지사항', date: '2024.00.00' },
+//   ],
+//   장학: [
+//     { title: '장학 공지사항', date: '2024.00.00' },
+//     { title: '장학 공지사항', date: '2024.00.00' },
+//     { title: '장학 공지사항', date: '2024.00.00' },
+//     { title: '장학 공지사항', date: '2024.00.00' },
+//     { title: '장학 공지사항', date: '2024.00.00' },
+//   ],
+// };
 
 const links = [
   {
@@ -101,13 +106,15 @@ const links = [
   },
 ];
 
+const announcementTab = ['학부', '대학원', '취업', '장학'];
+
 function Main(): JSX.Element {
-  const [activeTab, setActiveTab] =
-    useState<keyof typeof announcements>('학부');
   const [papers, setPapers] = useState([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [activeTab, setActiveTab] = useState('학부');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPaper = async () => {
       try {
         const response = await axios.get(apiEndpoints.thesis.list, {
           params: {
@@ -117,11 +124,27 @@ function Main(): JSX.Element {
         });
         setPapers(response.data.data);
       } catch (error) {
-        console.error('논문 데이터를 가져오는 중 오류 발생:', error);
+        console.error('논문 데이터 가져오기 실패:', error);
       }
     };
 
-    fetchData();
+    const fetchAnnouncement = async () => {
+      try {
+        const response = await axios.get(apiEndpoints.board.list, {
+          params: {
+            page: 0,
+            size: 5,
+          },
+        });
+        setAnnouncements(response.data.data);
+        console.log('announcement', response.data.data);
+      } catch (error) {
+        console.error('공지사항 데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchPaper();
+    fetchAnnouncement();
   }, []);
 
   return (
@@ -146,7 +169,7 @@ function Main(): JSX.Element {
           <AnnouncementContainer>
             <p>공지사항</p>
             <TabContainer>
-              {Object.keys(announcements).map((tab) => (
+              {announcementTab.map((tab) => (
                 <TabButton
                   key={tab}
                   isActive={activeTab === tab}
@@ -157,15 +180,38 @@ function Main(): JSX.Element {
               ))}
             </TabContainer>
             <ContentContainer>
-              {announcements[activeTab].map((announcement, index) => (
-                <AnnouncementItem key={index}>
-                  <span>
-                    <img src="/bullet.svg" />
-                    <span>{announcement.title}</span>
-                  </span>
-                  <span>{announcement.date}</span>
-                </AnnouncementItem>
-              ))}
+              {announcements
+                .filter((announcement) => {
+                  // 각 탭에 해당하는 카테고리로 필터링
+                  switch (activeTab) {
+                    case '학부':
+                      return announcement.category === 'undergraduate';
+                    case '대학원':
+                      return announcement.category === 'graduate';
+                    case '취업':
+                      return announcement.category === 'employment';
+                    case '장학':
+                      return announcement.category === 'scholarship';
+                    default:
+                      return false;
+                  }
+                })
+                .map((announcement) => (
+                  <AnnouncementItem
+                    key={announcement.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '10px 0',
+                    }}
+                  >
+                    <span>
+                      <img src="/bullet.svg" />
+                      {announcement.title}
+                    </span>
+                    <span>{announcement.createDate}</span>
+                  </AnnouncementItem>
+                ))}
             </ContentContainer>
           </AnnouncementContainer>
           <SeminarContainer>
