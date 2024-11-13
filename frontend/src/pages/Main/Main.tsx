@@ -19,16 +19,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
 
-interface Announcement {
-  category: string;
-  createDate: string;
-  // file: string;
-  id: number;
-  title: string;
-  viewCount: number;
-  writer: string;
-}
-
+// 논문
 interface Paper {
   author: string;
   content: string;
@@ -42,36 +33,18 @@ interface Paper {
   thesisImage: string;
 }
 
-// const announcements: { [key: string]: Announcement[] } = {
-//   학부: [
-//     { title: '공지사항', date: '2024.00.00' },
-//     { title: '공지사항', date: '2024.00.00' },
-//     { title: '공지사항', date: '2024.00.00' },
-//     { title: '공지사항', date: '2024.00.00' },
-//     { title: '공지사항', date: '2024.00.00' },
-//   ],
-//   대학원: [
-//     { title: '대학원 공지사항', date: '2024.00.00' },
-//     { title: '대학원 공지사항', date: '2024.00.00' },
-//     { title: '대학원 공지사항', date: '2024.00.00' },
-//     { title: '대학원 공지사항', date: '2024.00.00' },
-//     { title: '대학원 공지사항', date: '2024.00.00' },
-//   ],
-//   취업: [
-//     { title: '취업 공지사항', date: '2024.00.00' },
-//     { title: '취업 공지사항', date: '2024.00.00' },
-//     { title: '취업 공지사항', date: '2024.00.00' },
-//     { title: '취업 공지사항', date: '2024.00.00' },
-//     { title: '취업 공지사항', date: '2024.00.00' },
-//   ],
-//   장학: [
-//     { title: '장학 공지사항', date: '2024.00.00' },
-//     { title: '장학 공지사항', date: '2024.00.00' },
-//     { title: '장학 공지사항', date: '2024.00.00' },
-//     { title: '장학 공지사항', date: '2024.00.00' },
-//     { title: '장학 공지사항', date: '2024.00.00' },
-//   ],
-// };
+// 공지사항
+const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
+
+interface Announcement {
+  category: string;
+  createDate: string;
+  // file: string;
+  id: number;
+  title: string;
+  viewCount: number;
+  writer: string;
+}
 
 const links = [
   {
@@ -106,8 +79,6 @@ const links = [
   },
 ];
 
-const announcementTab = ['학부', '대학원', '취업', '장학'];
-
 function Main(): JSX.Element {
   const [papers, setPapers] = useState([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -137,7 +108,6 @@ function Main(): JSX.Element {
           },
         });
         setAnnouncements(response.data.data);
-        console.log('announcement', response.data.data);
       } catch (error) {
         console.error('공지사항 데이터 가져오기 실패', error);
       }
@@ -215,7 +185,7 @@ function Main(): JSX.Element {
             </ContentContainer>
           </AnnouncementContainer>
           <SeminarContainer>
-            {/* TODO: 링크 연결이 필요하면 넣기 */}
+            {/* TODO: 최신 세미나 링크 연결 필요 */}
             <button>
               <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
               <p style={{ fontSize: '16px', fontWeight: '700' }}>
