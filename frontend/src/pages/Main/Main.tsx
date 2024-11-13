@@ -15,63 +15,36 @@ import {
   AnnouncementItem,
   SeminarRoomReservation,
 } from './MainStyle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { apiEndpoints } from '../../config/apiConfig';
 
-interface Announcement {
-  title: string;
-  date: string;
+// 논문
+interface Paper {
+  author: string;
+  content: string;
+  issn: string;
+  journal: string;
+  link: string;
+  publicationCollection: string;
+  publicationDate: string;
+  publicationIssue: string;
+  publicationPage: string;
+  thesisImage: string;
 }
 
-// 더미 데이터
-const paper = [
-  {
-    title: '연구 논문1',
-    content: '연구 논문1 초반 내용',
-  },
-  {
-    title: '연구 논문2',
-    content: '연구 논문2 초반 내용',
-  },
-  {
-    title: '연구 논문3',
-    content: '연구 논문3 초반 내용',
-  },
-  {
-    title: '연구 논문4',
-    content: '연구 논문4 초반 내용',
-  },
-];
+// 공지사항
+const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
 
-const announcements: { [key: string]: Announcement[] } = {
-  학부: [
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-    { title: '공지사항', date: '2024.00.00' },
-  ],
-  대학원: [
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-    { title: '대학원 공지사항', date: '2024.00.00' },
-  ],
-  취업: [
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-    { title: '취업 공지사항', date: '2024.00.00' },
-  ],
-  장학: [
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-    { title: '장학 공지사항', date: '2024.00.00' },
-  ],
-};
+interface Announcement {
+  category: string;
+  createDate: string;
+  // file: string;
+  id: number;
+  title: string;
+  viewCount: number;
+  writer: string;
+}
 
 const links = [
   {
@@ -107,21 +80,54 @@ const links = [
 ];
 
 function Main(): JSX.Element {
-  const [activeTab, setActiveTab] =
-    useState<keyof typeof announcements>('학부');
+  const [papers, setPapers] = useState([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [activeTab, setActiveTab] = useState('학부');
+
+  useEffect(() => {
+    const fetchPaper = async () => {
+      try {
+        const response = await axios.get(apiEndpoints.thesis.list, {
+          params: {
+            page: 0,
+            size: 4,
+          },
+        });
+        setPapers(response.data.data);
+      } catch (error) {
+        console.error('논문 데이터 가져오기 실패:', error);
+      }
+    };
+
+    const fetchAnnouncement = async () => {
+      try {
+        const response = await axios.get(apiEndpoints.board.list, {
+          params: {
+            page: 0,
+            size: 5,
+          },
+        });
+        setAnnouncements(response.data.data);
+      } catch (error) {
+        console.error('공지사항 데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchPaper();
+    fetchAnnouncement();
+  }, []);
 
   return (
     <MainContainer>
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        {/* 더미 데이터 */}
         <div style={{ display: 'flex' }}>
-          {paper.map((item) => (
-            <Paper key={item.title}>
-              <img src="paperImage.png" />
-              <p>{item.title}</p>
-              <p>{item.content}</p>
+          {papers.map((paper: Paper) => (
+            <Paper key={paper.journal} style={{ margin: '10px' }}>
+              <img src={paper.thesisImage} alt="논문 이미지" />
+              <p>{paper.author}</p>
+              <p>{paper.content}</p>
             </Paper>
           ))}
         </div>
@@ -133,7 +139,7 @@ function Main(): JSX.Element {
           <AnnouncementContainer>
             <p>공지사항</p>
             <TabContainer>
-              {Object.keys(announcements).map((tab) => (
+              {announcementTab.map((tab) => (
                 <TabButton
                   key={tab}
                   isActive={activeTab === tab}
@@ -144,19 +150,42 @@ function Main(): JSX.Element {
               ))}
             </TabContainer>
             <ContentContainer>
-              {announcements[activeTab].map((announcement, index) => (
-                <AnnouncementItem key={index}>
-                  <span>
-                    <img src="/bullet.svg" />
-                    <span>{announcement.title}</span>
-                  </span>
-                  <span>{announcement.date}</span>
-                </AnnouncementItem>
-              ))}
+              {announcements
+                .filter((announcement) => {
+                  // 각 탭에 해당하는 카테고리로 필터링
+                  switch (activeTab) {
+                    case '학부':
+                      return announcement.category === 'undergraduate';
+                    case '대학원':
+                      return announcement.category === 'graduate';
+                    case '취업':
+                      return announcement.category === 'employment';
+                    case '장학':
+                      return announcement.category === 'scholarship';
+                    default:
+                      return false;
+                  }
+                })
+                .map((announcement) => (
+                  <AnnouncementItem
+                    key={announcement.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '10px 0',
+                    }}
+                  >
+                    <span>
+                      <img src="/bullet.svg" />
+                      {announcement.title}
+                    </span>
+                    <span>{announcement.createDate}</span>
+                  </AnnouncementItem>
+                ))}
             </ContentContainer>
           </AnnouncementContainer>
           <SeminarContainer>
-            {/* TODO: 링크 연결이 필요하면 넣기 */}
+            {/* TODO: 최신 세미나 링크 연결 필요 */}
             <button>
               <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
               <p style={{ fontSize: '16px', fontWeight: '700' }}>
