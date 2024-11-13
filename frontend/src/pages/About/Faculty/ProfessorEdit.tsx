@@ -73,7 +73,7 @@ const ProfessorEdit: React.FC = () => {
 
     try {
       await axios.post(apiEndpoints.professor.update(Number(id)), formData);
-      navigate('/faculty');
+      navigate('/about/faculty');
     } catch (err) {
       setError('교수 정보 수정에 실패했습니다.');
       console.error('Error updating professor:', err);

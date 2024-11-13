@@ -55,7 +55,7 @@ const ProfessorDetail: React.FC = () => {
   }, [fetchProfessorData]);
 
   const handleEdit = () => {
-    navigate(`/professor/edit/${id}`);
+    navigate(`/about/faculty/edit/${id}`);
   };
 
   const handleDelete = async () => {
@@ -64,7 +64,7 @@ const ProfessorDetail: React.FC = () => {
       axios
         .delete(apiEndpoints.professor.delete(Number(id)))
         .then(() => {
-          navigate('/faculty', { replace: true });
+          navigate('/about/faculty', { replace: true });
         })
         .catch((err) => {
           setError('교수 정보 삭제에 실패했습니다.');
