@@ -30,7 +30,7 @@ interface ApiResponse {
   data: Professor[];
 }
 
-const Faculty = () => {
+const Professor = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [professors, setProfessors] = useState<Professor[]>([]);
@@ -195,4 +195,4 @@ const Faculty = () => {
   );
 };
 
-export default Faculty;
+export default Professor;

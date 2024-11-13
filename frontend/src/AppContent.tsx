@@ -8,7 +8,7 @@ import Main from './pages/Main/Main';
 import SignIn from './pages/Auth/SignIn';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
-import Faculty from './pages/About/Faculty/Faculty';
+import Professor from './pages/About/Faculty/Professor';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
 import mainImage from './assets/images/main_picture.svg';
 import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
@@ -81,7 +81,7 @@ function AppContent() {
             element={<Hyperlink />}
           />
           <Route path="/about" element={<Overview />} />
-          <Route path="/about/faculty" element={<Faculty />} />
+          <Route path="/about/faculty" element={<Professor />} />
           <Route path="/about/faculty/edit/:id" element={<ProfessorEdit />} />
           <Route path="/about/faculty/:id" element={<ProfessorDtail />} />
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
