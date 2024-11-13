@@ -15,16 +15,36 @@ export const apiEndpoints = {
       return `${API_URL}/api/professor?${params.toString()}`;
     },
 
-    // - 교수 생성 API
+    thesis: {
+      // GET /api/thesis - 모든 논문 조회 API
+      list: `${API_URL}/api/thesis`,
+      listWithPage: (page: number, size: number) => {
+        const params = new URLSearchParams({
+          page: page.toString(),
+          size: size.toString(),
+        });
+        return `${API_URL}/api/thesis?${params.toString()}`;
+      },
+
+      // POST /api/thesis - 논문 생성 API
+      create: `${API_URL}/api/thesis`,
+
+      // GET /api/thesis/{thesisId} - 논문 상세 정보 반환 API
+      detail: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
+
+      // POST /api/thesis/{thesisId} - 논문 정보 업데이트 API
+      update: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
+
+      // DELETE /api/thesis/{thesisId} - 논문 삭제 API
+      delete: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
+    },
+
     create: `${API_URL}/api/professor`,
 
-    // - 교수 상세 정보 반환 API
     detail: (professorId: number) => `${API_URL}/api/professor/${professorId}`,
 
-    // - 교수 정보 업데이트 API
     update: (professorId: number) => `${API_URL}/api/professor/${professorId}`,
 
-    // - 교수 삭제 API
     delete: (professorId: number) => `${API_URL}/api/professor/${professorId}`,
   },
   admin: {

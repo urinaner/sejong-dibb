@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Phone, Mail, Globe, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import * as S from './FacultyStyle';
 
 interface ProfessorCardProps {
@@ -20,8 +21,23 @@ interface ProfessorCardProps {
 
 const ProfessorCard = memo(
   ({ professor, onImageError, defaultImage }: ProfessorCardProps) => {
+    const navigate = useNavigate();
+
+    const handleCardClick = (e: React.MouseEvent) => {
+      // 링크나 버튼 클릭 시에는 상세 페이지로 이동하지 않음
+      if ((e.target as HTMLElement).closest('a, button')) {
+        return;
+      }
+      navigate(`/about/faculty/${professor.id}`);
+    };
+
+    const handleLinkClick = (e: React.MouseEvent, url: string) => {
+      e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+      window.open(url, '_blank', 'noopener noreferrer');
+    };
+
     return (
-      <S.ProfessorCard>
+      <S.ProfessorCard onClick={handleCardClick} role="button" tabIndex={0}>
         <S.ImageSection>
           <S.ProfessorImage
             src={defaultImage}
@@ -51,7 +67,10 @@ const ProfessorCard = memo(
                 <S.InfoItem>
                   <Mail />
                   <span>이메일: </span>
-                  <S.Link href={`mailto:${professor.email}`}>
+                  <S.Link
+                    href={`mailto:${professor.email}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {professor.email}
                   </S.Link>
                 </S.InfoItem>
@@ -62,8 +81,7 @@ const ProfessorCard = memo(
                   <span>홈페이지: </span>
                   <S.Link
                     href={professor.homepage}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={(e) => handleLinkClick(e, professor.homepage)}
                   >
                     {professor.homepage}
                   </S.Link>

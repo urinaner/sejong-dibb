@@ -78,18 +78,6 @@ export const ProfessorCardWrapper = styled.div`
   }
 `;
 
-// Professor Card Styles
-export const ProfessorCard = styled.div`
-  display: flex;
-  background: white;
-  width: 100%;
-  overflow: hidden;
-
-  ${media.mobile} {
-    flex-direction: column;
-  }
-`;
-
 export const ImageSection = styled.div`
   flex-shrink: 0;
   width: 200px;
@@ -328,5 +316,29 @@ export const EmptyStateContainer = styled.div`
     min-height: 150px;
     font-size: 1rem;
     margin: 1.5rem 0;
+  }
+`;
+
+export const ProfessorCard = styled.div`
+  display: flex;
+  background: white;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px #1a73e8;
+  }
+
+  ${media.mobile} {
+    flex-direction: column;
   }
 `;

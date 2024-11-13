@@ -7,6 +7,8 @@ import { AuthContext } from '../../../context/AuthContext';
 import Button from '../../../common/Button/Button';
 import { useModalContext } from '../../../context/ModalContext';
 import * as S from './ProfessorDetailStyle';
+import ProfileSection from './ProfileSection';
+import TabSection from './TabSection';
 
 interface Professor {
   id: number;
@@ -53,7 +55,7 @@ const ProfessorDetail: React.FC = () => {
   }, [fetchProfessorData]);
 
   const handleEdit = () => {
-    navigate(`/about/faculty/edit/${id}`);
+    navigate(`/professor/edit/${id}`);
   };
 
   const handleDelete = async () => {
@@ -128,7 +130,7 @@ const ProfessorDetail: React.FC = () => {
           <Button
             variant="ghost"
             size="small"
-            onClick={() => navigate('/faculty')}
+            onClick={() => navigate('/about/faculty')}
           >
             <ChevronLeft size={18} />
             목록으로
@@ -157,6 +159,16 @@ const ProfessorDetail: React.FC = () => {
           </S.ActionSection>
         )}
       </S.HeaderContainer>
+
+      <ProfileSection
+        professor={professor}
+        onImageError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+          e.currentTarget.src = '/professor_example.jpg';
+        }}
+        defaultImage="/professor_example.jpg"
+      />
+
+      <TabSection professorId={professor.id} />
     </S.Container>
   );
 };

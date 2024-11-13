@@ -15,7 +15,7 @@ import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
 import NoticeCreate from './pages/News/NoticeBoard/NoticeCreate';
 import NoticeEdit from './pages/News/NoticeBoard/NoticeEdit';
 import ProfessorEdit from './pages/About/Faculty/ProfessorEdit';
-import ProfessorDtail from './pages/About/Faculty/ProfessorDtail';
+import ProfessorDtail from './pages/About/Faculty/ProfessorDetail';
 
 const PageContainer = styled.div`
   display: flex;
