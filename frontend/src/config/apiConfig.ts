@@ -10,9 +10,9 @@ export const apiEndpoints = {
   },
   professor: {
     create: `${API_URL}/api/professor`,
-    get: (thesisId: string) => `${API_URL}/api/professor/${thesisId}`,
-    update: (thesisId: string) => `${API_URL}/api/professor/${thesisId}`,
-    delete: (thesisId: string) => `${API_URL}/api/professor/${thesisId}`,
+    get: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
+    update: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
+    delete: (professorId: string) => `${API_URL}/api/professor/${professorId}`,
   },
   admin: {
     login: `${API_URL}/api/admin/login`,
