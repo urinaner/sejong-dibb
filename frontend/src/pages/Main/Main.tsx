@@ -15,32 +15,27 @@ import {
   AnnouncementItem,
   SeminarRoomReservation,
 } from './MainStyle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { apiEndpoints } from '../../config/apiConfig';
 
 interface Announcement {
   title: string;
   date: string;
 }
 
-// 더미 데이터
-const paper = [
-  {
-    title: '연구 논문1',
-    content: '연구 논문1 초반 내용',
-  },
-  {
-    title: '연구 논문2',
-    content: '연구 논문2 초반 내용',
-  },
-  {
-    title: '연구 논문3',
-    content: '연구 논문3 초반 내용',
-  },
-  {
-    title: '연구 논문4',
-    content: '연구 논문4 초반 내용',
-  },
-];
+interface Paper {
+  author: string;
+  content: string;
+  issn: string;
+  journal: string;
+  link: string;
+  publicationCollection: string;
+  publicationDate: string;
+  publicationIssue: string;
+  publicationPage: string;
+  thesisImage: string;
+}
 
 const announcements: { [key: string]: Announcement[] } = {
   학부: [
@@ -109,19 +104,37 @@ const links = [
 function Main(): JSX.Element {
   const [activeTab, setActiveTab] =
     useState<keyof typeof announcements>('학부');
+  const [papers, setPapers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiEndpoints.thesis.list, {
+          params: {
+            page: 0,
+            size: 4,
+          },
+        });
+        setPapers(response.data.data);
+      } catch (error) {
+        console.error('논문 데이터를 가져오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <MainContainer>
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        {/* 더미 데이터 */}
         <div style={{ display: 'flex' }}>
-          {paper.map((item) => (
-            <Paper key={item.title}>
-              <img src="paperImage.png" />
-              <p>{item.title}</p>
-              <p>{item.content}</p>
+          {papers.map((paper: Paper) => (
+            <Paper key={paper.journal} style={{ margin: '10px' }}>
+              <img src={paper.thesisImage} alt="논문 이미지" />
+              <p>{paper.author}</p>
+              <p>{paper.content}</p>
             </Paper>
           ))}
         </div>
