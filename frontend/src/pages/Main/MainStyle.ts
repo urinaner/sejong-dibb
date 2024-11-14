@@ -105,12 +105,13 @@ export const AnnouncementItem = styled.div`
   cursor: pointer;
 
   img {
-    margin: 0 8px 0 20px;
+    margin: 0 8px 0 8px;
   }
 
   span {
     font-size: 15px;
     font-weight: 400;
+    margin-right: 8px;
   }
 `;
 
@@ -201,7 +202,7 @@ export const Shortcut = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50%;
+  width: fit-content;
 
   img {
     width: 90px;

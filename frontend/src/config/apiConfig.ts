@@ -1,6 +1,13 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const apiEndpoints = {
+  thesis: {
+    list: `${API_URL}/api/thesis`,
+    create: `${API_URL}/api/thesis`,
+    get: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
+    update: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
+    delete: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
+  },
   professor: {
     // GET /api/professor - 모든 교수 조회 API (페이지네이션)
     list: `${API_URL}/api/professor`,
