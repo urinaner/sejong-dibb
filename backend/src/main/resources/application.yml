@@ -13,10 +13,10 @@ spring:
       on-profile: local
 
   datasource:
-    url: jdbc:mysql://localhost:3306/dibb?useSSL=false&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: dlwls6288
+    url: jdbc:h2:mem:~/test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   sql:
     init:
