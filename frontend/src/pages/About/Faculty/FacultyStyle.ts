@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const media = {
   mobile: '@media(max-width: 768px)',
   tablet: '@media(max-width: 1024px)',
+  desktop: '@media(min-width: 1025px)',
 };
 
 export const Container = styled.div`
@@ -12,7 +13,8 @@ export const Container = styled.div`
   padding: 40px 20px;
 
   ${media.mobile} {
-    padding: 20px 16px;
+    width: 100%;
+    padding: 16px;
   }
 `;
 
@@ -28,246 +30,212 @@ export const HeaderContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
 export const Title = styled.h1`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.8rem;
   font-weight: bold;
   color: #1a202c;
   margin: 0;
 
   ${media.mobile} {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     width: 100%;
   }
 `;
 
-export const ActionButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-
-  ${media.mobile} {
-    width: 100%;
-
-    button {
-      width: 100%;
-    }
-  }
-`;
-
-export const ProfessorList = styled.div`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  margin-top: 2rem;
+
+  ${media.mobile} {
+    gap: 1rem;
+  }
 `;
 
-export const ProfessorCardWrapper = styled.div`
+export const FormSection = styled.div`
   position: relative;
   width: 100%;
-  transition: all 0.2s ease-in-out;
+  background: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   overflow: hidden;
-  background: white;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-export const ImageSection = styled.div`
-  flex-shrink: 0;
-  width: 200px;
-  height: 240px;
-  background: #f5f5f5;
-  position: relative;
+  transition: all 0.2s ease-in-out;
 
   ${media.mobile} {
-    width: 100%;
-    height: 250px;
+    border-radius: 8px;
+    box-shadow: none;
   }
 `;
 
-export const ProfessorImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-`;
-
-export const InfoSection = styled.div`
-  flex: 1;
-  padding: 24px;
-  display: flex;
-
-  ${media.mobile} {
-    flex-direction: column;
-  }
-`;
-
-export const MainInfo = styled.div`
-  flex: 1;
-  margin-right: 24px;
-  min-width: 200px;
-
-  ${media.mobile} {
-    margin-right: 0;
-    margin-bottom: 24px;
-  }
-`;
-
-export const ProfessorName = styled.h2`
+export const FormTitle = styled.h2`
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 24px;
+  font-size: 1.2rem;
   font-weight: 500;
   color: #333333;
-  margin: 0 0 8px 0;
-`;
-
-export const Position = styled.p`
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  color: #666666;
-  margin: 0 0 4px 0;
-`;
-
-export const Major = styled.p`
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  color: #1a73e8;
-  margin: 0 0 16px 0;
-`;
-
-export const ContactInfo = styled.div`
-  flex: 2;
-  min-width: 300px;
-
-  ${media.mobile} {
-    min-width: 100%;
-  }
-`;
-
-export const InfoTitle = styled.h3`
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333333;
-  margin: 0 0 12px 0;
-  padding-bottom: 8px;
+  margin: 0;
+  padding: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 2px solid #eaeaea;
+
+  ${media.mobile} {
+    font-size: 1.1rem;
+    padding: 1rem;
+    padding-bottom: 0.8rem;
+  }
 `;
 
-export const InfoList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+export const FormContent = styled.div`
+  padding: 1.5rem;
+
+  ${media.mobile} {
+    padding: 1rem;
+  }
 `;
 
-export const InfoItem = styled.div`
+export const InputGroup = styled.div`
+  margin-bottom: 1.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  ${media.mobile} {
+    margin-bottom: 1rem;
+  }
+`;
+
+export const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #4a5568;
+
+  ${media.mobile} {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  background-color: white;
+
+  &:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+  }
+
+  &:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: #a0aec0;
+  }
+
+  ${media.mobile} {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+  }
+`;
+
+export const InputWithIcon = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  color: #666666;
-  padding: 4px 0;
 
   svg {
+    position: absolute;
+    right: 12px;
     color: #1a73e8;
     min-width: 18px;
   }
-`;
 
-export const Link = styled.a`
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s;
-  word-break: break-all;
-
-  &:hover {
-    color: #1a73e8;
-  }
-`;
-
-export const EditButtonContainer = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-
-  ${ProfessorCardWrapper}:hover & {
-    opacity: 1;
+  input {
+    padding-right: 2.5rem;
   }
 
   ${media.mobile} {
-    opacity: 1;
-    position: relative;
-    top: auto;
-    right: auto;
-    margin-top: 0.5rem;
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 1rem 1rem;
-  }
-`;
-
-export const PaginationWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
-`;
-
-export const PaginationButton = styled.button<{ disabled?: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid ${(props) => (props.disabled ? '#e2e8f0' : '#1a73e8')};
-  border-radius: 50%;
-  background: white;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  transition: all 0.2s;
-
-  &:hover:not(:disabled) {
-    background: #1a73e8;
-
     svg {
-      color: white;
+      right: 8px;
+      width: 16px;
+      height: 16px;
+    }
+
+    input {
+      padding-right: 2rem;
     }
   }
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+
+  ${media.mobile} {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+
+    button {
+      width: 100%;
+      height: 44px; // 모바일에서 터치 영역 확대
+      font-size: 0.9rem;
+    }
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #fff5f5;
+  color: #c53030;
+  border-radius: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.875rem;
+  border: 1px solid #feb2b2;
 
   svg {
-    width: 20px;
-    height: 20px;
-    color: ${(props) => (props.disabled ? '#a0aec0' : '#1a73e8')};
-    transition: color 0.2s;
+    flex-shrink: 0;
+    min-width: 18px;
   }
 
   ${media.mobile} {
-    width: 32px;
-    height: 32px;
+    padding: 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
 
     svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
     }
   }
-`;
-
-export const PageNumber = styled.span`
-  font-size: 1rem;
-  color: #4a5568;
-  min-width: 80px;
-  text-align: center;
 `;
 
 export const LoadingContainer = styled.div`
@@ -277,68 +245,56 @@ export const LoadingContainer = styled.div`
   min-height: 300px;
   color: #4a5568;
   font-size: 1.1rem;
+  font-family: 'Noto Sans KR', sans-serif;
 
   ${media.mobile} {
     min-height: 200px;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 `;
 
-export const ErrorContainer = styled.div`
-  margin: 2rem 0;
-  padding: 1rem;
-  background-color: #fff5f5;
-  color: #c53030;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 1.1rem;
-  border: 1px solid #feb2b2;
+export const RequiredMark = styled.span`
+  color: #e53e3e;
+  margin-left: 2px;
+`;
+
+export const HelperText = styled.p`
+  margin-top: 0.25rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.75rem;
+  color: #718096;
 
   ${media.mobile} {
-    margin: 1.5rem 0;
-    font-size: 1rem;
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
   }
 `;
 
-export const EmptyStateContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  background-color: #f8f9fa;
-  color: #4a5568;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  border: 1px dashed #cbd5e0;
-  margin: 2rem 0;
-
-  ${media.mobile} {
-    min-height: 150px;
-    font-size: 1rem;
-    margin: 1.5rem 0;
-  }
-`;
-
-export const ProfessorCard = styled.div`
-  display: flex;
-  background: white;
-  width: 100%;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-
-  &:hover,
-  &:focus {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+// 스크롤바 스타일링
+export const GlobalStyle = styled.div`
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f8f9fa;
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px #1a73e8;
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f8f9fa;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 3px;
   }
 
   ${media.mobile} {
-    flex-direction: column;
+    *::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
   }
 `;
