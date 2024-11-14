@@ -45,7 +45,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
     // sj-auth
-    implementation 'com.github.urinaner:sejong-auth:v0.4.3'
+    implementation 'com.github.urinaner:sejong-auth:v0.4.4'
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
