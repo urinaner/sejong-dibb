@@ -46,7 +46,7 @@ class ProfessorServiceTest extends IntegrationTestSupport {
         dto.setName("김영한");
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("younghan@sejong.ac.kr");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when: 교수 저장 메소드 호출
         Long savedProfessorId = professorService.saveProfessor(dto);
@@ -68,7 +68,7 @@ class ProfessorServiceTest extends IntegrationTestSupport {
         ProfessorReqDto dto = new ProfessorReqDto();
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("younghan@sejong.ac.kr");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when: 교수 저장 시 이름이 없는 경우 예외 발생 확인
         ProfessorException exception = assertThrows(ProfessorException.class, () -> professorService.saveProfessor(dto));
@@ -88,13 +88,13 @@ class ProfessorServiceTest extends IntegrationTestSupport {
         dto1.setName("김영한");
         dto1.setPhoneN("010-1234-5678");
         dto1.setEmail("younghan@sejong.ac.kr");
-        dto1.setDepartmentId(department.getDepartmentId());
+        dto1.setDepartmentId(department.getId());
 
         ProfessorReqDto dto2 = new ProfessorReqDto();
         dto2.setName("장영재");
         dto2.setPhoneN("010-1234-5678"); // 동일한 핸드폰 번호
         dto2.setEmail("yj@sejong.ac.kr");
-        dto2.setDepartmentId(department.getDepartmentId());
+        dto2.setDepartmentId(department.getId());
 
         // when: 첫 번째 교수 저장
         professorService.saveProfessor(dto1);
@@ -115,7 +115,7 @@ class ProfessorServiceTest extends IntegrationTestSupport {
         dto.setName("김영한");
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("younghan@sejong.ac.kr");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         Long savedProfessorId = professorService.saveProfessor(dto);
 
@@ -140,7 +140,7 @@ class ProfessorServiceTest extends IntegrationTestSupport {
         dto.setName("이영훈");
         dto.setPhoneN("010-5678-1234");
         dto.setEmail("lee@sejong.ac.kr");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         Long savedProfessorId = professorService.saveProfessor(dto);
 

@@ -41,7 +41,7 @@ class ProfessorRepositoryTest extends IntegrationTestSupport {
         dto.setName("홍길동");
         dto.setPhoneN("010-1234-5678"); // 고유한 번호
         dto.setEmail("hong1@example.com"); // 고유한 이메일
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when
         Professor entity = professorMapper.toEntity(dto, departmentRepository);
@@ -59,7 +59,7 @@ class ProfessorRepositoryTest extends IntegrationTestSupport {
         dto.setName("홍길동");
         dto.setPhoneN("010-1234-5678"); // 고유한 번호
         dto.setEmail("hong1@example.com"); // 고유한 이메일
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when
         Professor entity = professorMapper.toEntity(dto, departmentRepository);
@@ -78,7 +78,7 @@ class ProfessorRepositoryTest extends IntegrationTestSupport {
         dto.setName("홍길동");
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("hong1@example.com");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         Professor entity = professorMapper.toEntity(dto, departmentRepository);
         Professor savedEntity = professorRepository.save(entity);

@@ -37,7 +37,7 @@ class DepartmentRepositoryTest extends IntegrationTestSupport {
         department.setKoreanName("전자공학과");
         Department savedDepartment = departmentRepository.save(department);
         // when
-        Optional<Department> foundDepartment = departmentRepository.findById(savedDepartment.getDepartmentId());
+        Optional<Department> foundDepartment = departmentRepository.findById(savedDepartment.getId());
         // then
         assertThat(foundDepartment).isPresent();
         assertThat(foundDepartment.get().getKoreanName()).isEqualTo("전자공학과");
@@ -51,9 +51,9 @@ class DepartmentRepositoryTest extends IntegrationTestSupport {
         department.setKoreanName("기계공학과");
         Department savedDepartment = departmentRepository.save(department);
         // when
-        departmentRepository.deleteById(savedDepartment.getDepartmentId());
+        departmentRepository.deleteById(savedDepartment.getId());
         // then
-        Optional<Department> deletedDepartment = departmentRepository.findById(savedDepartment.getDepartmentId());
+        Optional<Department> deletedDepartment = departmentRepository.findById(savedDepartment.getId());
         assertThat(deletedDepartment).isNotPresent();
     }
 

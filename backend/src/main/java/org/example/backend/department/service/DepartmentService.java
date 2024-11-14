@@ -26,7 +26,7 @@ public class DepartmentService {
     public Long saveDepartment(DepartmentReqDto departmentReqDto) {
         Department department = departmentMapper.toEntity(departmentReqDto);
         departmentRepository.save(department);
-        return department.getDepartmentId();
+        return department.getId();
     }
 
     public DepartmentResDto getDepartment(Long departmentId) {
