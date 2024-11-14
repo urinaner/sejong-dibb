@@ -69,4 +69,27 @@ class ProfessorRepositoryTest extends IntegrationTestSupport {
         boolean exists = professorRepository.existsByEmail(savedEntity.getEmail());
         assertThat(exists).isTrue();
     }
+
+    @Test
+    @DisplayName("교수 삭제 테스트")
+    void deleteProfessorById() {
+        // given: 테스트용 교수 데이터 생성 및 저장
+        ProfessorReqDto dto = new ProfessorReqDto();
+        dto.setName("홍길동");
+        dto.setPhoneN("010-1234-5678");
+        dto.setEmail("hong1@example.com");
+        dto.setDepartmentId(department.getDepartmentId());
+
+        Professor entity = professorMapper.toEntity(dto, departmentRepository);
+        Professor savedEntity = professorRepository.save(entity);
+
+        Long professorId = savedEntity.getId();
+
+        // when: 저장된 교수 삭제
+        professorRepository.deleteById(professorId);
+
+        // then: 삭제된 교수 정보가 존재하지 않는지 확인
+        boolean exists = professorRepository.existsById(professorId);
+        assertThat(exists).isFalse();
+    }
 }
