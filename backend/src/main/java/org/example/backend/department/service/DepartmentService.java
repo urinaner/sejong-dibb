@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.example.backend.department.exception.DepartmentExceptionType.NOT_FOUND_DEPARTMENT;
+import static org.example.backend.department.exception.DepartmentExceptionType.REQUIRED_KOREAN_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +25,16 @@ public class DepartmentService {
 
     @Transactional
     public Long saveDepartment(DepartmentReqDto departmentReqDto) {
+        validateDepartmentRequiredFields(departmentReqDto);
         Department department = departmentMapper.toEntity(departmentReqDto);
         departmentRepository.save(department);
         return department.getId();
+    }
+
+    private void validateDepartmentRequiredFields(DepartmentReqDto departmentReqDto) {
+        if (departmentReqDto.getKoreanName() == null || departmentReqDto.getKoreanName().isEmpty()) {
+            throw new DepartmentException(REQUIRED_KOREAN_NAME);
+        }
     }
 
     public DepartmentResDto getDepartment(Long departmentId) {
