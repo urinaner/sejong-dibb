@@ -41,7 +41,7 @@ class ProfessorMapperTest extends IntegrationTestSupport {
         dto.setName("홍길동");
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("hong1@example.com");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when: DTO를 엔티티로 매핑
         Professor entity = professorMapper.toEntity(dto, departmentRepository);
@@ -64,7 +64,7 @@ class ProfessorMapperTest extends IntegrationTestSupport {
         ProfessorReqDto dto = new ProfessorReqDto();
         dto.setPhoneN("010-1234-5678");
         dto.setEmail("hong1@example.com");
-        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentId(department.getId());
 
         // when: DTO를 엔티티로 매핑
         Professor entity = professorMapper.toEntity(dto, departmentRepository);

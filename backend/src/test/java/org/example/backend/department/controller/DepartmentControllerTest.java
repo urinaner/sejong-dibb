@@ -26,7 +26,7 @@ class DepartmentControllerTest extends ControllerTestSupport {
         when(departmentService.getDepartment(departmentId)).thenReturn(resDto);
 
         // When & Then
-        mockMvc.perform(get("/api/departments/" + departmentId)
+        mockMvc.perform(get("/api/department/" + departmentId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.koreanName").value("컴퓨터공학과"));
@@ -45,7 +45,7 @@ class DepartmentControllerTest extends ControllerTestSupport {
         when(departmentService.saveDepartment(reqDto)).thenReturn(createdId);
 
         // When & Then
-        mockMvc.perform(post("/api/departments")
+        mockMvc.perform(post("/api/department")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ class DepartmentControllerTest extends ControllerTestSupport {
         when(departmentService.updateDepartment(departmentId, reqDto)).thenReturn(resDto);
 
         // When & Then
-        mockMvc.perform(put("/api/departments/" + departmentId)
+        mockMvc.perform(put("/api/department/" + departmentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isOk())
@@ -85,7 +85,7 @@ class DepartmentControllerTest extends ControllerTestSupport {
         doNothing().when(departmentService).deleteDepartment(departmentId);
 
         // When & Then
-        mockMvc.perform(delete("/api/departments/" + departmentId)
+        mockMvc.perform(delete("/api/department/" + departmentId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

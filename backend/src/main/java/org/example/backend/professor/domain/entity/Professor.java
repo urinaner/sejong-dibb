@@ -1,10 +1,12 @@
 package org.example.backend.professor.domain.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.department.domain.entity.Department;
+import org.example.backend.thesis.domain.entity.Thesis;
 
 @Entity
 @Data
@@ -44,4 +46,7 @@ public class Professor {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Thesis> theses = new ArrayList<>();
 }

@@ -6,9 +6,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,5 +38,19 @@ public class ExceptionControllerAdvice {
         log.error("예상하지 못한 예외가 발생했습니다. URI: {}, ", request.getRequestURI(), e);
         return ResponseEntity.internalServerError()
                 .body(new ExceptionResponse("알 수 없는 오류가 발생했습니다."));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        log.error("DataIntegrityViolationException occurred: ", e);
+
+        //참조 제약 조건 위반 확인
+        if (e.getMessage().contains("FOREIGN KEY") || e.getMessage().contains("foreign key")) {
+            return ResponseEntity.badRequest()
+                    .body(new ExceptionResponse("해당 데이터를 삭제하기 전에 연관된 데이터를 먼저 삭제해주세요."));
+        }
+
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse("데이터 처리 중 오류가 발생했습니다."));
     }
 }

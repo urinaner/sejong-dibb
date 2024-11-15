@@ -72,6 +72,7 @@ public class ProfessorService {
         return professorMapper.toProfessorDto(professor);
     }
 
+    @Transactional
     public void deleteProfessor(Long professorId) {
         Professor professor = findProfessorById(professorId);
         professorRepository.delete(professor);

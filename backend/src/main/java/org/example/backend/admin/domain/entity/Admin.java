@@ -25,10 +25,8 @@ public class Admin {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "role", nullable = false)
