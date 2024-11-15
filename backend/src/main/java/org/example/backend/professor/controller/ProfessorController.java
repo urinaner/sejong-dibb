@@ -9,6 +9,7 @@ import org.example.backend.common.exception.dto.ResponseDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.service.ProfessorService;
+import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,14 @@ public class ProfessorController {
     public ResponseEntity<ProfessorResDto> getProfessor(@PathVariable(name = "professorId") Long professorId) {
         ProfessorResDto professorResDto = professorService.getProfessor(professorId);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "교수별 논문 조회 API", description = "교수별 논문의 리스트 반환")
+    @GetMapping("/{professorId}/thesis")
+    public ResponseDto<List<ThesisResDto>> getThesisByProfessor(@PathVariable(name = "professorId") Long professorId,
+                                                                Pageable pageable) {
+        Page<ThesisResDto> thesisResDtos = professorService.getThesisByProfessor(professorId, pageable);
+        return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
     @Operation(summary = "모든 교수 조회 API", description = "모든 교수의 리스트 반환")
