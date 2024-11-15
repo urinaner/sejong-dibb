@@ -69,17 +69,9 @@ export const apiEndpoints = {
     get: `${API_URL}/api/`,
   },
   board: {
-    list: `${API_URL}/api/board`,
-    listWithPage: (page: number, size: number, category?: string) => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        size: size.toString(),
-      });
-      if (category) {
-        params.append('category', category);
-      }
-      return `${API_URL}/api/board?${params.toString()}`;
-    },
+    base: `${API_URL}/api/board`,
+    listWithPage: (page: number, size: number) =>
+      `${API_URL}/api/board?page=${page}&size=${size}`,
     create: `${API_URL}/api/board`,
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
