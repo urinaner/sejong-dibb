@@ -34,7 +34,6 @@ interface NoticeItem {
   file?: string;
 }
 
-// Category mapping updated with explicit English keys
 const CATEGORY_MAP = {
   undergraduate: '학부',
   graduate: '대학원',
@@ -44,7 +43,6 @@ const CATEGORY_MAP = {
 
 type CategoryKey = keyof typeof CATEGORY_MAP;
 
-// Added type safety for notice types
 const NOTICE_TYPES = ['전체', ...Object.values(CATEGORY_MAP)] as const;
 
 interface PageInfo {
@@ -74,7 +72,6 @@ const NoticeBoard: React.FC = () => {
     size: 5,
   });
 
-  // Convert Korean category to English
   const getEnglishCategory = (koreanType: string): CategoryKey | undefined => {
     if (koreanType === '전체') return undefined;
     const entry = Object.entries(CATEGORY_MAP).find(
@@ -83,7 +80,6 @@ const NoticeBoard: React.FC = () => {
     return entry ? (entry[0] as CategoryKey) : undefined;
   };
 
-  // Convert English category to Korean for display
   const getCategoryLabel = (category: string): string => {
     return CATEGORY_MAP[category as CategoryKey] || category;
   };
