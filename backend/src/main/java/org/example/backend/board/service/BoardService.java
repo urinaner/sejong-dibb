@@ -44,6 +44,10 @@ public class BoardService {
         if (dto.getContent() == null || dto.getContent().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_CONTENT);
         }
+
+        if (dto.getDepartmentId() == null) {
+            throw new BoardException(BoardExceptionType.REQUIRED_DEPARTMENT_ID);
+        }
     }
 
     public BoardResDto getBoard(Long boardId) {
