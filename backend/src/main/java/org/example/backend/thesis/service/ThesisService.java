@@ -70,4 +70,9 @@ public class ThesisService {
         return thesisRepository.findById(thesisId)
                 .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
     }
+
+    public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
+        return thesisRepository.findByProfessorId(professorId, pageable)
+                .map(thesisMapper::toThesisDto);
+    }
 }

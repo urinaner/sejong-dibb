@@ -50,6 +50,13 @@ public class ThesisController {
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
+    @Operation(summary = "교수별 논문 조회 API", description = "교수별 논문의 리스트 반환")
+    @GetMapping("/professor/{professorId}")
+    public ResponseDto<List<ThesisResDto>> getThesisByProfessor(@PathVariable(name = "professorId") Long professorId, Pageable pageable) {
+        Page<ThesisResDto> thesisResDtos = thesisService.getThesisByProfessor(professorId, pageable);
+        return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
+    }
+
     @Operation(summary = "논문 정보 업데이트 API", description = "논문 정보 업데이트")
     @PostMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> updateThesis(@PathVariable(name = "thesisId") Long thesisId,
