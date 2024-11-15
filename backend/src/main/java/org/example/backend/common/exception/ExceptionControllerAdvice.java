@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.common.exception.paging.InvalidPaginationParameterException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -60,5 +61,12 @@ public class ExceptionControllerAdvice {
 
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse("데이터 처리 중 오류가 발생했습니다."));
+    }
+
+    @ExceptionHandler(InvalidPaginationParameterException.class)
+    public ResponseEntity<ExceptionResponse
+            > handleInvalidPaginationParameterException(InvalidPaginationParameterException e) {
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ExceptionResponse(e.getExceptionType().errorMessage()));
     }
 }
