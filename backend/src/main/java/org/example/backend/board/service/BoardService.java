@@ -3,22 +3,22 @@ package org.example.backend.board.service;
 import static org.example.backend.board.exception.BoardExceptionType.NOT_FOUND_BOARD;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
+import org.example.backend.board.domain.dto.reqDto.BoardCreateReqDto;
+import org.example.backend.board.domain.dto.reqDto.BoardUpdateReqDto;
 import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.mapper.BoardMapper;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
+import org.example.backend.department.exception.DepartmentException;
+import org.example.backend.department.exception.DepartmentExceptionType;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +29,17 @@ public class BoardService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public Long saveBoard(BoardReqDto boardReqDto) {
+    public Long saveBoard(BoardCreateReqDto boardReqDto) {
         validateUserRequiredFields(boardReqDto);
+
+        validateDepartmentExists(boardReqDto);
+
         Board board = boardMapper.toEntity(boardReqDto, departmentRepository);
         Board savedBoard = boardRepository.save(board);
         return savedBoard.getId();
     }
 
-    private void validateUserRequiredFields(BoardReqDto dto) {
+    private void validateUserRequiredFields(BoardCreateReqDto dto) {
         if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_TITLE);
         }
@@ -62,13 +65,18 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto) {
+    public BoardResDto updateBoard(Long boardId, BoardUpdateReqDto boardReqDto) {
         Board board = findBoardById(boardId);
 
-        boardMapper.updateBoardFromDto(boardReqDto, board, departmentRepository);
+        boardMapper.updateBoardFromDto(boardReqDto, board);
 
         boardRepository.save(board);
         return boardMapper.toBoardDto(board);
+    }
+
+    private void validateDepartmentExists(BoardCreateReqDto boardReqDto) {
+        departmentRepository.findById(boardReqDto.getDepartmentId())
+                .orElseThrow(() -> new DepartmentException(DepartmentExceptionType.NOT_FOUND_DEPARTMENT));
     }
 
     public void deleteBoard(Long boardId) {

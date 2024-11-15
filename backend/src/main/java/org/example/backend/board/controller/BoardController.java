@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
+import org.example.backend.board.domain.dto.reqDto.BoardCreateReqDto;
+import org.example.backend.board.domain.dto.reqDto.BoardUpdateReqDto;
 import org.example.backend.board.service.BoardService;
 import org.example.backend.common.exception.dto.ResponseDto;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class BoardController {
 
     @Operation(summary = "게시판 생성 API", description = "게시판 생성")
     @PostMapping
-    public ResponseEntity<Long> createBoard(@RequestBody BoardReqDto boardReqDto) {
+    public ResponseEntity<Long> createBoard(@RequestBody BoardCreateReqDto boardReqDto) {
         Long boardId = boardService.saveBoard(boardReqDto);
         return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
@@ -51,7 +52,7 @@ public class BoardController {
     @Operation(summary = "게시판 정보 업데이트 API", description = "게시판 정보 업데이트")
     @PostMapping("/{boardId}")
     public ResponseEntity<BoardResDto> updateBoard(@PathVariable(name = "boardId") Long boardId,
-                                                   @RequestBody BoardReqDto boardReqDto) {
+                                                   @RequestBody BoardUpdateReqDto boardReqDto) {
         BoardResDto boardResDto = boardService.updateBoard(boardId, boardReqDto);
         return new ResponseEntity<>(boardResDto, HttpStatus.OK);
     }
