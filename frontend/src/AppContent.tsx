@@ -17,6 +17,7 @@ import NoticeEdit from './pages/News/NoticeBoard/NoticeEdit';
 import ProfessorEdit from './pages/About/Faculty/ProfessorEdit';
 import ProfessorDtail from './pages/About/Faculty/ProfessorDetail';
 import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
+import Reservation from './pages/SeminarRoom/Reservation';
 
 const PageContainer = styled.div`
   display: flex;
@@ -90,6 +91,7 @@ function AppContent() {
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/news/noticeboard/create" element={<NoticeCreate />} />
           <Route path="/news/noticeboard/edit/:id" element={<NoticeEdit />} />
+          <Route path="/seminar-rooms/reservation" element={<Reservation />} />
         </Routes>
       </ContentWrapper>
       <Footer />
