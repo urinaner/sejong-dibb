@@ -61,6 +61,11 @@ public class ThesisService {
         return thesisMapper.toThesisDto(thesis);
     }
 
+    public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
+        return thesisRepository.findByProfessorId(professorId, pageable)
+                .map(thesisMapper::toThesisDto);
+    }
+
     public void deleteThesis(Long thesisId) {
         Thesis thesis = findThesisById(thesisId);
         thesisRepository.delete(thesis);
