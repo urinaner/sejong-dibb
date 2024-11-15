@@ -15,11 +15,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.info("CustomAuthenticationFailureHandler.onAuthenticationFailure");
 
-        String errorMessage = "Invalid username or password";
+        String errorMessage = "유효하지 않는 아이디 또는 비밀번호입니다.";
 
         // 에러 메시지를 JSON으로 반환
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"" + errorMessage + "\"}");
+        response.setContentType("application/json;charset=utf-8");
+        response.getWriter().write("{\"message\": \"" + errorMessage + "\"}");
     }
 }
