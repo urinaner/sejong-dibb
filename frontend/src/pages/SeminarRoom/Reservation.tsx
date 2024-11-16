@@ -79,6 +79,7 @@ function Reservation() {
         formatDay={(locale, date) => moment(date).format('D')}
         prev2Label={null}
         next2Label={null}
+        minDetail="year"
         onChange={handleDateChange}
       />
     </Container>
