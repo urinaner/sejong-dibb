@@ -1,10 +1,14 @@
 package org.example.backend.admin.service;
 
+import static org.example.backend.admin.exception.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
+import static org.example.backend.admin.exception.AdminExceptionType.INVALID_ACCESS_TOKEN;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.dto.AccessTokenReq;
 import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.admin.exception.AdminException;
 import org.example.backend.admin.repository.AdminRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,10 +33,8 @@ public class AdminService {
         log.info("loginId: " + loginId);
         log.info("password: " + password);
 
-        Boolean isExist = userRepository.existsByLoginId(loginId);
-
-        if (isExist) {
-            return;
+        if (validateExistLoginId(loginId)) {
+            throw new AdminException(ALREADY_EXIST_LOGIN_ID);
         }
 
         Admin admin = Admin.builder()
@@ -44,12 +46,21 @@ public class AdminService {
         userRepository.save(admin);
     }
 
+    private boolean validateExistLoginId(String loginId) {
+        Boolean isExist = userRepository.existsByLoginId(loginId);
+
+        if (isExist) {
+            return true;
+        }
+        return false;
+    }
+
     public void signOut(AccessTokenReq accessTokenReq) {
         String accessToken = accessTokenReq.getAccessToken();
 
         // 토큰이 없거나 잘못된 형식이면 예외 발생
         if (accessToken == null || !accessToken.startsWith(BEARER_TYPE)) {
-            throw new ServiceException("StatusCode.INVALID_ACCESS_TOKEN"); // 유효하지 않은 토큰
+            throw new AdminException(INVALID_ACCESS_TOKEN);
         }
     }
 }

@@ -1,8 +1,10 @@
 package org.example.backend.board.domain.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class BoardResDto {
 
     private Long id;
@@ -11,8 +13,6 @@ public class BoardResDto {
 
     private String content;
 
-    private int viewCount;
-
     private String writer;
 
     private String file;
@@ -20,5 +20,4 @@ public class BoardResDto {
     private String createDate;
 
     private String category;
-
 }

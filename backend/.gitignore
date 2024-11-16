@@ -25,6 +25,7 @@ application.properties
 *.ipr
 *.properties
 .env
+*.yml
 
 out/
 !**/src/main/**/out/
