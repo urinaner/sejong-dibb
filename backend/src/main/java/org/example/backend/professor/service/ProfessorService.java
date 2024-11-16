@@ -1,5 +1,7 @@
 package org.example.backend.professor.service;
 
+import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
+
 import lombok.RequiredArgsConstructor;
 import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
@@ -10,13 +12,12 @@ import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
+import org.example.backend.thesis.service.ThesisService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class ProfessorService {
     private final ProfessorMapper professorMapper = Mappers.getMapper(ProfessorMapper.class);
     private final ProfessorRepository professorRepository;
     private final DepartmentRepository departmentRepository;
+    private final ThesisService thesisService;
 
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto) {
@@ -62,6 +64,7 @@ public class ProfessorService {
         return professorRepository.findAll(pageable)
                 .map(professorMapper::toProfessorDto);
     }
+
     @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
         Professor professor = findProfessorById(professorId);
@@ -81,5 +84,12 @@ public class ProfessorService {
     private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
+    }
+
+    public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
+        professorRepository.findById(professorId)
+                .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
+
+        return thesisService.getThesisByProfessor(professorId, pageable);
     }
 }

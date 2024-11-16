@@ -3,6 +3,16 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const apiEndpoints = {
   thesis: {
     list: `${API_URL}/api/thesis`,
+    listWithPage: (page: number, size: number, sort?: string[]) => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      });
+      if (sort && sort.length > 0) {
+        sort.forEach((sortItem) => params.append('sort', sortItem));
+      }
+      return `${API_URL}/api/thesis?${params.toString()}`;
+    },
     create: `${API_URL}/api/thesis`,
     get: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
     update: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
@@ -69,17 +79,9 @@ export const apiEndpoints = {
     get: `${API_URL}/api/`,
   },
   board: {
-    list: `${API_URL}/api/board`,
-    listWithPage: (page: number, size: number, category?: string) => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        size: size.toString(),
-      });
-      if (category) {
-        params.append('category', category);
-      }
-      return `${API_URL}/api/board?${params.toString()}`;
-    },
+    base: `${API_URL}/api/board`,
+    listWithPage: (page: number, size: number) =>
+      `${API_URL}/api/board?page=${page}&size=${size}`,
     create: `${API_URL}/api/board`,
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,

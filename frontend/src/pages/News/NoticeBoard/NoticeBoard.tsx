@@ -34,24 +34,16 @@ interface NoticeItem {
   file?: string;
 }
 
-const CATEGORY_MAP: { [key: string]: string } = {
+const CATEGORY_MAP = {
   undergraduate: '학부',
   graduate: '대학원',
   employment: '취업',
   scholarship: '장학',
-};
-const NOTICE_TYPES = ['전체', '학부', '대학원', '취업', '장학'];
+} as const;
 
-const REVERSE_CATEGORY_MAP: { [key: string]: string } = {
-  학부: 'undergraduate',
-  대학원: 'graduate',
-  취업: 'employment',
-  장학: 'scholarship',
-};
+type CategoryKey = keyof typeof CATEGORY_MAP;
 
-const getEnglishCategory = (koreanType: string): string | undefined => {
-  return REVERSE_CATEGORY_MAP[koreanType];
-};
+const NOTICE_TYPES = ['전체', ...Object.values(CATEGORY_MAP)] as const;
 
 interface PageInfo {
   currentPage: number;
@@ -66,48 +58,6 @@ interface ApiResponse {
   data: NoticeItem[];
 }
 
-// 더미데이터 생성 함수 유지
-
-/*
-const generateDummyNotices = (
-    page: number,
-    size: number,
-    type: string,
-): ApiResponse => {
-  const totalItems = 23;
-  const totalPages = Math.ceil(totalItems / size);
-  const startIndex = page * size;
-
-  const dummyData = Array.from(
-      { length: Math.min(size, totalItems - startIndex) },
-      (_, index) => {
-        const id = startIndex + index + 1;
-        const category =
-            type === '전체'
-                ? ['학부', '대학원'][Math.floor(Math.random() * 2)]
-                : type;
-
-        return {
-          id: id,
-          title: `${category} 공지사항 ${id}`,
-          content: `게시글 내용 ${id}`,
-          viewCount: Math.floor(Math.random() * 100),
-          writer: `작성자${Math.floor(Math.random() * 5) + 1}`,
-          createDate: new Date(2024, 0, id).toISOString().split('T')[0],
-          category: category,
-        };
-      },
-  );
-
-  return {
-    message: '조회성공',
-    page: page,
-    totalPage: totalPages,
-    data: dummyData,
-  };
-};
-*/
-
 const NoticeBoard: React.FC = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -115,15 +65,23 @@ const NoticeBoard: React.FC = () => {
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedType, setSelectedType] = useState('전체');
+  const [selectedType, setSelectedType] = useState<string>('전체');
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     currentPage: 0,
     totalPages: 0,
     size: 5,
   });
 
+  const getEnglishCategory = (koreanType: string): CategoryKey | undefined => {
+    if (koreanType === '전체') return undefined;
+    const entry = Object.entries(CATEGORY_MAP).find(
+      ([_, value]) => value === koreanType,
+    );
+    return entry ? (entry[0] as CategoryKey) : undefined;
+  };
+
   const getCategoryLabel = (category: string): string => {
-    return CATEGORY_MAP[category] || category;
+    return CATEGORY_MAP[category as CategoryKey] || category;
   };
 
   const fetchNotices = async (page = 0) => {
@@ -131,12 +89,12 @@ const NoticeBoard: React.FC = () => {
     setError(null);
 
     try {
-      const category =
-        selectedType !== '전체' ? getEnglishCategory(selectedType) : undefined;
+      const category = getEnglishCategory(selectedType);
+      const endpoint = category
+        ? `${apiEndpoints.board.base}/category/${category}?page=${page}&size=${pageInfo.size}`
+        : apiEndpoints.board.listWithPage(page, pageInfo.size);
 
-      const response = await axios.get<ApiResponse>(
-        apiEndpoints.board.listWithPage(page, pageInfo.size, category),
-      );
+      const response = await axios.get<ApiResponse>(endpoint);
 
       setNotices(response.data.data);
       setPageInfo({
@@ -144,7 +102,7 @@ const NoticeBoard: React.FC = () => {
         totalPages: response.data.totalPage,
         size: pageInfo.size,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to fetch notices:', error);
       setError('게시글을 불러오는데 실패했습니다.');
     } finally {
@@ -225,6 +183,7 @@ const NoticeBoard: React.FC = () => {
       </PaginationContainer>
     );
   };
+
   return (
     <Container>
       <HeaderContainer>
@@ -290,4 +249,5 @@ const NoticeBoard: React.FC = () => {
     </Container>
   );
 };
+
 export default NoticeBoard;
