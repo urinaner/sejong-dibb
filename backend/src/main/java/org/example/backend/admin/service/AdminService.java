@@ -2,15 +2,19 @@ package org.example.backend.admin.service;
 
 import static org.example.backend.admin.exception.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
 import static org.example.backend.admin.exception.AdminExceptionType.INVALID_ACCESS_TOKEN;
+import static org.example.backend.admin.exception.AdminExceptionType.NOT_FOUND_ADMIN;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.dto.AccessTokenReq;
+import org.example.backend.admin.domain.dto.AdminReqDto;
+import org.example.backend.admin.domain.dto.AdminResDto;
 import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.admin.domain.mapper.AdminMapper;
 import org.example.backend.admin.exception.AdminException;
 import org.example.backend.admin.repository.AdminRepository;
-import org.hibernate.service.spi.ServiceException;
+import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AdminService {
 
+    private final AdminMapper adminMapper = Mappers.getMapper(AdminMapper.class);
     private final AdminRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private static final String BEARER_TYPE = "Bearer";
@@ -62,5 +67,20 @@ public class AdminService {
         if (accessToken == null || !accessToken.startsWith(BEARER_TYPE)) {
             throw new AdminException(INVALID_ACCESS_TOKEN);
         }
+    }
+
+    @Transactional
+    public AdminResDto updateAdmin(Long adminId, AdminReqDto adminReqDto) {
+        Admin admin = findAdminById(adminId);
+
+        adminMapper.updateAdminFromDto(adminReqDto, admin);
+
+        userRepository.save(admin);
+        return adminMapper.toAdminDto(admin);
+    }
+
+    private Admin findAdminById(Long adminId) {
+        return userRepository.findById(adminId)
+                .orElseThrow(() -> new AdminException(NOT_FOUND_ADMIN));
     }
 }

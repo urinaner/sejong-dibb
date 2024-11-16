@@ -3,6 +3,8 @@ package org.example.backend.admin.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.dto.AccessTokenReq;
+import org.example.backend.admin.domain.dto.AdminReqDto;
+import org.example.backend.admin.domain.dto.AdminResDto;
 import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.service.AdminService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,13 @@ public class AdminController {
         userService.joinProcess(joinDTO);
 
         return "ok";
+    }
+
+    @PostMapping("/{adminId}")
+    public ResponseEntity<AdminResDto> updateAdmin(@PathVariable(name = "adminId") Long adminId,
+                                   @RequestBody AdminReqDto adminReqDto) {
+        AdminResDto adminResDto = userService.updateAdmin(adminId, adminReqDto);
+        return new ResponseEntity<>(adminResDto, HttpStatus.OK);
     }
 
     @PostMapping("/signOut")

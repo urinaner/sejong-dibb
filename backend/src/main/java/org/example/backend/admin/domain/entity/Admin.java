@@ -17,6 +17,7 @@ public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "admin_id")
     private Long id;
 
     @Column(name = "login_id", nullable = false)
@@ -31,8 +32,4 @@ public class Admin {
 
     @Column(name = "role", nullable = false)
     private String role;
-
-    @OneToMany()
-    @JoinColumn(name = "admin_id")
-    private List<Department> departments;
 }
