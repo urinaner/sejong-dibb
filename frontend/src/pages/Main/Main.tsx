@@ -19,6 +19,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
 
+interface ApiResponse<T> {
+  message: string;
+  page: number;
+  totalPage: number;
+  data: T[];
+}
 // 논문
 interface Paper {
   author: string;
@@ -32,6 +38,15 @@ interface Paper {
   publicationPage: string;
   thesisImage: string;
 }
+
+const CATEGORY_MAP = {
+  학부: 'undergraduate',
+  대학원: 'graduate',
+  취업: 'employment',
+  장학: 'scholarship',
+} as const;
+
+type CategoryKey = (typeof CATEGORY_MAP)[keyof typeof CATEGORY_MAP];
 
 // 공지사항
 const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
@@ -80,42 +95,59 @@ const links = [
 ];
 
 function Main(): JSX.Element {
-  const [papers, setPapers] = useState([]);
+  const [papers, setPapers] = useState<Paper[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [activeTab, setActiveTab] = useState('학부');
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const fetchPaper = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await axios.get(apiEndpoints.thesis.list, {
-          params: {
-            page: 0,
-            size: 4,
-          },
-        });
-        setPapers(response.data.data);
-      } catch (error) {
-        console.error('논문 데이터 가져오기 실패:', error);
+        // 논문 데이터 로드
+        const paperResponse = await axios.get<ApiResponse<Paper>>(
+          apiEndpoints.thesis.listWithPage(0, 4),
+        );
+        setPapers(paperResponse.data.data);
+
+        // 초기 카테고리(학부)의 공지사항 로드
+        await fetchAnnouncementsByCategory(CATEGORY_MAP.학부);
+      } catch (err) {
+        console.error('초기 데이터 로드 실패:', err);
       }
     };
 
-    const fetchAnnouncement = async () => {
-      try {
-        const response = await axios.get(apiEndpoints.board.list, {
+    fetchInitialData();
+  }, []);
+
+  const fetchAnnouncementsByCategory = async (category: CategoryKey) => {
+    setLoading(true);
+    try {
+      const response = await axios.get<ApiResponse<Announcement>>(
+        `${apiEndpoints.board.base}/category/${category}`,
+        {
           params: {
             page: 0,
             size: 5,
           },
-        });
-        setAnnouncements(response.data.data);
-      } catch (error) {
-        console.error('공지사항 데이터 가져오기 실패', error);
-      }
-    };
+        },
+      );
+      setAnnouncements(response.data.data);
+    } catch (error) {
+      console.error('공지사항 데이터 가져오기 실패:', error);
+      setError('공지사항을 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchPaper();
-    fetchAnnouncement();
-  }, []);
+  // 탭 변경 핸들러
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const categoryKey = CATEGORY_MAP[tab as keyof typeof CATEGORY_MAP];
+    if (categoryKey) {
+      fetchAnnouncementsByCategory(categoryKey);
+    }
+  };
 
   return (
     <MainContainer>
@@ -143,30 +175,21 @@ function Main(): JSX.Element {
                 <TabButton
                   key={tab}
                   isActive={activeTab === tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => handleTabChange(tab)}
                 >
                   {tab}
                 </TabButton>
               ))}
             </TabContainer>
             <ContentContainer>
-              {announcements
-                .filter((announcement) => {
-                  // 각 탭에 해당하는 카테고리로 필터링
-                  switch (activeTab) {
-                    case '학부':
-                      return announcement.category === 'undergraduate';
-                    case '대학원':
-                      return announcement.category === 'graduate';
-                    case '취업':
-                      return announcement.category === 'employment';
-                    case '장학':
-                      return announcement.category === 'scholarship';
-                    default:
-                      return false;
-                  }
-                })
-                .map((announcement) => (
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div>{error}</div>
+              ) : announcements.length === 0 ? (
+                <div>등록된 공지사항이 없습니다.</div>
+              ) : (
+                announcements.map((announcement) => (
                   <AnnouncementItem
                     key={announcement.id}
                     style={{
@@ -176,12 +199,13 @@ function Main(): JSX.Element {
                     }}
                   >
                     <span>
-                      <img src="/bullet.svg" />
+                      <img src="/bullet.svg" alt="bullet" />
                       {announcement.title}
                     </span>
                     <span>{announcement.createDate}</span>
                   </AnnouncementItem>
-                ))}
+                ))
+              )}
             </ContentContainer>
           </AnnouncementContainer>
           <SeminarContainer>

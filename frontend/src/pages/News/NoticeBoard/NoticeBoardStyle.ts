@@ -114,16 +114,17 @@ export const Table = styled.table`
   border-collapse: collapse;
   font-size: 1rem;
   background-color: #fff;
+  text-align: center;
 `;
 
 export const Th = styled.th`
   padding: 16px 24px;
-  text-align: left;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   font-weight: 600;
   color: #333;
   background-color: #f8f9fa;
+  text-align: center;
 
   ${media.mobile} {
     padding: 12px 16px;
@@ -135,6 +136,7 @@ export const Td = styled.td`
   padding: 16px 24px;
   border-bottom: 1px solid #ddd;
   line-height: 1.5;
+  text-align: center;
 
   ${media.mobile} {
     padding: 12px 16px;
@@ -163,6 +165,7 @@ export const TitleLink = styled.span`
   cursor: pointer;
   font-weight: 500;
   color: #333;
+  text-align: left;
 
   &:hover {
     color: #666;
