@@ -3,9 +3,8 @@ package org.example.backend.board.service;
 import static org.example.backend.board.exception.BoardExceptionType.NOT_FOUND_BOARD;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
-import org.example.backend.board.domain.dto.reqDto.BoardCreateReqDto;
-import org.example.backend.board.domain.dto.reqDto.BoardUpdateReqDto;
 import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.mapper.BoardMapper;
 import org.example.backend.board.exception.BoardException;
@@ -29,7 +28,7 @@ public class BoardService {
     private final DepartmentRepository departmentRepository;
 
     @Transactional
-    public Long saveBoard(BoardCreateReqDto boardReqDto) {
+    public Long saveBoard(BoardReqDto boardReqDto) {
         validateUserRequiredFields(boardReqDto);
 
         validateDepartmentExists(boardReqDto);
@@ -39,7 +38,7 @@ public class BoardService {
         return savedBoard.getId();
     }
 
-    private void validateUserRequiredFields(BoardCreateReqDto dto) {
+    private void validateUserRequiredFields(BoardReqDto dto) {
         if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_TITLE);
         }
@@ -65,16 +64,16 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResDto updateBoard(Long boardId, BoardUpdateReqDto boardReqDto) {
+    public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto) {
         Board board = findBoardById(boardId);
 
-        boardMapper.updateBoardFromDto(boardReqDto, board);
+        boardMapper.updateBoardFromDto(boardReqDto, board, departmentRepository);
 
         boardRepository.save(board);
         return boardMapper.toBoardDto(board);
     }
 
-    private void validateDepartmentExists(BoardCreateReqDto boardReqDto) {
+    private void validateDepartmentExists(BoardReqDto boardReqDto) {
         departmentRepository.findById(boardReqDto.getDepartmentId())
                 .orElseThrow(() -> new DepartmentException(DepartmentExceptionType.NOT_FOUND_DEPARTMENT));
     }

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BoardBaseDto {
+public class BoardReqDto {
 
     private String title;
 
@@ -18,4 +18,6 @@ public class BoardBaseDto {
     private String createDate;
 
     private String category;
+
+    private Long departmentId;
 }

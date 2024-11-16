@@ -1,13 +1,23 @@
 package org.example.backend.board.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@JsonPropertyOrder({"id"})
-public class BoardResDto extends BoardBaseDto {
+@NoArgsConstructor
+public class BoardResDto {
 
     private Long id;
+
+    private String title;
+
+    private String content;
+
+    private String writer;
+
+    private String file;
+
+    private String createDate;
+
+    private String category;
 }
