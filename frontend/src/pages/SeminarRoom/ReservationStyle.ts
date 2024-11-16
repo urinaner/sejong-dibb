@@ -164,7 +164,7 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
   font-family: 'Noto Sans KR';
 
   .react-calendar__navigation {
-    height: 52px;
+    height: 60px;
 
     ${media.mobile} {
       height: 44px;
@@ -190,11 +190,16 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   .react-calendar__tile {
     padding: 10px;
-    height: 100px;
+    width: auto; /* 부모 컨테이너에 따라 유동적으로 변경 */
+    height: auto; /* aspect-ratio에 의해 자동으로 계산 */
+    aspect-ratio: 1 / 0.6;
+    font-size: 16px;
 
     ${media.mobile} {
       padding: 0;
-      height: 50px;
+      width: auto;
+      height: auto;
+      aspect-ratio: 1 / 0.6;
     }
   }
 
