@@ -6,9 +6,12 @@ import org.example.backend.admin.domain.dto.AccessTokenReq;
 import org.example.backend.admin.domain.dto.AdminReqDto;
 import org.example.backend.admin.domain.dto.AdminResDto;
 import org.example.backend.admin.domain.dto.SignInReqDto;
+import org.example.backend.admin.domain.dto.mail.MailReqDto;
+import org.example.backend.admin.domain.dto.mail.MailResDto;
 import org.example.backend.admin.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -40,5 +43,13 @@ public class AdminController {
         accessTokenReq.setAccessToken(accessToken);
         userService.signOut(accessTokenReq);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Transactional
+    @PostMapping("/sendEmail")
+    public ResponseEntity<Void> sendEmail(@RequestBody MailReqDto mailReqDto) {
+        MailResDto dto = userService.createTmpPasswordMail(mailReqDto);
+        userService.mailSend(dto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

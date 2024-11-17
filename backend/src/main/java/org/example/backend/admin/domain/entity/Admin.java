@@ -2,9 +2,6 @@ package org.example.backend.admin.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.backend.department.domain.entity.Department;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -32,4 +29,12 @@ public class Admin {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    public boolean isEqualEmail(String email) {
+        return this.email.equals(email);
+    }
+
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }

@@ -47,6 +47,9 @@ dependencies {
     // sj-auth
     implementation 'com.github.urinaner:sejong-auth:v0.4.4'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
