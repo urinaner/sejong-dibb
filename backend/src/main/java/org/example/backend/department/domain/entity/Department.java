@@ -1,16 +1,12 @@
 package org.example.backend.department.domain.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.global.config.BaseEntity;
-import org.example.backend.professor.domain.entity.Professor;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -45,9 +41,6 @@ public class Department extends BaseEntity {
 
     @Column(name = "map")
     private String map;
-
-    @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
-    private List<Professor> professors = new ArrayList<>();
 
     @Builder
     private Department(String koreanName, String englishName, String intro, String phoneN,
