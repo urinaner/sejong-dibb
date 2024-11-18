@@ -15,18 +15,18 @@ INSERT INTO admin (login_id, password, username, email, role)
 VALUES ('admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com', 'ADMIN');
 
 -- Professor 더미 데이터 (10개)
-INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image, department_id)
+INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image)
 VALUES
-    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg', 1),
-    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg', 1),
-    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://example.com/prof3.jpg', 1),
-    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://example.com/prof4.jpg', 1),
-    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://example.com/prof5.jpg', 1),
-    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://example.com/prof6.jpg', 1),
-    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://example.com/prof7.jpg', 1),
-    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://example.com/prof8.jpg', 1),
-    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://example.com/prof9.jpg', 1),
-    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://example.com/prof10.jpg', 1);
+    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg'),
+    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg'),
+    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://example.com/prof3.jpg'),
+    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://example.com/prof4.jpg'),
+    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://example.com/prof5.jpg'),
+    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://example.com/prof6.jpg'),
+    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://example.com/prof7.jpg'),
+    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://example.com/prof8.jpg'),
+    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://example.com/prof9.jpg'),
+    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://example.com/prof10.jpg');
 
 -- Seminar 더미 데이터 (10개)
 INSERT INTO seminar (name, writer, place, start_date, end_date, speaker, company)
