@@ -3,17 +3,14 @@ package org.example.backend.professor.service;
 import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
-import org.example.backend.professor.domain.mapper.ProfessorMapper;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.service.ThesisService;
-import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,17 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfessorService {
-
-    private final ProfessorMapper professorMapper = Mappers.getMapper(ProfessorMapper.class);
     private final ProfessorRepository professorRepository;
-    private final DepartmentRepository departmentRepository;
     private final ThesisService thesisService;
 
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto) {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
-        Professor professor = professorMapper.toEntity(professorReqDto, departmentRepository);
+        Professor professor = Professor.of(professorReqDto);
         Professor savedProfessor = professorRepository.save(professor);
         return savedProfessor.getId();
     }
@@ -56,23 +50,19 @@ public class ProfessorService {
 
     public ProfessorResDto getProfessor(Long professorId) {
         Professor professor = findProfessorById(professorId);
-
-        return professorMapper.toProfessorDto(professor);
+        return ProfessorResDto.of(professor);
     }
 
-    public Page<ProfessorResDto> getAllBoards(Pageable pageable) {
+    public Page<ProfessorResDto> getAllProfessors(Pageable pageable) {
         return professorRepository.findAll(pageable)
-                .map(professorMapper::toProfessorDto);
+                .map(ProfessorResDto::of);
     }
 
     @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
         Professor professor = findProfessorById(professorId);
-
-        professorMapper.updateProfessorFromDto(professorReqDto, professor, departmentRepository);
-
-        professorRepository.save(professor);
-        return professorMapper.toProfessorDto(professor);
+        professor.update(professorReqDto);
+        return ProfessorResDto.of(professor);
     }
 
     @Transactional
@@ -89,7 +79,6 @@ public class ProfessorService {
     public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
         professorRepository.findById(professorId)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
-
         return thesisService.getThesisByProfessor(professorId, pageable);
     }
 }
