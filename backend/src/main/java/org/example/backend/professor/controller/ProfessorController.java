@@ -55,7 +55,7 @@ public class ProfessorController {
     @Operation(summary = "모든 교수 조회 API", description = "모든 교수의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ProfessorResDto>> getAllBoards(Pageable pageable) {
-        Page<ProfessorResDto> professorResDto = professorService.getAllBoards(pageable);
+        Page<ProfessorResDto> professorResDto = professorService.getAllProfessors(pageable);
         return ResponseDto.ok(professorResDto.getNumber(), professorResDto.getTotalPages(),
                 professorResDto.getContent());
     }
