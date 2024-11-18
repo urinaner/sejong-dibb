@@ -35,18 +35,15 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const clearError = () => setError(null);
 
   // 인증 상태 설정 함수
-  const setAuthState = (
-    userName: string | null,
-    adminRole: boolean = false,
-  ) => {
+  const setAuthState = (userName: string | null, adminRole = false) => {
     if (userName) {
       localStorage.setItem('user', userName);
       localStorage.setItem('isAdmin', String(adminRole));
@@ -70,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       setAuthState(null);
-      window.location.href = '/signin';
+      window.location.href = '/admin/signin';
     }
   }, []);
 
@@ -92,7 +89,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signin = async (
     userName: string,
     password: string,
-    isAdminLogin: boolean = false,
+    isAdminLogin = false,
   ) => {
     if (!userName || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
@@ -118,8 +115,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
       });
 
-      // 로그인 성공 시 사용자 정보 저장
-      setAuthState(userName, isAdminLogin);
+      if (response.status === 200) {
+        setAuthState(userName, isAdminLogin);
+      } else {
+        throw new Error('로그인에 실패했습니다.');
+      }
     } catch (error: any) {
       let errorMessage = '로그인에 실패했습니다.';
 
@@ -147,7 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const contextValue = {
+  const contextValue: AuthContextType = {
     user,
     isAuthenticated,
     isAdmin,
