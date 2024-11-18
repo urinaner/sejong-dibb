@@ -1,15 +1,16 @@
 package org.example.backend.thesis.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.example.backend.professor.domain.entity.Professor;
+import org.example.backend.thesis.domain.dto.ThesisReqDto;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Thesis {
 
     @Id
@@ -50,4 +51,51 @@ public class Thesis {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
+
+    @Builder
+    private Thesis(String author, String journal, String content, String link,
+                   String publicationDate, String thesisImage, String publicationCollection,
+                   String publicationIssue, String publicationPage, String issn, Professor professor) {
+        this.author = author;
+        this.journal = journal;
+        this.content = content;
+        this.link = link;
+        this.publicationDate = publicationDate;
+        this.thesisImage = thesisImage;
+        this.publicationCollection = publicationCollection;
+        this.publicationIssue = publicationIssue;
+        this.publicationPage = publicationPage;
+        this.issn = issn;
+        this.professor = professor;
+    }
+
+    public static Thesis of(ThesisReqDto dto, Professor professor) {
+        return Thesis.builder()
+                .author(dto.getAuthor())
+                .journal(dto.getJournal())
+                .content(dto.getContent())
+                .link(dto.getLink())
+                .publicationDate(dto.getPublicationDate())
+                .thesisImage(dto.getThesisImage())
+                .publicationCollection(dto.getPublicationCollection())
+                .publicationIssue(dto.getPublicationIssue())
+                .publicationPage(dto.getPublicationPage())
+                .issn(dto.getIssn())
+                .professor(professor)
+                .build();
+    }
+
+    public void update(ThesisReqDto dto, Professor professor) {
+        this.author = dto.getAuthor();
+        this.journal = dto.getJournal();
+        this.content = dto.getContent();
+        this.link = dto.getLink();
+        this.publicationDate = dto.getPublicationDate();
+        this.thesisImage = dto.getThesisImage();
+        this.publicationCollection = dto.getPublicationCollection();
+        this.publicationIssue = dto.getPublicationIssue();
+        this.publicationPage = dto.getPublicationPage();
+        this.issn = dto.getIssn();
+        this.professor = professor;
+    }
 }
