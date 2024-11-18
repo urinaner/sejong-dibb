@@ -2,16 +2,14 @@ package org.example.backend.admin.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.department.domain.entity.Department;
 
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "admin")
 public class Admin {
 
@@ -32,7 +30,23 @@ public class Admin {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToMany()
-    @JoinColumn(name = "admin_id")
-    private List<Department> departments;
+    @Builder
+    private Admin(String loginId, String password, String username, String email, String role) {
+        this.loginId = loginId;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+    }
+
+    public static Admin of(SignInReqDto dto, String encodedPassword) {
+        return Admin.builder()
+                .loginId(dto.getLoginId())
+                .password(encodedPassword)
+                .build();
+    }
+
+    public void updatePassword(String newEncodedPassword) {
+        this.password = newEncodedPassword;
+    }
 }
