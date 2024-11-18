@@ -21,8 +21,9 @@ class DepartmentRepositoryTest extends IntegrationTestSupport {
     @DisplayName("부서 생성 테스트")
     void testCreateDepartment() {
         // given
-        Department department = new Department();
-        department.setKoreanName("컴퓨터공학과");
+        Department department = Department.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         // when
         Department savedDepartment = departmentRepository.save(department);
         // then
@@ -33,22 +34,24 @@ class DepartmentRepositoryTest extends IntegrationTestSupport {
     @DisplayName("부서 조회 테스트")
     void testFindDepartment() {
         // given
-        Department department = new Department();
-        department.setKoreanName("전자공학과");
+        Department department = Department.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         Department savedDepartment = departmentRepository.save(department);
         // when
         Optional<Department> foundDepartment = departmentRepository.findById(savedDepartment.getId());
         // then
         assertThat(foundDepartment).isPresent();
-        assertThat(foundDepartment.get().getKoreanName()).isEqualTo("전자공학과");
+        assertThat(foundDepartment.get().getKoreanName()).isEqualTo("컴퓨터공학과");
     }
 
     @Test
     @DisplayName("부서 삭제 테스트")
     void testDeleteDepartment() {
         // given
-        Department department = new Department();
-        department.setKoreanName("기계공학과");
+        Department department = Department.builder()
+                .koreanName("기계공학과")
+                .build();
         Department savedDepartment = departmentRepository.save(department);
         // when
         departmentRepository.deleteById(savedDepartment.getId());

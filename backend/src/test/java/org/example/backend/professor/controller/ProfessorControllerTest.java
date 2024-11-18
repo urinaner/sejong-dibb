@@ -31,10 +31,12 @@ class ProfessorControllerTest extends ControllerTestSupport {
         Long professorId = 1L;
 
         // ProfessorService의 동작 Mock 설정
-        ProfessorResDto professorResDto = new ProfessorResDto();
-        professorResDto.setId(professorId);
-        professorResDto.setName("이순신");
-        professorResDto.setMajor("수학과");
+
+        ProfessorResDto professorResDto = ProfessorResDto.builder()
+                .id(professorId)
+                .name("이순신")
+                .major("수학과")
+                .build();
 
         given(professorService.getProfessor(professorId)).willReturn(professorResDto);
 
@@ -52,10 +54,11 @@ class ProfessorControllerTest extends ControllerTestSupport {
         String professorJson = "{ \"name\": \"김유신\", \"major\": \"화학과\" }";
 
         // 업데이트 후 반환될 교수 정보 설정
-        ProfessorResDto updatedProfessorResDto = new ProfessorResDto();
-        updatedProfessorResDto.setId(professorId);
-        updatedProfessorResDto.setName("김유신");
-        updatedProfessorResDto.setMajor("화학과");
+        ProfessorResDto updatedProfessorResDto = ProfessorResDto.builder()
+                .id(professorId)
+                .name("김유신")
+                .major("화학과")
+                .build();
 
         // ProfessorService의 동작 Mock 설정
         given(professorService.updateProfessor(eq(professorId), any(ProfessorReqDto.class))).willReturn(updatedProfessorResDto);

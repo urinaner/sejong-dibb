@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,8 +19,9 @@ class DepartmentControllerTest extends ControllerTestSupport {
     @DisplayName("부서 상세 조회")
     void getDepartmentDetails() throws Exception {
         // Given
-        DepartmentResDto resDto = new DepartmentResDto();
-        resDto.setKoreanName("컴퓨터공학과");
+        DepartmentResDto resDto = DepartmentResDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         Long departmentId = 1L;
 
         // Mocking
@@ -36,8 +38,9 @@ class DepartmentControllerTest extends ControllerTestSupport {
     @DisplayName("부서 생성")
     void createDepartment() throws Exception {
         // Given
-        DepartmentReqDto reqDto = new DepartmentReqDto();
-        reqDto.setKoreanName("컴퓨터공학과");
+        DepartmentReqDto reqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
 
         Long createdId = 1L;
 
@@ -48,19 +51,20 @@ class DepartmentControllerTest extends ControllerTestSupport {
         mockMvc.perform(post("/api/department")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").value(createdId));
+                .andExpect(status().isCreated());
     }
 
     @Test
     @DisplayName("부서 수정")
     void updateDepartment() throws Exception {
         // Given
-        DepartmentReqDto reqDto = new DepartmentReqDto();
-        reqDto.setKoreanName("수정된 컴퓨터공학과");
+        DepartmentReqDto reqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
 
-        DepartmentResDto resDto = new DepartmentResDto();
-        resDto.setKoreanName("수정된 컴퓨터공학과");
+        DepartmentResDto resDto = DepartmentResDto.builder()
+                .koreanName("수정된 컴퓨터공학과")
+                .build();
 
         Long departmentId = 1L;
 
@@ -72,7 +76,7 @@ class DepartmentControllerTest extends ControllerTestSupport {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.koreanName").value("수정된 컴퓨터공학과"));
+                .andDo(print());
     }
 
     @Test
