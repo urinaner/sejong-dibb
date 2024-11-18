@@ -58,15 +58,15 @@ VALUES
 
 
 -- Board 더미 데이터 (10개)
-INSERT INTO board (title, content, view_count, writer, file, create_date, category, department_id)
+INSERT INTO board (title, content, view_count, writer, file, category)
 VALUES
-    ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', 'file1.txt', '2024-01-01', 'undergraduate', 1),
-    ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', 'file2.txt', '2024-01-02', 'graduate', 1),
-    ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', 'file3.txt', '2024-01-03', 'employment', 1),
-    ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', 'file4.txt', '2024-01-04', 'scholarship', 1),
-    ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', 'file5.txt', '2024-01-05', 'undergraduate', 1),
-    ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', 'file6.txt', '2024-01-06', 'graduate', 1),
-    ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', 'file7.txt', '2024-01-07', 'employment', 1),
-    ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', '2024-01-08', 'scholarship', 1),
-    ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', '2024-01-09', 'undergraduate', 1),
-    ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt', '2024-01-10', 'graduate', 1);
+    ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', 'file1.txt', 'undergraduate'),
+    ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', 'file2.txt', 'graduate'),
+    ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', 'file3.txt', 'employment'),
+    ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', 'file4.txt', 'scholarship'),
+    ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', 'file5.txt', 'undergraduate'),
+    ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', 'file6.txt', 'graduate'),
+    ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', 'file7.txt', 'employment'),
+    ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', 'scholarship'),
+    ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', 'undergraduate'),
+    ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt','graduate');
