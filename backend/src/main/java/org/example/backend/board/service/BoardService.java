@@ -7,14 +7,9 @@ import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.entity.Category;
-import org.example.backend.board.domain.mapper.BoardMapper;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
-import org.example.backend.department.exception.DepartmentException;
-import org.example.backend.department.exception.DepartmentExceptionType;
-import org.example.backend.department.repository.DepartmentRepository;
-import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,17 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BoardService {
-    private final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
     private final BoardRepository boardRepository;
-    private final DepartmentRepository departmentRepository;
 
     @Transactional
     public Long saveBoard(BoardReqDto boardReqDto) {
         validateUserRequiredFields(boardReqDto);
-
-        validateDepartmentExists(boardReqDto);
-
-        Board board = boardMapper.toEntity(boardReqDto, departmentRepository);
+        Board board = Board.of(boardReqDto);
         Board savedBoard = boardRepository.save(board);
         return savedBoard.getId();
     }
@@ -43,47 +33,34 @@ public class BoardService {
         if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_TITLE);
         }
-
         if (dto.getContent() == null || dto.getContent().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_CONTENT);
-        }
-
-        if (dto.getDepartmentId() == null) {
-            throw new BoardException(BoardExceptionType.REQUIRED_DEPARTMENT_ID);
         }
     }
 
     public BoardResDto getBoard(Long boardId) {
         Board board = findBoardById(boardId);
-
-        return boardMapper.toBoardDto(board);
+        return BoardResDto.of(board);
     }
 
     public Page<BoardResDto> getAllBoards(Pageable pageable) {
         return boardRepository.findAll(pageable)
-                .map(boardMapper::toBoardDto);
+                .map(BoardResDto::of);
     }
 
     public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {
-        Page<Board> boards = boardRepository.findAllByCategory(category, pageable);
-        return boards.map(boardMapper::toBoardDto);
+        return boardRepository.findAllByCategory(category, pageable)
+                .map(BoardResDto::of);
     }
 
     @Transactional
     public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto) {
         Board board = findBoardById(boardId);
-
-        boardMapper.updateBoardFromDto(boardReqDto, board, departmentRepository);
-
-        boardRepository.save(board);
-        return boardMapper.toBoardDto(board);
+        board.update(boardReqDto);
+        return BoardResDto.of(board);
     }
 
-    private void validateDepartmentExists(BoardReqDto boardReqDto) {
-        departmentRepository.findById(boardReqDto.getDepartmentId())
-                .orElseThrow(() -> new DepartmentException(DepartmentExceptionType.NOT_FOUND_DEPARTMENT));
-    }
-
+    @Transactional
     public void deleteBoard(Long boardId) {
         Board board = findBoardById(boardId);
         boardRepository.delete(board);
