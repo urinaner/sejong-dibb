@@ -59,10 +59,11 @@ public class JWTFilter extends OncePerRequestFilter {
         String loginId = jwtUtil.getLoginId(token);
         String role = jwtUtil.getRole(token);
 
-        Admin admin = new Admin();
-        admin.setUsername(loginId);
-        admin.setPassword("temppassword");
-        admin.setRole(role);
+        Admin admin = Admin.builder()
+                .username(loginId)
+                .password("temppassword")
+                .role(role)
+                .build();
 
         CustomUserDetails customUserDetails = new CustomUserDetails(admin);
 
