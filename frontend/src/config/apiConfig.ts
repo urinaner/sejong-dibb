@@ -69,6 +69,11 @@ export const apiEndpoints = {
     signOut: `${API_URL}/api/admin/signOut`,
     register: `${API_URL}/api/admin/join`,
   },
+  user: {
+    login: `${API_URL}/api/user/login`,
+    signOut: `${API_URL}/api/user/signOut`,
+    register: `${API_URL}/api/user/join`,
+  },
   department: {
     get: (id: string) => `${API_URL}/api/departments/${id}`,
     update: (id: string) => `${API_URL}/api/departments/${id}`,
