@@ -1,4 +1,5 @@
-import {
+// src/context/AuthContext.tsx
+import React, {
   createContext,
   useState,
   useCallback,
@@ -8,12 +9,18 @@ import {
 import axios from 'axios';
 import { apiEndpoints } from '../config/apiConfig';
 
+// AuthContext 타입 정의
 interface AuthContextType {
   user: string | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   error: string | null;
-  signin: (userName: string, password: string) => Promise<void>;
+  signin: (
+    userName: string,
+    password: string,
+    isAdminLogin?: boolean,
+  ) => Promise<void>;
   signout: () => Promise<void>;
   clearError: () => void;
 }
@@ -28,105 +35,62 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const clearError = () => setError(null);
 
   // 인증 상태 설정 함수
-  const setAuthState = (token: string | null, userName: string | null) => {
-    if (token && userName) {
-      localStorage.setItem('token', token);
+  const setAuthState = (userName: string | null, adminRole = false) => {
+    if (userName) {
       localStorage.setItem('user', userName);
+      localStorage.setItem('isAdmin', String(adminRole));
       setUser(userName);
       setIsAuthenticated(true);
+      setIsAdmin(adminRole);
     } else {
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('isAdmin');
       setUser(null);
       setIsAuthenticated(false);
+      setIsAdmin(false);
     }
   };
 
+  // 로그아웃 함수
   const signout = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setAuthState(null, null);
-        return;
-      }
-
       await axios.post(apiEndpoints.admin.signOut);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      setAuthState(null, null);
-      window.location.href = '/signin';
+      setAuthState(null);
+      window.location.href = '/admin/signin';
     }
   }, []);
 
+  // 초기화
   useEffect(() => {
     const initializeAuth = () => {
-      const token = localStorage.getItem('token');
       const savedUser = localStorage.getItem('user');
-      if (token && savedUser) {
-        setAuthState(token, savedUser);
+      const savedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+
+      if (savedUser) {
+        setAuthState(savedUser, savedIsAdmin);
       }
     };
 
-    let isLoggingOut = false;
-
-    const requestInterceptor = axios.interceptors.request.use(
-      (config) => {
-        // Content-Type 설정 (multipart/form-data가 아닌 경우에만)
-        if (
-          config.headers &&
-          config.headers['Content-Type'] !== 'multipart/form-data'
-        ) {
-          config.headers['Content-Type'] = 'application/json';
-        }
-
-        // XSRF 토큰 관련 설정 제거
-        if (config.headers) {
-          delete config.headers['X-XSRF-TOKEN'];
-        }
-
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
-
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        // 게시판 관련 공개 API의 401/403 에러는 무시
-        const isPublicBoardEndpoint =
-          error.config?.url?.includes('/api/board') &&
-          (error.config?.method === 'get' || error.config?.method === 'GET');
-
-        if (
-          !isLoggingOut &&
-          error.response?.status === 401 &&
-          !isPublicBoardEndpoint
-        ) {
-          isLoggingOut = true;
-          await signout();
-          isLoggingOut = false;
-        }
-        return Promise.reject(error);
-      },
-    );
-
     initializeAuth();
+  }, []);
 
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, [signout]);
-
-  const signin = async (userName: string, password: string) => {
+  // 로그인 함수
+  const signin = async (
+    userName: string,
+    password: string,
+    isAdminLogin = false,
+  ) => {
     if (!userName || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
       return;
@@ -140,20 +104,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       formData.append('loginId', userName);
       formData.append('password', password);
 
-      const response = await axios.post(apiEndpoints.admin.login, formData, {
+      // 관리자/일반 사용자 로그인 엔드포인트 선택
+      const loginEndpoint = isAdminLogin
+        ? apiEndpoints.admin.login
+        : apiEndpoints.user.login;
+
+      const response = await axios.post(loginEndpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      const token = response.headers['authorization'];
-
-      if (!token) {
-        throw new Error('인증 토큰을 받지 못했습니다.');
+      if (response.status === 200) {
+        setAuthState(userName, isAdminLogin);
+      } else {
+        throw new Error('로그인에 실패했습니다.');
       }
-
-      setAuthState(token, userName);
-      setError(null);
     } catch (error: any) {
       let errorMessage = '로그인에 실패했습니다.';
 
@@ -181,9 +147,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const value = {
+  const contextValue: AuthContextType = {
     user,
     isAuthenticated,
+    isAdmin,
     isLoading,
     error,
     signin,
@@ -191,7 +158,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearError,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

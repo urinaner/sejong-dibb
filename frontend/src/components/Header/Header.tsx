@@ -69,10 +69,8 @@ const Header: React.FC = () => {
         { name: '공지사항', path: '/news/noticeboard' },
         { name: '세미나', path: '/news' },
         { name: '연구 논문', path: '/news' },
-        { name: '공지 사항 조회', path: '/news' },
         { name: '연구 논문 조회', path: '/news' },
         { name: '세미나실 예약', path: '/news' },
-        { name: '세미나 조회', path: '/news' },
       ],
     },
     {
