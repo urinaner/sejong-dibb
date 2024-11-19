@@ -23,6 +23,7 @@ import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
 import Reservation from './pages/SeminarRoom/Reservation';
 
 import mainImage from './assets/images/main_picture.svg';
+import ThesisList from "./pages/News/Thesis/ThesisList";
 
 const PageContainer = styled.div`
   display: flex;
@@ -101,6 +102,7 @@ function AppContent() {
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/seminar-rooms/reservation" element={<Reservation />} />
+          <Route path="/news/thesis" element={<ThesisList />} />
 
           {/* Admin Protected Routes */}
           <Route
