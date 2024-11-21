@@ -15,32 +15,32 @@ INSERT INTO admin (login_id, password, username, email, role)
 VALUES ('admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com', 'ADMIN');
 
 -- Professor 더미 데이터 (10개)
-INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image, department_id)
+INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image)
 VALUES
-    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg', 1),
-    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg', 1),
-    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://example.com/prof3.jpg', 1),
-    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://example.com/prof4.jpg', 1),
-    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://example.com/prof5.jpg', 1),
-    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://example.com/prof6.jpg', 1),
-    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://example.com/prof7.jpg', 1),
-    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://example.com/prof8.jpg', 1),
-    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://example.com/prof9.jpg', 1),
-    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://example.com/prof10.jpg', 1);
+    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg'),
+    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg'),
+    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://example.com/prof3.jpg'),
+    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://example.com/prof4.jpg'),
+    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://example.com/prof5.jpg'),
+    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://example.com/prof6.jpg'),
+    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://example.com/prof7.jpg'),
+    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://example.com/prof8.jpg'),
+    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://example.com/prof9.jpg'),
+    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://example.com/prof10.jpg');
 
 -- Seminar 더미 데이터 (10개)
-INSERT INTO seminar (name, writer, place, start_date, end_date, speaker, company, department_id)
+INSERT INTO seminar (name, writer, place, start_date, end_date, speaker, company)
 VALUES
-    ('세미나1', '작성자1', '세미나룸 A', '2024-01-01', '2024-01-02', '연사1', '기업1', 1),
-    ('세미나2', '작성자2', '세미나룸 B', '2024-01-10', '2024-01-11', '연사2', '기업2', 1),
-    ('세미나3', '작성자3', '세미나룸 C', '2024-02-01', '2024-02-02', '연사3', '기업3', 1),
-    ('세미나4', '작성자4', '세미나룸 D', '2024-03-01', '2024-03-02', '연사4', '기업4', 1),
-    ('세미나5', '작성자5', '세미나룸 E', '2024-04-01', '2024-04-02', '연사5', '기업5', 1),
-    ('세미나6', '작성자6', '세미나룸 F', '2024-05-01', '2024-05-02', '연사6', '기업6', 1),
-    ('세미나7', '작성자7', '세미나룸 G', '2024-06-01', '2024-06-02', '연사7', '기업7', 1),
-    ('세미나8', '작성자8', '세미나룸 H', '2024-07-01', '2024-07-02', '연사8', '기업8', 1),
-    ('세미나9', '작성자9', '세미나룸 I', '2024-08-01', '2024-08-02', '연사9', '기업9', 1),
-    ('세미나10', '작성자10', '세미나룸 J', '2024-09-01', '2024-09-02', '연사10', '기업10', 1);
+    ('세미나1', '작성자1', '세미나룸 A', '2024-01-01', '2024-01-02', '연사1', '기업1'),
+    ('세미나2', '작성자2', '세미나룸 B', '2024-01-10', '2024-01-11', '연사2', '기업2'),
+    ('세미나3', '작성자3', '세미나룸 C', '2024-02-01', '2024-02-02', '연사3', '기업3'),
+    ('세미나4', '작성자4', '세미나룸 D', '2024-03-01', '2024-03-02', '연사4', '기업4'),
+    ('세미나5', '작성자5', '세미나룸 E', '2024-04-01', '2024-04-02', '연사5', '기업5'),
+    ('세미나6', '작성자6', '세미나룸 F', '2024-05-01', '2024-05-02', '연사6', '기업6'),
+    ('세미나7', '작성자7', '세미나룸 G', '2024-06-01', '2024-06-02', '연사7', '기업7'),
+    ('세미나8', '작성자8', '세미나룸 H', '2024-07-01', '2024-07-02', '연사8', '기업8'),
+    ('세미나9', '작성자9', '세미나룸 I', '2024-08-01', '2024-08-02', '연사9', '기업9'),
+    ('세미나10', '작성자10', '세미나룸 J', '2024-09-01', '2024-09-02', '연사10', '기업10');
 
 -- Thesis 더미 데이터 (10개)
 INSERT INTO thesis (author, journal, content, link, publication_date, thesis_image, publication_collection, publication_issue, publication_page, issn, professor_id)
@@ -58,15 +58,15 @@ VALUES
 
 
 -- Board 더미 데이터 (10개)
-INSERT INTO board (title, content, view_count, writer, file, create_date, category, department_id)
+INSERT INTO board (title, content, view_count, writer, file, category)
 VALUES
-    ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', 'file1.txt', '2024-01-01', 'undergraduate', 1),
-    ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', 'file2.txt', '2024-01-02', 'graduate', 1),
-    ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', 'file3.txt', '2024-01-03', 'employment', 1),
-    ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', 'file4.txt', '2024-01-04', 'scholarship', 1),
-    ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', 'file5.txt', '2024-01-05', 'undergraduate', 1),
-    ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', 'file6.txt', '2024-01-06', 'graduate', 1),
-    ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', 'file7.txt', '2024-01-07', 'employment', 1),
-    ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', '2024-01-08', 'scholarship', 1),
-    ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', '2024-01-09', 'undergraduate', 1),
-    ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt', '2024-01-10', 'graduate', 1);
+    ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', 'file1.txt', 'undergraduate'),
+    ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', 'file2.txt', 'graduate'),
+    ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', 'file3.txt', 'employment'),
+    ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', 'file4.txt', 'scholarship'),
+    ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', 'file5.txt', 'undergraduate'),
+    ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', 'file6.txt', 'graduate'),
+    ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', 'file7.txt', 'employment'),
+    ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', 'scholarship'),
+    ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', 'undergraduate'),
+    ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt','graduate');

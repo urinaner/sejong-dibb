@@ -16,80 +16,84 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class ProfessorRepositoryTest extends IntegrationTestSupport {
 
-    @Autowired private ProfessorRepository professorRepository;
-    @Autowired private DepartmentRepository departmentRepository;
-
-    private static Department department;
-
-    @BeforeEach
-    void setUp() {
-        department = new Department();
-        department.setKoreanName("컴퓨터공학과" + UUID.randomUUID().toString());  // 유니크한 이름으로 설정
-        departmentRepository.save(department);
-    }
+    @Autowired
+    private ProfessorRepository professorRepository;
 
     @AfterEach
     void tearDown() {
-        professorRepository.deleteAll();  // 테스트 데이터 삭제
-        departmentRepository.deleteAll();
+        professorRepository.deleteAll();
     }
+
     @Test
     @DisplayName("휴대폰 번호로 교수 존재 여부 확인")
     void existsByPhoneN() {
         // given
-        ProfessorReqDto dto = new ProfessorReqDto();
-        dto.setName("홍길동");
-        dto.setPhoneN("010-1234-5678"); // 고유한 번호
-        dto.setEmail("hong1@example.com"); // 고유한 이메일
-        dto.setDepartmentId(department.getId());
+        Professor professor = Professor.builder()
+                .name("홍길동")
+                .major("컴퓨터공학")
+                .phoneN("010-1234-5678")
+                .email("hong1@example.com")
+                .position("정교수")
+                .homepage("https://prof.sejong.ac.kr")
+                .lab("충무관 404호")
+                .profileImage("profile.jpg")
+                .build();
+
+        Professor savedProfessor = professorRepository.save(professor);
 
         // when
-        Professor entity = professorMapper.toEntity(dto, departmentRepository);
-        Professor savedEntity = professorRepository.save(entity);
+        boolean exists = professorRepository.existsByPhoneN(savedProfessor.getPhoneN());
 
         // then
-        boolean exists = professorRepository.existsByPhoneN(savedEntity.getPhoneN());
         assertThat(exists).isTrue();
     }
 
     @Test
+    @DisplayName("이메일로 교수 존재 여부 확인")
     void existsByEmail() {
         // given
-        ProfessorReqDto dto = new ProfessorReqDto();
-        dto.setName("홍길동");
-        dto.setPhoneN("010-1234-5678"); // 고유한 번호
-        dto.setEmail("hong1@example.com"); // 고유한 이메일
-        dto.setDepartmentId(department.getId());
+        Professor professor = Professor.builder()
+                .name("홍길동")
+                .major("컴퓨터공학")
+                .phoneN("010-1234-5678")
+                .email("hong1@example.com")
+                .position("정교수")
+                .homepage("https://prof.sejong.ac.kr")
+                .lab("충무관 404호")
+                .profileImage("profile.jpg")
+                .build();
+
+        Professor savedProfessor = professorRepository.save(professor);
 
         // when
-        Professor entity = professorMapper.toEntity(dto, departmentRepository);
-        Professor savedEntity = professorRepository.save(entity);
+        boolean exists = professorRepository.existsByEmail(savedProfessor.getEmail());
 
         // then
-        boolean exists = professorRepository.existsByEmail(savedEntity.getEmail());
         assertThat(exists).isTrue();
     }
 
     @Test
     @DisplayName("교수 삭제 테스트")
     void deleteProfessorById() {
-        // given: 테스트용 교수 데이터 생성 및 저장
-        ProfessorReqDto dto = new ProfessorReqDto();
-        dto.setName("홍길동");
-        dto.setPhoneN("010-1234-5678");
-        dto.setEmail("hong1@example.com");
-        dto.setDepartmentId(department.getId());
+        // given
+        Professor professor = Professor.builder()
+                .name("홍길동")
+                .major("컴퓨터공학")
+                .phoneN("010-1234-5678")
+                .email("hong1@example.com")
+                .position("정교수")
+                .homepage("https://prof.sejong.ac.kr")
+                .lab("충무관 404호")
+                .profileImage("profile.jpg")
+                .build();
 
-        Professor entity = professorMapper.toEntity(dto, departmentRepository);
-        Professor savedEntity = professorRepository.save(entity);
+        Professor savedProfessor = professorRepository.save(professor);
+        Long professorId = savedProfessor.getId();
 
-        Long professorId = savedEntity.getId();
-
-        // when: 저장된 교수 삭제
+        // when
         professorRepository.deleteById(professorId);
 
-        // then: 삭제된 교수 정보가 존재하지 않는지 확인
-        boolean exists = professorRepository.existsById(professorId);
-        assertThat(exists).isFalse();
+        // then
+        assertThat(professorRepository.existsById(professorId)).isFalse();
     }
 }

@@ -1,18 +1,18 @@
 package org.example.backend.board.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.backend.department.domain.entity.Department;
+import org.example.backend.board.domain.dto.BoardReqDto;
+import org.example.backend.global.config.BaseEntity;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board")
-public class Board {
-
+public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
@@ -33,14 +33,36 @@ public class Board {
     @Column(name = "file")
     private String file;
 
-    @Column(name = "create_date")
-    private String createDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    @Builder
+    private Board(String title, String content, String writer,
+                  String file, Category category) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.file = file;
+        this.category = category;
+        this.viewCount = 0;
+    }
+
+    public static Board of(BoardReqDto dto) {
+        return Board.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(dto.getWriter())
+                .file(dto.getFile())
+                .category(Category.valueOf(dto.getCategory()))
+                .build();
+    }
+
+    public void update(BoardReqDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.writer = dto.getWriter();
+        this.file = dto.getFile();
+        this.category = Category.valueOf(dto.getCategory());
+    }
 }

@@ -46,7 +46,7 @@ public class ThesisController {
     @Operation(summary = "모든 논문 조회 API", description = "모든 논문의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ThesisResDto>> getAllBoards(Pageable pageable) {
-        Page<ThesisResDto> thesisResDtos = thesisService.getAllBoards(pageable);
+        Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(pageable);
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
