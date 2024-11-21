@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.board.domain.entity.Board;
+import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.domain.mapper.BoardMapper;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
@@ -61,6 +62,11 @@ public class BoardService {
     public Page<BoardResDto> getAllBoards(Pageable pageable) {
         return boardRepository.findAll(pageable)
                 .map(boardMapper::toBoardDto);
+    }
+
+    public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {
+        Page<Board> boards = boardRepository.findAllByCategory(category, pageable);
+        return boards.map(boardMapper::toBoardDto);
     }
 
     @Transactional

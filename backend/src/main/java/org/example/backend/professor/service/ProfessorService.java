@@ -25,6 +25,7 @@ public class ProfessorService {
     private final ProfessorMapper professorMapper = Mappers.getMapper(ProfessorMapper.class);
     private final ProfessorRepository professorRepository;
     private final DepartmentRepository departmentRepository;
+    private final ThesisService thesisService;
 
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto) {
@@ -81,5 +82,12 @@ public class ProfessorService {
     private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
+    }
+
+    public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
+        professorRepository.findById(professorId)
+                .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
+
+        return thesisService.getThesisByProfessor(professorId, pageable);
     }
 }

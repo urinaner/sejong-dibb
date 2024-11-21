@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
+import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.service.BoardService;
 import org.example.backend.common.exception.dto.ResponseDto;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,14 @@ public class BoardController {
     @GetMapping
     public ResponseDto<List<BoardResDto>> getAllBoards(Pageable pageable) {
         Page<BoardResDto> boardList = boardService.getAllBoards(pageable);
+        return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
+    }
+    @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
+    @GetMapping("/category/{category}")
+    public ResponseDto<List<BoardResDto>> getBoardsByCategory(
+            @PathVariable("category") Category category,
+            Pageable pageable) {
+        Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, pageable);
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
 

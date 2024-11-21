@@ -1,22 +1,28 @@
+// src/AppContent.tsx
 import React from 'react';
 import styled from 'styled-components';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Modal from './components/Modal/Modal';
+
+// Pages
 import Main from './pages/Main/Main';
-import SignIn from './pages/Auth/SignIn';
+import AdminSignIn from './pages/Auth/AdminSignIn';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
 import Professor from './pages/About/Faculty/Professor';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
-import mainImage from './assets/images/main_picture.svg';
 import NoticeDetail from './pages/News/NoticeBoard/NoticeDetail';
 import NoticeCreate from './pages/News/NoticeBoard/NoticeCreate';
 import NoticeEdit from './pages/News/NoticeBoard/NoticeEdit';
 import ProfessorEdit from './pages/About/Faculty/ProfessorEdit';
-import ProfessorDtail from './pages/About/Faculty/ProfessorDetail';
+import ProfessorDetail from './pages/About/Faculty/ProfessorDetail';
 import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
+import Reservation from './pages/SeminarRoom/Reservation';
+
+import mainImage from './assets/images/main_picture.svg';
 
 const PageContainer = styled.div`
   display: flex;
@@ -75,21 +81,60 @@ function AppContent() {
       </MainImageWrapper>
       <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Main />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route
+            path="/admin/signin"
+            element={
+              <ProtectedRoute requireAuth={false}>
+                <AdminSignIn />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
           />
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
-          <Route path="/about/faculty/edit/:id" element={<ProfessorEdit />} />
-          <Route path="/about/faculty/:id" element={<ProfessorDtail />} />
-          <Route path="/about/faculty/create" element={<ProfessorCreate />} />
+          <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
-          <Route path="/news/noticeboard/create" element={<NoticeCreate />} />
-          <Route path="/news/noticeboard/edit/:id" element={<NoticeEdit />} />
+          <Route path="/seminar-rooms/reservation" element={<Reservation />} />
+
+          {/* Admin Protected Routes */}
+          <Route
+            path="/about/faculty/edit/:id"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ProfessorEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about/faculty/create"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ProfessorCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/noticeboard/create"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <NoticeCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/noticeboard/edit/:id"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <NoticeEdit />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </ContentWrapper>
       <Footer />
