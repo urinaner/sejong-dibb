@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +32,11 @@ public class ThesisController {
     private final ThesisService thesisService;
 
     @Operation(summary = "논문 생성 API", description = "논문 생성")
-    @PostMapping
-    public ResponseEntity<Long> createThesis(@RequestBody ThesisReqDto thesisReqDto) {
-        Long thesisId = thesisService.saveThesis(thesisReqDto);
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Long> createThesis(
+            @RequestPart(value = "thesisReqDto") ThesisReqDto thesisReqDto,
+            @RequestPart(value = "thesis_image") MultipartFile multipartFile) {
+        Long thesisId = thesisService.saveThesis(thesisReqDto, multipartFile);
         return new ResponseEntity<>(thesisId, HttpStatus.OK);
     }
 

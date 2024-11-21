@@ -17,16 +17,16 @@ VALUES ('admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO',
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image)
 VALUES
-    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://example.com/prof1.jpg'),
-    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://example.com/prof2.jpg'),
-    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://example.com/prof3.jpg'),
-    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://example.com/prof4.jpg'),
-    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://example.com/prof5.jpg'),
-    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://example.com/prof6.jpg'),
-    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://example.com/prof7.jpg'),
-    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://example.com/prof8.jpg'),
-    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://example.com/prof9.jpg'),
-    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://example.com/prof10.jpg');
+    ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+008.png'),
+    ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+007.png'),
+    ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+006.png'),
+    ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+005.png'),
+    ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+004.png'),
+    ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com', 'SE 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+003.png'),
+    ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-17+002.png'),
+    ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-17+001.png'),
+    ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dibb.png'),
+    ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com', 'CG 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/profile/(1116)%E1%84%83%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A1%E1%84%86%E1%85%B5%E1%86%A8%E1%84%83%E1%85%B2%E1%84%8B%E1%85%A9+%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8E%E1%85%A6%E1%84%8F%E1%85%A5%E1%86%BA(1).jpg');
 
 -- Seminar 더미 데이터 (10개)
 INSERT INTO seminar (name, writer, place, start_date, end_date, speaker, company)
@@ -45,16 +45,16 @@ VALUES
 -- Thesis 더미 데이터 (10개)
 INSERT INTO thesis (author, journal, content, link, publication_date, thesis_image, publication_collection, publication_issue, publication_page, issn, professor_id)
 VALUES
-    ('저자1', 'Journal A', '논문 내용 1', 'https://example.com/thesis1', '2024-01-01', 'https://example.com/image1.jpg', 'Volume 1', 'Issue 1', 'Page 1', '1234-5678', 1),
-    ('저자2', 'Journal B', '논문 내용 2', 'https://example.com/thesis2', '2024-02-01', 'https://example.com/image2.jpg', 'Volume 2', 'Issue 2', 'Page 2', '2345-6789', 2),
-    ('저자3', 'Journal C', '논문 내용 3', 'https://example.com/thesis3', '2024-03-01', 'https://example.com/image3.jpg', 'Volume 3', 'Issue 3', 'Page 3', '3456-7890', 3),
-    ('저자4', 'Journal D', '논문 내용 4', 'https://example.com/thesis4', '2024-04-01', 'https://example.com/image4.jpg', 'Volume 4', 'Issue 4', 'Page 4', '4567-8901', 4),
-    ('저자5', 'Journal E', '논문 내용 5', 'https://example.com/thesis5', '2024-05-01', 'https://example.com/image5.jpg', 'Volume 5', 'Issue 5', 'Page 5', '5678-9012', 5),
-    ('저자6', 'Journal F', '논문 내용 6', 'https://example.com/thesis6', '2024-06-01', 'https://example.com/image6.jpg', 'Volume 6', 'Issue 6', 'Page 6', '6789-0123', 6),
-    ('저자7', 'Journal G', '논문 내용 7', 'https://example.com/thesis7', '2024-07-01', 'https://example.com/image7.jpg', 'Volume 7', 'Issue 7', 'Page 7', '7890-1234', 7),
-    ('저자8', 'Journal H', '논문 내용 8', 'https://example.com/thesis8', '2024-08-01', 'https://example.com/image8.jpg', 'Volume 8', 'Issue 8', 'Page 8', '8901-2345', 8),
-    ('저자9', 'Journal I', '논문 내용 9', 'https://example.com/thesis9', '2024-09-01', 'https://example.com/image9.jpg', 'Volume 9', 'Issue 9', 'Page 9', '9012-3456', 9),
-    ('저자10', 'Journal J', '논문 내용 10', 'https://example.com/thesis10', '2024-10-01', 'https://example.com/image10.jpg', 'Volume 10', 'Issue 10', 'Page 10', '0123-4567', 10);
+    ('저자1', 'Journal A', '논문 내용 1', 'https://example.com/thesis1', '2024-01-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_540224b.jpg', 'Volume 1', 'Issue 1', 'Page 1', '1234-5678', 1),
+    ('저자2', 'Journal B', '논문 내용 2', 'https://example.com/thesis2', '2024-02-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_587943b.jpg', 'Volume 2', 'Issue 2', 'Page 2', '2345-6789', 2),
+    ('저자3', 'Journal C', '논문 내용 3', 'https://example.com/thesis3', '2024-03-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590742b.jpg', 'Volume 3', 'Issue 3', 'Page 3', '3456-7890', 3),
+    ('저자4', 'Journal D', '논문 내용 4', 'https://example.com/thesis4', '2024-04-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590742b.jpg', 'Volume 4', 'Issue 4', 'Page 4', '4567-8901', 4),
+    ('저자5', 'Journal E', '논문 내용 5', 'https://example.com/thesis5', '2024-05-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590852b.jpg', 'Volume 5', 'Issue 5', 'Page 5', '5678-9012', 5),
+    ('저자6', 'Journal F', '논문 내용 6', 'https://example.com/thesis6', '2024-06-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_593743b.jpg', 'Volume 6', 'Issue 6', 'Page 6', '6789-0123', 6),
+    ('저자7', 'Journal G', '논문 내용 7', 'https://example.com/thesis7', '2024-07-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_593743b.jpg', 'Volume 7', 'Issue 7', 'Page 7', '7890-1234', 7),
+    ('저자8', 'Journal H', '논문 내용 8', 'https://example.com/thesis8', '2024-08-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_596862b.jpg', 'Volume 8', 'Issue 8', 'Page 8', '8901-2345', 8),
+    ('저자9', 'Journal I', '논문 내용 9', 'https://example.com/thesis9', '2024-09-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_598360b.jpg', 'Volume 9', 'Issue 9', 'Page 9', '9012-3456', 9),
+    ('저자10', 'Journal J', '논문 내용 10', 'https://example.com/thesis10', '2024-10-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_598598b.jpg', 'Volume 10', 'Issue 10', 'Page 10', '0123-4567', 10);
 
 
 -- Board 더미 데이터 (10개)

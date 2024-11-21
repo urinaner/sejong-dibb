@@ -33,7 +33,7 @@ public class Thesis {
     @Column(name = "publication_date")
     private String publicationDate;
 
-    @Column(name = "thesis_image")
+    @Column(name = "thesis_image", length = 1000)
     private String thesisImage;
 
     @Column(name = "publication_collection")

@@ -1,6 +1,13 @@
 package org.example.backend.professor.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -42,7 +49,7 @@ public class Professor {
     @Column(name = "lab")
     private String lab;
 
-    @Column(name = "profileImage")
+    @Column(name = "profileImage", length = 1000)
     private String profileImage;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -83,5 +90,9 @@ public class Professor {
         this.homepage = dto.getHomepage() == null ? this.homepage : dto.getHomepage();
         this.lab = dto.getLab() == null ? this.lab : dto.getLab();
         this.profileImage = dto.getProfileImage() == null ? this.profileImage : dto.getProfileImage();
+    }
+
+    public void updateProfilePhoto(String uploadImageUrl) {
+        this.profileImage = uploadImageUrl;
     }
 }

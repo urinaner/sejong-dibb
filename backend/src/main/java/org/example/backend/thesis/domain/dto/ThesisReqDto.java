@@ -54,4 +54,8 @@ public class ThesisReqDto {
                 .professorId(professorId)
                 .build();
     }
+
+    public void setThesisImage(String thesisImage) {
+        this.thesisImage = thesisImage;
+    }
 }

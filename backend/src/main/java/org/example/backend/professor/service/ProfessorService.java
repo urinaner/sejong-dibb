@@ -3,6 +3,7 @@ package org.example.backend.professor.service;
 import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.global.config.S3Uploader;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +24,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfessorService {
     private final ProfessorRepository professorRepository;
     private final ThesisService thesisService;
+    private final S3Uploader s3Uploader;
+    private static final String dirName = "profile";
 
     @Transactional
-    public Long saveProfessor(ProfessorReqDto professorReqDto) {
+    public Long saveProfessor(ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
+
+        if (!multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            professorReqDto.setProfileImage(uploadImageUrl);
+        }
+
         Professor professor = Professor.of(professorReqDto);
         Professor savedProfessor = professorRepository.save(professor);
+
         return savedProfessor.getId();
     }
 
