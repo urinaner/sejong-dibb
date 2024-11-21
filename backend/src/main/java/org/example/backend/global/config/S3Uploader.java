@@ -1,7 +1,6 @@
 package org.example.backend.global.config;
 
 import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_FILE;
-import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -12,10 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.professor.domain.dto.file.FileUploadResDto;
-import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
-import org.example.backend.professor.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,33 +23,24 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Uploader {
 
     private final AmazonS3Client amazonS3Client;
-    private final ProfessorRepository userRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
     @Transactional
-    public FileUploadResDto upload(Long userId, MultipartFile multipartFile, String dirName) {
+    public String upload(MultipartFile multipartFile, String dirName) {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_FILE));
 
-        return upload(userId, uploadFile, dirName);
+        return upload(uploadFile, dirName);
     }
 
-    private FileUploadResDto upload(Long userId, File uploadFile, String dirName) {
+    private String upload(File uploadFile, String dirName) {
         String fileName = dirName + "/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
 
-        Professor user = userRepository.findById(userId)
-                .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
-
-        user.updateProfilePhoto(uploadImageUrl);
-
-        return FileUploadResDto.builder()
-                .fileName(fileName)
-                .url(uploadImageUrl)
-                .build();
+        return uploadImageUrl;
     }
 
     private String putS3(File uploadFile, String fileName) {

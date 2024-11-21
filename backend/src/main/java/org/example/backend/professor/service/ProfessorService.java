@@ -4,7 +4,6 @@ import static org.example.backend.professor.exception.ProfessorExceptionType.NOT
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.S3Uploader;
-import org.example.backend.professor.domain.dto.file.FileUploadResDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
@@ -33,12 +32,13 @@ public class ProfessorService {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
 
+        if (!multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            professorReqDto.setProfileImage(uploadImageUrl);
+        }
+
         Professor professor = Professor.of(professorReqDto);
         Professor savedProfessor = professorRepository.save(professor);
-
-        if (!multipartFile.isEmpty()) {
-            s3Uploader.upload(savedProfessor.getId(), multipartFile, dirName);
-        }
 
         return savedProfessor.getId();
     }
