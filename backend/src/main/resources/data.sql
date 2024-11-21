@@ -45,16 +45,16 @@ VALUES
 -- Thesis 더미 데이터 (10개)
 INSERT INTO thesis (author, journal, content, link, publication_date, thesis_image, publication_collection, publication_issue, publication_page, issn, professor_id)
 VALUES
-    ('저자1', 'Journal A', '논문 내용 1', 'https://example.com/thesis1', '2024-01-01', 'https://example.com/image1.jpg', 'Volume 1', 'Issue 1', 'Page 1', '1234-5678', 1),
-    ('저자2', 'Journal B', '논문 내용 2', 'https://example.com/thesis2', '2024-02-01', 'https://example.com/image2.jpg', 'Volume 2', 'Issue 2', 'Page 2', '2345-6789', 2),
-    ('저자3', 'Journal C', '논문 내용 3', 'https://example.com/thesis3', '2024-03-01', 'https://example.com/image3.jpg', 'Volume 3', 'Issue 3', 'Page 3', '3456-7890', 3),
-    ('저자4', 'Journal D', '논문 내용 4', 'https://example.com/thesis4', '2024-04-01', 'https://example.com/image4.jpg', 'Volume 4', 'Issue 4', 'Page 4', '4567-8901', 4),
-    ('저자5', 'Journal E', '논문 내용 5', 'https://example.com/thesis5', '2024-05-01', 'https://example.com/image5.jpg', 'Volume 5', 'Issue 5', 'Page 5', '5678-9012', 5),
-    ('저자6', 'Journal F', '논문 내용 6', 'https://example.com/thesis6', '2024-06-01', 'https://example.com/image6.jpg', 'Volume 6', 'Issue 6', 'Page 6', '6789-0123', 6),
-    ('저자7', 'Journal G', '논문 내용 7', 'https://example.com/thesis7', '2024-07-01', 'https://example.com/image7.jpg', 'Volume 7', 'Issue 7', 'Page 7', '7890-1234', 7),
-    ('저자8', 'Journal H', '논문 내용 8', 'https://example.com/thesis8', '2024-08-01', 'https://example.com/image8.jpg', 'Volume 8', 'Issue 8', 'Page 8', '8901-2345', 8),
-    ('저자9', 'Journal I', '논문 내용 9', 'https://example.com/thesis9', '2024-09-01', 'https://example.com/image9.jpg', 'Volume 9', 'Issue 9', 'Page 9', '9012-3456', 9),
-    ('저자10', 'Journal J', '논문 내용 10', 'https://example.com/thesis10', '2024-10-01', 'https://example.com/image10.jpg', 'Volume 10', 'Issue 10', 'Page 10', '0123-4567', 10);
+    ('저자1', 'Journal A', '논문 내용 1', 'https://example.com/thesis1', '2024-01-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_540224b.jpg', 'Volume 1', 'Issue 1', 'Page 1', '1234-5678', 1),
+    ('저자2', 'Journal B', '논문 내용 2', 'https://example.com/thesis2', '2024-02-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_587943b.jpg', 'Volume 2', 'Issue 2', 'Page 2', '2345-6789', 2),
+    ('저자3', 'Journal C', '논문 내용 3', 'https://example.com/thesis3', '2024-03-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590742b.jpg', 'Volume 3', 'Issue 3', 'Page 3', '3456-7890', 3),
+    ('저자4', 'Journal D', '논문 내용 4', 'https://example.com/thesis4', '2024-04-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590742b.jpg', 'Volume 4', 'Issue 4', 'Page 4', '4567-8901', 4),
+    ('저자5', 'Journal E', '논문 내용 5', 'https://example.com/thesis5', '2024-05-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_590852b.jpg', 'Volume 5', 'Issue 5', 'Page 5', '5678-9012', 5),
+    ('저자6', 'Journal F', '논문 내용 6', 'https://example.com/thesis6', '2024-06-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_593743b.jpg', 'Volume 6', 'Issue 6', 'Page 6', '6789-0123', 6),
+    ('저자7', 'Journal G', '논문 내용 7', 'https://example.com/thesis7', '2024-07-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_593743b.jpg', 'Volume 7', 'Issue 7', 'Page 7', '7890-1234', 7),
+    ('저자8', 'Journal H', '논문 내용 8', 'https://example.com/thesis8', '2024-08-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_596862b.jpg', 'Volume 8', 'Issue 8', 'Page 8', '8901-2345', 8),
+    ('저자9', 'Journal I', '논문 내용 9', 'https://example.com/thesis9', '2024-09-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_598360b.jpg', 'Volume 9', 'Issue 9', 'Page 9', '9012-3456', 9),
+    ('저자10', 'Journal J', '논문 내용 10', 'https://example.com/thesis10', '2024-10-01', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_598598b.jpg', 'Volume 10', 'Issue 10', 'Page 10', '0123-4567', 10);
 
 
 -- Board 더미 데이터 (10개)
