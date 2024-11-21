@@ -23,13 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         log.info("CustomUserDetailsService.loadUserByLoginId: {}", loginId);
 
-        Admin userData = userRepository.findByLoginId(loginId);
+        Admin userData = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User not found with loginId: " + loginId)); // 사용자가 존재하지 않을 경우 예외 던지기
 
-        if (userData != null) {
-            return new CustomUserDetails(userData);
-        }
-
-        // 사용자가 존재하지 않을 경우 예외 던지기
-        throw new UsernameNotFoundException("User not found with loginId: " + loginId);
+        return new CustomUserDetails(userData);
     }
 }

@@ -11,8 +11,6 @@ import org.example.backend.professor.domain.mapper.ProfessorMapper;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
-import org.example.backend.thesis.domain.dto.ThesisResDto;
-import org.example.backend.thesis.service.ThesisService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
