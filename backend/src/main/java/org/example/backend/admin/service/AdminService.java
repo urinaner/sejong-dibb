@@ -10,7 +10,6 @@ import org.example.backend.admin.domain.dto.SignInReqDto;
 import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.admin.exception.AdminException;
 import org.example.backend.admin.repository.AdminRepository;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

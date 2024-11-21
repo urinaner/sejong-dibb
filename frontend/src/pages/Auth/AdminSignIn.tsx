@@ -1,4 +1,4 @@
-// SignIn.tsx
+// AdminSignIn.tsx
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -14,7 +14,7 @@ import {
 import { AuthContext } from '../../context/AuthContext';
 import { useModalContext } from '../../context/ModalContext';
 
-const SignIn: React.FC = () => {
+const AdminSignIn: React.FC = () => {
   const navigate = useNavigate();
   const context = useContext(AuthContext);
   const { openModal } = useModalContext();
@@ -45,7 +45,7 @@ const SignIn: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      await signin(loginId, password);
+      await signin(loginId, password, true);
 
       openModal(
         <div>
@@ -103,4 +103,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default AdminSignIn;
