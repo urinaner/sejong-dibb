@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public enum ProfessorExceptionType implements BaseExceptionType {
 
     NOT_FOUND_PROFESSOR(NOT_FOUND, "교수를 찾을 수 없습니다"),
+    NOT_FOUND_FILE(NOT_FOUND, "파일을 찾을 수 없습니다"),
 
     REQUIRED_NAME(BAD_REQUEST, "이름은 필수 입력값입니다."),
 
