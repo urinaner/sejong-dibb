@@ -3,6 +3,7 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.global.config.S3Uploader;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +24,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThesisService {
     private final ThesisRepository thesisRepository;
     private final ProfessorRepository professorRepository;
+    private final S3Uploader s3Uploader;
+    private static final String dirName = "image";
 
     @Transactional
-    public Long saveThesis(ThesisReqDto thesisReqDto) {
+    public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         validateUserRequiredFields(thesisReqDto);
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
+
+        if (!multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            thesisReqDto.setThesisImage(uploadImageUrl);
+        }
+
         Thesis thesis = Thesis.of(thesisReqDto, professor);
         Thesis savedThesis = thesisRepository.save(thesis);
+
         return savedThesis.getId();
     }
 

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfessorReqDto {
     @Schema(description = "교수 이름", example = "김세종")
@@ -60,5 +59,9 @@ public class ProfessorReqDto {
                 .lab(lab)
                 .profileImage(profileImage)
                 .build();
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }
