@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Search } from 'lucide-react';
+import useAuth from '../../../hooks/useAuth';
 import { apiEndpoints } from '../../../config/apiConfig';
+import { Edit, Plus, Trash2 } from 'lucide-react';
 import * as S from './ThesisStyle';
 
 interface ThesisItem {
@@ -11,42 +13,63 @@ interface ThesisItem {
   content: string;
   link: string;
   publicationDate: string;
+  thesisImage: string;
+  publicationCollection: string;
+  publicationIssue: string;
+  publicationPage: string;
+  issn: string;
+}
+
+interface ThesisResponse {
+  message: string;
+  page: number;
+  totalPage: number;
+  data: ThesisItem[];
 }
 
 const ThesisList: React.FC = () => {
+  const navigate = useNavigate();
+  const auth = useAuth();
   const [theses, setTheses] = useState<ThesisItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchTheses = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        apiEndpoints.thesis.listWithPage(page - 1, 10),
-      );
-      setTheses(response.data.data);
-      setTotalPages(response.data.totalPage);
-    } catch (error) {
-      setError('논문 목록을 불러오는데 실패했습니다.');
-      console.error('Failed to fetch theses:', error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    const fetchTheses = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get<ThesisResponse>(
+          apiEndpoints.thesis.listWithPage(currentPage, 10),
+        );
+
+        if (response.data?.data) {
+          setTheses(response.data.data);
+          setTotalPages(response.data.totalPage);
+        } else {
+          throw new Error('Invalid data format');
+        }
+      } catch (err) {
+        setError('논문 목록을 불러오는데 실패했습니다.');
+        console.error('Error fetching theses:', err);
+        setTheses([]); // 에러 시 빈 배열로 초기화
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTheses();
+  }, [currentPage]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
     }
   };
 
-  useEffect(() => {
-    fetchTheses();
-  }, [page]);
-
-  const handleSearch = (event: React.FormEvent) => {
-    event.preventDefault();
-    fetchTheses();
-  };
-
   const formatDate = (dateString: string) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
@@ -55,99 +78,95 @@ const ThesisList: React.FC = () => {
     });
   };
 
+  if (loading) {
+    return <S.LoadingSpinner>Loading...</S.LoadingSpinner>;
+  }
+
+  if (error) {
+    return <S.ErrorMessage>{error}</S.ErrorMessage>;
+  }
+
   return (
     <S.Container>
-      <S.TopSection>
-        <S.HeaderSection>
-          <S.Title>연구 논문</S.Title>
-          <S.Description>
-            세종대학교 바이오융합공학과 연구 논문 게시판입니다.
-          </S.Description>
-        </S.HeaderSection>
+      <S.Header>
+        <S.Title>논문</S.Title>
+        {auth?.isAuthenticated && (
+          <S.ActionButtons>
+            <S.CreateButton onClick={() => navigate('/news/thesis/create')}>
+              <Plus size={18} />
+              논문 등록
+            </S.CreateButton>
+          </S.ActionButtons>
+        )}
+      </S.Header>
 
-        <S.SearchContainer onSubmit={handleSearch}>
-          <S.SearchInput
-            type="text"
-            placeholder="논문 검색"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <S.SearchButton type="submit">
-            <Search size={20} />
-          </S.SearchButton>
-        </S.SearchContainer>
-      </S.TopSection>
-
-      {error ? (
-        <S.ErrorMessage>{error}</S.ErrorMessage>
-      ) : loading ? (
-        <S.LoadingMessage>논문 목록을 불러오는 중입니다...</S.LoadingMessage>
-      ) : (
-        <S.ThesisList>
-          {theses.map((thesis) => (
+      <S.ThesisList>
+        {theses.length > 0 ? (
+          theses.map((thesis) => (
             <S.ThesisItem key={thesis.id}>
               <S.ThesisThumbnail>
                 <img
-                  src="/thesis.svg"
+                  src={thesis.thesisImage || '/paperImage.png'}
                   alt="논문 썸네일"
                   onError={(e) => {
-                    e.currentTarget.src = '/thesis.svg';
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/paperImage.png';
                   }}
                 />
               </S.ThesisThumbnail>
               <S.ThesisContent>
                 <S.ThesisTitle>{thesis.content}</S.ThesisTitle>
                 <S.ThesisInfo>
-                  <S.InfoItem>
-                    <S.Label>저자</S.Label>
-                    <S.Value>{thesis.author}</S.Value>
-                  </S.InfoItem>
-                  <S.InfoItem>
-                    <S.Label>저널명</S.Label>
-                    <S.Value>{thesis.journal}</S.Value>
-                  </S.InfoItem>
-                  <S.InfoItem>
-                    <S.Label>발표일</S.Label>
-                    <S.Value>{formatDate(thesis.publicationDate)}</S.Value>
-                  </S.InfoItem>
+                  <span>저자: {thesis.author}</span>
+                  <span>저널: {thesis.journal}</span>
+                  <span>발행일: {formatDate(thesis.publicationDate)}</span>
                 </S.ThesisInfo>
+                {thesis.publicationCollection && (
+                  <S.PublicationInfo>
+                    {`Vol. ${thesis.publicationCollection}${
+                      thesis.publicationIssue
+                        ? `, No. ${thesis.publicationIssue}`
+                        : ''
+                    }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
+                  </S.PublicationInfo>
+                )}
+                {auth?.isAuthenticated && (
+                  <S.ActionButtonGroup>
+                    <S.EditButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/news/thesis/edit/${thesis.id}`);
+                      }}
+                    >
+                      <Edit size={16} />
+                      수정
+                    </S.EditButton>
+                  </S.ActionButtonGroup>
+                )}
               </S.ThesisContent>
             </S.ThesisItem>
-          ))}
-        </S.ThesisList>
-      )}
+          ))
+        ) : (
+          <S.EmptyMessage>등록된 논문이 없습니다.</S.EmptyMessage>
+        )}
+      </S.ThesisList>
 
-      {!loading && totalPages > 1 && (
+      {totalPages > 1 && (
         <S.Pagination>
-          <S.PageButton onClick={() => setPage(1)} disabled={page === 1}>
-            처음
-          </S.PageButton>
-          <S.PageButton onClick={() => setPage(page - 1)} disabled={page === 1}>
+          <S.PageButton
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
             이전
           </S.PageButton>
-          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            const pageNum = i + 1;
-            return (
-              <S.PageButton
-                key={pageNum}
-                onClick={() => setPage(pageNum)}
-                $isActive={page === pageNum}
-              >
-                {pageNum}
-              </S.PageButton>
-            );
-          })}
+          <span>
+            {currentPage + 1} / {totalPages}
+          </span>
           <S.PageButton
-            onClick={() => setPage(page + 1)}
-            disabled={page === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages - 1}
           >
             다음
-          </S.PageButton>
-          <S.PageButton
-            onClick={() => setPage(totalPages)}
-            disabled={page === totalPages}
-          >
-            마지막
           </S.PageButton>
         </S.Pagination>
       )}

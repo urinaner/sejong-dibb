@@ -189,3 +189,240 @@ export const ErrorMessage = styled.div`
     flex-shrink: 0;
   }
 `;
+
+// Action Buttons
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  ${media.mobile} {
+    width: 100%;
+    margin-top: 1rem;
+
+    button {
+      flex: 1;
+    }
+  }
+`;
+
+export const Button = styled(BaseButton)`
+  background-color: #3182ce;
+  color: white;
+  border: 1px solid #2c5282;
+  padding: 0 1rem;
+  height: 36px;
+  gap: 4px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #2c5282;
+  }
+
+  ${media.mobile} {
+    height: 32px;
+    font-size: 0.85rem;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+`;
+
+export const ActionButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  ${media.mobile} {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+`;
+
+export const ActionButton = styled(BaseButton)`
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #4a5568;
+  padding: 0 0.75rem;
+  height: 32px;
+  font-size: 0.85rem;
+  gap: 4px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #f8fafc;
+    border-color: #cbd5e0;
+  }
+`;
+
+export const DeleteButton = styled(BaseButton)`
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #dc3545;
+
+  &:hover:not(:disabled) {
+    background-color: #fff5f5;
+    border-color: #dc3545;
+  }
+
+  &:disabled {
+    background-color: #ffe3e3;
+    border-color: #ffc9c9;
+    color: #fa5252;
+  }
+`;
+
+// Loading and Empty states
+export const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: #4a5568;
+  font-size: 1.1rem;
+
+  ${media.mobile} {
+    min-height: 200px;
+    font-size: 1rem;
+  }
+`;
+
+export const EmptyMessage = styled.div`
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #e2e8f0;
+  margin: 2rem 0;
+
+  ${media.mobile} {
+    padding: 2rem 1rem;
+    font-size: 1rem;
+  }
+`;
+
+// Thesis Item Styles
+export const ThesisList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+`;
+
+export const ThesisItem = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  ${media.mobile} {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+`;
+
+export const ThesisThumbnail = styled.div`
+  flex-shrink: 0;
+  width: 200px;
+  height: 280px;
+  background: #f8fafc;
+  border-radius: 4px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    height: 200px;
+  }
+`;
+
+export const ThesisContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const ThesisTitle = styled.h2`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+  line-height: 1.4;
+
+  ${media.mobile} {
+    font-size: 1.1rem;
+  }
+`;
+
+export const ThesisInfo = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #4a5568;
+  font-size: 0.95rem;
+
+  span {
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -0.5rem;
+      top: 50%;
+      width: 1px;
+      height: 12px;
+      background-color: #cbd5e0;
+      transform: translateY(-50%);
+    }
+  }
+
+  ${media.mobile} {
+    font-size: 0.9rem;
+    gap: 0.75rem;
+  }
+`;
+
+export const PublicationInfo = styled.div`
+  color: #718096;
+  font-size: 0.9rem;
+
+  ${media.mobile} {
+    font-size: 0.85rem;
+  }
+`;
+
+export const Title = styled.h1`
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+
+  ${media.mobile} {
+    font-size: 1.5rem;
+  }
+`;

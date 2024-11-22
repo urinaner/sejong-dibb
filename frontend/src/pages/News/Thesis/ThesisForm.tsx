@@ -1,11 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
-import { useModalContext } from '../../../context/ModalContext';
-import * as S from './ThesisCreateStyle';
-import { WriteButton } from '../NoticeBoard/NoticeBoardStyle';
 import useAuth from '../../../hooks/useAuth';
+import { AlertTriangle } from 'lucide-react';
+import * as S from './ThesisCreateStyle';
 
 interface ThesisFormData {
   author: string;
@@ -21,87 +18,58 @@ interface ThesisFormData {
   professorId: number;
 }
 
-const ThesisCreate: React.FC = () => {
+interface ThesisFormProps {
+  formData: ThesisFormData;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isSubmitting: boolean;
+  mode: 'create' | 'edit';
+  onDelete?: () => void;
+  error?: string;
+}
+
+const ThesisForm: React.FC<ThesisFormProps> = ({
+  formData,
+  onSubmit,
+  onChange,
+  isSubmitting,
+  mode,
+  onDelete,
+  error,
+}) => {
   const navigate = useNavigate();
-  const { openModal } = useModalContext();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<ThesisFormData>({
-    author: '',
-    journal: '',
-    content: '',
-    link: '',
-    publicationDate: '',
-    thesisImage: '',
-    publicationCollection: '',
-    publicationIssue: '',
-    publicationPage: '',
-    issn: '',
-    professorId: 1,
-  });
   const auth = useAuth();
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    },
-    [],
-  );
+  const handleCancel = useCallback(() => {
+    navigate('/thesis');
+  }, [navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validation check
-    if (
-      !formData.author.trim() ||
-      !formData.journal.trim() ||
-      !formData.content.trim()
-    ) {
-      openModal(
-        <div>
-          <h2>필수 항목을 입력해주세요</h2>
-          <p>저자, 저널명, 내용은 필수 입력 항목입니다.</p>
-        </div>,
-      );
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      const response = await axios.post(apiEndpoints.thesis.create, formData);
-
-      if (response.status === 200) {
-        openModal(
-          <div>
-            <h2>논문이 성공적으로 등록되었습니다.</h2>
-          </div>,
-        );
-        navigate('/news/thesis');
-      }
-    } catch (error) {
-      console.error('Error creating thesis:', error);
-      openModal(
-        <div>
-          <h2>논문 등록 실패</h2>
-          <p>논문 등록 중 오류가 발생했습니다. 다시 시도해주세요.</p>
-        </div>,
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  if (!auth?.isAuthenticated) {
+    return (
+      <S.Container>
+        <S.ErrorMessage>
+          <AlertTriangle size={20} />
+          접근 권한이 없습니다. 관리자로 로그인해주세요.
+        </S.ErrorMessage>
+      </S.Container>
+    );
+  }
 
   return (
     <S.Container>
       <S.ContentWrapper>
         <S.Header>
-          <h1>논문 등록</h1>
+          <h1>{mode === 'create' ? '논문 등록' : '논문 수정'}</h1>
         </S.Header>
 
-        <S.FormSection onSubmit={handleSubmit}>
+        {error && (
+          <S.ErrorMessage>
+            <AlertTriangle size={20} />
+            {error}
+          </S.ErrorMessage>
+        )}
+
+        <S.FormSection onSubmit={onSubmit}>
           <S.FormGroup>
             <S.Label>
               저자<S.RequiredMark>*</S.RequiredMark>
@@ -110,7 +78,7 @@ const ThesisCreate: React.FC = () => {
               type="text"
               name="author"
               value={formData.author}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="저자명을 입력하세요"
               required
             />
@@ -124,7 +92,7 @@ const ThesisCreate: React.FC = () => {
               type="text"
               name="journal"
               value={formData.journal}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="저널명을 입력하세요"
               required
             />
@@ -138,7 +106,7 @@ const ThesisCreate: React.FC = () => {
               type="text"
               name="content"
               value={formData.content}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="논문의 제목 또는 주요 내용을 입력하세요"
               required
             />
@@ -150,7 +118,7 @@ const ThesisCreate: React.FC = () => {
               type="date"
               name="publicationDate"
               value={formData.publicationDate}
-              onChange={handleInputChange}
+              onChange={onChange}
             />
           </S.FormGroup>
 
@@ -160,7 +128,7 @@ const ThesisCreate: React.FC = () => {
               type="url"
               name="link"
               value={formData.link}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="https://..."
             />
             <S.HelperText>논문의 원문 링크를 입력하세요.</S.HelperText>
@@ -174,7 +142,7 @@ const ThesisCreate: React.FC = () => {
                   type="text"
                   name="publicationCollection"
                   value={formData.publicationCollection}
-                  onChange={handleInputChange}
+                  onChange={onChange}
                   placeholder="Vol."
                 />
               </div>
@@ -183,7 +151,7 @@ const ThesisCreate: React.FC = () => {
                   type="text"
                   name="publicationIssue"
                   value={formData.publicationIssue}
-                  onChange={handleInputChange}
+                  onChange={onChange}
                   placeholder="No."
                 />
               </div>
@@ -192,7 +160,7 @@ const ThesisCreate: React.FC = () => {
                   type="text"
                   name="publicationPage"
                   value={formData.publicationPage}
-                  onChange={handleInputChange}
+                  onChange={onChange}
                   placeholder="pp."
                 />
               </div>
@@ -205,7 +173,7 @@ const ThesisCreate: React.FC = () => {
               type="text"
               name="issn"
               value={formData.issn}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="ISSN 번호를 입력하세요"
             />
           </S.FormGroup>
@@ -216,20 +184,28 @@ const ThesisCreate: React.FC = () => {
               type="url"
               name="thesisImage"
               value={formData.thesisImage}
-              onChange={handleInputChange}
+              onChange={onChange}
               placeholder="이미지 URL을 입력하세요"
             />
           </S.FormGroup>
 
           <S.ButtonGroup>
-            <S.CancelButton
-              type="button"
-              onClick={() => navigate('/news/thesis')}
-            >
+            <S.CancelButton type="button" onClick={handleCancel}>
               취소
             </S.CancelButton>
+            {mode === 'edit' && onDelete && (
+              <S.DeleteButton type="button" onClick={onDelete}>
+                삭제
+              </S.DeleteButton>
+            )}
             <S.SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '등록 중...' : '논문 등록'}
+              {isSubmitting
+                ? mode === 'create'
+                  ? '등록 중...'
+                  : '수정 중...'
+                : mode === 'create'
+                  ? '논문 등록'
+                  : '논문 수정'}
             </S.SubmitButton>
           </S.ButtonGroup>
         </S.FormSection>
@@ -238,4 +214,4 @@ const ThesisCreate: React.FC = () => {
   );
 };
 
-export default ThesisCreate;
+export default ThesisForm;

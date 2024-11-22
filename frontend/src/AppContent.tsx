@@ -23,6 +23,7 @@ import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
 import Reservation from './pages/SeminarRoom/Reservation';
 import ThesisList from './pages/News/Thesis/ThesisList';
 import ThesisCreate from './pages/News/Thesis/ThesisCreate';
+import ThesisEdit from './pages/News/Thesis/ThesisEdit';
 
 import mainImage from './assets/images/main_picture.svg';
 
@@ -143,6 +144,14 @@ function AppContent() {
             element={
               <ProtectedRoute requireAuth requireAdmin>
                 <ThesisCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/thesis/edit/:id"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ThesisEdit />
               </ProtectedRoute>
             }
           />
