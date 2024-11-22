@@ -1,59 +1,48 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../../../hooks/useAuth';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Image as ImageIcon } from 'lucide-react';
 import * as S from './ThesisCreateStyle';
 
-interface ThesisFormData {
-  author: string;
-  journal: string;
-  content: string;
-  link: string;
-  publicationDate: string;
-  thesisImage: string;
-  publicationCollection: string;
-  publicationIssue: string;
-  publicationPage: string;
-  issn: string;
-  professorId: number;
-}
-
 interface ThesisFormProps {
-  formData: ThesisFormData;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  formData: {
+    author: string;
+    journal: string;
+    content: string;
+    link: string;
+    publicationDate: string;
+    thesisImage: string;
+    publicationCollection: string;
+    publicationIssue: string;
+    publicationPage: string;
+    issn: string;
+    professorId: number;
+  };
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageError: () => void;
   isSubmitting: boolean;
   mode: 'create' | 'edit';
-  onDelete?: () => void;
-  error?: string;
+  imagePreview: string | null;
+  thumbnailError: boolean;
+  error?: string | null;
 }
+
+const DEFAULT_THUMBNAIL = '/paperImage.png';
 
 const ThesisForm: React.FC<ThesisFormProps> = ({
   formData,
-  onSubmit,
   onChange,
+  onSubmit,
+  onImageChange,
+  onImageError,
   isSubmitting,
   mode,
-  onDelete,
+  imagePreview,
+  thumbnailError,
   error,
 }) => {
   const navigate = useNavigate();
-  const auth = useAuth();
-
-  const handleCancel = useCallback(() => {
-    navigate('/thesis');
-  }, [navigate]);
-
-  if (!auth?.isAuthenticated) {
-    return (
-      <S.Container>
-        <S.ErrorMessage>
-          <AlertTriangle size={20} />
-          접근 권한이 없습니다. 관리자로 로그인해주세요.
-        </S.ErrorMessage>
-      </S.Container>
-    );
-  }
 
   return (
     <S.Container>
@@ -70,6 +59,38 @@ const ThesisForm: React.FC<ThesisFormProps> = ({
         )}
 
         <S.FormSection onSubmit={onSubmit}>
+          <S.FormGroup>
+            <S.Label>썸네일 이미지</S.Label>
+            <S.ImageUploadContainer>
+              <S.ImagePreviewContainer>
+                {thumbnailError ? (
+                  <S.FallbackThumbnail>
+                    <ImageIcon size={48} />
+                    <span>이미지를 불러올 수 없습니다</span>
+                  </S.FallbackThumbnail>
+                ) : (
+                  <img
+                    src={imagePreview || DEFAULT_THUMBNAIL}
+                    alt="논문 썸네일 미리보기"
+                    onError={onImageError}
+                  />
+                )}
+              </S.ImagePreviewContainer>
+              <S.ImageUploadButton>
+                이미지 {mode === 'create' ? '업로드' : '변경'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={onImageChange}
+                  style={{ display: 'none' }}
+                />
+              </S.ImageUploadButton>
+              <S.HelperText>
+                * 최대 5MB, JPG/PNG 파일만 업로드 가능합니다.
+              </S.HelperText>
+            </S.ImageUploadContainer>
+          </S.FormGroup>
+
           <S.FormGroup>
             <S.Label>
               저자<S.RequiredMark>*</S.RequiredMark>
@@ -178,34 +199,12 @@ const ThesisForm: React.FC<ThesisFormProps> = ({
             />
           </S.FormGroup>
 
-          <S.FormGroup>
-            <S.Label>썸네일 이미지 URL</S.Label>
-            <S.Input
-              type="url"
-              name="thesisImage"
-              value={formData.thesisImage}
-              onChange={onChange}
-              placeholder="이미지 URL을 입력하세요"
-            />
-          </S.FormGroup>
-
           <S.ButtonGroup>
-            <S.CancelButton type="button" onClick={handleCancel}>
+            <S.CancelButton type="button" onClick={() => navigate('/thesis')}>
               취소
             </S.CancelButton>
-            {mode === 'edit' && onDelete && (
-              <S.DeleteButton type="button" onClick={onDelete}>
-                삭제
-              </S.DeleteButton>
-            )}
             <S.SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? mode === 'create'
-                  ? '등록 중...'
-                  : '수정 중...'
-                : mode === 'create'
-                  ? '논문 등록'
-                  : '논문 수정'}
+              {isSubmitting ? '저장 중...' : '저장'}
             </S.SubmitButton>
           </S.ButtonGroup>
         </S.FormSection>

@@ -89,6 +89,22 @@ export const apiEndpoints = {
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
   },
+  // 임시 URI 지정
+  upload: {
+    // 단일 이미지 업로드
+    image: `${API_URL}/api/upload/image`,
+    // 다중 이미지 업로드
+    images: `${API_URL}/api/upload/images`,
+    // 파일 업로드
+    file: `${API_URL}/api/upload/file`,
+    // 다중 파일 업로드
+    files: `${API_URL}/api/upload/files`,
+    // S3 signed URL 요청
+    getSignedUrl: (fileName: string) =>
+      `${API_URL}/api/upload/signed-url?fileName=${encodeURIComponent(fileName)}`,
+    // 파일 삭제
+    delete: (fileId: string) => `${API_URL}/api/upload/${fileId}`,
+  },
 };
 
 export default API_URL;

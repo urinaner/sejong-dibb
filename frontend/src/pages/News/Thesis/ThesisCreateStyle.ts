@@ -1,4 +1,3 @@
-// ThesisCreateStyle.ts
 import styled from 'styled-components';
 
 export const media = {
@@ -424,5 +423,80 @@ export const Title = styled.h1`
 
   ${media.mobile} {
     font-size: 1.5rem;
+  }
+`;
+
+export const ImageUploadContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const ImagePreviewContainer = styled.div`
+  width: 240px;
+  height: 320px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8fafc;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    height: 280px;
+  }
+`;
+
+export const FallbackThumbnail = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: #94a3b8;
+
+  svg {
+    opacity: 0.5;
+  }
+
+  span {
+    font-size: 0.875rem;
+  }
+`;
+
+export const ImageUploadButton = styled.label`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1a73e8;
+  background-color: white;
+  border: 1px solid #1a73e8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: fit-content;
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  input[type='file'] {
+    display: none;
+  }
+
+  ${media.mobile} {
+    width: 100%;
   }
 `;
