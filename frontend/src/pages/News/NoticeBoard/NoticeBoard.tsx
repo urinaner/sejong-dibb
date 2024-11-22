@@ -107,6 +107,7 @@ const NoticeBoard: React.FC = () => {
             <S.Th>작성자</S.Th>
             <S.Th>등록일</S.Th>
             <S.Th>카테고리</S.Th>
+            <S.Th style={{ textAlign: 'right' }}>조회수</S.Th>
           </tr>
         </thead>
         <tbody>
@@ -123,6 +124,7 @@ const NoticeBoard: React.FC = () => {
               <S.Td>{notice.writer}</S.Td>
               <S.Td>{notice.createDate}</S.Td>
               <S.Td>{getCategoryLabel(notice.category)}</S.Td>
+              <S.ViewCount>{formatViewCount(notice.viewCount)}</S.ViewCount>
             </S.Tr>
           ))}
         </tbody>
