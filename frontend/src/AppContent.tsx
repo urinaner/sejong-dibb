@@ -21,9 +21,10 @@ import ProfessorEdit from './pages/About/Faculty/ProfessorEdit';
 import ProfessorDetail from './pages/About/Faculty/ProfessorDetail';
 import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
 import Reservation from './pages/SeminarRoom/Reservation';
+import ThesisList from './pages/News/Thesis/ThesisList';
+import ThesisCreate from './pages/News/Thesis/ThesisCreate';
 
 import mainImage from './assets/images/main_picture.svg';
-import ThesisList from "./pages/News/Thesis/ThesisList";
 
 const PageContainer = styled.div`
   display: flex;
@@ -134,6 +135,14 @@ function AppContent() {
             element={
               <ProtectedRoute requireAuth requireAdmin>
                 <NoticeEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/thesis/create"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ThesisCreate />
               </ProtectedRoute>
             }
           />
