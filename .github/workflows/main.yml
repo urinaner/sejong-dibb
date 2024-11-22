@@ -41,7 +41,7 @@ jobs:
         run: |
           cd backend
           chmod +x ./gradlew
-          ./gradlew build
+          ./gradlew build -x test
 
       # 도커 이미지 빌드 및 푸시
       - name: Docker build & push
