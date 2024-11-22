@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +33,12 @@ public class ProfessorController {
     private final ProfessorService professorService;
 
     @Operation(summary = "교수 생성 API", description = "교수 생성")
-    @PostMapping
-    public ResponseEntity<Long> createProfessor(@RequestBody ProfessorReqDto professorReqDto) {
-        Long professorId = professorService.saveProfessor(professorReqDto);
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Long> createProfessor(
+            @RequestPart(value = "professorReqDto") ProfessorReqDto professorReqDto,
+            @RequestPart(value = "profileImage") MultipartFile multipartFile
+    ) {
+        Long professorId = professorService.saveProfessor(professorReqDto, multipartFile);
         return new ResponseEntity<>(professorId, HttpStatus.OK);
     }
 
@@ -55,7 +60,7 @@ public class ProfessorController {
     @Operation(summary = "모든 교수 조회 API", description = "모든 교수의 리스트 반환")
     @GetMapping
     public ResponseDto<List<ProfessorResDto>> getAllBoards(Pageable pageable) {
-        Page<ProfessorResDto> professorResDto = professorService.getAllBoards(pageable);
+        Page<ProfessorResDto> professorResDto = professorService.getAllProfessors(pageable);
         return ResponseDto.ok(professorResDto.getNumber(), professorResDto.getTotalPages(),
                 professorResDto.getContent());
     }

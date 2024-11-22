@@ -1,15 +1,15 @@
 package org.example.backend.seminar.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.backend.department.domain.entity.Department;
+import org.example.backend.seminar.domain.dto.SeminarReqDto;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Seminar {
 
     @Id
@@ -38,7 +38,37 @@ public class Seminar {
     @Column(name = "company")
     private String company;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    @Builder
+    private Seminar(String name, String writer, String place, String startDate,
+                    String endDate, String speaker, String company) {
+        this.name = name;
+        this.writer = writer;
+        this.place = place;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.speaker = speaker;
+        this.company = company;
+    }
+
+    public static Seminar of(SeminarReqDto dto) {
+        return Seminar.builder()
+                .name(dto.getName())
+                .writer(dto.getWriter())
+                .place(dto.getPlace())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .speaker(dto.getSpeaker())
+                .company(dto.getCompany())
+                .build();
+    }
+
+    public void update(SeminarReqDto dto) {
+        this.name = dto.getName();
+        this.writer = dto.getWriter();
+        this.place = dto.getPlace();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.speaker = dto.getSpeaker();
+        this.company = dto.getCompany();
+    }
 }

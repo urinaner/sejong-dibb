@@ -27,9 +27,9 @@ class DepartmentServiceTest extends IntegrationTestSupport {
     @Test
     void registerDepartment() {
         // given
-        DepartmentReqDto departmentReqDto = new DepartmentReqDto();
-        departmentReqDto.setKoreanName("컴퓨터공학과");
-
+        DepartmentReqDto departmentReqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         // when
         Long saveId = departmentService.saveDepartment(departmentReqDto);
 
@@ -42,8 +42,9 @@ class DepartmentServiceTest extends IntegrationTestSupport {
     @Test
     void getDepartment() {
         // given
-        DepartmentReqDto departmentReqDto = new DepartmentReqDto();
-        departmentReqDto.setKoreanName("컴퓨터공학과");
+        DepartmentReqDto departmentReqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         Long saveId = departmentService.saveDepartment(departmentReqDto);
 
         // when
@@ -57,13 +58,15 @@ class DepartmentServiceTest extends IntegrationTestSupport {
     @Test
     void updateDepartment() {
         // given
-        DepartmentReqDto departmentReqDto = new DepartmentReqDto();
-        departmentReqDto.setKoreanName("컴퓨터공학과");
+        DepartmentReqDto departmentReqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         Long saveId = departmentService.saveDepartment(departmentReqDto);
 
         // when
-        DepartmentReqDto updatedDepartmentReqDto = new DepartmentReqDto();
-        updatedDepartmentReqDto.setKoreanName("전자공학과");
+        DepartmentReqDto updatedDepartmentReqDto = DepartmentReqDto.builder()
+                .koreanName("전자공학과")
+                .build();
         departmentService.updateDepartment(saveId, updatedDepartmentReqDto);
         DepartmentResDto updatedDepartment = departmentService.getDepartment(saveId);
 
@@ -75,8 +78,9 @@ class DepartmentServiceTest extends IntegrationTestSupport {
     @Test
     void deleteDepartment() {
         // given
-        DepartmentReqDto departmentReqDto = new DepartmentReqDto();
-        departmentReqDto.setKoreanName("컴퓨터공학과");
+        DepartmentReqDto departmentReqDto = DepartmentReqDto.builder()
+                .koreanName("컴퓨터공학과")
+                .build();
         Long saveId = departmentService.saveDepartment(departmentReqDto);
 
         // when

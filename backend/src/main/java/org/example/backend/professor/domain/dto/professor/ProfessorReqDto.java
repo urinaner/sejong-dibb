@@ -1,14 +1,16 @@
 package org.example.backend.professor.domain.dto.professor;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfessorReqDto {
-
-    @Schema(description = "교수 고유 아이디", example = "54321")
+    @Schema(description = "교수 이름", example = "김세종")
     private String name;
 
     @Schema(description = "교수 전공", example = "신경생물학")
@@ -32,6 +34,34 @@ public class ProfessorReqDto {
     @Schema(description = "교수 프로필 이미지", example = "https://www.sju.ac.kr/professor/example/profile.jpg")
     private String profileImage;
 
-    @Schema(description = "교수 학과 고유 아이디", example = "12345")
-    private Long departmentId;
+    @Builder
+    private ProfessorReqDto(String name, String major, String phoneN, String email,
+                            String position, String homepage, String lab, String profileImage) {
+        this.name = name;
+        this.major = major;
+        this.phoneN = phoneN;
+        this.email = email;
+        this.position = position;
+        this.homepage = homepage;
+        this.lab = lab;
+        this.profileImage = profileImage;
+    }
+
+    public static ProfessorReqDto of(String name, String major, String phoneN, String email,
+                                     String position, String homepage, String lab, String profileImage) {
+        return ProfessorReqDto.builder()
+                .name(name)
+                .major(major)
+                .phoneN(phoneN)
+                .email(email)
+                .position(position)
+                .homepage(homepage)
+                .lab(lab)
+                .profileImage(profileImage)
+                .build();
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }

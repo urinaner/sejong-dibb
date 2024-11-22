@@ -1,22 +1,26 @@
 package org.example.backend.admin.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.example.backend.department.domain.entity.Department;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.example.backend.admin.domain.dto.SignInReqDto;
 
 @Entity
 @Getter
-@Builder
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "admin")
 public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "admin_id")
     private Long id;
 
     @Column(name = "login_id", nullable = false)
@@ -32,7 +36,27 @@ public class Admin {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToMany()
-    @JoinColumn(name = "admin_id")
-    private List<Department> departments;
+    @Builder
+    private Admin(String loginId, String password, String username, String email, String role) {
+        this.loginId = loginId;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+    }
+
+    public static Admin of(SignInReqDto dto, String encodedPassword) {
+        return Admin.builder()
+                .loginId(dto.getLoginId())
+                .password(encodedPassword)
+                .build();
+    }
+
+    public void updatePassword(String newEncodedPassword) {
+        this.password = newEncodedPassword;
+    }
+
+    public boolean isEqualEmail(String email) {
+        return this.email.equals(email);
+    }
 }

@@ -1,18 +1,18 @@
 package org.example.backend.department.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.example.backend.professor.domain.entity.Professor;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
+import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
+import org.example.backend.global.config.BaseEntity;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "department")
-public class Department {
-
+public class Department extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id", nullable = false)
@@ -42,6 +42,40 @@ public class Department {
     @Column(name = "map")
     private String map;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE)
-    private List<Professor> professors;
+    @Builder
+    private Department(String koreanName, String englishName, String intro, String phoneN,
+                       String location, String educationalObjective, String workHour, String map) {
+        this.koreanName = koreanName;
+        this.englishName = englishName;
+        this.intro = intro;
+        this.phoneN = phoneN;
+        this.location = location;
+        this.educationalObjective = educationalObjective;
+        this.workHour = workHour;
+        this.map = map;
+    }
+
+    public static Department of(DepartmentReqDto dto) {
+        return Department.builder()
+                .koreanName(dto.getKoreanName())
+                .englishName(dto.getEnglishName())
+                .intro(dto.getIntro())
+                .phoneN(dto.getPhoneN())
+                .location(dto.getLocation())
+                .educationalObjective(dto.getEducationalObjective())
+                .workHour(dto.getWorkHour())
+                .map(dto.getMap())
+                .build();
+    }
+
+    public void update(DepartmentReqDto dto) {
+        this.koreanName = dto.getKoreanName();
+        this.englishName = dto.getEnglishName();
+        this.intro = dto.getIntro();
+        this.phoneN = dto.getPhoneN();
+        this.location = dto.getLocation();
+        this.educationalObjective = dto.getEducationalObjective();
+        this.workHour = dto.getWorkHour();
+        this.map = dto.getMap();
+    }
 }

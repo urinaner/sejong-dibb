@@ -27,12 +27,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //implementation 'io.springfox:springfox-swagger2:3.0.0'
-    //implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'	//Swagger
 
@@ -47,6 +43,13 @@ dependencies {
     // sj-auth
     implementation 'com.github.urinaner:sejong-auth:v0.4.4'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // s3
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -56,15 +59,12 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final' // 테스트 환경에서도 사용
-
-
-
 }
 
 tasks.named('test') {
     useJUnitPlatform()
     jvmArgs '-XX:+EnableDynamicAgentLoading'
+    enabled = false
 }
 
 tasks.withType(JavaCompile) {

@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     Admin findByUsername(String username);
 
-    Admin findByLoginId(String loginId);
+    Optional<Admin> findByLoginId(String loginId);
 
     Boolean existsByUsername(String username);
 
