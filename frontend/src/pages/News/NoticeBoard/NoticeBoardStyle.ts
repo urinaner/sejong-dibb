@@ -227,6 +227,22 @@ export const PageButton = styled.button<StyledButtonProps>`
   }
 `;
 
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+
+  ${media.mobile} {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    gap: 0.25rem;
+  }
+`;
+
 export const ErrorMessage = styled.div`
   text-align: center;
   padding: 1rem;
