@@ -26,6 +26,7 @@ interface ThesisFormProps {
   imagePreview: string | null;
   thumbnailError: boolean;
   error?: string | null;
+  onDelete?: () => void;
 }
 
 const DEFAULT_THUMBNAIL = '/paperImage.png';
@@ -38,6 +39,7 @@ const ThesisForm: React.FC<ThesisFormProps> = ({
   onImageError,
   isSubmitting,
   mode,
+  onDelete,
   imagePreview,
   thumbnailError,
   error,
@@ -203,6 +205,11 @@ const ThesisForm: React.FC<ThesisFormProps> = ({
             <S.CancelButton type="button" onClick={() => navigate('/thesis')}>
               취소
             </S.CancelButton>
+            {mode === 'edit' && onDelete && (
+              <S.DeleteButton type="button" onClick={onDelete}>
+                삭제
+              </S.DeleteButton>
+            )}
             <S.SubmitButton type="submit" disabled={isSubmitting}>
               {isSubmitting ? '저장 중...' : '저장'}
             </S.SubmitButton>

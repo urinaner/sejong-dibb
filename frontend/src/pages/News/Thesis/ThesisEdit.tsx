@@ -130,6 +130,26 @@ const ThesisEdit: React.FC = () => {
     [openModal],
   );
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(apiEndpoints.thesis.delete(id));
+      openModal(
+        <div>
+          <h2>논문이 성공적으로 삭제되었습니다.</h2>
+        </div>,
+      );
+      navigate('/news/thesis');
+    } catch (error) {
+      console.error('Error deleting thesis:', error);
+      openModal(
+        <div>
+          <h2>논문 삭제 실패</h2>
+          <p>논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.</p>
+        </div>,
+      );
+    }
+  };
+
   const handleImageUpload = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('image', file);
@@ -214,6 +234,7 @@ const ThesisEdit: React.FC = () => {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       mode="edit"
+      onDelete={handleDelete}
       imagePreview={imagePreview}
       onImageChange={handleImageChange}
       onImageError={handleImageError}
