@@ -24,6 +24,7 @@ import Reservation from './pages/SeminarRoom/Reservation';
 import ThesisList from './pages/News/Thesis/ThesisList';
 import ThesisCreate from './pages/News/Thesis/ThesisCreate';
 import ThesisEdit from './pages/News/Thesis/ThesisEdit';
+import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 
 import mainImage from './assets/images/main_picture.svg';
 
@@ -105,6 +106,7 @@ function AppContent() {
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/seminar-rooms/reservation" element={<Reservation />} />
           <Route path="/news/thesis" element={<ThesisList />} />
+          <Route path="/news/thesis/:id" element={<ThesisDetail />} />
 
           {/* Admin Protected Routes */}
           <Route

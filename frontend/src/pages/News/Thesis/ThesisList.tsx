@@ -114,7 +114,9 @@ const ThesisList: React.FC = () => {
                   }}
                 />
               </S.ThesisThumbnail>
-              <S.ThesisContent>
+              <S.ThesisContent
+                onClick={() => navigate(`/news/thesis/${thesis.id}`)}
+              >
                 <S.ThesisTitle>{thesis.content}</S.ThesisTitle>
                 <S.ThesisInfo>
                   <span>저자: {thesis.author}</span>
