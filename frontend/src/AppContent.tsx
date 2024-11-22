@@ -70,7 +70,8 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isAuthPage =
-    location.pathname === '/signin' || location.pathname === '/signup';
+    location.pathname === '/admin/signin' ||
+    location.pathname === '/admin/signup';
 
   return (
     <PageContainer>
@@ -85,7 +86,7 @@ function AppContent() {
       </MainImageWrapper>
       <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
-          {/* Public Routes */}
+          {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
           <Route
             path="/admin/signin"
@@ -99,16 +100,18 @@ function AppContent() {
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
           />
+          {/*  about */}
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
           <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
+          {/*  news */}
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/seminar-rooms/reservation" element={<Reservation />} />
           <Route path="/news/thesis" element={<ThesisList />} />
           <Route path="/news/thesis/:id" element={<ThesisDetail />} />
 
-          {/* Admin Protected Routes */}
+          {/* 어드민 권한 보호 Routes */}
           <Route
             path="/about/faculty/edit/:id"
             element={
