@@ -50,7 +50,9 @@ const NoticeBoard: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get<ApiResponse>(
-        `${apiEndpoints.board.listWithPage(page, pageInfo.size)}${category !== 'all' ? `&category=${category}` : ''}`,
+        category === 'all'
+          ? apiEndpoints.board.listWithPage(page, pageInfo.size)
+          : `${apiEndpoints.board.base}/category/${category}?page=${page}&size=${pageInfo.size}`,
       );
       if (response.data?.data) {
         setNotices(response.data.data);
