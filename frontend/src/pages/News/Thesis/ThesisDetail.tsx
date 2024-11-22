@@ -8,6 +8,7 @@ import {
   Edit,
   Trash2,
   AlertTriangle,
+  Image as ImageIcon,
 } from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
@@ -30,6 +31,8 @@ interface ThesisDetail {
   professorId: number;
 }
 
+const DEFAULT_THUMBNAIL = '/paperImage.png';
+
 const ThesisDetail: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -40,6 +43,7 @@ const ThesisDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState(false);
 
   const fetchThesisDetail = useCallback(async () => {
     try {
@@ -106,6 +110,10 @@ const ThesisDetail: React.FC = () => {
     );
   };
 
+  const handleImageError = () => {
+    setThumbnailError(true);
+  };
+
   if (loading) {
     return (
       <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
@@ -165,57 +173,76 @@ const ThesisDetail: React.FC = () => {
         )}
       </S.HeaderContainer>
 
-      <S.ContentSection>
-        <S.InfoGrid>
-          <S.InfoItem>
-            <S.InfoLabel>
-              <Book size={18} />
-              저널
-            </S.InfoLabel>
-            <S.InfoValue>{thesis.journal}</S.InfoValue>
-          </S.InfoItem>
+      <S.ContentWrapper>
+        <S.ThumbnailSection>
+          {thumbnailError ? (
+            <S.FallbackThumbnail>
+              <ImageIcon size={48} />
+              <span>이미지를 불러올 수 없습니다</span>
+            </S.FallbackThumbnail>
+          ) : (
+            <S.ThumbnailImage
+              src={thesis.thesisImage || DEFAULT_THUMBNAIL}
+              alt="논문 썸네일"
+              onError={handleImageError}
+            />
+          )}
+        </S.ThumbnailSection>
 
-          <S.InfoItem>
-            <S.InfoLabel>
-              <Calendar size={18} />
-              발행일
-            </S.InfoLabel>
-            <S.InfoValue>{thesis.publicationDate}</S.InfoValue>
-          </S.InfoItem>
-
-          {thesis.issn && (
+        <S.ContentSection>
+          <S.InfoGrid>
             <S.InfoItem>
               <S.InfoLabel>
-                <Hash size={18} />
-                ISSN
+                <Book size={18} />
+                저널
               </S.InfoLabel>
-              <S.InfoValue>{thesis.issn}</S.InfoValue>
+              <S.InfoValue>{thesis.journal}</S.InfoValue>
             </S.InfoItem>
+
+            <S.InfoItem>
+              <S.InfoLabel>
+                <Calendar size={18} />
+                발행일
+              </S.InfoLabel>
+              <S.InfoValue>{thesis.publicationDate}</S.InfoValue>
+            </S.InfoItem>
+
+            {thesis.issn && (
+              <S.InfoItem>
+                <S.InfoLabel>
+                  <Hash size={18} />
+                  ISSN
+                </S.InfoLabel>
+                <S.InfoValue>{thesis.issn}</S.InfoValue>
+              </S.InfoItem>
+            )}
+          </S.InfoGrid>
+
+          {(thesis.publicationCollection ||
+            thesis.publicationIssue ||
+            thesis.publicationPage) && (
+            <S.PublicationInfo>
+              {`Vol. ${thesis.publicationCollection || '-'}${
+                thesis.publicationIssue
+                  ? `, No. ${thesis.publicationIssue}`
+                  : ''
+              }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
+            </S.PublicationInfo>
           )}
-        </S.InfoGrid>
 
-        {(thesis.publicationCollection ||
-          thesis.publicationIssue ||
-          thesis.publicationPage) && (
-          <S.PublicationInfo>
-            {`Vol. ${thesis.publicationCollection || '-'}${
-              thesis.publicationIssue ? `, No. ${thesis.publicationIssue}` : ''
-            }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
-          </S.PublicationInfo>
-        )}
-
-        {thesis.link && (
-          <S.ExternalLinkButton
-            href={thesis.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="논문 원문 보기"
-          >
-            <ExternalLink size={18} />
-            논문 원문 보기
-          </S.ExternalLinkButton>
-        )}
-      </S.ContentSection>
+          {thesis.link && (
+            <S.ExternalLinkButton
+              href={thesis.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="논문 원문 보기"
+            >
+              <ExternalLink size={18} />
+              논문 원문 보기
+            </S.ExternalLinkButton>
+          )}
+        </S.ContentSection>
+      </S.ContentWrapper>
     </S.Container>
   );
 };

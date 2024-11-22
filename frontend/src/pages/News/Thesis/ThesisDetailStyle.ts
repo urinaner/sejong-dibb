@@ -178,21 +178,6 @@ export const DeleteButton = styled(BaseButton)`
   }
 `;
 
-export const ContentSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-
-  ${media.mobile} {
-    padding: 1.5rem;
-    gap: 1.5rem;
-  }
-`;
-
 export const InfoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -227,53 +212,6 @@ export const InfoValue = styled.div`
   color: #1a202c;
   font-size: 1rem;
   line-height: 1.5;
-`;
-
-export const PublicationInfo = styled.p`
-  color: #4a5568;
-  font-size: 0.9rem;
-  margin: 0;
-
-  ${media.mobile} {
-    font-size: 0.85rem;
-  }
-`;
-
-export const ExternalLinkButton = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  background-color: white;
-  border: 1px solid #e2e8f0;
-  color: #4a5568;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 500;
-
-  &:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e0;
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  ${media.mobile} {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-
-    svg {
-      width: 16px;
-      height: 16px;
-    }
-  }
 `;
 
 export const DeleteConfirmationModal = styled.div`
@@ -367,5 +305,122 @@ export const ErrorContainer = styled.div`
   ${media.mobile} {
     font-size: 1.1rem;
     gap: 0.75rem;
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+`;
+
+export const ThumbnailSection = styled.div`
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+
+  ${media.mobile} {
+    height: 300px;
+  }
+`;
+
+export const ThumbnailImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+export const FallbackThumbnail = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: #f8fafc;
+  color: #94a3b8;
+
+  svg {
+    opacity: 0.5;
+  }
+
+  span {
+    font-size: 0.875rem;
+  }
+`;
+
+export const ContentSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+// ... 기존 스타일 컴포넌트들 ...
+
+export const PublicationInfo = styled.div`
+  color: #64748b;
+  font-size: 0.95rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+
+  ${media.mobile} {
+    font-size: 0.875rem;
+    padding: 0.875rem;
+  }
+`;
+
+export const ExternalLinkButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #1a73e8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease-in-out;
+  width: fit-content;
+
+  &:hover {
+    background-color: #f8fafc;
+    border-color: #1a73e8;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  ${media.mobile} {
+    font-size: 0.875rem;
+    padding: 0.625rem 0.875rem;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 `;
