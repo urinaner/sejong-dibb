@@ -6,6 +6,7 @@ import { useModalContext } from '../../../context/ModalContext';
 import * as S from './ThesisCreateStyle';
 import { WriteButton } from '../NoticeBoard/NoticeBoardStyle';
 import useAuth from '../../../hooks/useAuth';
+import { Image as ImageIcon } from 'lucide-react';
 
 interface ThesisFormData {
   author: string;
@@ -39,22 +40,62 @@ const ThesisCreate: React.FC = () => {
     professorId: 1,
   });
   const auth = useAuth();
+  // 썸네일 업로드
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [thumbnailError, setThumbnailError] = useState(false);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+  const handleImageChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        openModal(
+          <div>
+            <h2>파일 크기 초과</h2>
+            <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
+          </div>,
+        );
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        openModal(
+          <div>
+            <h2>잘못된 파일 형식</h2>
+            <p>이미지 파일만 업로드할 수 있습니다.</p>
+          </div>,
+        );
+        return;
+      }
+
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     },
-    [],
+    [openModal],
   );
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await axios.post<{ imageUrl: string }>(
+      apiEndpoints.upload.image,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+    return response.data.imageUrl;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validation check
     if (
       !formData.author.trim() ||
       !formData.journal.trim() ||
@@ -71,7 +112,17 @@ const ThesisCreate: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post(apiEndpoints.thesis.create, formData);
+      const updatedData = { ...formData };
+
+      if (imageFile) {
+        const imageUrl = await handleImageUpload(imageFile);
+        updatedData.thesisImage = imageUrl;
+      }
+
+      const response = await axios.post(
+        apiEndpoints.thesis.create,
+        updatedData,
+      );
 
       if (response.status === 200) {
         openModal(
@@ -94,6 +145,17 @@ const ThesisCreate: React.FC = () => {
     }
   };
 
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [],
+  );
+
   return (
     <S.Container>
       <S.ContentWrapper>
@@ -102,6 +164,33 @@ const ThesisCreate: React.FC = () => {
         </S.Header>
 
         <S.FormSection onSubmit={handleSubmit}>
+          <S.FormGroup>
+            <S.Label>썸네일 이미지</S.Label>
+            <S.ImageUploadContainer>
+              <S.ImagePreviewContainer>
+                {imagePreview ? (
+                  <img src={imagePreview} alt="썸네일 미리보기" />
+                ) : (
+                  <S.FallbackThumbnail>
+                    <ImageIcon size={48} />
+                    <span>이미지를 선택해주세요</span>
+                  </S.FallbackThumbnail>
+                )}
+              </S.ImagePreviewContainer>
+              <S.ImageUploadButton>
+                이미지 업로드
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </S.ImageUploadButton>
+              <S.HelperText>
+                * 최대 5MB, JPG/PNG 파일만 업로드 가능합니다.
+              </S.HelperText>
+            </S.ImageUploadContainer>
+          </S.FormGroup>
+
           <S.FormGroup>
             <S.Label>
               저자<S.RequiredMark>*</S.RequiredMark>
@@ -207,17 +296,6 @@ const ThesisCreate: React.FC = () => {
               value={formData.issn}
               onChange={handleInputChange}
               placeholder="ISSN 번호를 입력하세요"
-            />
-          </S.FormGroup>
-
-          <S.FormGroup>
-            <S.Label>썸네일 이미지 URL</S.Label>
-            <S.Input
-              type="url"
-              name="thesisImage"
-              value={formData.thesisImage}
-              onChange={handleInputChange}
-              placeholder="이미지 URL을 입력하세요"
             />
           </S.FormGroup>
 
