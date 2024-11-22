@@ -188,8 +188,17 @@ export const AdminButton = styled.button`
   width: auto; /* 버튼 크기를 텍스트에 맞게 조정 */
 
   img {
-    width: 24px;
-    height: 24px;
+    width: 108px;
+    height: auto;
+
+    ${media.tablet} {
+      margin-top: 8px;
+    }
+
+    ${media.mobile} {
+      width: 92px;
+      margin-top: 8px;
+    }
   }
 
   svg {
