@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
 import * as S from './NoticeBoardStyle';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 
 interface NoticeItem {
@@ -29,7 +28,7 @@ const CATEGORY_MAP = {
   graduate: '대학원',
   employment: '취업',
   scholarship: '장학',
-} as const;
+};
 
 type CategoryKey = keyof typeof CATEGORY_MAP;
 
@@ -40,28 +39,37 @@ const NoticeBoard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const [pageInfo, setPageInfo] = useState({
+    currentPage: 0,
+    totalPages: 0,
+    size: 10,
+  });
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const fetchNotices = async (page = 0, category = selectedCategory) => {
+    setLoading(true);
+    try {
+      const response = await axios.get<ApiResponse>(
+        `${apiEndpoints.board.listWithPage(page, pageInfo.size)}${category !== 'all' ? `&category=${category}` : ''}`,
+      );
+      if (response.data?.data) {
+        setNotices(response.data.data);
+        setPageInfo({
+          currentPage: response.data.page,
+          totalPages: response.data.totalPage,
+          size: pageInfo.size,
+        });
+      }
+    } catch (err) {
+      setError('게시글을 불러오는데 실패했습니다.');
+      console.error('Error fetching notices:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchNotices = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get<ApiResponse>(
-          apiEndpoints.board.listWithPage(currentPage, 10),
-        );
-        if (response.data?.data) {
-          setNotices(response.data.data);
-          setTotalPages(response.data.totalPage);
-        }
-      } catch (err) {
-        setError('게시글을 불러오는데 실패했습니다.');
-        console.error('Error fetching notices:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNotices();
+    fetchNotices(currentPage);
   }, [currentPage]);
 
   const getCategoryLabel = (category: string): string => {
@@ -71,6 +79,91 @@ const NoticeBoard: React.FC = () => {
   const formatViewCount = (count: number | undefined): string => {
     if (typeof count === 'undefined') return '0';
     return count.toLocaleString();
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    const totalPages = pageInfo.totalPages;
+    const currentPageNum = pageInfo.currentPage + 1;
+
+    // 첫 페이지와 이전 버튼
+    pages.push(
+      <S.PageButton
+        key="first"
+        onClick={() => handlePageChange(0)}
+        disabled={currentPageNum === 1}
+      >
+        ⟪
+      </S.PageButton>,
+      <S.PageButton
+        key="prev"
+        onClick={() => handlePageChange(pageInfo.currentPage - 1)}
+        disabled={currentPageNum === 1}
+      >
+        ⟨
+      </S.PageButton>,
+    );
+
+    // 10페이지 이하일 경우 모든 페이지 표시
+    if (totalPages <= 10) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(
+          <S.PageButton
+            key={i}
+            onClick={() => handlePageChange(i - 1)}
+            isActive={i === currentPageNum}
+          >
+            {i}
+          </S.PageButton>,
+        );
+      }
+    } else {
+      // 10페이지 초과시 페이지 범위 계산하여 표시
+      let startPage = Math.max(1, currentPageNum - 4);
+      const endPage = Math.min(totalPages, startPage + 9);
+
+      if (endPage - startPage < 9) {
+        startPage = Math.max(1, endPage - 9);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(
+          <S.PageButton
+            key={i}
+            onClick={() => handlePageChange(i - 1)}
+            isActive={i === currentPageNum}
+          >
+            {i}
+          </S.PageButton>,
+        );
+      }
+    }
+
+    // Next and Last buttons
+    pages.push(
+      <S.PageButton
+        key="next"
+        onClick={() => handlePageChange(pageInfo.currentPage + 1)}
+        disabled={currentPageNum === totalPages}
+      >
+        ⟩
+      </S.PageButton>,
+      <S.PageButton
+        key="last"
+        onClick={() => handlePageChange(totalPages - 1)}
+        disabled={currentPageNum === totalPages}
+      >
+        ⟫
+      </S.PageButton>,
+    );
+
+    return <S.PaginationContainer>{pages}</S.PaginationContainer>;
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 0 && newPage < pageInfo.totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   if (loading) {
@@ -86,9 +179,28 @@ const NoticeBoard: React.FC = () => {
       <S.HeaderContainer>
         <S.Navigation>
           <S.NavButtonGroup>
-            <S.NavButton>전체</S.NavButton>
-            {Object.values(CATEGORY_MAP).map((category) => (
-              <S.NavButton key={category}>{category}</S.NavButton>
+            <S.NavButton
+              isActive={selectedCategory === 'all'}
+              onClick={() => {
+                setSelectedCategory('all');
+                setCurrentPage(0);
+                fetchNotices(0, 'all');
+              }}
+            >
+              전체
+            </S.NavButton>
+            {Object.entries(CATEGORY_MAP).map(([key, value]) => (
+              <S.NavButton
+                key={key}
+                isActive={selectedCategory === key}
+                onClick={() => {
+                  setSelectedCategory(key);
+                  setCurrentPage(0);
+                  fetchNotices(0, key);
+                }}
+              >
+                {value}
+              </S.NavButton>
             ))}
           </S.NavButtonGroup>
           {auth?.isAuthenticated && (
@@ -134,27 +246,7 @@ const NoticeBoard: React.FC = () => {
         <S.EmptyMessage>등록된 게시글이 없습니다.</S.EmptyMessage>
       )}
 
-      {totalPages > 1 && (
-        <S.Pagination>
-          <S.PageButton
-            onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-            disabled={currentPage === 0}
-          >
-            이전
-          </S.PageButton>
-          <span>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <S.PageButton
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
-            }
-            disabled={currentPage === totalPages - 1}
-          >
-            다음
-          </S.PageButton>
-        </S.Pagination>
-      )}
+      {pageInfo.totalPages > 1 && renderPagination()}
     </S.Container>
   );
 };
