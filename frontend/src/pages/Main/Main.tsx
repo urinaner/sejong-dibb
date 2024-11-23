@@ -1,6 +1,7 @@
 import {
   MainContainer,
   PaperContainer,
+  TMP,
   Title,
   AnnouncementAndSeminar,
   AnnouncementContainer,
@@ -154,7 +155,7 @@ function Main(): JSX.Element {
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        <div style={{ display: 'flex' }}>
+        <TMP>
           {papers.map((paper: Paper) => (
             <Paper key={paper.journal} style={{ margin: '10px' }}>
               <img src={paper.thesisImage} alt="논문 이미지" />
@@ -162,7 +163,7 @@ function Main(): JSX.Element {
               <p>{paper.content}</p>
             </Paper>
           ))}
-        </div>
+        </TMP>
       </PaperContainer>
 
       <ContentWrapper>
@@ -210,12 +211,16 @@ function Main(): JSX.Element {
           </AnnouncementContainer>
           <SeminarContainer>
             {/* TODO: 최신 세미나 링크 연결 필요 */}
-            <button>
-              <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
-              <p style={{ fontSize: '16px', fontWeight: '700' }}>
-                최신 세미나 제목
-              </p>
-              <div style={{ fontSize: '14px', fontWeight: '300' }}>
+            <button
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <p>세미나</p>
+              <p>최신 세미나 제목</p>
+              <div>
                 최신 세미나 담당자
                 <br />
                 최신 세미나 일정
@@ -225,7 +230,7 @@ function Main(): JSX.Element {
               <img src="info.svg" />
             </button>
             <SeminarRoomReservation to="/seminar-rooms/reservation">
-              <span style={{ marginRight: '20px' }}>세미나실 예약</span>
+              <span>세미나실 예약</span>
               <img src="/whiteCalendarIcon.svg" />
             </SeminarRoomReservation>
           </SeminarContainer>
