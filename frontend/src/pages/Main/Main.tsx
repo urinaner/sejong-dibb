@@ -1,6 +1,7 @@
 import {
   MainContainer,
   PaperContainer,
+  TMP,
   Title,
   AnnouncementAndSeminar,
   AnnouncementContainer,
@@ -154,7 +155,7 @@ function Main(): JSX.Element {
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        <div style={{ display: 'flex' }}>
+        <TMP>
           {papers.map((paper: Paper) => (
             <Paper key={paper.journal} style={{ margin: '10px' }}>
               <img src={paper.thesisImage} alt="논문 이미지" />
@@ -162,7 +163,7 @@ function Main(): JSX.Element {
               <p>{paper.content}</p>
             </Paper>
           ))}
-        </div>
+        </TMP>
       </PaperContainer>
 
       <ContentWrapper>
@@ -210,7 +211,13 @@ function Main(): JSX.Element {
           </AnnouncementContainer>
           <SeminarContainer>
             {/* TODO: 최신 세미나 링크 연결 필요 */}
-            <button>
+            <button
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
               <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
               <p style={{ fontSize: '16px', fontWeight: '700' }}>
                 최신 세미나 제목

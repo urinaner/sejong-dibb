@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+const media = {
+  mobile: '@media(max-width: 768px)',
+  tablet: '@media(max-width: 1024px)',
+};
+
 export const MainContainer = styled.div``;
 
 export const PaperContainer = styled.section`
@@ -9,11 +14,36 @@ export const PaperContainer = styled.section`
   align-items: center;
 `;
 
+export const TMP = styled.div`
+  display: flex;
+  ${media.tablet} {
+    display: flex;
+    flex-wrap: wrap; /* 태블릿에서는 기존 flex 레이아웃 */
+    justify-content: space-between; /* 태블릿에서는 4열로 가로 배치 */
+  }
+
+  ${media.mobile} {
+    display: grid; /* 모바일에서는 grid 레이아웃 */
+    grid-template-columns: repeat(2, 1fr); /* 2열 */
+    grid-template-rows: repeat(2, auto); /* 2행 */
+    justify-items: center; /* 카드 중앙 정렬 */
+  }
+`;
+
 export const Title = styled.div`
   margin: 50px 0 40px 0;
   font-size: 30px;
   font-weight: 700;
   color: #5d5a88;
+
+  ${media.tablet} {
+    margin: 40px 0 30px 0;
+    font-size: 28px;
+  }
+  ${media.mobile} {
+    margin: 30px 0 20px 0;
+    font-size: 24px;
+  }
 `;
 
 export const Paper = styled.article`
@@ -28,6 +58,14 @@ export const Paper = styled.article`
     width: 200px;
     height: auto;
     margin-bottom: 12px;
+
+    ${media.tablet} {
+      width: auto;
+    }
+
+    ${media.mobile} {
+      width: auto;
+    }
   }
 
   p:first-of-type {
@@ -37,14 +75,32 @@ export const Paper = styled.article`
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 8px;
+
+    ${media.mobile} {
+      font-size: 16px;
+    }
   }
 
   p:last-of-type {
     margin: 0;
     font-family: 'Noto Sans KR';
     color: #5d5a88;
-    font-size: 18;
+    font-size: 16px;
     font-weight: 400;
+
+    ${media.mobile} {
+      font-size: 14px;
+    }
+  }
+
+  ${media.tablet} {
+    flex: 1 0 calc(25% - 20px); /* 태블릿: 25% 너비 (4열) */
+    max-width: 220px;
+  }
+
+  ${media.mobile} {
+    max-width: 160px; /* 모바일에서 카드 크기 축소 */
+    padding: 18px;
   }
 `;
 
@@ -63,6 +119,10 @@ export const AnnouncementAndSeminar = styled.section`
 
   display: flex;
   flex-direction: column;
+
+  ${media.tablet} {
+    margin-right: 40px;
+  }
 `;
 
 export const AnnouncementContainer = styled.div`
@@ -118,9 +178,11 @@ export const AnnouncementItem = styled.div`
 export const SeminarContainer = styled.div`
   flex: 1;
   display: flex;
+  align-items: flex-end;
 
   // 세미나 정보
   button:first-of-type {
+    height: 200px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -150,11 +212,16 @@ export const SeminarContainer = styled.div`
       left: 90%;
       bottom: 15%;
     }
+
+    ${media.tablet} {
+      height: 180px;
+    }
   }
 `;
 
 // 세미나실 예약
 export const SeminarRoomReservation = styled(Link)`
+  height: 200px;
   flex: 1;
   border-radius: 0;
   border: none;
@@ -173,6 +240,11 @@ export const SeminarRoomReservation = styled(Link)`
   font-size: 22px;
   background-color: #358bbf;
   text-decoration: none;
+
+  ${media.tablet} {
+    height: 180px;
+    font-size: 20px;
+  }
 `;
 
 export const ShortcutContainer = styled.section`
@@ -207,10 +279,18 @@ export const Shortcut = styled.div`
   img {
     width: 90px;
     height: auto;
+
+    ${media.tablet} {
+      width: 80px;
+    }
   }
 
   &:hover {
     background-color: rgba(240, 240, 240, 0.3);
     cursor: pointer;
+  }
+
+  ${media.tablet} {
+    font-size: 20px;
   }
 `;
