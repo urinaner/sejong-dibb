@@ -46,6 +46,7 @@ public class SeminarController {
         return new ResponseEntity<>(seminarResDto, HttpStatus.OK);
     }
 
+
     @Operation(summary = "세미나 삭제 API", description = "세미나 삭제")
     @DeleteMapping("/{seminarId}")
     public ResponseEntity<?> deleteSeminar(@PathVariable(name = "seminarId") Long seminarId) {
