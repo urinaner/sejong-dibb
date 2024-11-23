@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
     private final BoardService boardService;
 
-    @Operation(summary = "게시판 생성 API", description = "게시판 생성")
+    @Operation(summary = "게시판 생성 API 입니다.", description = "게시판 생성입니다.")
     @PostMapping
     public ResponseEntity<Long> createBoard(@RequestBody BoardReqDto boardReqDto) {
         Long boardId = boardService.saveBoard(boardReqDto);
