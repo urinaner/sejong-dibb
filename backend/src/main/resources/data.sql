@@ -4,7 +4,7 @@ DELETE FROM seminar;
 DELETE FROM professor;
 DELETE FROM department;
 DELETE FROM admin;
-DELETE FROM user;
+DELETE FROM users;
 
 
 -- Department 더미 데이터 (1개)
@@ -73,7 +73,7 @@ VALUES
     ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt','graduate');
 
 -- User 더미 데이터 (10개)
-INSERT INTO user (student_id, name, major, phone, role)
+INSERT INTO users (student_id, name, major, phone, role)
 VALUES
     ('20180001', '사용자1', '컴퓨터공학과', '010-1111-1111', 'USER'),
     ('20180002', '사용자2', '컴퓨터공학과', '010-2222-2222', 'USER'),
