@@ -6,7 +6,12 @@ const media = {
   tablet: '@media(max-width: 1024px)',
 };
 
-export const MainContainer = styled.div``;
+export const MainContainer = styled.div`
+  ${media.mobile} {
+    display: flex;
+    flex-direction: column;
+  }
+`;
 
 export const PaperContainer = styled.section`
   display: flex;
@@ -109,6 +114,11 @@ export const ContentWrapper = styled.section`
   justify-content: space-around;
   margin-top: 48px;
   margin-bottom: 50px;
+
+  ${media.mobile} {
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
 export const AnnouncementAndSeminar = styled.section`
@@ -123,6 +133,11 @@ export const AnnouncementAndSeminar = styled.section`
   ${media.tablet} {
     margin-right: 40px;
   }
+
+  ${media.mobile} {
+    flex: 100%;
+    margin-right: 0;
+  }
 `;
 
 export const AnnouncementContainer = styled.div`
@@ -130,6 +145,15 @@ export const AnnouncementContainer = styled.div`
 
   p {
     font-size: 22px;
+
+    ${media.mobile} {
+      font-size: 20px;
+      margin-top: 0;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 40px;
   }
 `;
 
@@ -199,23 +223,71 @@ export const SeminarContainer = styled.div`
 
     p {
       margin: 16px 0 16px 0;
+
+      ${media.mobile} {
+        margin: 0 0 0 8px;
+      }
+    }
+
+    p:first-of-type {
+      font-size: 22px;
+      margin-bottom: 0;
+
+      ${media.mobile} {
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    p:last-of-type {
+      font-size: 16px;
+      font-weight: 700;
+
+      ${media.mobile} {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
     }
 
     div {
-      display: flex;
-      flex-direction: column;
-      text-align: left; /* 텍스트 왼쪽 정렬 */
+      font-size: 14px;
+      font-weight: 300;
+      text-align: left;
+
+      ${media.mobile} {
+        margin-left: 8px;
+      }
     }
 
     img {
       position: relative;
       left: 90%;
       bottom: 15%;
+
+      ${media.mobile} {
+        width: 24px;
+        height: auto;
+        left: 80%;
+        bottom: 80%;
+      }
     }
 
     ${media.tablet} {
       height: 180px;
     }
+
+    ${media.mobile} {
+      height: 148px;
+      margin-right: 8px;
+
+      padding: 0;
+      flex: 1;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 40px;
   }
 `;
 
@@ -233,6 +305,15 @@ export const SeminarRoomReservation = styled(Link)`
     margin: 16px 0 16px 0;
   }
 
+  span {
+    margin-right: 20px;
+
+    ${media.mobile} {
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
+  }
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,6 +325,15 @@ export const SeminarRoomReservation = styled(Link)`
   ${media.tablet} {
     height: 180px;
     font-size: 20px;
+  }
+
+  ${media.mobile} {
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    height: 148px;
+    font-size: 16px;
+    margin-left: 8px;
   }
 `;
 
@@ -268,6 +358,11 @@ export const ShortcutContainer = styled.section`
     font-family: 'Noto Sans KR';
     font-size: 22px;
   }
+
+  ${media.mobile} {
+    width: 90%;
+    padding: 40px 0;
+  }
 `;
 
 export const Shortcut = styled.div`
@@ -283,6 +378,10 @@ export const Shortcut = styled.div`
     ${media.tablet} {
       width: 80px;
     }
+
+    ${media.mobile} {
+      width: 72px;
+    }
   }
 
   &:hover {
@@ -292,5 +391,9 @@ export const Shortcut = styled.div`
 
   ${media.tablet} {
     font-size: 20px;
+  }
+
+  ${media.tablet} {
+    font-size: 18px;
   }
 `;

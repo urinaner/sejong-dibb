@@ -218,11 +218,9 @@ function Main(): JSX.Element {
                 justifyContent: 'space-between',
               }}
             >
-              <p style={{ fontSize: '22px', marginBottom: '0' }}>세미나</p>
-              <p style={{ fontSize: '16px', fontWeight: '700' }}>
-                최신 세미나 제목
-              </p>
-              <div style={{ fontSize: '14px', fontWeight: '300' }}>
+              <p>세미나</p>
+              <p>최신 세미나 제목</p>
+              <div>
                 최신 세미나 담당자
                 <br />
                 최신 세미나 일정
@@ -232,7 +230,7 @@ function Main(): JSX.Element {
               <img src="info.svg" />
             </button>
             <SeminarRoomReservation to="/seminar-rooms/reservation">
-              <span style={{ marginRight: '20px' }}>세미나실 예약</span>
+              <span>세미나실 예약</span>
               <img src="/whiteCalendarIcon.svg" />
             </SeminarRoomReservation>
           </SeminarContainer>
