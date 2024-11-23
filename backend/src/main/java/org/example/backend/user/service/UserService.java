@@ -28,10 +28,17 @@ public class UserService {
     private final Sj sj;
     private final JWTUtil jwtUtil;
 
+    @Transactional
     public String loginProcess(SignInReqDto joinDTO) {
         try {
             SjProfile sjProfile = sj.login(joinDTO.getLoginId(), joinDTO.getPassword());
             String token = jwtUtil.createJwt(sjProfile.getName(), "USER", 60 * 60 * 10L);
+            UserReqDto userReqDto = UserReqDto.builder()
+                    .name(sjProfile.getName())
+                    .studentId(sjProfile.getStudentCode())
+                    .major(sjProfile.getMajor())
+                    .build();
+            saveUser(userReqDto);
             return token;
         } catch (RuntimeException e) {
             throw new UserException(NOT_FOUND_USER);

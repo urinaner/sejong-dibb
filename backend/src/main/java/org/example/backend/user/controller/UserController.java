@@ -26,8 +26,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/join")
-    public ResponseEntity<String> joinProcess(@RequestBody SignInReqDto joinDTO) {
+    @PostMapping("/login")
+    public ResponseEntity<String> loginProcess(@RequestBody SignInReqDto joinDTO) {
         String token = userService.loginProcess(joinDTO);
 
         return ResponseEntity.ok()
