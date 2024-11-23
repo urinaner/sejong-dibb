@@ -4,12 +4,8 @@ name: Backend CI/CD using GitHub Actions & Docker
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
 
 jobs:
   build:
@@ -39,7 +35,7 @@ jobs:
       # Gradle 설정
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
-
+      
       # 백엔드 빌드 실행
       - name: Build Backend
         run: |
