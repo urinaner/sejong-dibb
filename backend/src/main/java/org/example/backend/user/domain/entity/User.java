@@ -1,19 +1,16 @@
 package org.example.backend.user.domain.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.user.domain.dto.UserReqDto;
 
 @Entity
 @Getter
@@ -26,6 +23,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(name = "student_id", unique = true)
+    private String studentId;
+
     @Column(name = "name")
     private String name;
 
@@ -35,6 +35,27 @@ public class User {
     @Column(name = "phone", unique = true)
     private String phoneN;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations = new ArrayList<>();
+
+    @Builder
+    private User(String studentId, String name, String major, String phoneN) {
+        this.studentId = studentId;
+        this.name = name;
+        this.major = major;
+        this.phoneN = phoneN;
+    }
+
+    public static User of(String studentId, String name, String major, String phoneN) {
+        return User.builder()
+                .studentId(studentId)
+                .name(name)
+                .major(major)
+                .phoneN(phoneN)
+                .build();
+    }
+
+    public void update(UserReqDto dto) {
+        this.name = dto.getName();
+        this.major = dto.getMajor();
+        this.phoneN = dto.getPhoneN();
+    }
 }
