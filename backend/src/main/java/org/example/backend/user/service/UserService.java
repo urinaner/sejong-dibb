@@ -41,7 +41,9 @@ public class UserService {
     @Transactional
     public Long saveUser(UserReqDto userReqDto) {
         validateRequiredFields(userReqDto);
-        return null;
+        User user = User.of(userReqDto);
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
     }
 
     private void validateRequiredFields(UserReqDto userReqDto) {

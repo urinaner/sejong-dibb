@@ -20,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long id;
 
     @Column(name = "student_id", unique = true)
@@ -44,12 +44,12 @@ public class User {
         this.phoneN = phoneN;
     }
 
-    public static User of(String studentId, String name, String major, String phoneN) {
+    public static User of(UserReqDto dto) {
         return User.builder()
-                .studentId(studentId)
-                .name(name)
-                .major(major)
-                .phoneN(phoneN)
+                .studentId(dto.getStudentId())
+                .name(dto.getName())
+                .major(dto.getMajor())
+                .phoneN(dto.getPhoneN())
                 .build();
     }
 
