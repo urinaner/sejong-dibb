@@ -62,4 +62,4 @@ jobs:
             sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
             # 사용하지 않는 이미지 정리
-            sudo docker image prune -a -f
+            # sudo docker image prune -a -f
