@@ -38,6 +38,6 @@ public class SeminarRoom {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "seminar_room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "seminarRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 }
