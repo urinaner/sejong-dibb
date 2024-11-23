@@ -33,27 +33,24 @@ export const apiEndpoints = {
     },
 
     thesis: {
-      // GET /api/thesis - 모든 논문 조회 API
+      base: `${API_URL}/api/thesis`,
       list: `${API_URL}/api/thesis`,
-      listWithPage: (page: number, size: number) => {
+      listWithPage: (page: number, size: number, sort?: string[]) => {
         const params = new URLSearchParams({
           page: page.toString(),
           size: size.toString(),
         });
+        if (sort && sort.length > 0) {
+          sort.forEach((sortItem) => params.append('sort', sortItem));
+        }
         return `${API_URL}/api/thesis?${params.toString()}`;
       },
-
-      // POST /api/thesis - 논문 생성 API
       create: `${API_URL}/api/thesis`,
-
-      // GET /api/thesis/{thesisId} - 논문 상세 정보 반환 API
-      detail: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
-
-      // POST /api/thesis/{thesisId} - 논문 정보 업데이트 API
-      update: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
-
-      // DELETE /api/thesis/{thesisId} - 논문 삭제 API
-      delete: (thesisId: number) => `${API_URL}/api/thesis/${thesisId}`,
+      get: (thesisId: number | string) => `${API_URL}/api/thesis/${thesisId}`,
+      update: (thesisId: number | string) =>
+        `${API_URL}/api/thesis/${thesisId}`,
+      delete: (thesisId: number | string) =>
+        `${API_URL}/api/thesis/${thesisId}`,
     },
 
     create: `${API_URL}/api/professor`,
@@ -91,6 +88,22 @@ export const apiEndpoints = {
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
+  },
+  // 임시 URI 지정
+  upload: {
+    // 단일 이미지 업로드
+    image: `${API_URL}/api/upload/image`,
+    // 다중 이미지 업로드
+    images: `${API_URL}/api/upload/images`,
+    // 파일 업로드
+    file: `${API_URL}/api/upload/file`,
+    // 다중 파일 업로드
+    files: `${API_URL}/api/upload/files`,
+    // S3 signed URL 요청
+    getSignedUrl: (fileName: string) =>
+      `${API_URL}/api/upload/signed-url?fileName=${encodeURIComponent(fileName)}`,
+    // 파일 삭제
+    delete: (fileId: string) => `${API_URL}/api/upload/${fileId}`,
   },
 };
 

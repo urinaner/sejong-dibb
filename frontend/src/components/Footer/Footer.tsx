@@ -80,8 +80,8 @@ function renderSightMapSections() {
       titleLink: '/news/noticeboard',
       contents: [
         { name: '공지사항', link: '/news/noticeboard' },
-        { name: '세미나', link: '/News' },
-        { name: '연구논문', link: '/News' },
+        { name: '세미나', link: '/news' },
+        { name: '연구논문', link: '/news/thesis' },
       ],
     },
     {
