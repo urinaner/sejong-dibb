@@ -2,9 +2,9 @@ name: Backend CI/CD using GitHub Actions & Docker
 # 워크플로우 실행 조건 설정
 on:
   push:
-    branches: [ "production" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "production" ]
+    branches: [ "main" ]
 jobs:
   build:
     runs-on: ubuntu-latest
