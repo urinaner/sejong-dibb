@@ -35,6 +35,8 @@ public class User {
     @Column(name = "phone", unique = true)
     private String phoneN;
 
+    @Column(name = "role", nullable = false)
+    private String role = "USER";
 
     @Builder
     private User(String studentId, String name, String major, String phoneN) {
