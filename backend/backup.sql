@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `board` (
   `content` text,
   `view_count` int DEFAULT '0',
   `writer` varchar(255) DEFAULT NULL,
-  `file` varchar(255) DEFAULT NULL,
+  `fileList` TEXT DEFAULT NULL,
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `category` varchar(50) DEFAULT NULL,
   `department_id` bigint DEFAULT NULL,
