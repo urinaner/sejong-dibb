@@ -1,9 +1,14 @@
 package org.example.backend.seminarRoom.service;
 
+import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.INVALID_CAPACITY;
+import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.INVALID_NAME_VALUE;
+import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
+
 import lombok.RequiredArgsConstructor;
 import org.example.backend.seminarRoom.domain.SeminarRoom;
 import org.example.backend.seminarRoom.domain.dto.SeminarRoomReqDto;
 import org.example.backend.seminarRoom.domain.dto.SeminarRoomResDto;
+import org.example.backend.seminarRoom.exception.SeminarRoomException;
 import org.example.backend.seminarRoom.repository.SeminarRoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +31,7 @@ public class SeminarRoomService {
 
     public SeminarRoomResDto getSeminarRoom(Long id) {
         SeminarRoom seminarRoom = seminarRoomRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("세미나실이 존재하지 않습니다."));
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
         return SeminarRoomResDto.of(seminarRoom);
     }
 
@@ -35,7 +40,7 @@ public class SeminarRoomService {
         validateSeminarRoom(reqDto);
 
         SeminarRoom seminarRoom = seminarRoomRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("세미나실이 존재하지 않습니다."));
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
 
         seminarRoom.update(reqDto);
         return SeminarRoomResDto.of(seminarRoom);
@@ -44,16 +49,16 @@ public class SeminarRoomService {
     @Transactional
     public void deleteSeminarRoom(Long id) {
         SeminarRoom seminarRoom = seminarRoomRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("세미나실이 존재하지 않습니다."));
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
         seminarRoomRepository.delete(seminarRoom);
     }
 
     private void validateSeminarRoom(SeminarRoomReqDto reqDto) {
         if (reqDto.getName() == null || reqDto.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("세미나실 이름은 필수입니다.");
+            throw new SeminarRoomException(INVALID_NAME_VALUE);
         }
         if (reqDto.getPersonCapacity() == null || reqDto.getPersonCapacity() <= 0) {
-            throw new IllegalArgumentException("수용 인원은 1명 이상이어야 합니다.");
+            throw new SeminarRoomException(INVALID_CAPACITY);
         }
     }
 }
