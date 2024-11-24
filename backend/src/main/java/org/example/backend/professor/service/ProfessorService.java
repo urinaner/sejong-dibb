@@ -70,7 +70,11 @@ public class ProfessorService {
     }
 
     @Transactional
-    public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto) {
+    public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
+        if (!multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            professorReqDto.setProfileImage(uploadImageUrl);
+        }
         Professor professor = findProfessorById(professorId);
         professor.update(professorReqDto);
         return ProfessorResDto.of(professor);
