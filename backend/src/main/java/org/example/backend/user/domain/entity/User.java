@@ -18,7 +18,7 @@ import org.example.backend.reservation.domain.Reservation;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -35,6 +35,4 @@ public class User {
     @Column(name = "phone", unique = true)
     private String phoneN;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations = new ArrayList<>();
 }
