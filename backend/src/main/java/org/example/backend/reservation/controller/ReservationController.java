@@ -34,14 +34,6 @@ public class ReservationController {
         return ResponseEntity.ok(resDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ReservationResDto> updateReservation(
-            @PathVariable Long id,
-            @RequestBody ReservationReqDto reqDto) {
-        ReservationResDto resDto = reservationService.updateReservation(id, reqDto);
-        return ResponseEntity.ok(resDto);
-    }
-
     @PatchMapping("/{id}/status")
     public ResponseEntity<ReservationResDto> updateReservationStatus(
             @PathVariable Long id,
