@@ -1,8 +1,13 @@
 package org.example.backend.reservation.service;
 
+import static org.example.backend.reservation.exception.ReservationExceptionType.*;
+import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
+
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.seminarRoom.domain.SeminarRoom;
+import org.example.backend.seminarRoom.exception.SeminarRoomException;
 import org.example.backend.seminarRoom.repository.SeminarRoomRepository;
 import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.ReservationStatus;
@@ -30,7 +35,7 @@ public class ReservationService {
     @Transactional
     public ReservationResDto createReservation(ReservationReqDto reqDto) {
         SeminarRoom seminarRoom = seminarRoomRepository.findById(reqDto.getSeminarRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("세미나실이 존재하지 않습니다."));
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
 
         validateReservationTime(reqDto);
         validateTimeTableOverlap(reqDto, seminarRoom.getId());
@@ -50,17 +55,17 @@ public class ReservationService {
 
     public ReservationResDto getReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
         return ReservationResDto.of(reservation);
     }
 
     @Transactional
     public ReservationResDto updateReservation(Long id, ReservationReqDto reqDto) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
 
         SeminarRoom seminarRoom = seminarRoomRepository.findById(reqDto.getSeminarRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("세미나실이 존재하지 않습니다."));
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
 
         validateReservationTime(reqDto);
         validateReservationOverlap(reqDto, seminarRoom.getId());
@@ -72,7 +77,7 @@ public class ReservationService {
     @Transactional
     public ReservationResDto updateReservationStatus(Long id, ReservationStatus status) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
 
         reservation.updateStatus(status);
         return ReservationResDto.of(reservation);
@@ -81,7 +86,7 @@ public class ReservationService {
     @Transactional
     public void deleteReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
         reservationRepository.delete(reservation);
     }
 
@@ -98,11 +103,7 @@ public class ReservationService {
         );
 
         if (hasTimeTableConflict) {
-            throw new IllegalArgumentException(
-                    String.format("해당 시간(%s %s)에 정기 수업이 있어 예약이 불가능합니다.",
-                            weekDay.getKorName(),
-                            reqDto.getStartTime().toLocalTime())
-            );
+            throw new ReservationException(CONFLICT_TIMETABLE);
         }
     }
 
@@ -115,23 +116,23 @@ public class ReservationService {
         );
 
         if (hasReservationConflict) {
-            throw new IllegalArgumentException("해당 시간에 이미 승인된 예약이 존재합니다.");
+            throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
     }
 
     private void validateReservationTime(ReservationReqDto reqDto) {
         LocalDateTime now = LocalDateTime.now();
 //        if (reqDto.getStartTime().isBefore(now)) {
-//            throw new IllegalArgumentException("과거의 시간으로 예약할 수 없습니다.");
+//            throw new ReservationException(PAST_TIME_RESERVATION);
 //        }
         if (reqDto.getStartTime().isAfter(reqDto.getEndTime())) {
-            throw new IllegalArgumentException("시작 시간은 종료 시간보다 이후일 수 없습니다.");
+            throw new ReservationException(INVALID_TIME_ORDER);
         }
 
         // 예약 시간이 너무 긴 경우 체크 (예: 2시간 초과)
         long hours = ChronoUnit.HOURS.between(reqDto.getStartTime(), reqDto.getEndTime());
         if (hours > 2) {
-            throw new IllegalArgumentException("예약은 최대 2시간까지만 가능합니다.");
+            throw new ReservationException(EXCEEDS_MAX_DURATION);
         }
     }
 }
