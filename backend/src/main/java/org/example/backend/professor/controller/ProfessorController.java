@@ -68,8 +68,9 @@ public class ProfessorController {
     @Operation(summary = "교수 정보 업데이트 API", description = "교수 정보 업데이트")
     @PostMapping("/{professorId}")
     public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "professorId") Long professorId,
-                                                           @RequestBody ProfessorReqDto professorReqDto) {
-        ProfessorResDto professorResDto = professorService.updateProfessor(professorId, professorReqDto);
+                                                           @RequestPart(value = "professorReqDto") ProfessorReqDto professorReqDto,
+                                                           @RequestPart(value = "profileImage") MultipartFile multipartFile) {
+        ProfessorResDto professorResDto = professorService.updateProfessor(professorId, professorReqDto, multipartFile);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
 
