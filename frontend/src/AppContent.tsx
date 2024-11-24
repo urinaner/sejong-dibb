@@ -21,6 +21,10 @@ import ProfessorEdit from './pages/About/Faculty/ProfessorEdit';
 import ProfessorDetail from './pages/About/Faculty/ProfessorDetail';
 import ProfessorCreate from './pages/About/Faculty/ProfessorCreate';
 import Reservation from './pages/SeminarRoom/Reservation';
+import ThesisList from './pages/News/Thesis/ThesisList';
+import ThesisCreate from './pages/News/Thesis/ThesisCreate';
+import ThesisEdit from './pages/News/Thesis/ThesisEdit';
+import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 
 import mainImage from './assets/images/main_picture.svg';
 
@@ -66,7 +70,8 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isAuthPage =
-    location.pathname === '/signin' || location.pathname === '/signup';
+    location.pathname === '/admin/signin' ||
+    location.pathname === '/admin/signup';
 
   return (
     <PageContainer>
@@ -81,7 +86,7 @@ function AppContent() {
       </MainImageWrapper>
       <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
-          {/* Public Routes */}
+          {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
           <Route
             path="/admin/signin"
@@ -95,14 +100,18 @@ function AppContent() {
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
           />
+          {/*  about */}
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
           <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
+          {/*  news */}
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
           <Route path="/seminar-rooms/reservation" element={<Reservation />} />
+          <Route path="/news/thesis" element={<ThesisList />} />
+          <Route path="/news/thesis/:id" element={<ThesisDetail />} />
 
-          {/* Admin Protected Routes */}
+          {/* 어드민 권한 보호 Routes */}
           <Route
             path="/about/faculty/edit/:id"
             element={
@@ -132,6 +141,22 @@ function AppContent() {
             element={
               <ProtectedRoute requireAuth requireAdmin>
                 <NoticeEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/thesis/create"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ThesisCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/thesis/edit/:id"
+            element={
+              <ProtectedRoute requireAuth requireAdmin>
+                <ThesisEdit />
               </ProtectedRoute>
             }
           />
