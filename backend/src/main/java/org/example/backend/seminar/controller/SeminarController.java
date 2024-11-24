@@ -31,7 +31,7 @@ public class SeminarController {
         return new ResponseEntity<>(seminarId, HttpStatus.OK);
     }
 
-    @Operation(summary = "모든 세미나 조회 API", description = "모든 세미나의 리스트 반환")
+    @Operation(summary = "단일 세미나 조회 API", description = "단일 세미나의 리스트 반환")
     @GetMapping("/{seminarId}")
     public ResponseEntity<SeminarResDto> getSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         SeminarResDto seminarResDto = seminarService.getSeminar(seminarId);
