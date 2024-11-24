@@ -1,6 +1,7 @@
 package org.example.backend.board.domain.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,18 +15,18 @@ public class BoardResDto {
     private String title;
     private String content;
     private String writer;
-    private String file;
+    private List<String> fileList;
     private LocalDateTime createDate;
     private String category;
 
     @Builder
     private BoardResDto(Long id, String title, String content, String writer,
-                        String file, LocalDateTime createDate, String category) {
+                        List<String> fileList, LocalDateTime createDate, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.file = file;
+        this.fileList = fileList;
         this.createDate = createDate;
         this.category = category;
     }
@@ -36,7 +37,7 @@ public class BoardResDto {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writer(board.getWriter())
-                .file(board.getFile())
+                .fileList(board.getFileList())
                 .createDate(board.getCreatedDateTime())
                 .category(board.getCategory().name())
                 .build();

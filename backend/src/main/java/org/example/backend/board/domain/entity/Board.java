@@ -1,12 +1,14 @@
 package org.example.backend.board.domain.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.global.config.BaseEntity;
+import org.example.backend.global.config.StringListConverter;
 
 @Entity
 @Getter
@@ -30,8 +32,9 @@ public class Board extends BaseEntity {
     @Column(name = "writer")
     private String writer;
 
-    @Column(name = "file")
-    private String file;
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "file_list", length = 1000)
+    private List<String> fileList;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -39,11 +42,11 @@ public class Board extends BaseEntity {
 
     @Builder
     private Board(String title, String content, String writer,
-                  String file, Category category) {
+                  List<String> fileList, Category category) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.file = file;
+        this.fileList = fileList;
         this.category = category;
         this.viewCount = 0;
     }
@@ -53,7 +56,7 @@ public class Board extends BaseEntity {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .writer(dto.getWriter())
-                .file(dto.getFile())
+                .fileList(dto.getFileList())
                 .category(Category.valueOf(dto.getCategory()))
                 .build();
     }
@@ -62,7 +65,7 @@ public class Board extends BaseEntity {
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.writer = dto.getWriter();
-        this.file = dto.getFile();
+        this.fileList = dto.getFileList();
         this.category = Category.valueOf(dto.getCategory());
     }
 }

@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +31,10 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary = "게시판 생성 API 입니다.", description = "게시판 생성입니다.")
-    @PostMapping
-    public ResponseEntity<Long> createBoard(@RequestBody BoardReqDto boardReqDto) {
-        Long boardId = boardService.saveBoard(boardReqDto);
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Long> createBoard(@RequestPart(value = "boardReqDto") BoardReqDto boardReqDto,
+                                            @RequestPart(value = "boardFiles") List<MultipartFile> multipartFileList) {
+        Long boardId = boardService.saveBoard(boardReqDto, multipartFileList);
         return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
 
@@ -60,8 +63,9 @@ public class BoardController {
     @Operation(summary = "게시판 정보 업데이트 API", description = "게시판 정보 업데이트")
     @PostMapping("/{boardId}")
     public ResponseEntity<BoardResDto> updateBoard(@PathVariable(name = "boardId") Long boardId,
-                                                   @RequestBody BoardReqDto boardReqDto) {
-        BoardResDto boardResDto = boardService.updateBoard(boardId, boardReqDto);
+                                                   @RequestPart(value = "boardReqDto") BoardReqDto boardReqDto,
+                                                   @RequestPart(value = "boardFiles") List<MultipartFile> multipartFileList) {
+        BoardResDto boardResDto = boardService.updateBoard(boardId, boardReqDto, multipartFileList);
         return new ResponseEntity<>(boardResDto, HttpStatus.OK);
     }
 
