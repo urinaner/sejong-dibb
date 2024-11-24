@@ -37,7 +37,7 @@ public class BoardResDto {
                 .content(board.getContent())
                 .writer(board.getWriter())
                 .file(board.getFile())
-                .createDate(board.getCreatedDateTime())
+                .createDate(board.getCreatedAt())
                 .category(board.getCategory().name())
                 .build();
     }
