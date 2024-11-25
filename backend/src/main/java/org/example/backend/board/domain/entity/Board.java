@@ -1,6 +1,7 @@
 package org.example.backend.board.domain.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,6 +36,9 @@ public class Board extends BaseEntity {
     @Convert(converter = StringListConverter.class)
     @Column(name = "file_list", length = 1000)
     private List<String> fileList;
+
+    @Column(name = "created_date_time")
+    private LocalDateTime createdDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
