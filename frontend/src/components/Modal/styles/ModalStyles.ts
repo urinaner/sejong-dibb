@@ -1,76 +1,55 @@
-import styled, { keyframes } from 'styled-components';
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
+// components/Modal/styles/ModalStyles.ts
+import styled from 'styled-components';
 
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 50;
+  align-items: center;
+  z-index: 1000;
 `;
 
 export const ModalContainer = styled.div`
-  background: white;
+  background-color: white;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  width: 100%;
+  min-width: 300px;
   max-width: 500px;
-  margin: 1.5rem;
-  animation: ${fadeIn} 0.3s ease-out;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
-// components/Modal/utils/modalUtils.ts
-export const focusableElements = [
-  'button',
-  '[href]',
-  'input',
-  'select',
-  'textarea',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
+export const ModalHeader = styled.div`
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+`;
 
-export function trapFocus(element: HTMLElement) {
-  const focusableEls = element.querySelectorAll(focusableElements);
-  const firstFocusableEl = focusableEls[0] as HTMLElement;
-  const lastFocusableEl = focusableEls[focusableEls.length - 1] as HTMLElement;
+export const ModalContent = styled.div`
+  margin-bottom: 20px;
+`;
 
-  function handleTabKey(e: KeyboardEvent) {
-    const isTabPressed = e.key === 'Tab';
+export const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+`;
 
-    if (!isTabPressed) return;
+export const Button = styled.button`
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1a73e8;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
 
-    if (e.shiftKey) {
-      if (document.activeElement === firstFocusableEl) {
-        lastFocusableEl.focus();
-        e.preventDefault();
-      }
-    } else {
-      if (document.activeElement === lastFocusableEl) {
-        firstFocusableEl.focus();
-        e.preventDefault();
-      }
-    }
+  &:hover {
+    background-color: #1557b0;
   }
-
-  element.addEventListener('keydown', handleTabKey);
-  firstFocusableEl?.focus();
-
-  return () => {
-    element.removeEventListener('keydown', handleTabKey);
-  };
-}
+`;
