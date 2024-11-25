@@ -99,3 +99,13 @@ export interface UseNoticeModalsReturn {
   closeFormError: () => void;
   setConfirmLoading: (isLoading: boolean) => void;
 }
+
+export interface DeleteButtonProps {
+  title?: string;
+  message?: string;
+  submessage?: string;
+  onDelete: () => Promise<void>;
+  isDeleting?: boolean;
+  children: React.ReactNode;
+  className?: string;
+}

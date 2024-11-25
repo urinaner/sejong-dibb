@@ -3,7 +3,7 @@ import { ModalHeader } from './components/ModalHeader';
 import { ModalContent } from './components/ModalContent';
 import { ModalFooter } from './components/ModalFooter';
 import { ModalCloseButton } from './components/ModalCloseButton';
-import { ModalProvider } from './context/ModalContext';
+import { ModalDeleteButton } from './components/ModalDeleteButton';
 import { useModal } from './hooks/useModal';
 
 // 모달 컴포넌트 합성
@@ -12,7 +12,7 @@ const Modal = Object.assign(ModalRoot, {
   Content: ModalContent,
   Footer: ModalFooter,
   CloseButton: ModalCloseButton,
-  Provider: ModalProvider,
+  DeleteButton: ModalDeleteButton,
 });
 
 // 컴포넌트 및 훅 내보내기
@@ -27,6 +27,7 @@ export type {
   AlertModalProps,
   ConfirmModalProps,
   FormErrorModalProps,
+  DeleteButtonProps,
   UseModalReturn,
   UseNoticeModalsReturn,
   AlertType,

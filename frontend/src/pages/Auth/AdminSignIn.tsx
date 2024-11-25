@@ -50,6 +50,7 @@ const AdminSignIn: React.FC = () => {
           <Modal.Header>로그인 성공</Modal.Header>
           <Modal.Content>
             <p>환영합니다!</p>
+            <p>관리자 계정으로 로그인 되었습니다.</p>
           </Modal.Content>
           <Modal.Footer>
             <Button onClick={handleCloseSuccessModal}>확인</Button>
