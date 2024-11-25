@@ -239,11 +239,22 @@ CREATE TABLE IF NOT EXISTS `board` (
   `content` text,
   `view_count` int DEFAULT '0',
   `writer` varchar(255) DEFAULT NULL,
-  `file` varchar(255) DEFAULT NULL,
+  `fileList` TEXT DEFAULT NULL,
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `category` varchar(50) DEFAULT NULL,
   `department_id` bigint DEFAULT NULL,
   PRIMARY KEY (`board_id`),
   KEY `FK_board_department` (`department_id`),
   CONSTRAINT `FK_board_department` FOREIGN KEY (`department_id`) REFERENCES `Department` (`department_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- User 테이블 생성
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` bigint NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `major` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
+  'phone' varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

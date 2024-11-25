@@ -1,15 +1,11 @@
-DELETE
-FROM board;
-DELETE
-FROM thesis;
-DELETE
-FROM seminar;
-DELETE
-FROM professor;
-DELETE
-FROM department;
-DELETE
-FROM admin;
+DELETE FROM board;
+DELETE FROM thesis;
+DELETE FROM seminar;
+DELETE FROM professor;
+DELETE FROM department;
+DELETE FROM admin;
+DELETE FROM users;
+
 
 
 -- Department 더미 데이터 (1개)
@@ -94,17 +90,19 @@ VALUES ('저자1', 'Journal A', '논문 내용 1', 'https://example.com/thesis1'
 
 
 -- Board 더미 데이터 (10개)
-INSERT INTO board (title, content, view_count, writer, file, category)
-VALUES ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', 'file1.txt', 'undergraduate'),
-       ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', 'file2.txt', 'graduate'),
-       ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', 'file3.txt', 'employment'),
-       ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', 'file4.txt', 'scholarship'),
-       ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', 'file5.txt', 'undergraduate'),
-       ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', 'file6.txt', 'graduate'),
-       ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', 'file7.txt', 'employment'),
-       ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', 'file8.txt', 'scholarship'),
-       ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', 'file9.txt', 'undergraduate'),
-       ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', 'file10.txt', 'graduate');
+INSERT INTO board (title, content, view_count, writer, file_list, category)
+VALUES
+    ('첫 번째 게시글', '게시글 내용 1', 10, '작성자1', '["file1.txt", "file2.txt"]', 'undergraduate'),
+    ('두 번째 게시글', '게시글 내용 2', 20, '작성자2', '["file3.txt", "file4.txt"]', 'graduate'),
+    ('세 번째 게시글', '게시글 내용 3', 30, '작성자3', '["file5.txt", "file6.txt"]', 'employment'),
+    ('네 번째 게시글', '게시글 내용 4', 40, '작성자4', '["file7.txt", "file8.txt"]', 'scholarship'),
+    ('다섯 번째 게시글', '게시글 내용 5', 50, '작성자5', '["file9.txt", "file10.txt"]', 'undergraduate'),
+    ('여섯 번째 게시글', '게시글 내용 6', 60, '작성자6', '["file11.txt", "file12.txt"]', 'graduate'),
+    ('일곱 번째 게시글', '게시글 내용 7', 70, '작성자7', '["file13.txt", "file14.txt"]', 'employment'),
+    ('여덟 번째 게시글', '게시글 내용 8', 80, '작성자8', '["file15.txt", "file16.txt"]', 'scholarship'),
+    ('아홉 번째 게시글', '게시글 내용 9', 90, '작성자9', '["file17.txt", "file18.txt"]', 'undergraduate'),
+    ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', '["file19.txt", "file20.txt"]', 'graduate');
+
 
 
 -- 세미나실 더미데이터
@@ -135,6 +133,20 @@ VALUES ('2024-03-04', '2024-06-21', '09:00:00', '10:30:00', 1),
        ('2024-03-11', '2024-06-14', '16:00:00', '18:00:00', 1),
        ('2024-03-11', '2024-06-14', '13:00:00', '15:00:00', 1),
        ('2024-03-04', '2024-06-21', '09:30:00', '11:00:00', 1);
+       
+ -- User 더미 데이터 (10개)
+INSERT INTO users (student_id, name, major, phone, role)
+VALUES
+    ('20180001', '사용자1', '컴퓨터공학과', '010-1111-1111', 'USER'),
+    ('20180002', '사용자2', '컴퓨터공학과', '010-2222-2222', 'USER'),
+    ('20180003', '사용자3', '컴퓨터공학과', '010-3333-3333', 'USER'),
+    ('20180004', '사용자4', '컴퓨터공학과', '010-4444-4444', 'USER'),
+    ('20180005', '사용자5', '컴퓨터공학과', '010-5555-5555', 'USER'),
+    ('20180006', '사용자6', '컴퓨터공학과', '010-6666-6666', 'USER'),
+    ('20180007', '사용자7', '컴퓨터공학과', '010-7777-7777', 'USER'),
+    ('20180008', '사용자8', '컴퓨터공학과', '010-8888-8888', 'USER'),
+    ('20180009', '사용자9', '컴퓨터공학과', '010-9999-9999', 'USER'),
+    ('20180010', '사용자10', '컴퓨터공학과', '010-1010-1010', 'USER');
 
 -- Timetable WeekDays 더미데이터
 INSERT INTO timetable_week_days (timetable_timetable_id, week_days)

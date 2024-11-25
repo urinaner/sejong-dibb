@@ -1,5 +1,6 @@
 package org.example.backend.board.domain.dto;
 
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,16 +12,20 @@ public class BoardReqDto {
     private String title;
     private String content;
     private String writer;
-    private String file;
+    private List<String> fileList;
     private String category;
 
     @Builder
     private BoardReqDto(String title, String content, String writer,
-                        String file, String category) {
+                        List<String> fileList, String category) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.file = file;
+        this.fileList = fileList;
         this.category = category;
+    }
+
+    public void setFileList(List<String> fileList) {
+        this.fileList = fileList;
     }
 }

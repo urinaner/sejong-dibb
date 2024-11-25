@@ -57,8 +57,9 @@ public class ThesisController {
     @Operation(summary = "논문 정보 업데이트 API", description = "논문 정보 업데이트")
     @PostMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> updateThesis(@PathVariable(name = "thesisId") Long thesisId,
-                                                     @RequestBody ThesisReqDto thesisReqDto) {
-        ThesisResDto thesisResDto = thesisService.updateThesis(thesisId, thesisReqDto);
+                                                     @RequestPart(value = "thesisReqDto") ThesisReqDto thesisReqDto,
+                                                     @RequestPart(value = "thesis_image") MultipartFile multipartFile) {
+        ThesisResDto thesisResDto = thesisService.updateThesis(thesisId, thesisReqDto, multipartFile);
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
 

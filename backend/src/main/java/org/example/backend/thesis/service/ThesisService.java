@@ -65,7 +65,12 @@ public class ThesisService {
     }
 
     @Transactional
-    public ThesisResDto updateThesis(Long thesisId, ThesisReqDto thesisReqDto) {
+    public ThesisResDto updateThesis(Long thesisId, ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
+        if (!multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            thesisReqDto.setThesisImage(uploadImageUrl);
+        }
+
         Thesis thesis = findThesisById(thesisId);
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
         thesis.update(thesisReqDto, professor);
