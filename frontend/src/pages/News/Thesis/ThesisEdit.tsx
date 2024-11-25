@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Image as ImageIcon, AlertTriangle } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
-// import { useModalContext } from '../../../context/ModalContext';
 import ThesisForm from './ThesisForm';
-
-const DEFAULT_THUMBNAIL = '/paperImage.png';
+import {
+  AlertModal,
+  FormErrorModal,
+  ConfirmModal,
+} from '../../../components/Modal/templates/AlertModal';
 
 interface ThesisFormData {
   author: string;
@@ -26,10 +28,16 @@ interface ImageUploadResponse {
   imageUrl: string;
 }
 
+interface AlertState {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  type: 'success' | 'error';
+}
+
 const ThesisEdit: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  // const { openModal } = useModalContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +45,22 @@ const ThesisEdit: React.FC = () => {
   const [thumbnailError, setThumbnailError] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // 모달 상태 관리
+  const [alertState, setAlertState] = useState<AlertState>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'success',
+  });
+  const [formErrorState, setFormErrorState] = useState({
+    isOpen: false,
+    message: '',
+  });
+  const [confirmState, setConfirmState] = useState({
+    isOpen: false,
+    isLoading: false,
+  });
 
   const [formData, setFormData] = useState<ThesisFormData>({
     author: '',
@@ -52,8 +76,43 @@ const ThesisEdit: React.FC = () => {
     professorId: 1,
   });
 
+  const showAlert = (
+    title: string,
+    message: string,
+    type: 'success' | 'error' = 'success',
+  ) => {
+    setAlertState({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const showFormError = (message: string) => {
+    setFormErrorState({
+      isOpen: true,
+      message,
+    });
+  };
+
+  const closeAlert = () => {
+    setAlertState((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const closeFormError = () => {
+    setFormErrorState((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleSuccessAndNavigate = (message: string, path: string) => {
+    showAlert('성공', message, 'success');
+    setTimeout(() => {
+      navigate(path);
+    }, 1500);
+  };
+
   const handleCancel = () => {
-    navigate(-1); // 이전 페이지로 이동
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -66,12 +125,11 @@ const ThesisEdit: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching thesis:', error);
-        // openModal(
-        //   <div>
-        //     <h2>데이터 로드 실패</h2>
-        //     <p>논문 정보를 불러오는데 실패했습니다.</p>
-        //   </div>,
-        // );
+        showAlert(
+          '데이터 로드 실패',
+          '논문 정보를 불러오는데 실패했습니다.',
+          'error',
+        );
         navigate('/news/thesis');
       } finally {
         setIsLoading(false);
@@ -99,32 +157,27 @@ const ThesisEdit: React.FC = () => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      // 파일 크기 체크 (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        // openModal(
-        //   <div>
-        //     <h2>파일 크기 초과</h2>
-        //     <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
-        //   </div>,
-        // );
+        showAlert(
+          '파일 크기 초과',
+          '이미지 크기는 5MB를 초과할 수 없습니다.',
+          'error',
+        );
         return;
       }
 
-      // 이미지 타입 체크
       if (!file.type.startsWith('image/')) {
-        // openModal(
-        //   <div>
-        //     <h2>잘못된 파일 형식</h2>
-        //     <p>이미지 파일만 업로드할 수 있습니다.</p>
-        //   </div>,
-        // );
+        showAlert(
+          '잘못된 파일 형식',
+          '이미지 파일만 업로드할 수 있습니다.',
+          'error',
+        );
         return;
       }
 
       setImageFile(file);
       setThumbnailError(false);
 
-      // 이미지 미리보기 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -135,22 +188,22 @@ const ThesisEdit: React.FC = () => {
   );
 
   const handleDelete = async () => {
+    setConfirmState((prev) => ({ ...prev, isLoading: true }));
     try {
       await axios.delete(apiEndpoints.thesis.delete(id));
-      // openModal(
-      //   <div>
-      //     <h2>논문이 성공적으로 삭제되었습니다.</h2>
-      //   </div>,
-      // );
-      navigate('/news/thesis');
+      handleSuccessAndNavigate(
+        '논문이 성공적으로 삭제되었습니다.',
+        '/news/thesis',
+      );
     } catch (error) {
       console.error('Error deleting thesis:', error);
-      // openModal(
-      //   <div>
-      //     <h2>논문 삭제 실패</h2>
-      //     <p>논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.</p>
-      //   </div>,
-      // );
+      showAlert(
+        '논문 삭제 실패',
+        '논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
+        'error',
+      );
+    } finally {
+      setConfirmState({ isOpen: false, isLoading: false });
     }
   };
 
@@ -183,12 +236,7 @@ const ThesisEdit: React.FC = () => {
       !formData.journal.trim() ||
       !formData.content.trim()
     ) {
-      // openModal(
-      //   <div>
-      //     <h2>필수 항목을 입력해주세요</h2>
-      //     <p>저자, 저널명, 내용은 필수 입력 항목입니다.</p>
-      //   </div>,
-      // );
+      showFormError('저자, 저널명, 내용은 필수 입력 항목입니다.');
       return;
     }
 
@@ -196,28 +244,23 @@ const ThesisEdit: React.FC = () => {
       setIsSubmitting(true);
       const updatedData = { ...formData };
 
-      // 새로운 이미지가 있는 경우 먼저 업로드
       if (imageFile) {
         const imageUrl = await handleImageUpload(imageFile);
         updatedData.thesisImage = imageUrl;
       }
 
       await axios.post(apiEndpoints.thesis.update(id), updatedData);
-
-      // openModal(
-      //   <div>
-      //     <h2>논문이 성공적으로 수정되었습니다.</h2>
-      //   </div>,
-      // );
-      navigate(`/news/thesis/${id}`);
+      handleSuccessAndNavigate(
+        '논문이 성공적으로 수정되었습니다.',
+        `/news/thesis/${id}`,
+      );
     } catch (error) {
       console.error('Error updating thesis:', error);
-      // openModal(
-      //   <div>
-      //     <h2>논문 수정 실패</h2>
-      //     <p>논문 수정 중 오류가 발생했습니다. 다시 시도해주세요.</p>
-      //   </div>,
-      // );
+      showAlert(
+        '논문 수정 실패',
+        '논문 수정 중 오류가 발생했습니다. 다시 시도해주세요.',
+        'error',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -232,16 +275,46 @@ const ThesisEdit: React.FC = () => {
   }
 
   return (
-    <ThesisForm
-      formData={formData}
-      onChange={handleInputChange}
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      mode="edit"
-      imagePreview={imagePreview}
-      onImageChange={handleImageChange}
-      onCancel={handleCancel}
-    />
+    <>
+      <ThesisForm
+        formData={formData}
+        onChange={handleInputChange}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        mode="edit"
+        imagePreview={imagePreview}
+        onImageChange={handleImageChange}
+        onCancel={handleCancel}
+      />
+
+      {/* Alert Modal */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={closeAlert}
+        title={alertState.title}
+        message={alertState.message}
+        type={alertState.type}
+      />
+
+      {/* Form Error Modal */}
+      <FormErrorModal
+        isOpen={formErrorState.isOpen}
+        onClose={closeFormError}
+        message={formErrorState.message}
+      />
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        onConfirm={handleDelete}
+        title="논문 삭제"
+        message="정말 이 논문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+        confirmText="삭제"
+        cancelText="취소"
+        isLoading={confirmState.isLoading}
+      />
+    </>
   );
 };
 
