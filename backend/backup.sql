@@ -248,7 +248,6 @@ CREATE TABLE IF NOT EXISTS `board` (
   CONSTRAINT `FK_board_department` FOREIGN KEY (`department_id`) REFERENCES `Department` (`department_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- User 테이블 생성
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` bigint NOT NULL AUTO_INCREMENT,
   `student_id` varchar(255) DEFAULT NULL,
