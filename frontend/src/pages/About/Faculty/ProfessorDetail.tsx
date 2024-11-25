@@ -5,7 +5,7 @@ import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import Button from '../../../common/Button/Button';
-import { useModalContext } from '../../../context/ModalContext';
+import { Modal } from '../../../components/Modal';
 import * as S from './ProfessorDetailStyle';
 import ProfileSection from './ProfileSection';
 import TabSection from './TabSection';
@@ -26,12 +26,14 @@ const ProfessorDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const { openModal } = useModalContext();
 
   const [professor, setProfessor] = useState<Professor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState({ title: '', content: '' });
 
   const isAuthenticated = auth?.isAuthenticated ?? false;
 
@@ -59,44 +61,33 @@ const ProfessorDetail: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    const confirmDeletion = () => {
-      setDeleteLoading(true);
-      axios
-        .delete(apiEndpoints.professor.delete(Number(id)))
-        .then(() => {
-          navigate('/about/faculty', { replace: true });
-        })
-        .catch((err) => {
-          setError('교수 정보 삭제에 실패했습니다.');
-          console.error('Error deleting professor:', err);
-        })
-        .finally(() => {
-          setDeleteLoading(false);
-        });
-    };
+    try {
+      setIsDeleteLoading(true);
+      await axios.delete(apiEndpoints.professor.delete(Number(id)));
+      setModalMessage({
+        title: '삭제 완료',
+        content: '교수 정보가 성공적으로 삭제되었습니다.',
+      });
+      setIsConfirmModalOpen(false);
+      setIsResultModalOpen(true);
+    } catch (err) {
+      console.error('Error deleting professor:', err);
+      setModalMessage({
+        title: '삭제 실패',
+        content: '교수 정보 삭제에 실패했습니다.',
+      });
+      setIsConfirmModalOpen(false);
+      setIsResultModalOpen(true);
+    } finally {
+      setIsDeleteLoading(false);
+    }
+  };
 
-    openModal(
-      <S.DeleteConfirmationModal>
-        <AlertTriangle size={48} color="#EF4444" />
-        <S.ModalTitle>교수 정보 삭제</S.ModalTitle>
-        <S.ModalMessage>
-          정말 이 교수 정보를 삭제하시겠습니까?
-          <br />이 작업은 되돌릴 수 없습니다.
-        </S.ModalMessage>
-        <S.ModalButtonGroup>
-          <Button variant="ghost" onClick={() => openModal(null)}>
-            취소
-          </Button>
-          <Button
-            variant="danger"
-            onClick={confirmDeletion}
-            isLoading={deleteLoading}
-          >
-            삭제
-          </Button>
-        </S.ModalButtonGroup>
-      </S.DeleteConfirmationModal>,
-    );
+  const handleResultModalClose = () => {
+    setIsResultModalOpen(false);
+    if (modalMessage.title === '삭제 완료') {
+      navigate('/about/faculty', { replace: true });
+    }
   };
 
   if (loading) {
@@ -150,11 +141,11 @@ const ProfessorDetail: React.FC = () => {
             </Button>
             <Button
               variant="danger"
-              onClick={handleDelete}
-              disabled={deleteLoading}
+              onClick={() => setIsConfirmModalOpen(true)}
+              disabled={isDeleteLoading}
             >
               <Trash2 size={18} />
-              삭제
+              {isDeleteLoading ? '삭제 중...' : '삭제'}
             </Button>
           </S.ActionSection>
         )}
@@ -169,6 +160,58 @@ const ProfessorDetail: React.FC = () => {
       />
 
       <TabSection professorId={professor.id} />
+
+      {/* 삭제 확인 모달 */}
+      <Modal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+      >
+        <Modal.Header>
+          <h2 className="text-xl font-semibold">교수 정보 삭제</h2>
+          <Modal.CloseButton onClick={() => setIsConfirmModalOpen(false)} />
+        </Modal.Header>
+        <Modal.Content>
+          <div className="flex flex-col items-center gap-4">
+            <AlertTriangle size={48} className="text-red-500" />
+            <p className="text-center">
+              정말 이 교수 정보를 삭제하시겠습니까?
+              <br />이 작업은 되돌릴 수 없습니다.
+            </p>
+          </div>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button
+            variant="ghost"
+            onClick={() => setIsConfirmModalOpen(false)}
+            disabled={isDeleteLoading}
+          >
+            취소
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            disabled={isDeleteLoading}
+          >
+            {isDeleteLoading ? '삭제 중...' : '삭제'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* 결과 알림 모달 */}
+      <Modal isOpen={isResultModalOpen} onClose={handleResultModalClose}>
+        <Modal.Header>
+          <h2 className="text-xl font-semibold">{modalMessage.title}</h2>
+          <Modal.CloseButton onClick={handleResultModalClose} />
+        </Modal.Header>
+        <Modal.Content>
+          <p>{modalMessage.content}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleResultModalClose}>
+            확인
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </S.Container>
   );
 };

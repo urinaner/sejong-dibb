@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
-import { useModalContext } from '../../../context/ModalContext';
+// import { useModalContext } from '../../../context/ModalContext';
 import * as S from './ThesisCreateStyle';
 import { WriteButton } from '../NoticeBoard/NoticeBoardStyle';
 import useAuth from '../../../hooks/useAuth';
@@ -24,7 +24,7 @@ interface ThesisFormData {
 
 const ThesisCreate: React.FC = () => {
   const navigate = useNavigate();
-  const { openModal } = useModalContext();
+  // const { openModal } = useModalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<ThesisFormData>({
     author: '',
@@ -51,22 +51,22 @@ const ThesisCreate: React.FC = () => {
       if (!file) return;
 
       if (file.size > 5 * 1024 * 1024) {
-        openModal(
-          <div>
-            <h2>파일 크기 초과</h2>
-            <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
-          </div>,
-        );
+        // openModal(
+        //   <div>
+        //     <h2>파일 크기 초과</h2>
+        //     <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
+        //   </div>,
+        // );
         return;
       }
 
       if (!file.type.startsWith('image/')) {
-        openModal(
-          <div>
-            <h2>잘못된 파일 형식</h2>
-            <p>이미지 파일만 업로드할 수 있습니다.</p>
-          </div>,
-        );
+        // openModal(
+        //   <div>
+        //     <h2>잘못된 파일 형식</h2>
+        //     <p>이미지 파일만 업로드할 수 있습니다.</p>
+        //   </div>,
+        // );
         return;
       }
 
@@ -77,7 +77,7 @@ const ThesisCreate: React.FC = () => {
       };
       reader.readAsDataURL(file);
     },
-    [openModal],
+    [],
   );
 
   const handleImageUpload = async (file: File): Promise<string> => {
@@ -101,12 +101,12 @@ const ThesisCreate: React.FC = () => {
       !formData.journal.trim() ||
       !formData.content.trim()
     ) {
-      openModal(
-        <div>
-          <h2>필수 항목을 입력해주세요</h2>
-          <p>저자, 저널명, 내용은 필수 입력 항목입니다.</p>
-        </div>,
-      );
+      // openModal(
+      //   <div>
+      //     <h2>필수 항목을 입력해주세요</h2>
+      //     <p>저자, 저널명, 내용은 필수 입력 항목입니다.</p>
+      //   </div>,
+      // );
       return;
     }
 
@@ -125,21 +125,21 @@ const ThesisCreate: React.FC = () => {
       );
 
       if (response.status === 200) {
-        openModal(
-          <div>
-            <h2>논문이 성공적으로 등록되었습니다.</h2>
-          </div>,
-        );
+        // openModal(
+        //   <div>
+        //     <h2>논문이 성공적으로 등록되었습니다.</h2>
+        //   </div>,
+        // );
         navigate('/news/thesis');
       }
     } catch (error) {
       console.error('Error creating thesis:', error);
-      openModal(
-        <div>
-          <h2>논문 등록 실패</h2>
-          <p>논문 등록 중 오류가 발생했습니다. 다시 시도해주세요.</p>
-        </div>,
-      );
+      // openModal(
+      //   <div>
+      //     <h2>논문 등록 실패</h2>
+      //     <p>논문 등록 중 오류가 발생했습니다. 다시 시도해주세요.</p>
+      //   </div>,
+      // );
     } finally {
       setIsSubmitting(false);
     }

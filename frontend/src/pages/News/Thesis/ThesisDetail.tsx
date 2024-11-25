@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
-import { useModalContext } from '../../../context/ModalContext';
+// import { useModalContext } from '../../../context/ModalContext';
 import * as S from './ThesisDetailStyle';
 
 interface ThesisDetail {
@@ -37,7 +37,7 @@ const ThesisDetail: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const { openModal } = useModalContext();
+  // const { openModal } = useModalContext();
 
   const [thesis, setThesis] = useState<ThesisDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -69,45 +69,45 @@ const ThesisDetail: React.FC = () => {
       setIsDeleting(true);
       await axios.delete(apiEndpoints.thesis.delete(id));
 
-      openModal(
-        <S.DeleteConfirmationModal>
-          <AlertTriangle size={48} color="#E53E3E" />
-          <S.ModalTitle>논문이 성공적으로 삭제되었습니다</S.ModalTitle>
-          <S.ModalMessage>삭제된 논문은 복구할 수 없습니다.</S.ModalMessage>
-        </S.DeleteConfirmationModal>,
-      );
+      // openModal(
+      //   <S.DeleteConfirmationModal>
+      //     <AlertTriangle size={48} color="#E53E3E" />
+      //     <S.ModalTitle>논문이 성공적으로 삭제되었습니다</S.ModalTitle>
+      //     <S.ModalMessage>삭제된 논문은 복구할 수 없습니다.</S.ModalMessage>
+      //   </S.DeleteConfirmationModal>,
+      // );
 
       navigate('/news/thesis');
     } catch (error) {
       console.error('Failed to delete thesis:', error);
-      openModal(
-        <S.DeleteConfirmationModal>
-          <AlertTriangle size={48} color="#E53E3E" />
-          <S.ModalTitle>삭제 실패</S.ModalTitle>
-          <S.ModalMessage>
-            논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.
-          </S.ModalMessage>
-        </S.DeleteConfirmationModal>,
-      );
+      // openModal(
+      //   <S.DeleteConfirmationModal>
+      //     <AlertTriangle size={48} color="#E53E3E" />
+      //     <S.ModalTitle>삭제 실패</S.ModalTitle>
+      //     <S.ModalMessage>
+      //       논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.
+      //     </S.ModalMessage>
+      //   </S.DeleteConfirmationModal>,
+      // );
     } finally {
       setIsDeleting(false);
     }
   };
 
   const handleDeleteClick = () => {
-    openModal(
-      <S.DeleteConfirmationModal>
-        <AlertTriangle size={48} color="#E53E3E" />
-        <S.ModalTitle>논문을 삭제하시겠습니까?</S.ModalTitle>
-        <S.ModalMessage>이 작업은 취소할 수 없습니다.</S.ModalMessage>
-        <S.ModalButtonGroup>
-          <S.CancelButton onClick={() => openModal(null)}>취소</S.CancelButton>
-          <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? '삭제 중...' : '삭제'}
-          </S.DeleteButton>
-        </S.ModalButtonGroup>
-      </S.DeleteConfirmationModal>,
-    );
+    // openModal(
+    //   <S.DeleteConfirmationModal>
+    //     <AlertTriangle size={48} color="#E53E3E" />
+    //     <S.ModalTitle>논문을 삭제하시겠습니까?</S.ModalTitle>
+    //     <S.ModalMessage>이 작업은 취소할 수 없습니다.</S.ModalMessage>
+    //     <S.ModalButtonGroup>
+    //       <S.CancelButton onClick={() => openModal(null)}>취소</S.CancelButton>
+    //       <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+    //         {isDeleting ? '삭제 중...' : '삭제'}
+    //       </S.DeleteButton>
+    //     </S.ModalButtonGroup>
+    //   </S.DeleteConfirmationModal>,
+    // );
   };
 
   const handleImageError = () => {

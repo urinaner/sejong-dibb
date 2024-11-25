@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 // 기본 모달 Props 타입
 export interface ModalRootProps {
@@ -23,9 +23,9 @@ export interface ModalCloseButtonProps {
 // 모달 컨텍스트 타입
 export interface ModalContextType {
   isOpen: boolean;
-  openModal: (content: ReactNode) => void;
+  openModal: (content: React.ReactNode) => void;
   closeModal: () => void;
-  modalContent: ReactNode | null;
+  modalContent: React.ReactNode | null;
 }
 
 // Alert 모달 타입들

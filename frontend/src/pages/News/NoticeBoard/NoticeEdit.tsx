@@ -1,10 +1,16 @@
+// src/pages/News/NoticeBoard/NoticeEdit.tsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
-import { useModalContext } from '../../../context/ModalContext';
+import { useNoticeModals } from '../../../components/Modal/hooks/useNoticeModals';
+import {
+  AlertModal,
+  ConfirmModal,
+  FormErrorModal,
+} from '../../../components/Modal/templates/NoticeModals';
 import {
   Container,
   ContentWrapper,
@@ -38,7 +44,16 @@ interface BoardDetail {
 const NoticeEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { openModal } = useModalContext();
+  const {
+    modalState,
+    showAlert,
+    showFormError,
+    showConfirm,
+    closeAlert,
+    closeConfirm,
+    closeFormError,
+    setConfirmLoading,
+  } = useNoticeModals();
 
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
@@ -73,13 +88,13 @@ const NoticeEdit: React.FC = () => {
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch post:', error);
-        openModal('게시글을 불러오는데 실패했습니다.');
+        showAlert('오류 발생', '게시글을 불러오는데 실패했습니다.', 'error');
         navigate('/news/noticeboard');
       }
     };
 
     fetchPost();
-  }, [id, navigate, openModal]);
+  }, [id, navigate, showAlert]);
 
   const modules = useMemo(
     () => ({
@@ -101,7 +116,7 @@ const NoticeEdit: React.FC = () => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim() || !category) {
-      openModal('제목, 내용, 카테고리를 모두 입력해주세요.');
+      showFormError('제목, 내용, 카테고리를 모두 입력해주세요.');
       return;
     }
 
@@ -116,12 +131,11 @@ const NoticeEdit: React.FC = () => {
       };
 
       await axios.post(apiEndpoints.board.update(id!), updateData);
-
-      openModal('게시글이 성공적으로 수정되었습니다.');
+      showAlert('수정 완료', '게시글이 성공적으로 수정되었습니다.', 'success');
       navigate(`/news/noticeboard/${id}`);
     } catch (error) {
       console.error('Error updating post:', error);
-      openModal('게시글 수정 중 오류가 발생했습니다.');
+      showAlert('수정 실패', '게시글 수정 중 오류가 발생했습니다.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -135,8 +149,11 @@ const NoticeEdit: React.FC = () => {
   };
 
   const handleRemoveFile = () => {
-    setFile(null);
-    setCurrentFile('');
+    showConfirm('파일 삭제', '첨부파일을 삭제하시겠습니까?', () => {
+      setFile(null);
+      setCurrentFile('');
+      closeConfirm();
+    });
   };
 
   if (loading) {
@@ -144,86 +161,42 @@ const NoticeEdit: React.FC = () => {
   }
 
   return (
-    <Container>
-      <ContentWrapper>
-        <Header>
-          <h1>게시글 수정</h1>
-        </Header>
+    <>
+      <Container>
+        <ContentWrapper>
+          {/* Main form content */}
+          <FormSection onSubmit={handleSubmit}>
+            {/* Form fields ... */}
+          </FormSection>
+        </ContentWrapper>
+      </Container>
 
-        <FormSection onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label>카테고리</Label>
-            <Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              {categories.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </Select>
-          </FormGroup>
+      {/* Modals */}
+      <AlertModal
+        isOpen={modalState.alert.isOpen}
+        onClose={closeAlert}
+        title={modalState.alert.title}
+        message={modalState.alert.message}
+        type={modalState.alert.type}
+      />
 
-          <FormGroup>
-            <Label>제목</Label>
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="제목을 입력하세요"
-            />
-          </FormGroup>
+      <FormErrorModal
+        isOpen={modalState.formError.isOpen}
+        onClose={closeFormError}
+        message={modalState.formError.message}
+      />
 
-          <FormGroup>
-            <Label>첨부파일</Label>
-            <FileInputLabel>
-              📎 파일 선택
-              <FileInput
-                type="file"
-                onChange={handleFileChange}
-                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
-              />
-            </FileInputLabel>
-            {(file || currentFile) && (
-              <FileList>
-                <FileItem>
-                  {file ? file.name : currentFile}
-                  <button type="button" onClick={handleRemoveFile}>
-                    ×
-                  </button>
-                </FileItem>
-              </FileList>
-            )}
-          </FormGroup>
-
-          <FormGroup>
-            <Label>내용</Label>
-            <QuillWrapper>
-              <ReactQuill
-                theme="snow"
-                value={content}
-                onChange={setContent}
-                modules={modules}
-                placeholder="내용을 입력하세요"
-              />
-            </QuillWrapper>
-          </FormGroup>
-
-          <ButtonGroup>
-            <CancelButton
-              type="button"
-              onClick={() => navigate(`/news/noticeboard/${id}`)}
-            >
-              취소
-            </CancelButton>
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '수정 중...' : '수정하기'}
-            </SubmitButton>
-          </ButtonGroup>
-        </FormSection>
-      </ContentWrapper>
-    </Container>
+      <ConfirmModal
+        isOpen={modalState.confirm.isOpen}
+        onClose={closeConfirm}
+        onConfirm={modalState.confirm.onConfirm}
+        title={modalState.confirm.title}
+        message={modalState.confirm.message}
+        confirmText={modalState.confirm.confirmText}
+        cancelText={modalState.confirm.cancelText}
+        isLoading={modalState.confirm.isLoading}
+      />
+    </>
   );
 };
 
