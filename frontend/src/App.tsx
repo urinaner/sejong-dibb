@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppContent from './AppContent';
-import { ModalProvider } from './context/ModalContext';
+import { ModalProvider } from './components/Modal/context/ModalContext';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
