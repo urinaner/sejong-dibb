@@ -29,7 +29,11 @@ import {
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
-import { useModalContext } from '../../../context/ModalContext';
+import {
+  AlertModal,
+  FormErrorModal,
+} from '../../../components/Modal/templates/NoticeModals';
+import { useNoticeModals } from '../../../components/Modal/hooks/useNoticeModals';
 
 interface PostFormData {
   title: string;
@@ -50,7 +54,15 @@ const NoticeCreate: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const auth = useContext(AuthContext);
-  const { openModal, closeModal } = useModalContext();
+
+  const {
+    showAlert,
+    showFormError,
+    alertModal,
+    formErrorModal,
+    closeAlert,
+    closeFormError,
+  } = useNoticeModals();
 
   if (!auth) {
     throw new Error('AuthContext must be used within AuthProvider');
@@ -96,14 +108,15 @@ const NoticeCreate: React.FC = () => {
     [],
   );
 
-  const handleChange = useCallback((content: string) => {
-    setContent(content);
+  const handleChange = useCallback((value: string) => {
+    setContent(value);
   }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim() || !category) {
-      openModal('제목, 내용, 카테고리를 모두 입력해주세요.');
+      showFormError('제목, 내용, 카테고리를 모두 입력해주세요.');
       return;
     }
 
@@ -113,15 +126,12 @@ const NoticeCreate: React.FC = () => {
       const postData = {
         title: title.trim(),
         content: content.trim(),
-        writer: auth.user || 'admin', // 현재 로그인한 사용자 또는 기본값
-        file: file ? file.name : '', // 파일이 있는 경우 파일명, 없는 경우 빈 문자열
-        createDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식
+        writer: auth.user || 'admin',
+        file: file ? file.name : '',
+        createDate: new Date().toISOString().split('T')[0],
         category: category,
         departmentId: 1,
       };
-
-      // 요청 데이터 확인
-      console.log('Request Data:', postData);
 
       const response = await axios.post(apiEndpoints.board.create, postData, {
         headers: {
@@ -130,18 +140,11 @@ const NoticeCreate: React.FC = () => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        openModal(<h1>게시글이 성공적으로 등록되었습니다.</h1>);
-        navigate('/news/noticeboard');
+        showAlert('등록 완료', '게시글이 성공적으로 등록되었습니다.');
       }
     } catch (error: any) {
       console.error('Error posting article:', error);
-
-      if (error.response) {
-        console.error('Error Status:', error.response.status);
-        console.error('Error Data:', error.response.data);
-      }
-
-      openModal(<h1>게시글 작성 중 오류가 발생했습니다.</h1>);
+      showAlert('등록 실패', '게시글 등록 중 오류가 발생했습니다.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -156,6 +159,14 @@ const NoticeCreate: React.FC = () => {
 
   const handleRemoveFile = () => {
     setFile(null);
+  };
+
+  // 알림 모달이 닫힐 때 목록으로 이동
+  const handleAlertClose = () => {
+    closeAlert();
+    if (alertModal.type === 'success') {
+      navigate('/news/noticeboard');
+    }
   };
 
   return (
@@ -240,6 +251,20 @@ const NoticeCreate: React.FC = () => {
           </ButtonGroup>
         </FormSection>
       </ContentWrapper>
+
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={handleAlertClose}
+        title={alertModal.title}
+        message={alertModal.message}
+        type={alertModal.type}
+      />
+
+      <FormErrorModal
+        isOpen={formErrorModal.isOpen}
+        onClose={closeFormError}
+        message={formErrorModal.message}
+      />
     </Container>
   );
 };
