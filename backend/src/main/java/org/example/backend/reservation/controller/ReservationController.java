@@ -28,22 +28,22 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ReservationResDto> getReservation(@PathVariable Long id) {
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<ReservationResDto> getReservation(@PathVariable(value = "reservationId") Long id) {
         ReservationResDto resDto = reservationService.getReservation(id);
         return ResponseEntity.ok(resDto);
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{reservationId}/status")
     public ResponseEntity<ReservationResDto> updateReservationStatus(
-            @PathVariable Long id,
-            @RequestParam ReservationStatus status) {
+            @PathVariable(value = "reservationId") Long id,
+            @RequestParam(value = "status") ReservationStatus status) {
         ReservationResDto resDto = reservationService.updateReservationStatus(id, status);
         return ResponseEntity.ok(resDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable(value = "reservationId") Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
