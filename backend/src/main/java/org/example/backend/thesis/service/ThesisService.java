@@ -32,7 +32,7 @@ public class ThesisService {
         validateUserRequiredFields(thesisReqDto);
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
 
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
             thesisReqDto.setThesisImage(uploadImageUrl);
         }
