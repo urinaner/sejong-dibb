@@ -36,7 +36,7 @@ public class ProfessorController {
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Long> createProfessor(
             @RequestPart(value = "professorReqDto") ProfessorReqDto professorReqDto,
-            @RequestPart(value = "profileImage") MultipartFile multipartFile
+            @RequestPart(value = "profileImage", required = false) MultipartFile multipartFile
     ) {
         Long professorId = professorService.saveProfessor(professorReqDto, multipartFile);
         return new ResponseEntity<>(professorId, HttpStatus.OK);
@@ -69,7 +69,7 @@ public class ProfessorController {
     @PostMapping("/{professorId}")
     public ResponseEntity<ProfessorResDto> updateProfessor(@PathVariable(name = "professorId") Long professorId,
                                                            @RequestPart(value = "professorReqDto") ProfessorReqDto professorReqDto,
-                                                           @RequestPart(value = "profileImage") MultipartFile multipartFile) {
+                                                           @RequestPart(value = "profileImage", required = false) MultipartFile multipartFile) {
         ProfessorResDto professorResDto = professorService.updateProfessor(professorId, professorReqDto, multipartFile);
         return new ResponseEntity<>(professorResDto, HttpStatus.OK);
     }
