@@ -30,8 +30,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationResDto createReservation(ReservationReqDto reqDto) {
-        SeminarRoom seminarRoom = seminarRoomRepository.findById(reqDto.getSeminarRoomId())
-                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
+        SeminarRoom seminarRoom = getSeminarRoomById(reqDto.getSeminarRoomId());
 
         validator.validate(reqDto);
 
