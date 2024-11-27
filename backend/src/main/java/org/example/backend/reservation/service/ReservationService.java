@@ -41,9 +41,8 @@ public class ReservationService {
     }
 
     private SeminarRoom getSeminarRoomById(Long seminarRoomId) {
-        SeminarRoom seminarRoom = seminarRoomRepository.findById(seminarRoomId)
+        return seminarRoomRepository.findById(seminarRoomId)
                 .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
-        return seminarRoom;
     }
 
     public List<ReservationResDto> getAllReservations() {
