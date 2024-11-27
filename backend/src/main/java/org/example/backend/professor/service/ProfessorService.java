@@ -32,7 +32,7 @@ public class ProfessorService {
         validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
 
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
             professorReqDto.setProfileImage(uploadImageUrl);
         }
@@ -71,7 +71,7 @@ public class ProfessorService {
 
     @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
             professorReqDto.setProfileImage(uploadImageUrl);
         }

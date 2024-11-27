@@ -35,7 +35,7 @@ public class ThesisController {
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Long> createThesis(
             @RequestPart(value = "thesisReqDto") ThesisReqDto thesisReqDto,
-            @RequestPart(value = "thesis_image") MultipartFile multipartFile) {
+            @RequestPart(value = "thesis_image", required = false) MultipartFile multipartFile) {
         Long thesisId = thesisService.saveThesis(thesisReqDto, multipartFile);
         return new ResponseEntity<>(thesisId, HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class ThesisController {
     @PostMapping("/{thesisId}")
     public ResponseEntity<ThesisResDto> updateThesis(@PathVariable(name = "thesisId") Long thesisId,
                                                      @RequestPart(value = "thesisReqDto") ThesisReqDto thesisReqDto,
-                                                     @RequestPart(value = "thesis_image") MultipartFile multipartFile) {
+                                                     @RequestPart(value = "thesis_image", required = false) MultipartFile multipartFile) {
         ThesisResDto thesisResDto = thesisService.updateThesis(thesisId, thesisReqDto, multipartFile);
         return new ResponseEntity<>(thesisResDto, HttpStatus.OK);
     }
