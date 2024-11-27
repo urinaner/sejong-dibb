@@ -83,12 +83,7 @@ const ThesisDetail: React.FC = () => {
             </div>
           </Modal.Content>
           <Modal.Footer>
-            <button
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-              onClick={() => openModal(null)}
-            >
-              확인
-            </button>
+            <Modal.CloseButton />
           </Modal.Footer>
         </>,
       );

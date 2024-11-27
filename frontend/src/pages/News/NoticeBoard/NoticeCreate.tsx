@@ -8,7 +8,7 @@ import React, {
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from '../../../components/Modal';
+import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Container,
@@ -31,7 +31,6 @@ import {
 import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
-import Button from '../../../common/Button/Button';
 
 interface PostFormData {
   title: string;
@@ -52,12 +51,7 @@ const NoticeCreate: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const auth = useContext(AuthContext);
-
-  // 모달 상태 관리
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState({ title: '', content: '' });
-  const [modalType, setModalType] = useState<'success' | 'error'>('success');
+  const { openModal } = useModal();
 
   if (!auth) {
     throw new Error('AuthContext must be used within AuthProvider');
@@ -107,15 +101,48 @@ const NoticeCreate: React.FC = () => {
     setContent(value);
   }, []);
 
+  const showErrorModal = (title: string, message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          {title}
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const showSuccessModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <CheckCircle size={48} color="#38A169" />
+          등록 완료
+        </Modal.Header>
+        <Modal.Content>
+          <p>게시글이 성공적으로 등록되었습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton onClick={() => navigate('/news/noticeboard')} />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim() || !category) {
-      setModalMessage({
-        title: '입력 오류',
-        content: '제목, 내용, 카테고리를 모두 입력해주세요.',
-      });
-      setIsErrorModalOpen(true);
+      showErrorModal(
+        '입력 형식 오류',
+        '제목, 내용, 카테고리를 모두 입력해 주세요',
+      );
       return;
     }
 
@@ -139,21 +166,11 @@ const NoticeCreate: React.FC = () => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        setModalType('success');
-        setModalMessage({
-          title: '등록 완료',
-          content: '게시글이 성공적으로 등록되었습니다.',
-        });
-        setIsResultModalOpen(true);
+        showSuccessModal();
       }
     } catch (error) {
       console.error('Error posting article:', error);
-      setModalType('error');
-      setModalMessage({
-        title: '등록 실패',
-        content: '게시글 등록 중 오류가 발생했습니다.',
-      });
-      setIsResultModalOpen(true);
+      showErrorModal('등록 실패', '게시글 등록 중 오류가 발생했습니다');
     } finally {
       setIsSubmitting(false);
     }
@@ -170,13 +187,6 @@ const NoticeCreate: React.FC = () => {
     setFile(null);
   };
 
-  const handleResultModalClose = () => {
-    setIsResultModalOpen(false);
-    if (modalType === 'success') {
-      navigate('/news/noticeboard');
-    }
-  };
-
   return (
     <Container>
       <ContentWrapper>
@@ -185,7 +195,6 @@ const NoticeCreate: React.FC = () => {
         </Header>
 
         <FormSection onSubmit={handleSubmit}>
-          {/* 기존 폼 내용 유지 */}
           <FormGroup>
             <Label>카테고리</Label>
             <Select
@@ -260,49 +269,6 @@ const NoticeCreate: React.FC = () => {
           </ButtonGroup>
         </FormSection>
       </ContentWrapper>
-
-      {/* 에러 모달 */}
-      <Modal
-        isOpen={isErrorModalOpen}
-        onClose={() => setIsErrorModalOpen(false)}
-      >
-        <Modal.Header>
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <AlertTriangle className="text-red-500" size={24} />
-            {modalMessage.title}
-          </h2>
-        </Modal.Header>
-        <Modal.Content>
-          <p className="text-gray-600">{modalMessage.content}</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Button variant="primary" onClick={() => setIsErrorModalOpen(false)}>
-            확인
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* 결과 모달 */}
-      <Modal isOpen={isResultModalOpen} onClose={handleResultModalClose}>
-        <Modal.Header>
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            {modalType === 'success' ? (
-              <CheckCircle className="text-green-500" size={24} />
-            ) : (
-              <AlertTriangle className="text-red-500" size={24} />
-            )}
-            {modalMessage.title}
-          </h2>
-        </Modal.Header>
-        <Modal.Content>
-          <p className="text-gray-600">{modalMessage.content}</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleResultModalClose}>
-            확인
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Container>
   );
 };
