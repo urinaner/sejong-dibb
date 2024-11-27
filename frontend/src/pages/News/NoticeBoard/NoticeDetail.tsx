@@ -9,7 +9,6 @@ import { AuthContext } from '../../../context/AuthContext';
 import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import 'react-quill/dist/quill.snow.css';
-import { ModalDeleteButton } from '../../../components/Modal/components/ModalDeleteButton';
 interface BoardDetail {
   id: number;
   title: string;
@@ -63,7 +62,26 @@ const NoticeDetail: React.FC = () => {
     fetchPostDetail();
   }, [id]);
 
-  const showConfirmModal = () => {};
+  const showConfirmModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#F59E0B" />
+          게시글 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>정말로 이 게시글을 삭제하시겠습니까?</p>
+          <p>삭제된 게시글은 복구할 수 없습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </S.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
 
   const showResultModal = (success: boolean) => {
     const icon = success ? (

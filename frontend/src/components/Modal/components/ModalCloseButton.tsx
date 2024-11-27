@@ -1,49 +1,73 @@
 import React from 'react';
 import styled from 'styled-components';
-import type { ModalCloseButtonProps } from '../types/modal.types';
+import { X } from 'lucide-react';
+import { useModal } from '../index';
 
-const CloseButton = styled.button<{ className?: string }>`
+// 타입 정의 수정
+export interface ModalCloseButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className?: string;
+}
+
+const StyledCloseButton = styled.button<{ className?: string }>`
   position: absolute;
-  top: 1rem; /* top-4 */
-  right: 1rem; /* right-4 */
-  padding: 0.5rem; /* p-2 */
-  border-radius: 9999px; /* rounded-full */
-  transition: background-color 0.2s; /* transition-colors */
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #1a202c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  z-index: 10;
 
   &:hover {
-    background-color: #f3f4f6; /* hover:bg-gray-100 */
+    background-color: #edf2f7;
+    color: #e53e3e;
+    border-color: #cbd5e0;
+  }
+
+  &:active {
+    background-color: #e2e8f0;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #e2e8f0;
   }
 
   ${({ className }) => className && className}
 `;
 
-const CloseIcon = styled.svg`
-  width: 16px;
-  height: 16px;
-`;
-
 export function ModalCloseButton({
-  onClick,
   className = '',
+  onClick,
+  ...props
 }: ModalCloseButtonProps) {
+  const { closeModal } = useModal();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(e);
+    }
+    closeModal();
+  };
+
   return (
-    <CloseButton
-      onClick={onClick}
+    <StyledCloseButton
+      type="button"
       className={className}
+      onClick={handleClick}
       aria-label="Close modal"
+      {...props}
     >
-      <CloseIcon
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12 4L4 12M4 4L12 12"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </CloseIcon>
-    </CloseButton>
+      <X size={18} strokeWidth={2} />
+    </StyledCloseButton>
   );
 }
