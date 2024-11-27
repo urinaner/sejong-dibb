@@ -1,119 +1,74 @@
 import React from 'react';
 import styled from 'styled-components';
-import { AlertTriangle } from 'lucide-react';
-import { Modal, useModal } from '../';
-import type { DeleteButtonProps } from '../types/modal.types';
+import type { ModalSubComponentProps } from '../types/modal.types';
 
-const DeleteModalContent = styled.div`
+const StyledDeleteButton = styled.button<{ $isDeleting?: boolean }>`
+  /* 기본 레이아웃 */
+  padding: 0.625rem 1rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-`;
+  justify-content: center;
+  gap: 0.5rem;
 
-const ModalTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a202c;
-`;
-
-const ModalMessage = styled.p`
-  color: #4a5568;
-  text-align: center;
-`;
-
-const ModalButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-`;
-
-const CancelButton = styled.button`
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  background-color: #e2e8f0;
-  color: #4a5568;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #cbd5e0;
-  }
-`;
-
-const StyledDeleteButton = styled.button<{ isDeleting?: boolean }>`
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  background-color: ${({ isDeleting }) => (isDeleting ? '#feb2b2' : '#e53e3e')};
+  /* 텍스트 스타일링 */
+  font-size: 0.875rem;
+  font-weight: 500;
   color: white;
-  transition: background-color 0.2s;
-  cursor: ${({ isDeleting }) => (isDeleting ? 'not-allowed' : 'pointer')};
 
+  /* 배경 및 테두리 */
+  background-color: ${({ $isDeleting }) =>
+    $isDeleting ? '#fed7d7' : '#e53e3e'};
+  border: 1px solid
+    ${({ $isDeleting }) => ($isDeleting ? '#feb2b2' : '#c53030')};
+  border-radius: 0.375rem;
+
+  /* 상호작용 */
+  cursor: ${({ $isDeleting }) => ($isDeleting ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease-in-out;
+
+  /* 호버 상태 */
   &:hover:not(:disabled) {
     background-color: #c53030;
+    border-color: #9b2c2c;
   }
 
+  /* 비활성화 상태 */
   &:disabled {
-    background-color: #feb2b2;
+    background-color: #fed7d7;
+    border-color: #feb2b2;
     cursor: not-allowed;
+    opacity: 0.7;
   }
+
+  /* Custom class extension */
+  ${({ className }) => className && className}
 `;
 
-export const ModalDeleteButton: React.FC<DeleteButtonProps> = ({
-  title = '삭제 확인',
-  message = '정말 삭제하시겠습니까?',
-  submessage = '이 작업은 취소할 수 없습니다.',
-  onDelete,
-  isDeleting = false,
+export interface ModalDeleteButtonProps extends ModalSubComponentProps {
+  onClick?: () => void;
+  disabled?: boolean;
+  isDeleting?: boolean;
+  label?: string;
+}
+
+export function ModalDeleteButton({
   children,
-  className,
-}) => {
-  const { openModal, closeModal } = useModal();
-
-  const handleDelete = async () => {
-    try {
-      await onDelete();
-      closeModal();
-    } catch (error) {
-      console.error('Delete operation failed:', error);
-    }
-  };
-
-  const handleDeleteClick = () => {
-    openModal(
-      <>
-        <Modal.Header>{title}</Modal.Header>
-        <Modal.Content>
-          <DeleteModalContent>
-            <AlertTriangle size={48} color="#E53E3E" />
-            <ModalTitle>{message}</ModalTitle>
-            {submessage && <ModalMessage>{submessage}</ModalMessage>}
-          </DeleteModalContent>
-        </Modal.Content>
-        <Modal.Footer>
-          <ModalButtonGroup>
-            <CancelButton onClick={() => closeModal()}>취소</CancelButton>
-            <StyledDeleteButton
-              onClick={handleDelete}
-              disabled={isDeleting}
-              isDeleting={isDeleting}
-            >
-              {isDeleting ? '삭제 중...' : '삭제'}
-            </StyledDeleteButton>
-          </ModalButtonGroup>
-        </Modal.Footer>
-      </>,
-    );
-  };
-
+  onClick,
+  disabled = false,
+  isDeleting = false,
+  label,
+  className = '',
+}: ModalDeleteButtonProps) {
   return (
     <StyledDeleteButton
-      onClick={handleDeleteClick}
+      type="button"
+      onClick={onClick}
+      disabled={disabled || isDeleting}
+      $isDeleting={isDeleting}
       className={className}
-      disabled={isDeleting}
-      isDeleting={isDeleting}
+      aria-label={label}
     >
-      {children}
+      {children || (isDeleting ? '삭제 중...' : '삭제')}
     </StyledDeleteButton>
   );
-};
+}

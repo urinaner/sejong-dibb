@@ -99,13 +99,12 @@ export interface UseNoticeModalsReturn {
   closeFormError: () => void;
   setConfirmLoading: (isLoading: boolean) => void;
 }
-
-export interface DeleteButtonProps {
+export type DeleteButtonProps = {
   title?: string;
   message?: string;
   submessage?: string;
   onDelete: () => Promise<void>;
   isDeleting?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
-}
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'title' | 'children'>;

@@ -9,6 +9,7 @@ import {
   Trash2,
   AlertTriangle,
   Image as ImageIcon,
+  CheckCircle,
 } from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
@@ -37,7 +38,7 @@ const ThesisDetail: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   const [thesis, setThesis] = useState<ThesisDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,34 +64,6 @@ const ThesisDetail: React.FC = () => {
   useEffect(() => {
     fetchThesisDetail();
   }, [fetchThesisDetail]);
-
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      await axios.delete(apiEndpoints.thesis.delete(id));
-      navigate('/news/thesis');
-    } catch (error) {
-      console.error('Failed to delete thesis:', error);
-      openModal(
-        <>
-          <Modal.Header>삭제 실패</Modal.Header>
-          <Modal.Content>
-            <div className="flex flex-col items-center gap-4 p-6">
-              <AlertTriangle size={48} color="#E53E3E" />
-              <p className="text-gray-600 text-center">
-                논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.
-              </p>
-            </div>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleImageError = () => {
     setThumbnailError(true);
@@ -119,6 +92,82 @@ const ThesisDetail: React.FC = () => {
       </S.ErrorContainer>
     );
   }
+  // 삭제 확인 모달
+  const showDeleteConfirmModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          논문 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>이 논문을 삭제하시겠습니까?</p>
+          <p>삭제된 논문은 복구할 수 없습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton onClick={closeModal} />
+          <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </S.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  // 삭제 성공 모달
+  const showSuccessModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <CheckCircle size={48} color="#38A169" />
+          삭제 완료
+        </Modal.Header>
+        <Modal.Content>
+          <p>논문이 성공적으로 삭제되었습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton
+            onClick={() => {
+              closeModal();
+              navigate('/news/thesis');
+            }}
+          />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  // 삭제 실패 모달
+  const showErrorModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          삭제 실패
+        </Modal.Header>
+        <Modal.Content>
+          <p>논문 삭제 중 오류가 발생했습니다.</p>
+          <p>다시 시도해 주세요.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton onClick={closeModal} />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      await axios.delete(apiEndpoints.thesis.delete(id));
+      showSuccessModal();
+    } catch (error) {
+      console.error('Failed to delete thesis:', error);
+      showErrorModal();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <S.Container>
@@ -143,16 +192,13 @@ const ThesisDetail: React.FC = () => {
               <Edit size={18} />
               수정
             </S.EditButton>
-            <Modal.DeleteButton
-              title="논문 삭제"
-              message="이 논문을 삭제하시겠습니까?"
-              submessage="삭제된 논문은 복구할 수 없습니다."
-              onDelete={handleDelete}
-              isDeleting={isDeleting}
+            <S.DeleteButton
+              onClick={showDeleteConfirmModal}
+              disabled={isDeleting}
             >
               <Trash2 size={18} />
               {isDeleting ? '삭제 중...' : '삭제'}
-            </Modal.DeleteButton>
+            </S.DeleteButton>
           </S.ActionSection>
         )}
       </S.HeaderContainer>
