@@ -200,7 +200,52 @@ const NoticeCreate: React.FC = () => {
             </Select>
           </FormGroup>
 
-          {/* 나머지 폼 필드들... */}
+          <FormGroup>
+            <Label>제목</Label>
+            <Input
+              type="text"
+              placeholder="제목을 입력하세요"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>첨부파일</Label>
+            <FileInputLabel>
+              📎 파일 선택
+              <FileInput
+                type="file"
+                onChange={handleFileChange}
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
+              />
+            </FileInputLabel>
+            {file && (
+              <FileList>
+                <FileItem>
+                  {file.name}
+                  <button type="button" onClick={handleRemoveFile}>
+                    ×
+                  </button>
+                </FileItem>
+              </FileList>
+            )}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>내용</Label>
+            <QuillWrapper>
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={content}
+                onChange={handleChange}
+                modules={modules}
+                formats={formats}
+                placeholder="내용을 입력하세요"
+              />
+            </QuillWrapper>
+          </FormGroup>
 
           <ButtonGroup>
             <CancelButton
