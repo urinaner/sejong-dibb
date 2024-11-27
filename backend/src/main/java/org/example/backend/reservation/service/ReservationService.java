@@ -41,6 +41,12 @@ public class ReservationService {
         return ReservationResDto.of(reservation);
     }
 
+    private SeminarRoom getSeminarRoomById(Long seminarRoomId) {
+        SeminarRoom seminarRoom = seminarRoomRepository.findById(seminarRoomId)
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
+        return seminarRoom;
+    }
+
     public List<ReservationResDto> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationResDto::of)
@@ -48,16 +54,14 @@ public class ReservationService {
     }
 
     public ReservationResDto getReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
+        Reservation reservation = getReservationById(id);
         return ReservationResDto.of(reservation);
     }
 
 
     @Transactional
     public ReservationResDto updateReservationStatus(Long id, ReservationStatus status) {
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
+        Reservation reservation = getReservationById(id);
 
         reservation.updateStatus(status);
         return ReservationResDto.of(reservation);
@@ -65,8 +69,12 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
+        Reservation reservation = getReservationById(id);
         reservationRepository.delete(reservation);
+    }
+
+    private Reservation getReservationById(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
 }
