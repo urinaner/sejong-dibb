@@ -1,10 +1,13 @@
 package org.example.backend.reservation.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.reservation.domain.ReservationStatus;
 import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.service.ReservationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +20,9 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/seminarRoom/{seminarRoomId}")
-    public ResponseEntity<ReservationResDto> createReservation(@PathVariable(value = "seminarRoomId") Long seminarRoomId,
-                                                               @RequestBody ReservationReqDto reqDto) {
+    public ResponseEntity<ReservationResDto> createReservation(
+            @PathVariable(value = "seminarRoomId") Long seminarRoomId,
+            @RequestBody ReservationReqDto reqDto) {
         ReservationResDto resDto = reservationService.createReservation(seminarRoomId, reqDto);
         return ResponseEntity.ok(resDto);
     }
@@ -30,7 +34,17 @@ public class ReservationController {
     }
 
     @GetMapping("seminarRoom/{seminarRoomId}")
-    public ResponseEntity<List<ReservationResDto>> getReservationsBySeminarRoom(@PathVariable(value = "seminarRoomId") Long seminarRoomId) {
+    public ResponseEntity<List<ReservationResDto>> getReservationsBySeminarRoomAndDate(@PathVariable(name = "seminarRoomId") Long seminarRoomId,
+                                                                                       @RequestParam(value = "status") ReservationStatus status,
+                                                                                       @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+                                                                                       ) {
+        List<ReservationResDto> reservations = reservationService.getReservationsByRoomAndDate(seminarRoomId, date, status);
+        return ResponseEntity.ok(reservations);
+    }
+
+
+    public ResponseEntity<List<ReservationResDto>> getReservationsBySeminarRoom(
+            @PathVariable(value = "seminarRoomId") Long seminarRoomId) {
         List<ReservationResDto> reservations = reservationService.getReservationsByRoom(seminarRoomId);
         return ResponseEntity.ok(reservations);
     }

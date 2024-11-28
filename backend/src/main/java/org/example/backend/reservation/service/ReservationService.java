@@ -3,6 +3,7 @@ package org.example.backend.reservation.service;
 import static org.example.backend.reservation.exception.ReservationExceptionType.*;
 import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
 
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.reservation.service.validation.ReservationValidator;
@@ -56,6 +57,13 @@ public class ReservationService {
         return ReservationResDto.of(reservation);
     }
 
+    public List<ReservationResDto> getReservationsByRoomAndDate(Long seminarRoomId, LocalDate date, ReservationStatus status) {
+        getReservationById(seminarRoomId);
+        return reservationRepository.findAllByDateAndStatus(seminarRoomId, date, status).stream()
+                .map(ReservationResDto::of)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public ReservationResDto updateReservationStatus(Long id, ReservationStatus status) {
@@ -80,5 +88,6 @@ public class ReservationService {
         return seminarRoomRepository.findById(seminarRoomId)
                 .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
     }
+
 
 }

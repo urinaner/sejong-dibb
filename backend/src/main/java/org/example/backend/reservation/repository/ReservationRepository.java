@@ -2,6 +2,7 @@ package org.example.backend.reservation.repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.ReservationStatus;
