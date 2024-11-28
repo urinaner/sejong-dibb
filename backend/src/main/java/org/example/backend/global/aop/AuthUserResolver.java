@@ -1,10 +1,10 @@
-package org.example.backend.global.config.aop;
+package org.example.backend.global.aop;
 
-import static org.example.backend.common.exception.AuthExceptionType.PLEASE_LOGIN;
+import static org.example.backend.common.exception.auth.AuthExceptionType.PLEASE_LOGIN;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.common.exception.AuthException;
+import org.example.backend.common.exception.auth.AuthException;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.user.service.UserService;
 import org.springframework.core.MethodParameter;

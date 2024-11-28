@@ -1,7 +1,8 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.global.config.auth.CustomAuthenticationFailureHandler;
 import org.example.backend.jwt.JWTFilter;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.jwt.LoginFilter;

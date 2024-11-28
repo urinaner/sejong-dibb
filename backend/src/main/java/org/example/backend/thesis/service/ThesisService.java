@@ -3,7 +3,7 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.S3Uploader;
+import org.example.backend.global.config.aws.S3Uploader;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;

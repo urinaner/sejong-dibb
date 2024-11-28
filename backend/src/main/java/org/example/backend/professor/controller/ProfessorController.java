@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.common.exception.dto.ResponseDto;
+import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.service.ProfessorService;

@@ -1,6 +1,6 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.web;
 
-import org.example.backend.global.config.aop.AuthUserResolver;
+import org.example.backend.global.aop.AuthUserResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

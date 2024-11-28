@@ -3,7 +3,7 @@ package org.example.backend.professor.service;
 import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.S3Uploader;
+import org.example.backend.global.config.aws.S3Uploader;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;

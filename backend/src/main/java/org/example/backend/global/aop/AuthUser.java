@@ -1,4 +1,4 @@
-package org.example.backend.global.config.aop;
+package org.example.backend.global.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

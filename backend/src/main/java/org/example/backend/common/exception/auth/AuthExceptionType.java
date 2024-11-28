@@ -1,8 +1,9 @@
-package org.example.backend.common.exception;
+package org.example.backend.common.exception.auth;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor

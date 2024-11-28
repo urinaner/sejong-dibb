@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.board.domain.dto.BoardReqDto;
-import org.example.backend.global.config.BaseEntity;
-import org.example.backend.global.config.StringListConverter;
+import org.example.backend.common.domain.BaseEntity;
+import org.example.backend.global.util.StringListConverter;
 
 @Entity
 @Getter
