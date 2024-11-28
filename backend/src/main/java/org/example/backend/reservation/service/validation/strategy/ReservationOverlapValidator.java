@@ -15,9 +15,9 @@ public class ReservationOverlapValidator implements ReservationValidationStrateg
     private final ReservationRepository reservationRepository;
 
     @Override
-    public void validate(ReservationReqDto reqDto) {
+    public void validate(ReservationReqDto reqDto, Long seminarRoomId) {
         boolean hasReservationConflict = reservationRepository.existsByTimePeriod(
-                reqDto.getSeminarRoomId(),
+                seminarRoomId,
                 reqDto.getStartTime(),
                 reqDto.getEndTime(),
                 ReservationStatus.APPROVED

@@ -27,12 +27,11 @@ public class ReservationService {
     private final SeminarRoomRepository seminarRoomRepository;
     private final ReservationValidator validator;
 
-
     @Transactional
-    public ReservationResDto createReservation(ReservationReqDto reqDto) {
-        SeminarRoom seminarRoom = getSeminarRoomById(reqDto.getSeminarRoomId());
+    public ReservationResDto createReservation(Long seminarRoomId, ReservationReqDto reqDto) {
+        SeminarRoom seminarRoom = getSeminarRoomById(seminarRoomId);
 
-        validator.validate(reqDto);
+        validator.validate(reqDto, seminarRoomId);
 
         Reservation reservation = Reservation.of(reqDto, seminarRoom);
         reservationRepository.save(reservation);

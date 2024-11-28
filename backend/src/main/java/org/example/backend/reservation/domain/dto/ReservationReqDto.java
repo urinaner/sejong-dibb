@@ -15,28 +15,25 @@ public class ReservationReqDto {
     private LocalDateTime endTime;
     private ReservationPurpose purpose;
     private String etc;
-    private Long seminarRoomId;
     private Long userId;
 
     @Builder
     private ReservationReqDto(LocalDateTime startTime, LocalDateTime endTime,
-                              ReservationPurpose purpose, String etc, Long seminarRoomId, Long userId) {
+                              ReservationPurpose purpose, String etc, Long userId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.seminarRoomId = seminarRoomId;
         this.userId = userId;
     }
 
     public static ReservationReqDto of(LocalDateTime startTime, LocalDateTime endTime,
-                                       ReservationPurpose purpose, String etc, Long seminarRoomId, Long userId) {
+                                       ReservationPurpose purpose, String etc, Long userId) {
         return ReservationReqDto.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .purpose(purpose)
                 .etc(etc)
-                .seminarRoomId(seminarRoomId)
                 .userId(userId)
                 .build();
     }

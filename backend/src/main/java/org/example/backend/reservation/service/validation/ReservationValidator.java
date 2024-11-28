@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class ReservationValidator {
     private final List<ReservationValidationStrategy> validators;
 
-    public void validate(ReservationReqDto reqDto) {
-        validators.forEach(validator -> validator.validate(reqDto));
+    public void validate(ReservationReqDto reqDto, Long seminarRoomId) {
+        validators.forEach(validator -> validator.validate(reqDto, seminarRoomId));
     }
 }

@@ -16,9 +16,10 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    @PostMapping
-    public ResponseEntity<ReservationResDto> createReservation(@RequestBody ReservationReqDto reqDto) {
-        ReservationResDto resDto = reservationService.createReservation(reqDto);
+    @PostMapping("/seminarRoom/{seminarRoomId}")
+    public ResponseEntity<ReservationResDto> createReservation(@PathVariable(value = "seminarRoomId") Long seminarRoomId,
+                                                               @RequestBody ReservationReqDto reqDto) {
+        ReservationResDto resDto = reservationService.createReservation(seminarRoomId, reqDto);
         return ResponseEntity.ok(resDto);
     }
 

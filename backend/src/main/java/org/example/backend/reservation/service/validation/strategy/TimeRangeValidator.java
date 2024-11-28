@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TimeRangeValidator implements ReservationValidationStrategy {
     @Override
-    public void validate(ReservationReqDto reqDto) {
+    public void validate(ReservationReqDto reqDto, Long seminarRoomId) {
         if (reqDto.getStartTime().isAfter(reqDto.getEndTime())) {
             throw new ReservationException(INVALID_TIME_ORDER);
         }

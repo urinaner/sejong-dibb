@@ -15,11 +15,11 @@ public class TimeTableOverlapValidator implements ReservationValidationStrategy 
     private final TimetableRepository timetableRepository;
 
     @Override
-    public void validate(ReservationReqDto reqDto) {
+    public void validate(ReservationReqDto reqDto, Long seminarRoomId) {
         WeekDay weekDay = WeekDay.from(reqDto.getStartTime().getDayOfWeek());
 
         boolean hasTimeTableConflict = timetableRepository.existsByTimeOverlap(
-                reqDto.getSeminarRoomId(),
+                seminarRoomId,
                 reqDto.getStartTime().toLocalDate(),
                 reqDto.getStartTime().toLocalTime(),
                 reqDto.getEndTime().toLocalTime(),
