@@ -29,6 +29,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @GetMapping("seminarRoom/{seminarRoomId}")
+    public ResponseEntity<List<ReservationResDto>> getReservationsBySeminarRoom(@PathVariable(value = "seminarRoomId") Long seminarRoomId) {
+        List<ReservationResDto> reservations = reservationService.getReservationsByRoom(seminarRoomId);
+        return ResponseEntity.ok(reservations);
+    }
+
     @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationResDto> getReservation(@PathVariable(value = "reservationId") Long id) {
         ReservationResDto resDto = reservationService.getReservation(id);

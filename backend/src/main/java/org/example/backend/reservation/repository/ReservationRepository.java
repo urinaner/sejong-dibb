@@ -32,4 +32,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("date") LocalDate date,
             @Param("status") ReservationStatus status
     );
+
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.seminarRoom.id = :seminarRoomId ")
+    List<Reservation> finaReservationsBySeminarRoom(
+            @Param("seminarRoomId")Long seminarRoomId);
 }

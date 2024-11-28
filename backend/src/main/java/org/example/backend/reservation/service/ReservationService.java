@@ -38,14 +38,15 @@ public class ReservationService {
 
         return ReservationResDto.of(reservation);
     }
-
-    private SeminarRoom getSeminarRoomById(Long seminarRoomId) {
-        return seminarRoomRepository.findById(seminarRoomId)
-                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
-    }
-
     public List<ReservationResDto> getAllReservations() {
         return reservationRepository.findAll().stream()
+                .map(ReservationResDto::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReservationResDto> getReservationsByRoom(Long seminarRoomId) {
+        getSeminarRoomById(seminarRoomId);
+        return reservationRepository.finaReservationsBySeminarRoom(seminarRoomId).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
@@ -74,4 +75,10 @@ public class ReservationService {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
+
+    private SeminarRoom getSeminarRoomById(Long seminarRoomId) {
+        return seminarRoomRepository.findById(seminarRoomId)
+                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
+    }
+
 }
