@@ -104,10 +104,6 @@ VALUES
     ('열 번째 게시글', '게시글 내용 10', 100, '작성자10', '["https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/%5B%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4%E1%84%82%E1%85%A9%E1%84%90%E1%85%B3%5D+%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A6%E1%84%92%E1%85%A1%E1%86%A8_07%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1(01%E1%84%8E%E1%85%A1%E1%84%89%E1%85%B5).pdf", "https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/%5B%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4%E1%84%82%E1%85%A9%E1%84%90%E1%85%B3%5D+%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A6%E1%84%92%E1%85%A1%E1%86%A8_07%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1(02%E1%84%8E%E1%85%A1%E1%84%89%E1%85%B5).pdf"]', 'graduate');
 
 
-
--- 세미나실 더미데이터
-INSERT INTO seminar_room (name, person_capacity, place, image)
-VALUES ('제1세미나실', 20, '본관 3층', 'seminar1.jpg');
 -- 세미나실 더미데이터
 INSERT INTO seminar_room (name, person_capacity, place, image)
 VALUES ('제1세미나실', 20, '본관 3층', 'seminar1.jpg'),
