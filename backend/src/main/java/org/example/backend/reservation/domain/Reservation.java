@@ -44,6 +44,10 @@ public class Reservation extends BaseEntity {
     private String etc;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "repetition_type")
+    private RepetitionType repetitionType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private ReservationStatus status;
 
@@ -56,11 +60,12 @@ public class Reservation extends BaseEntity {
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, ReservationStatus status, SeminarRoom seminarRoom, Long userId) {
+                        String etc, RepetitionType repetitionType, ReservationStatus status, SeminarRoom seminarRoom, Long userId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
+        this.repetitionType = repetitionType;
         this.status = status;
         this.seminarRoom = seminarRoom;
         this.userId = userId;
@@ -72,6 +77,7 @@ public class Reservation extends BaseEntity {
                 .endTime(dto.getEndTime())
                 .purpose(dto.getPurpose())
                 .etc(dto.getEtc())
+                .repetitionType(RepetitionType.valueOf(dto.getRepetitionType()))
                 .status(ReservationStatus.APPROVED)
                 .seminarRoom(seminarRoom)
                 .userId(dto.getUserId())
