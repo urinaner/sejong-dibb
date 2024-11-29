@@ -65,6 +65,7 @@ public class BoardService {
     @Transactional
     public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
         fileUpload(boardReqDto, multipartFileList);
+
         Board board = findBoardById(boardId);
         board.update(boardReqDto);
         return BoardResDto.of(board);
@@ -83,9 +84,9 @@ public class BoardService {
 
     private void fileUpload(BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
         List<String> updateImageUrlList = new ArrayList<>();
-        if (!multipartFileList.isEmpty()) {
+        if (multipartFileList != null && !multipartFileList.isEmpty()) {
             for (MultipartFile multipartFile : multipartFileList) {
-                if (multipartFile.isEmpty()) {
+                if (multipartFile == null || multipartFile.isEmpty()) {
                     throw new BoardException(BoardExceptionType.REQUIRED_FILE);
                 }
                 String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);

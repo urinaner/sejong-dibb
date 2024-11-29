@@ -33,7 +33,7 @@ public class BoardController {
     @Operation(summary = "게시판 생성 API 입니다.", description = "게시판 생성입니다.")
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Long> createBoard(@RequestPart(value = "boardReqDto") BoardReqDto boardReqDto,
-                                            @RequestPart(value = "boardFiles") List<MultipartFile> multipartFileList) {
+                                            @RequestPart(value = "boardFiles", required = false) List<MultipartFile> multipartFileList) {
         Long boardId = boardService.saveBoard(boardReqDto, multipartFileList);
         return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class BoardController {
     @PostMapping("/{boardId}")
     public ResponseEntity<BoardResDto> updateBoard(@PathVariable(name = "boardId") Long boardId,
                                                    @RequestPart(value = "boardReqDto") BoardReqDto boardReqDto,
-                                                   @RequestPart(value = "boardFiles") List<MultipartFile> multipartFileList) {
+                                                   @RequestPart(value = "boardFiles", required = false) List<MultipartFile> multipartFileList) {
         BoardResDto boardResDto = boardService.updateBoard(boardId, boardReqDto, multipartFileList);
         return new ResponseEntity<>(boardResDto, HttpStatus.OK);
     }
