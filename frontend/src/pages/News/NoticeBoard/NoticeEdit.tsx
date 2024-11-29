@@ -4,10 +4,8 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
-import {
-  AlertModal,
-  FormErrorModal,
-} from '../../../components/Modal/templates/AlertModal';
+import { Modal, useModal } from '../../../components/Modal';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Container,
   ContentWrapper,
@@ -38,16 +36,10 @@ interface BoardDetail {
   category: string;
 }
 
-interface AlertState {
-  isOpen: boolean;
-  title: string;
-  message: string;
-  type: 'success' | 'error';
-}
-
 const NoticeEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { openModal } = useModal();
 
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
@@ -57,56 +49,12 @@ const NoticeEdit: React.FC = () => {
   const [currentFile, setCurrentFile] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 모달 상태 관리
-  const [alertState, setAlertState] = useState<AlertState>({
-    isOpen: false,
-    title: '',
-    message: '',
-    type: 'success',
-  });
-
-  const [formErrorState, setFormErrorState] = useState({
-    isOpen: false,
-    message: '',
-  });
-
   const categories = [
     { value: 'undergraduate', label: '학부' },
     { value: 'graduate', label: '대학원' },
     { value: 'employment', label: '취업' },
     { value: 'scholarship', label: '장학' },
   ];
-
-  const showAlert = (
-    title: string,
-    message: string,
-    type: 'success' | 'error' = 'success',
-  ) => {
-    setAlertState({
-      isOpen: true,
-      title,
-      message,
-      type,
-    });
-  };
-
-  const showFormError = (message: string) => {
-    setFormErrorState({
-      isOpen: true,
-      message,
-    });
-  };
-
-  const closeAlert = () => {
-    setAlertState((prev) => ({ ...prev, isOpen: false }));
-    if (alertState.type === 'success') {
-      navigate(`/news/noticeboard/${id}`);
-    }
-  };
-
-  const closeFormError = () => {
-    setFormErrorState((prev) => ({ ...prev, isOpen: false }));
-  };
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -126,17 +74,27 @@ const NoticeEdit: React.FC = () => {
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch post:', error);
-        showAlert(
-          '데이터 로드 실패',
-          '게시글을 불러오는데 실패했습니다.',
-          'error',
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              데이터 로드 실패
+            </Modal.Header>
+            <Modal.Content>
+              <p>게시글을 불러오는데 실패했습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton
+                onClick={() => navigate('/news/noticeboard')}
+              />
+            </Modal.Footer>
+          </>,
         );
-        navigate('/news/noticeboard');
       }
     };
 
     fetchPost();
-  }, [id, navigate]);
+  }, [id, navigate, openModal]);
 
   const modules = useMemo(
     () => ({
@@ -153,6 +111,23 @@ const NoticeEdit: React.FC = () => {
     }),
     [],
   );
+
+  const showFormError = (message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          입력 오류
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,10 +148,39 @@ const NoticeEdit: React.FC = () => {
       };
 
       await axios.post(apiEndpoints.board.update(id!), updateData);
-      showAlert('수정 완료', '게시글이 성공적으로 수정되었습니다.');
+
+      openModal(
+        <>
+          <Modal.Header>
+            <CheckCircle size={48} color="#38A169" />
+            수정 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>게시글이 성공적으로 수정되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton
+              onClick={() => navigate(`/news/noticeboard/${id}`)}
+            />
+          </Modal.Footer>
+        </>,
+      );
     } catch (error) {
       console.error('Error updating post:', error);
-      showAlert('수정 실패', '게시글 수정 중 오류가 발생했습니다.', 'error');
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            수정 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>게시글 수정 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -199,104 +203,86 @@ const NoticeEdit: React.FC = () => {
   }
 
   return (
-    <>
-      <Container>
-        <ContentWrapper>
-          <Header>
-            <h1>게시글 수정</h1>
-          </Header>
+    <Container>
+      <ContentWrapper>
+        <Header>
+          <h1>게시글 수정</h1>
+        </Header>
 
-          <FormSection onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label>카테고리</Label>
-              <Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                {categories.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </Select>
-            </FormGroup>
+        <FormSection onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label>카테고리</Label>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </Select>
+          </FormGroup>
 
-            <FormGroup>
-              <Label>제목</Label>
-              <Input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="제목을 입력하세요"
+          <FormGroup>
+            <Label>제목</Label>
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목을 입력하세요"
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>첨부파일</Label>
+            <FileInputLabel>
+              📎 파일 선택
+              <FileInput
+                type="file"
+                onChange={handleFileChange}
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
               />
-            </FormGroup>
+            </FileInputLabel>
+            {(file || currentFile) && (
+              <FileList>
+                <FileItem>
+                  {file ? file.name : currentFile}
+                  <button type="button" onClick={handleRemoveFile}>
+                    ×
+                  </button>
+                </FileItem>
+              </FileList>
+            )}
+          </FormGroup>
 
-            <FormGroup>
-              <Label>첨부파일</Label>
-              <FileInputLabel>
-                📎 파일 선택
-                <FileInput
-                  type="file"
-                  onChange={handleFileChange}
-                  accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
-                />
-              </FileInputLabel>
-              {(file || currentFile) && (
-                <FileList>
-                  <FileItem>
-                    {file ? file.name : currentFile}
-                    <button type="button" onClick={handleRemoveFile}>
-                      ×
-                    </button>
-                  </FileItem>
-                </FileList>
-              )}
-            </FormGroup>
+          <FormGroup>
+            <Label>내용</Label>
+            <QuillWrapper>
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                modules={modules}
+                placeholder="내용을 입력하세요"
+              />
+            </QuillWrapper>
+          </FormGroup>
 
-            <FormGroup>
-              <Label>내용</Label>
-              <QuillWrapper>
-                <ReactQuill
-                  theme="snow"
-                  value={content}
-                  onChange={setContent}
-                  modules={modules}
-                  placeholder="내용을 입력하세요"
-                />
-              </QuillWrapper>
-            </FormGroup>
-
-            <ButtonGroup>
-              <CancelButton
-                type="button"
-                onClick={() => navigate(`/news/noticeboard/${id}`)}
-              >
-                취소
-              </CancelButton>
-              <SubmitButton type="submit" disabled={isSubmitting}>
-                {isSubmitting ? '수정 중...' : '수정하기'}
-              </SubmitButton>
-            </ButtonGroup>
-          </FormSection>
-        </ContentWrapper>
-      </Container>
-
-      {/* Alert Modal */}
-      <AlertModal
-        isOpen={alertState.isOpen}
-        onClose={closeAlert}
-        title={alertState.title}
-        message={alertState.message}
-        type={alertState.type}
-      />
-
-      {/* Form Error Modal */}
-      <FormErrorModal
-        isOpen={formErrorState.isOpen}
-        onClose={closeFormError}
-        message={formErrorState.message}
-      />
-    </>
+          <ButtonGroup>
+            <CancelButton
+              type="button"
+              onClick={() => navigate(`/news/noticeboard/${id}`)}
+            >
+              취소
+            </CancelButton>
+            <SubmitButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? '수정 중...' : '수정하기'}
+            </SubmitButton>
+          </ButtonGroup>
+        </FormSection>
+      </ContentWrapper>
+    </Container>
   );
 };
 
