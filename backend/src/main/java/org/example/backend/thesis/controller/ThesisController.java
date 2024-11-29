@@ -1,24 +1,22 @@
 package org.example.backend.thesis.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.common.exception.dto.ResponseDto;
+import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.service.ThesisService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,8 +47,11 @@ public class ThesisController {
 
     @Operation(summary = "모든 논문 조회 API", description = "모든 논문의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<ThesisResDto>> getAllBoards(Pageable pageable) {
-        Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(pageable);
+    public ResponseDto<List<ThesisResDto>> getAllBoards(@RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size,
+                                                        @RequestParam(defaultValue = "id") String sort,
+                                                        @RequestParam(defaultValue = "ASC") String sortDirection) {
+        Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(page, size, sort, sortDirection);
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 

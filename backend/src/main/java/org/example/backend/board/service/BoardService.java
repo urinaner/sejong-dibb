@@ -12,9 +12,11 @@ import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
-import org.example.backend.global.config.S3Uploader;
+import org.example.backend.global.config.aws.S3Uploader;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,12 +54,16 @@ public class BoardService {
         return BoardResDto.of(board);
     }
 
-    public Page<BoardResDto> getAllBoards(Pageable pageable) {
+    public Page<BoardResDto> getAllBoards(int pageNo, int pageSize, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         return boardRepository.findAll(pageable)
                 .map(BoardResDto::of);
     }
 
-    public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {
+    public Page<BoardResDto> getBoardsByCategory(Category category, int pageNo, int pageSize, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         return boardRepository.findAllByCategory(category, pageable)
                 .map(BoardResDto::of);
     }

@@ -32,14 +32,14 @@ public class UserService {
     public String loginProcess(SignInReqDto joinDTO) {
         try {
             SjProfile sjProfile = sj.login(joinDTO.getLoginId(), joinDTO.getPassword());
-            String token = jwtUtil.createJwt(sjProfile.getName(), "USER", 60 * 60 * 10L);
             UserReqDto userReqDto = UserReqDto.builder()
                     .name(sjProfile.getName())
                     .studentId(sjProfile.getStudentCode())
                     .major(sjProfile.getMajor())
                     .build();
-            saveUser(userReqDto);
-            return token;
+            Long userId = saveUser(userReqDto);
+
+            return jwtUtil.createJwt(String.valueOf(userId), "USER", 60 * 60 * 10L);
         } catch (RuntimeException e) {
             throw new UserException(NOT_FOUND_USER);
         }
@@ -80,8 +80,14 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public User getUserById(Long userId) {
+        return findUserById(userId);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(NOT_FOUND_USER));
     }
+
+
 }

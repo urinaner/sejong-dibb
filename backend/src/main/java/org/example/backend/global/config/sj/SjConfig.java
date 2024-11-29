@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.sj;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

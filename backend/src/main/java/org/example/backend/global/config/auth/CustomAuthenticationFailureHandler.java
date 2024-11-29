@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

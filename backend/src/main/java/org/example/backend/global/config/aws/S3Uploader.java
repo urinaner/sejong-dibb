@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.aws;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
