@@ -1,14 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Image as ImageIcon } from 'lucide-react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
+import { Modal, useModal } from '../../../components/Modal';
 import ThesisForm from './ThesisForm';
-import {
-  AlertModal,
-  FormErrorModal,
-  ConfirmModal,
-} from '../../../components/Modal/templates/AlertModal';
 
 interface ThesisFormData {
   author: string;
@@ -28,39 +24,16 @@ interface ImageUploadResponse {
   imageUrl: string;
 }
 
-interface AlertState {
-  isOpen: boolean;
-  title: string;
-  message: string;
-  type: 'success' | 'error';
-}
-
 const ThesisEdit: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { openModal } = useModal();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [thumbnailError, setThumbnailError] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  // 모달 상태 관리
-  const [alertState, setAlertState] = useState<AlertState>({
-    isOpen: false,
-    title: '',
-    message: '',
-    type: 'success',
-  });
-  const [formErrorState, setFormErrorState] = useState({
-    isOpen: false,
-    message: '',
-  });
-  const [confirmState, setConfirmState] = useState({
-    isOpen: false,
-    isLoading: false,
-  });
 
   const [formData, setFormData] = useState<ThesisFormData>({
     author: '',
@@ -76,41 +49,6 @@ const ThesisEdit: React.FC = () => {
     professorId: 1,
   });
 
-  const showAlert = (
-    title: string,
-    message: string,
-    type: 'success' | 'error' = 'success',
-  ) => {
-    setAlertState({
-      isOpen: true,
-      title,
-      message,
-      type,
-    });
-  };
-
-  const showFormError = (message: string) => {
-    setFormErrorState({
-      isOpen: true,
-      message,
-    });
-  };
-
-  const closeAlert = () => {
-    setAlertState((prev) => ({ ...prev, isOpen: false }));
-  };
-
-  const closeFormError = () => {
-    setFormErrorState((prev) => ({ ...prev, isOpen: false }));
-  };
-
-  const handleSuccessAndNavigate = (message: string, path: string) => {
-    showAlert('성공', message, 'success');
-    setTimeout(() => {
-      navigate(path);
-    }, 1500);
-  };
-
   const handleCancel = () => {
     navigate(-1);
   };
@@ -125,12 +63,20 @@ const ThesisEdit: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching thesis:', error);
-        showAlert(
-          '데이터 로드 실패',
-          '논문 정보를 불러오는데 실패했습니다.',
-          'error',
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              데이터 로드 실패
+            </Modal.Header>
+            <Modal.Content>
+              <p>논문 정보를 불러오는데 실패했습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton onClick={() => navigate('/news/thesis')} />
+            </Modal.Footer>
+          </>,
         );
-        navigate('/news/thesis');
       } finally {
         setIsLoading(false);
       }
@@ -139,7 +85,7 @@ const ThesisEdit: React.FC = () => {
     if (id) {
       fetchThesis();
     }
-  }, [id, navigate]);
+  }, [id, navigate, openModal]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,19 +104,37 @@ const ThesisEdit: React.FC = () => {
       if (!file) return;
 
       if (file.size > 5 * 1024 * 1024) {
-        showAlert(
-          '파일 크기 초과',
-          '이미지 크기는 5MB를 초과할 수 없습니다.',
-          'error',
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              파일 크기 초과
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
         );
         return;
       }
 
       if (!file.type.startsWith('image/')) {
-        showAlert(
-          '잘못된 파일 형식',
-          '이미지 파일만 업로드할 수 있습니다.',
-          'error',
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              잘못된 파일 형식
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 파일만 업로드할 수 있습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
         );
         return;
       }
@@ -184,26 +148,65 @@ const ThesisEdit: React.FC = () => {
       };
       reader.readAsDataURL(file);
     },
-    [],
+    [openModal],
   );
 
+  const showDeleteConfirm = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          논문 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>정말 이 논문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <Modal.DeleteButton onClick={handleDelete} disabled={isSubmitting}>
+            {isSubmitting ? '삭제 중...' : '삭제'}
+          </Modal.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleDelete = async () => {
-    setConfirmState((prev) => ({ ...prev, isLoading: true }));
+    setIsSubmitting(true);
     try {
       await axios.delete(apiEndpoints.thesis.delete(id));
-      handleSuccessAndNavigate(
-        '논문이 성공적으로 삭제되었습니다.',
-        '/news/thesis',
+      openModal(
+        <>
+          <Modal.Header>
+            <CheckCircle size={48} color="#38A169" />
+            삭제 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>논문이 성공적으로 삭제되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton onClick={() => navigate('/news/thesis')} />
+          </Modal.Footer>
+        </>,
       );
     } catch (error) {
       console.error('Error deleting thesis:', error);
-      showAlert(
-        '논문 삭제 실패',
-        '논문 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
-        'error',
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            삭제 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>논문 삭제 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
       );
     } finally {
-      setConfirmState({ isOpen: false, isLoading: false });
+      setIsSubmitting(false);
     }
   };
 
@@ -228,6 +231,23 @@ const ThesisEdit: React.FC = () => {
     }
   };
 
+  const showFormError = (message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          입력 오류
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -250,16 +270,35 @@ const ThesisEdit: React.FC = () => {
       }
 
       await axios.post(apiEndpoints.thesis.update(id), updatedData);
-      handleSuccessAndNavigate(
-        '논문이 성공적으로 수정되었습니다.',
-        `/news/thesis/${id}`,
+      openModal(
+        <>
+          <Modal.Header>
+            <CheckCircle size={48} color="#38A169" />
+            수정 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>논문이 성공적으로 수정되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton onClick={() => navigate(`/news/thesis/${id}`)} />
+          </Modal.Footer>
+        </>,
       );
     } catch (error) {
       console.error('Error updating thesis:', error);
-      showAlert(
-        '논문 수정 실패',
-        '논문 수정 중 오류가 발생했습니다. 다시 시도해주세요.',
-        'error',
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            수정 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>논문 수정 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
       );
     } finally {
       setIsSubmitting(false);
@@ -275,46 +314,17 @@ const ThesisEdit: React.FC = () => {
   }
 
   return (
-    <>
-      <ThesisForm
-        formData={formData}
-        onChange={handleInputChange}
-        onSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
-        mode="edit"
-        imagePreview={imagePreview}
-        onImageChange={handleImageChange}
-        onCancel={handleCancel}
-      />
-
-      {/* Alert Modal */}
-      <AlertModal
-        isOpen={alertState.isOpen}
-        onClose={closeAlert}
-        title={alertState.title}
-        message={alertState.message}
-        type={alertState.type}
-      />
-
-      {/* Form Error Modal */}
-      <FormErrorModal
-        isOpen={formErrorState.isOpen}
-        onClose={closeFormError}
-        message={formErrorState.message}
-      />
-
-      {/* Confirm Delete Modal */}
-      <ConfirmModal
-        isOpen={confirmState.isOpen}
-        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
-        onConfirm={handleDelete}
-        title="논문 삭제"
-        message="정말 이 논문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
-        confirmText="삭제"
-        cancelText="취소"
-        isLoading={confirmState.isLoading}
-      />
-    </>
+    <ThesisForm
+      formData={formData}
+      onChange={handleInputChange}
+      onSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
+      mode="edit"
+      imagePreview={imagePreview}
+      onImageChange={handleImageChange}
+      onCancel={handleCancel}
+      onDelete={showDeleteConfirm}
+    />
   );
 };
 

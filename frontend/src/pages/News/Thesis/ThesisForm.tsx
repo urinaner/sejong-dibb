@@ -25,6 +25,7 @@ interface ThesisFormProps {
   imagePreview: string | null;
   mode: 'create' | 'edit';
   isSubmitting: boolean;
+  onDelete?: () => void;
 }
 
 const ThesisForm: React.FC<ThesisFormProps> = ({
