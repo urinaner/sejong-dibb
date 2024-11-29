@@ -75,7 +75,7 @@ public class Reservation extends BaseEntity {
         return Reservation.builder()
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
-                .purpose(dto.getPurpose())
+                .purpose(ReservationPurpose.valueOf(dto.getDefaultPurpose()))
                 .etc(dto.getEtc())
                 .repetitionType(RepetitionType.valueOf(dto.getRepetitionType()))
                 .status(ReservationStatus.APPROVED)
@@ -87,7 +87,7 @@ public class Reservation extends BaseEntity {
     public void update(ReservationReqDto dto, SeminarRoom seminarRoom) {
         this.startTime = dto.getStartTime();
         this.endTime = dto.getEndTime();
-        this.purpose = dto.getPurpose();
+        this.purpose = ReservationPurpose.valueOf(dto.getDefaultPurpose());
         this.etc = dto.getEtc();
         this.seminarRoom = seminarRoom;
     }

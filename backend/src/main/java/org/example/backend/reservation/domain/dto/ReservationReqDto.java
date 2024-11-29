@@ -14,14 +14,14 @@ import org.example.backend.reservation.domain.ReservationPurpose;
 public class ReservationReqDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private ReservationPurpose purpose;
+    private String purpose;
     private String etc;
     private String repetitionType;
     private Long userId;
 
     @Builder
     private ReservationReqDto(LocalDateTime startTime, LocalDateTime endTime,
-                              ReservationPurpose purpose, String etc, String repetitionType, Long userId) {
+                              String purpose, String etc, String repetitionType, Long userId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
@@ -31,7 +31,7 @@ public class ReservationReqDto {
     }
 
     public static ReservationReqDto of(LocalDateTime startTime, LocalDateTime endTime,
-                                       ReservationPurpose purpose, String repetitionType, String etc, Long userId) {
+                                       String purpose, String repetitionType, String etc, Long userId) {
         return ReservationReqDto.builder()
                 .startTime(startTime)
                 .endTime(endTime)
@@ -40,5 +40,13 @@ public class ReservationReqDto {
                 .repetitionType(repetitionType)
                 .userId(userId)
                 .build();
+    }
+
+    public boolean isWeeklyReservation() {
+        return !startTime.toLocalTime().equals(endTime.toLocalTime());
+    }
+
+    public String getDefaultPurpose() {
+        return (purpose == null || purpose.isBlank()) ? "CLASS" : purpose;
     }
 }

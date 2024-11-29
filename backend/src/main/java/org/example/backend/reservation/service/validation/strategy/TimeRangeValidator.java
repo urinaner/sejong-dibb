@@ -16,9 +16,9 @@ public class TimeRangeValidator implements ReservationValidationStrategy {
             throw new ReservationException(INVALID_TIME_ORDER);
         }
 
-        long hours = ChronoUnit.HOURS.between(reqDto.getStartTime(), reqDto.getEndTime());
-        if (hours > 2) {
-            throw new ReservationException(EXCEEDS_MAX_DURATION);
-        }
+//        long hours = ChronoUnit.HOURS.between(reqDto.getStartTime(), reqDto.getEndTime());
+//        if (hours > 2) {
+//            throw new ReservationException(EXCEEDS_MAX_DURATION);
+//        }
     }
 }

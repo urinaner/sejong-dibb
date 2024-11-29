@@ -4,7 +4,11 @@ import static org.example.backend.reservation.exception.ReservationExceptionType
 import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.reservation.domain.RepetitionType;
+import org.example.backend.reservation.domain.ReservationPurpose;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.reservation.service.validation.ReservationValidator;
 import org.example.backend.seminarRoom.domain.SeminarRoom;
@@ -29,16 +33,47 @@ public class ReservationService {
     private final ReservationValidator validator;
 
     @Transactional
-    public ReservationResDto createReservation(Long seminarRoomId, ReservationReqDto reqDto) {
+    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationReqDto reqDto) {
         SeminarRoom seminarRoom = getSeminarRoomById(seminarRoomId);
 
         validator.validate(reqDto, seminarRoomId);
 
-        Reservation reservation = Reservation.of(reqDto, seminarRoom);
-        reservationRepository.save(reservation);
-
-        return ReservationResDto.of(reservation);
+        if (reqDto.isWeeklyReservation()) {
+            List<Reservation> weeklyReservations = createWeeklyReservations(reqDto, seminarRoom);
+            reservationRepository.saveAll(weeklyReservations);
+            return weeklyReservations.stream()
+                    .map(ReservationResDto::of)
+                    .collect(Collectors.toList());
+        } else {
+            Reservation reservation = Reservation.of(reqDto, seminarRoom);
+            reservationRepository.save(reservation);
+            return List.of(ReservationResDto.of(reservation));
+        }
     }
+
+    private List<Reservation> createWeeklyReservations(ReservationReqDto reqDto, SeminarRoom seminarRoom) {
+        List<Reservation> reservations = new ArrayList<>();
+        LocalDate startDate = reqDto.getStartTime().toLocalDate();
+        LocalDate endDate = reqDto.getEndTime().toLocalDate();
+
+        while (!startDate.isAfter(endDate)) {
+            LocalDateTime weeklyStart = LocalDateTime.of(startDate, reqDto.getStartTime().toLocalTime());
+            LocalDateTime weeklyEnd = LocalDateTime.of(startDate, reqDto.getEndTime().toLocalTime());
+            reservations.add(Reservation.builder()
+                    .startTime(weeklyStart)
+                    .endTime(weeklyEnd)
+                    .purpose(ReservationPurpose.valueOf(reqDto.getDefaultPurpose()))
+                    .etc(reqDto.getEtc())
+                    .repetitionType(RepetitionType.WEEKLY)
+                    .status(ReservationStatus.APPROVED)
+                    .seminarRoom(seminarRoom)
+                    .userId(reqDto.getUserId())
+                    .build());
+            startDate = startDate.plusWeeks(1);
+        }
+        return reservations;
+    }
+
     public List<ReservationResDto> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationResDto::of)
