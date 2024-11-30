@@ -1,24 +1,24 @@
 package org.example.backend.reservation.service;
 
 import static org.example.backend.reservation.exception.ReservationExceptionType.*;
-import static org.example.backend.seminarRoom.exception.SeminarRoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
+import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.utils.TimeParsingUtils;
 import org.example.backend.reservation.domain.RepetitionType;
 import org.example.backend.reservation.domain.ReservationPurpose;
 import org.example.backend.reservation.exception.ReservationException;
-import org.example.backend.reservation.service.validation.ReservationValidator;
-import org.example.backend.seminarRoom.domain.SeminarRoom;
-import org.example.backend.seminarRoom.exception.SeminarRoomException;
-import org.example.backend.seminarRoom.repository.SeminarRoomRepository;
+import org.example.backend.room.domain.Room;
+import org.example.backend.room.exception.RoomException;
+import org.example.backend.room.repository.RoomRepository;
 import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.ReservationStatus;
 import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.repository.ReservationRepository;
+import org.example.backend.user.domain.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -29,55 +29,50 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final SeminarRoomRepository seminarRoomRepository;
-    private final ReservationValidator validator;
+    private final RoomRepository roomRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationReqDto reqDto) {
-        SeminarRoom seminarRoom = getSeminarRoomById(seminarRoomId);
+    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationReqDto reqDto, User user) {
+        Room room = getSeminarRoomById(seminarRoomId);
 
-        validator.validate(reqDto, seminarRoomId);
+        validateReservationOverlap(reqDto, seminarRoomId);
 
         if (reqDto.isWeeklyReservation()) {
-            List<Reservation> weeklyReservations = createWeeklyReservations(reqDto, seminarRoom);
+            List<Reservation> weeklyReservations = createWeeklyReservations(reqDto, room, user);
             reservationRepository.saveAll(weeklyReservations);
             return weeklyReservations.stream()
                     .map(ReservationResDto::of)
                     .collect(Collectors.toList());
         } else {
-            Reservation reservation = Reservation.of(reqDto, seminarRoom);
+            Reservation reservation = Reservation.of(reqDto, room, user);
             reservationRepository.save(reservation);
             return List.of(ReservationResDto.of(reservation));
         }
     }
 
-    private List<Reservation> createWeeklyReservations(ReservationReqDto reqDto, SeminarRoom seminarRoom) {
+    private List<Reservation> createWeeklyReservations(ReservationReqDto reqDto, Room room, User user) {
         List<Reservation> reservations = new ArrayList<>();
-        LocalDate startDate = reqDto.getStartTime().toLocalDate();
-        LocalDate endDate = reqDto.getEndTime().toLocalDate();
+        LocalDateTime startDateTime = TimeParsingUtils.formatterLocalDateTime(reqDto.getStartTime());
+        LocalDateTime endDateTime = TimeParsingUtils.formatterLocalDateTime(reqDto.getEndTime());
+
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
 
         while (!startDate.isAfter(endDate)) {
-            LocalDateTime weeklyStart = LocalDateTime.of(startDate, reqDto.getStartTime().toLocalTime());
-            LocalDateTime weeklyEnd = LocalDateTime.of(startDate, reqDto.getEndTime().toLocalTime());
+            LocalDateTime weeklyStart = LocalDateTime.of(startDate, startDateTime.toLocalTime());
+            LocalDateTime weeklyEnd = LocalDateTime.of(startDate, endDateTime.toLocalTime());
             reservations.add(Reservation.builder()
                     .startTime(weeklyStart)
                     .endTime(weeklyEnd)
                     .purpose(ReservationPurpose.valueOf(reqDto.getDefaultPurpose()))
                     .etc(reqDto.getEtc())
                     .repetitionType(RepetitionType.WEEKLY)
-                    .status(ReservationStatus.APPROVED)
-                    .seminarRoom(seminarRoom)
-                    .userId(reqDto.getUserId())
+                    .room(room)
+                    .user(user)
                     .build());
             startDate = startDate.plusWeeks(1);
         }
         return reservations;
-    }
-
-    public List<ReservationResDto> getAllReservations() {
-        return reservationRepository.findAll().stream()
-                .map(ReservationResDto::of)
-                .collect(Collectors.toList());
     }
 
     public List<ReservationResDto> getReservationsByRoom(Long seminarRoomId) {
@@ -92,21 +87,13 @@ public class ReservationService {
         return ReservationResDto.of(reservation);
     }
 
-    public List<ReservationResDto> getReservationsByRoomAndDate(Long seminarRoomId, LocalDate date, ReservationStatus status) {
+    public List<ReservationResDto> getReservationsByRoomAndDate(Long seminarRoomId, String date) {
         getReservationById(seminarRoomId);
-        return reservationRepository.findAllByDateAndStatus(seminarRoomId, date, status).stream()
+        return reservationRepository.findAllByDateAndStatus(seminarRoomId, date).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
 
-
-    @Transactional
-    public ReservationResDto updateReservationStatus(Long id, ReservationStatus status) {
-        Reservation reservation = getReservationById(id);
-
-        reservation.updateStatus(status);
-        return ReservationResDto.of(reservation);
-    }
 
     @Transactional
     public void deleteReservation(Long id) {
@@ -114,15 +101,26 @@ public class ReservationService {
         reservationRepository.delete(reservation);
     }
 
+    private void validateReservationOverlap(ReservationReqDto reqDto, Long seminarRoomId) {
+        boolean hasReservationConflict = reservationRepository.existsByTimePeriod(
+                seminarRoomId,
+                TimeParsingUtils.formatterLocalDateTime(reqDto.getStartTime()),
+                TimeParsingUtils.formatterLocalDateTime(reqDto.getEndTime())
+        );
+
+        if (hasReservationConflict) {
+            throw new ReservationException(EXIST_ALREADY_RESERVATION);
+        }
+    }
+
     private Reservation getReservationById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
 
-    private SeminarRoom getSeminarRoomById(Long seminarRoomId) {
-        return seminarRoomRepository.findById(seminarRoomId)
-                .orElseThrow(() -> new SeminarRoomException(NOT_FOUND_SEMINAR_ROOM));
+    private Room getSeminarRoomById(Long seminarRoomId) {
+        return roomRepository.findById(seminarRoomId)
+                .orElseThrow(() -> new RoomException(NOT_FOUND_SEMINAR_ROOM));
     }
-
 
 }
