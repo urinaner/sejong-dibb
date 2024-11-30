@@ -16,9 +16,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.common.utils.TimeParsingUtils;
 import org.example.backend.global.config.BaseEntity;
 import org.example.backend.reservation.domain.dto.ReservationReqDto;
-import org.example.backend.seminarRoom.domain.SeminarRoom;
+import org.example.backend.room.domain.Room;
+import org.example.backend.user.domain.entity.User;
 
 @Entity
 @Getter
@@ -47,52 +49,36 @@ public class Reservation extends BaseEntity {
     @Column(name = "repetition_type")
     private RepetitionType repetitionType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private ReservationStatus status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seminar_room_id")
-    private SeminarRoom seminarRoom;
-
-    @Column(name = "user_id")
-    private Long userId;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, RepetitionType repetitionType, ReservationStatus status, SeminarRoom seminarRoom, Long userId) {
+                        String etc, RepetitionType repetitionType, Room room, User user) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.repetitionType = repetitionType;
-        this.status = status;
-        this.seminarRoom = seminarRoom;
-        this.userId = userId;
+        this.room = room;
+        this.user = user;
     }
 
-    public static Reservation of(ReservationReqDto dto, SeminarRoom seminarRoom) {
+    public static Reservation of(ReservationReqDto dto, Room room, User user) {
         return Reservation.builder()
-                .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
+                .startTime(TimeParsingUtils.formatterLocalDateTime(dto.getStartTime()))
+                .endTime(TimeParsingUtils.formatterLocalDateTime(dto.getEndTime()))
                 .purpose(ReservationPurpose.valueOf(dto.getDefaultPurpose()))
                 .etc(dto.getEtc())
                 .repetitionType(RepetitionType.valueOf(dto.getRepetitionType()))
-                .status(ReservationStatus.APPROVED)
-                .seminarRoom(seminarRoom)
-                .userId(dto.getUserId())
+                .room(room)
+                .user(user)
                 .build();
     }
 
-    public void update(ReservationReqDto dto, SeminarRoom seminarRoom) {
-        this.startTime = dto.getStartTime();
-        this.endTime = dto.getEndTime();
-        this.purpose = ReservationPurpose.valueOf(dto.getDefaultPurpose());
-        this.etc = dto.getEtc();
-        this.seminarRoom = seminarRoom;
-    }
-
-    public void updateStatus(ReservationStatus status) {
-        this.status = status;
-    }
 }
