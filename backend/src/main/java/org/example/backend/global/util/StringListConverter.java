@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.global.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

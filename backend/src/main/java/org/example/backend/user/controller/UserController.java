@@ -3,7 +3,7 @@ package org.example.backend.user.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.admin.domain.dto.SignInReqDto;
-import org.example.backend.common.exception.dto.ResponseDto;
+import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.user.domain.dto.UserReqDto;
 import org.example.backend.user.domain.dto.UserResDto;
 import org.example.backend.user.service.UserService;

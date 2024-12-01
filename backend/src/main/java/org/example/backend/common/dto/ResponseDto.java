@@ -1,4 +1,4 @@
-package org.example.backend.common.exception.dto;
+package org.example.backend.common.dto;
 
 import lombok.*;
 

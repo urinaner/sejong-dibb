@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
-import org.example.backend.global.config.BaseEntity;
+import org.example.backend.common.domain.BaseEntity;
 
 @Entity
 @Getter
