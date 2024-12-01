@@ -4,7 +4,8 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
-import { useModalContext } from '../../../context/ModalContext';
+import { Modal, useModal } from '../../../components/Modal';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Container,
   ContentWrapper,
@@ -38,7 +39,7 @@ interface BoardDetail {
 const NoticeEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { openModal } = useModalContext();
+  const { openModal } = useModal();
 
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
@@ -73,8 +74,22 @@ const NoticeEdit: React.FC = () => {
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch post:', error);
-        openModal('게시글을 불러오는데 실패했습니다.');
-        navigate('/news/noticeboard');
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              데이터 로드 실패
+            </Modal.Header>
+            <Modal.Content>
+              <p>게시글을 불러오는데 실패했습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton
+                onClick={() => navigate('/news/noticeboard')}
+              />
+            </Modal.Footer>
+          </>,
+        );
       }
     };
 
@@ -97,11 +112,28 @@ const NoticeEdit: React.FC = () => {
     [],
   );
 
+  const showFormError = (message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          입력 오류
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim() || !category) {
-      openModal('제목, 내용, 카테고리를 모두 입력해주세요.');
+      showFormError('제목, 내용, 카테고리를 모두 입력해주세요.');
       return;
     }
 
@@ -117,11 +149,38 @@ const NoticeEdit: React.FC = () => {
 
       await axios.post(apiEndpoints.board.update(id!), updateData);
 
-      openModal('게시글이 성공적으로 수정되었습니다.');
-      navigate(`/news/noticeboard/${id}`);
+      openModal(
+        <>
+          <Modal.Header>
+            <CheckCircle size={48} color="#38A169" />
+            수정 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>게시글이 성공적으로 수정되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton
+              onClick={() => navigate(`/news/noticeboard/${id}`)}
+            />
+          </Modal.Footer>
+        </>,
+      );
     } catch (error) {
       console.error('Error updating post:', error);
-      openModal('게시글 수정 중 오류가 발생했습니다.');
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            수정 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>게시글 수정 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -6,9 +6,9 @@ import * as S from './NoticeDetailStyle';
 import { useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { AuthContext } from '../../../context/AuthContext';
-import { useModalContext } from '../../../context/ModalContext';
+import { Modal, useModal } from '../../../components/Modal';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import 'react-quill/dist/quill.snow.css';
-
 interface BoardDetail {
   id: number;
   title: string;
@@ -31,7 +31,7 @@ const NoticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const { openModal } = useModalContext();
+  const { openModal } = useModal();
 
   const [post, setPost] = useState<BoardDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -62,21 +62,70 @@ const NoticeDetail: React.FC = () => {
     fetchPostDetail();
   }, [id]);
 
+  const showConfirmModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#F59E0B" />
+          게시글 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>정말로 이 게시글을 삭제하시겠습니까?</p>
+          <p>삭제된 게시글은 복구할 수 없습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </S.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const showResultModal = (success: boolean) => {
+    const icon = success ? (
+      <CheckCircle size={48} color="#38A169" />
+    ) : (
+      <AlertTriangle size={48} color="#E53E3E" />
+    );
+    const title = success ? '삭제 완료' : '삭제 실패';
+    const message = success
+      ? '게시글이 성공적으로 삭제되었습니다.'
+      : '게시글 삭제 중 오류가 발생했습니다.';
+
+    openModal(
+      <>
+        <Modal.Header>
+          {icon}
+          {title}
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton
+            onClick={() => {
+              if (success) {
+                navigate('/news/noticeboard');
+              }
+            }}
+          />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleDelete = async () => {
     if (!id || !post) return;
-
-    const confirmed = window.confirm('정말로 이 게시글을 삭제하시겠습니까?');
-    if (!confirmed) return;
 
     try {
       setIsDeleting(true);
       await axios.delete(apiEndpoints.board.delete(id));
-
-      openModal('게시글이 성공적으로 삭제되었습니다.');
-      navigate('/news/noticeboard');
+      showResultModal(true);
     } catch (error) {
       console.error('Failed to delete post:', error);
-      openModal('게시글 삭제 중 오류가 발생했습니다.');
+      showResultModal(false);
     } finally {
       setIsDeleting(false);
     }
@@ -120,7 +169,7 @@ const NoticeDetail: React.FC = () => {
               >
                 수정
               </S.EditButton>
-              <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+              <S.DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
                 {isDeleting ? '삭제중' : '삭제'}
               </S.DeleteButton>
             </S.ActionButtons>
@@ -156,7 +205,7 @@ const NoticeDetail: React.FC = () => {
             >
               수정하기
             </S.EditButton>
-            <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
+            <S.DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
               {isDeleting ? '삭제 중...' : '삭제하기'}
             </S.DeleteButton>
           </>
