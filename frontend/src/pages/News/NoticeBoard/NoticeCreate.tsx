@@ -28,19 +28,9 @@ import {
   FileList,
   FileItem,
 } from './NoticeCreateStyle';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { apiEndpoints, BoardReqDto } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
-
-interface PostFormData {
-  title: string;
-  content: string;
-  writer: string;
-  file: string;
-  createDate: string;
-  category: string;
-  departmentId: number;
-}
 
 const NoticeCreate: React.FC = () => {
   const navigate = useNavigate();
@@ -101,6 +91,32 @@ const NoticeCreate: React.FC = () => {
     setContent(value);
   }, []);
 
+  // 파일 유효성 검사
+  const validateFile = (file: File): string | null => {
+    // 파일 크기 제한 (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return '파일 크기는 5MB를 초과할 수 없습니다.';
+    }
+
+    // 허용된 파일 타입
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      return '지원하지 않는 파일 형식입니다.';
+    }
+
+    return null;
+  };
+
   const showErrorModal = (title: string, message: string) => {
     openModal(
       <>
@@ -149,38 +165,56 @@ const NoticeCreate: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const postData = {
+      const boardReqDto: BoardReqDto = {
         title: title.trim(),
         content: content.trim(),
         writer: auth.user || 'admin',
-        file: file ? file.name : '',
-        createDate: new Date().toISOString().split('T')[0],
         category: category,
-        departmentId: 1,
       };
 
-      const response = await axios.post(apiEndpoints.board.create, postData, {
-        headers: {
-          'Content-Type': 'application/json',
+      // 파일이 있는 경우 fileList 추가
+      if (file) {
+        boardReqDto.fileList = [file.name];
+      }
+
+      const formData = apiEndpoints.board.create.getFormData(
+        boardReqDto,
+        file ? [file] : [],
+      );
+
+      const response = await axios.post(
+        apiEndpoints.board.create.url,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
 
       if (response.status === 200 || response.status === 201) {
         showSuccessModal();
       }
     } catch (error) {
-      console.error('Error posting article:', error);
+      console.error('Error creating post:', error);
       showErrorModal('등록 실패', '게시글 등록 중 오류가 발생했습니다');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
+    if (!selectedFile) return;
+
+    // 파일 유효성 검사
+    const error = validateFile(selectedFile);
+    if (error) {
+      showErrorModal('파일 업로드 오류', error);
+      return;
     }
+
+    setFile(selectedFile);
   };
 
   const handleRemoveFile = () => {
