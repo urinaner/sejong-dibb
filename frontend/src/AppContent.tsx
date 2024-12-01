@@ -5,7 +5,6 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import Modal from './components/Modal/Modal';
 
 // Pages
 import Main from './pages/Main/Main';
@@ -163,7 +162,6 @@ function AppContent() {
         </Routes>
       </ContentWrapper>
       <Footer />
-      <Modal />
     </PageContainer>
   );
 }

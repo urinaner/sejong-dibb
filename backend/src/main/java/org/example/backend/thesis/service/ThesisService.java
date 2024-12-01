@@ -3,7 +3,7 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.S3Uploader;
+import org.example.backend.global.config.aws.S3Uploader;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
@@ -13,7 +13,9 @@ import org.example.backend.thesis.exception.ThesisException;
 import org.example.backend.thesis.exception.ThesisExceptionType;
 import org.example.backend.thesis.repository.ThesisRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +61,9 @@ public class ThesisService {
         return ThesisResDto.of(thesis);
     }
 
-    public Page<ThesisResDto> getAllTheses(Pageable pageable) {
+    public Page<ThesisResDto> getAllTheses(int pageNo, int pageSize, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         return thesisRepository.findAll(pageable)
                 .map(ThesisResDto::of);
     }

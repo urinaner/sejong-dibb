@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.global.config.web;
 
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

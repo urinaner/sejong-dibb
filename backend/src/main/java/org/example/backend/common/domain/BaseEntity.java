@@ -1,4 +1,4 @@
-package org.example.backend.global.config;
+package org.example.backend.common.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

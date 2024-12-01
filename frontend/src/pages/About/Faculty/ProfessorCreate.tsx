@@ -1,11 +1,19 @@
-// ProfessorCreate.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Mail, Phone, Globe, MapPin, Image } from 'lucide-react';
+import {
+  AlertTriangle,
+  CheckCircle,
+  Mail,
+  Phone,
+  Globe,
+  MapPin,
+  Image,
+} from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
+import { Modal, useModal } from '../../../components/Modal';
 import Button from '../../../common/Button/Button';
-import * as S from './ProfessorEditStyle'; // 기존 스타일 재사용
+import * as S from './ProfessorEditStyle';
 
 interface ProfessorFormData {
   name: string;
@@ -20,7 +28,7 @@ interface ProfessorFormData {
 
 const ProfessorCreate: React.FC = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
+  const { openModal } = useModal();
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<ProfessorFormData>({
     name: '',
@@ -43,26 +51,60 @@ const ProfessorCreate: React.FC = () => {
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setError('이름은 필수 입력 항목입니다.');
+      showError('이름은 필수 입력 항목입니다.');
       return false;
     }
     if (!formData.email.trim()) {
-      setError('이메일은 필수 입력 항목입니다.');
+      showError('이메일은 필수 입력 항목입니다.');
       return false;
     }
     if (!formData.position.trim()) {
-      setError('직위는 필수 입력 항목입니다.');
+      showError('직위는 필수 입력 항목입니다.');
       return false;
     }
     if (!formData.major.trim()) {
-      setError('전공은 필수 입력 항목입니다.');
+      showError('전공은 필수 입력 항목입니다.');
       return false;
     }
     if (!formData.phoneN.trim()) {
-      setError('전화번호는 필수 입력 항목입니다.');
+      showError('전화번호는 필수 입력 항목입니다.');
       return false;
     }
     return true;
+  };
+
+  const showError = (message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          입력 오류
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const showSuccess = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <CheckCircle size={48} color="#38A169" />
+          등록 완료
+        </Modal.Header>
+        <Modal.Content>
+          <p>교수 정보가 성공적으로 등록되었습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton onClick={() => navigate('/about/faculty')} />
+        </Modal.Footer>
+      </>,
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,13 +112,25 @@ const ProfessorCreate: React.FC = () => {
     if (!validateForm()) return;
 
     setSaving(true);
-    setError('');
 
     try {
       await axios.post(apiEndpoints.professor.create, formData);
-      navigate('/about/faculty');
+      showSuccess();
     } catch (err) {
-      setError('교수 정보 등록에 실패했습니다.');
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            등록 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>교수 정보 등록 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
       console.error('Error creating professor:', err);
     } finally {
       setSaving(false);
@@ -90,13 +144,6 @@ const ProfessorCreate: React.FC = () => {
       </S.HeaderContainer>
 
       <S.Form onSubmit={handleSubmit}>
-        {error && (
-          <S.ErrorMessage>
-            <AlertCircle size={18} />
-            {error}
-          </S.ErrorMessage>
-        )}
-
         <S.FormSection>
           <S.FormTitle>기본 정보</S.FormTitle>
           <S.FormContent>

@@ -1,4 +1,3 @@
-// AdminSignIn.tsx
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -12,12 +11,13 @@ import {
   ErrorMessage,
 } from './SignInStyle';
 import { AuthContext } from '../../context/AuthContext';
-import { useModalContext } from '../../context/ModalContext';
+import { Modal, useModal } from '../../components/Modal';
 
 const AdminSignIn: React.FC = () => {
   const navigate = useNavigate();
   const context = useContext(AuthContext);
-  const { openModal } = useModalContext();
+  const { isOpen, openModal, closeModal } = useModal();
+
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,7 +36,6 @@ const AdminSignIn: React.FC = () => {
       navigate('/');
     }
   }, [context?.isAuthenticated, navigate]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
@@ -46,18 +45,39 @@ const AdminSignIn: React.FC = () => {
     try {
       setIsSubmitting(true);
       await signin(loginId, password, true);
-
       openModal(
-        <div>
-          <h2>로그인 성공</h2>
-          <p>환영합니다!</p>
-        </div>,
+        <>
+          <Modal.Header>로그인 성공</Modal.Header>
+          <Modal.Content>
+            <p>환영합니다!</p>
+            <p>관리자 계정으로 로그인 되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Button onClick={handleCloseSuccessModal}>확인</Button>
+          </Modal.Footer>
+        </>,
       );
     } catch (err) {
       console.error('Login failed:', err);
+      openModal(
+        <>
+          <Modal.Header>로그인 실패</Modal.Header>
+          <Modal.Content>
+            <p>로그인에 실패했습니다. 다시 시도해주세요.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Button onClick={closeModal}>확인</Button>
+          </Modal.Footer>
+        </>,
+      );
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCloseSuccessModal = () => {
+    closeModal();
+    navigate('/'); // 성공 모달이 닫힐 때 메인 페이지로 이동
   };
 
   return (
@@ -99,6 +119,10 @@ const AdminSignIn: React.FC = () => {
           </LinkButton>
         </ActionButtons>
       </Form>
+
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        {/* modalContent는 openModal을 통해 전달된 ReactNode가 여기에 렌더링됩니다 */}
+      </Modal>
     </Container>
   );
 };
