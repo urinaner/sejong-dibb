@@ -84,27 +84,46 @@ export const apiEndpoints = {
     base: `${API_URL}/api/board`,
     listWithPage: (page: number, size: number) =>
       `${API_URL}/api/board?page=${page}&size=${size}`,
-    create: `${API_URL}/api/board`,
+    create: {
+      url: `${API_URL}/api/board`,
+      // API 명세에 맞게 요청 형식 지정
+      getFormData: (boardReqDto: BoardReqDto, files: File[]) => {
+        const formData = new FormData();
+
+        // boardReqDto를 JSON 문자열로 변환하여 추가
+        formData.append(
+          'boardReqDto',
+          JSON.stringify({
+            title: boardReqDto.title,
+            content: boardReqDto.content,
+            writer: boardReqDto.writer,
+            fileList: files.map((file) => file.name),
+            category: boardReqDto.category,
+          }),
+        );
+
+        // boardFiles 추가
+        files.forEach((file) => {
+          formData.append('boardFiles', file);
+        });
+
+        return formData;
+      },
+    },
     get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
-  },
-  // 임시 URI 지정
-  upload: {
-    // 단일 이미지 업로드
-    image: `${API_URL}/api/upload/image`,
-    // 다중 이미지 업로드
-    images: `${API_URL}/api/upload/images`,
-    // 파일 업로드
-    file: `${API_URL}/api/upload/file`,
-    // 다중 파일 업로드
-    files: `${API_URL}/api/upload/files`,
-    // S3 signed URL 요청
-    getSignedUrl: (fileName: string) =>
-      `${API_URL}/api/upload/signed-url?fileName=${encodeURIComponent(fileName)}`,
-    // 파일 삭제
-    delete: (fileId: string) => `${API_URL}/api/upload/${fileId}`,
+    getByCategory: (category: string, page: number, size: number) =>
+      `${API_URL}/api/board/category/${category}?page=${page}&size=${size}`,
   },
 };
+
+export interface BoardReqDto {
+  title: string;
+  content: string;
+  writer: string;
+  category: string;
+  fileList?: string[];
+}
 
 export default API_URL;
