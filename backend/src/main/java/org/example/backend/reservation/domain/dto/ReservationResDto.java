@@ -13,9 +13,9 @@ import org.example.backend.reservation.domain.ReservationPurpose;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationResDto {
     private Long id;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private String startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private String endTime;
     private ReservationPurpose purpose;
     private String etc;

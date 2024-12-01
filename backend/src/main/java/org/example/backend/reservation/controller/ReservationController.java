@@ -45,6 +45,7 @@ public class ReservationController {
         }
     }
 
+
     @GetMapping("/{roomId}/reservation")
     public ResponseEntity<List<ReservationResDto>> getReservationsByRoomAndDate(
             @PathVariable(name = "roomId") Long roomId,
@@ -54,12 +55,19 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/{roomId}/reservation/all")
-    public ResponseEntity<List<ReservationResDto>> getReservationsByRoom(
-            @PathVariable(value = "roomId") Long roomId) {
-        List<ReservationResDto> reservations = reservationService.getReservationsByRoom(roomId);
+    @GetMapping("/{roomId}/reservation/month")
+    public ResponseEntity<List<ReservationResDto>> getReservationsByRoomAndMonth(
+            @PathVariable(value = "roomId") Long roomId,
+            @RequestParam(required = false) String yearMonth) {
+        List<ReservationResDto> reservations;
+        if (yearMonth == null) {
+            reservations = reservationService.getCurrentMonthReservations(roomId);
+        } else {
+            reservations = reservationService.getMonthReservations(roomId, yearMonth);
+        }
         return ResponseEntity.ok(reservations);
     }
+
 
     @GetMapping("/{roomId}/reservation/{reservationId}")
     public ResponseEntity<ReservationResDto> getReservation(

@@ -173,7 +173,7 @@ VALUES ('장영재', '컴퓨터공학과', '010-2111-1111', 'USER'),
 
 INSERT INTO reservation (start_time, end_time, purpose, etc, repetition_type, room_id, user_id, created_at,
                          updated_at)
-VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'CLASS', '프로그래밍 기초 수업', 'DAILY', 1, 1, NOW(), NOW()),
+VALUES ('2024-11-01 09:00:00', '2024-11-01 11:00:00', 'CLASS', '프로그래밍 기초 수업', 'DAILY', 1, 1, NOW(), NOW()),
        ('2024-12-01 13:00:00', '2024-12-01 15:00:00', 'MEETING', '팀 프로젝트 미팅', 'WEEKLY', 1, 2, NOW(), NOW()),
        ('2024-12-02 10:00:00', '2024-12-02 12:00:00', 'SEMINAR', '신기술 세미나', 'DAILY', 1, 1, NOW(), NOW()),
        ('2024-12-03 14:00:00', '2024-12-03 16:00:00', 'CLASS', '알고리즘 수업', 'WEEKLY', 1, 3, NOW(), NOW()),

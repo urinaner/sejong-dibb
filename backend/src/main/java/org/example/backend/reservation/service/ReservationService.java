@@ -5,6 +5,7 @@ import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEM
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.utils.TimeParsingUtils;
@@ -78,6 +79,19 @@ public class ReservationService {
     public List<ReservationResDto> getReservationsByRoom(Long seminarRoomId) {
         getSeminarRoomById(seminarRoomId);
         return reservationRepository.finaReservationsBySeminarRoom(seminarRoomId).stream()
+                .map(ReservationResDto::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationResDto> getCurrentMonthReservations(Long roomId) {
+        String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        return getMonthReservations(roomId, currentYearMonth);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationResDto> getMonthReservations(Long roomId, String yearMonth) {
+        return reservationRepository.findAllByRoomAndYearMonth(roomId, yearMonth).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
