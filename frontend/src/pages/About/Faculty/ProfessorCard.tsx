@@ -40,7 +40,7 @@ const ProfessorCard = memo(
       <S.ProfessorCard onClick={handleCardClick} role="button" tabIndex={0}>
         <S.ImageSection>
           <S.ProfessorImage
-            src={defaultImage}
+            src={professor.profileImage || defaultImage}
             alt={`${professor.name} 교수`}
             onError={onImageError}
             loading="lazy"
