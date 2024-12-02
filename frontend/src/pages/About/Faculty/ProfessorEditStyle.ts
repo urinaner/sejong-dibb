@@ -212,3 +212,118 @@ export const HelperText = styled.p`
     font-size: 0.7rem;
   }
 `;
+
+export const ImageUploadContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  ${media.mobile} {
+    gap: 0.75rem;
+  }
+`;
+
+export const ImagePreviewContainer = styled.div`
+  width: 240px;
+  height: 320px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8fafc;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    height: 280px;
+  }
+`;
+
+export const FallbackThumbnail = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: #94a3b8;
+
+  svg {
+    opacity: 0.5;
+  }
+
+  span {
+    font-size: 0.875rem;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+`;
+
+export const ImageUploadButton = styled.label`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1a73e8;
+  background-color: white;
+  border: 1px solid #1a73e8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: fit-content;
+  font-family: 'Noto Sans KR', sans-serif;
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  input[type='file'] {
+    display: none;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    justify-content: center;
+  }
+`;
+
+export const ImageContainer = styled.div`
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #f8fafc;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  ${media.mobile} {
+    height: 160px;
+  }
+`;
+
+export const ImageError = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #fff5f5;
+  color: #c53030;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-family: 'Noto Sans KR', sans-serif;
+`;
