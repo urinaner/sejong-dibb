@@ -165,11 +165,15 @@ const NoticeCreate: React.FC = () => {
     try {
       setIsSubmitting(true);
 
+      const currentDate = new Date().toISOString().slice(0, 10);
+
       const boardReqDto: BoardReqDto = {
         title: title.trim(),
         content: content.trim(),
         writer: auth.user || 'admin',
         category: category,
+        departmentId: 1,
+        createDate: currentDate,
       };
 
       // 파일이 있는 경우 fileList 추가

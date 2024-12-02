@@ -6,6 +6,8 @@ export interface BoardReqDto {
   writer: string;
   category: string;
   fileList?: string[];
+  departmentId: 1;
+  createDate: string;
 }
 
 export interface ThesisReqDto {
@@ -213,8 +215,10 @@ export const apiEndpoints = {
             title: boardReqDto.title,
             content: boardReqDto.content,
             writer: boardReqDto.writer,
-            fileList: files.map((file) => file.name),
+            createDate: boardReqDto.createDate,
             category: boardReqDto.category,
+            departmentId: 1,
+            fileList: files.map((file) => file.name),
           }),
         );
 
