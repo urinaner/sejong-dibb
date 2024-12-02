@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import moment, { Moment, MomentInput } from 'moment';
+import { MomentInput } from 'moment';
 
 interface StyledButtonProps {
   isActive?: boolean;
@@ -216,12 +216,12 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   // 오늘
   .react-calendar__tile--now {
-    background: none;
+    background-color: #a0b4c9;
   }
 
   .react-calendar__tile--now:enabled:hover,
   .react-calendar__tile--now:enabled:focus {
-    background: #e6e6e6;
+    background: #a0b4c9;
   }
 
   .react-calendar__tile--active {
