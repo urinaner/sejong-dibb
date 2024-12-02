@@ -165,6 +165,7 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   .react-calendar__navigation {
     height: 60px;
+    margin: 0;
 
     ${media.mobile} {
       height: 44px;
@@ -189,6 +190,11 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
   }
 
   .react-calendar__tile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid #e6e6e6;
+
     padding: 10px;
     width: auto; /* 부모 컨테이너에 따라 유동적으로 변경 */
     height: auto; /* aspect-ratio에 의해 자동으로 계산 */
@@ -232,6 +238,8 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
   .react-calendar__month-view__weekdays {
     font-size: 16px;
     font-size: 1rem;
+    padding: 10px 8px;
+    border-bottom: 1px solid #e6e6e6;
   }
 
   // 주말

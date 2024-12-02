@@ -14,7 +14,7 @@ import {
   ReservationBtn,
   StyledCalendar,
 } from './ReservationStyle';
-import moment, { Moment, MomentInput } from 'moment';
+import moment, { MomentInput } from 'moment';
 
 const seminarRooms: string[] = ['세미나실1', '세미나실2'];
 
