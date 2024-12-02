@@ -122,10 +122,17 @@ const ProfessorCreate: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const formDataToSend = apiEndpoints.professor.create.getFormData(
-        formData,
-        imageFile,
+      const formDataToSend = new FormData();
+      formDataToSend.append(
+        'professorReqDto',
+        new Blob([JSON.stringify(formData)], {
+          type: 'application/json',
+        }),
       );
+
+      if (imageFile) {
+        formDataToSend.append('profileImage', imageFile);
+      }
 
       await axios.post(apiEndpoints.professor.create.url, formDataToSend, {
         headers: {

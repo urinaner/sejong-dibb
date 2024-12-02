@@ -123,7 +123,7 @@ export const apiEndpoints = {
         );
 
         if (imageFile) {
-          formData.append('profile_image', imageFile);
+          formData.append('profileImage', imageFile);
         }
 
         return formData;
