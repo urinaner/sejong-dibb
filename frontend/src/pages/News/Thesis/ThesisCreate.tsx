@@ -1,41 +1,27 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { apiEndpoints, ThesisReqDto } from '../../../config/apiConfig';
 import * as S from './ThesisCreateStyle';
-import { WriteButton } from '../NoticeBoard/NoticeBoardStyle';
-import useAuth from '../../../hooks/useAuth';
 import { Image as ImageIcon } from 'lucide-react';
 import {
   AlertModal,
   FormErrorModal,
 } from '../../../components/Modal/templates/AlertModal';
 
-interface ThesisFormData {
-  author: string;
-  journal: string;
-  content: string;
-  link: string;
-  publicationDate: string;
-  thesisImage: string;
-  publicationCollection: string;
-  publicationIssue: string;
-  publicationPage: string;
-  issn: string;
-  professorId: number;
-}
+type AlertType = 'success' | 'error';
 
 interface AlertState {
   isOpen: boolean;
   title: string;
   message: string;
-  type: 'success' | 'error';
+  type: AlertType;
 }
 
 const ThesisCreate: React.FC = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<ThesisFormData>({
+  const [formData, setFormData] = useState<ThesisReqDto>({
     author: '',
     journal: '',
     content: '',
@@ -49,45 +35,35 @@ const ThesisCreate: React.FC = () => {
     professorId: 1,
   });
 
-  // 모달 상태 관리
   const [alertState, setAlertState] = useState<AlertState>({
     isOpen: false,
     title: '',
     message: '',
     type: 'success',
   });
+
   const [formErrorState, setFormErrorState] = useState({
     isOpen: false,
     message: '',
   });
 
-  const auth = useAuth();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [thumbnailError, setThumbnailError] = useState(false);
 
   const showAlert = (
     title: string,
     message: string,
-    type: 'success' | 'error' = 'success',
+    type: AlertType = 'success',
   ) => {
-    setAlertState({
-      isOpen: true,
-      title,
-      message,
-      type,
-    });
+    setAlertState({ isOpen: true, title, message, type });
   };
 
   const showFormError = (message: string) => {
-    setFormErrorState({
-      isOpen: true,
-      message,
-    });
+    setFormErrorState({ isOpen: true, message });
   };
 
   const handleImageChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
@@ -119,22 +95,9 @@ const ThesisCreate: React.FC = () => {
     [],
   );
 
-  const handleImageUpload = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    const response = await axios.post<{ imageUrl: string }>(
-      apiEndpoints.upload.image,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    return response.data.imageUrl;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (
       !formData.author.trim() ||
       !formData.journal.trim() ||
@@ -146,21 +109,35 @@ const ThesisCreate: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      const updatedData = { ...formData };
 
-      if (imageFile) {
-        const imageUrl = await handleImageUpload(imageFile);
-        updatedData.thesisImage = imageUrl;
-      }
+      const thesisReqDto: ThesisReqDto = {
+        ...formData,
+        author: formData.author.trim(),
+        journal: formData.journal.trim(),
+        content: formData.content.trim(),
+        thesisImage: '',
+      };
+
+      const formDataToSend = apiEndpoints.thesis.create.getFormData(
+        thesisReqDto,
+        imageFile,
+      );
 
       const response = await axios.post(
-        apiEndpoints.thesis.create,
-        updatedData,
+        apiEndpoints.thesis.create.url,
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
       );
 
       if (response.status === 200) {
         showAlert('등록 완료', '논문이 성공적으로 등록되었습니다.');
-        navigate('/news/thesis');
+        setTimeout(() => {
+          navigate('/news/thesis');
+        }, 1500);
       }
     } catch (error) {
       console.error('Error creating thesis:', error);
@@ -173,6 +150,7 @@ const ThesisCreate: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   const closeAlert = () => {
     setAlertState((prev) => ({ ...prev, isOpen: false }));
   };
@@ -181,15 +159,8 @@ const ThesisCreate: React.FC = () => {
     setFormErrorState((prev) => ({ ...prev, isOpen: false }));
   };
 
-  const handleSuccessAndNavigate = (message: string) => {
-    showAlert('성공', message, 'success');
-    setTimeout(() => {
-      navigate('/news/thesis');
-    }, 1500); // 1.5초 후 이동
-  };
-
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setFormData((prev) => ({
         ...prev,
@@ -267,8 +238,7 @@ const ThesisCreate: React.FC = () => {
               <S.Label>
                 내용<S.RequiredMark>*</S.RequiredMark>
               </S.Label>
-              <S.Input
-                type="text"
+              <S.TextArea
                 name="content"
                 value={formData.content}
                 onChange={handleInputChange}
@@ -358,7 +328,6 @@ const ThesisCreate: React.FC = () => {
         </S.ContentWrapper>
       </S.Container>
 
-      {/* Alert Modal */}
       <AlertModal
         isOpen={alertState.isOpen}
         onClose={closeAlert}
@@ -367,7 +336,6 @@ const ThesisCreate: React.FC = () => {
         type={alertState.type}
       />
 
-      {/* Form Error Modal */}
       <FormErrorModal
         isOpen={formErrorState.isOpen}
         onClose={closeFormError}

@@ -13,7 +13,27 @@ export const apiEndpoints = {
       }
       return `${API_URL}/api/thesis?${params.toString()}`;
     },
-    create: `${API_URL}/api/thesis`,
+    create: {
+      url: `${API_URL}/api/thesis`,
+      getFormData: (thesisReqDto: ThesisReqDto, imageFile?: File | null) => {
+        const formData = new FormData();
+
+        // thesisReqDto를 JSON 문자열로 변환하여 추가
+        formData.append(
+          'thesisReqDto',
+          new Blob([JSON.stringify(thesisReqDto)], {
+            type: 'application/json',
+          }),
+        );
+
+        // thesis_image 추가
+        if (imageFile) {
+          formData.append('thesis_image', imageFile);
+        }
+
+        return formData;
+      },
+    },
     get: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
     update: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
     delete: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
@@ -124,6 +144,20 @@ export interface BoardReqDto {
   writer: string;
   category: string;
   fileList?: string[];
+}
+
+export interface ThesisReqDto {
+  author: string;
+  journal: string;
+  content: string;
+  link: string;
+  publicationDate: string;
+  thesisImage: string;
+  publicationCollection: string;
+  publicationIssue: string;
+  publicationPage: string;
+  issn: string;
+  professorId: number;
 }
 
 export default API_URL;
