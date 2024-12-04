@@ -1,13 +1,12 @@
-package org.example.backend.timetable.exception;
+package org.example.backend.room.exception;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.exception.BaseException;
 import org.example.backend.common.exception.BaseExceptionType;
-import org.example.backend.seminar.exception.SeminarExceptionType;
 
 @RequiredArgsConstructor
-public class TimetableException extends BaseException {
-    private final TimetableExceptionType exceptionType;
+public class RoomException extends BaseException {
+    private final RoomExceptionType exceptionType;
     @Override
     public BaseExceptionType exceptionType() {
         return exceptionType;

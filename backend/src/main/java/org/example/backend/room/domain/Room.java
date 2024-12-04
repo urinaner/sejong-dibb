@@ -1,4 +1,4 @@
-package org.example.backend.seminarRoom.domain;
+package org.example.backend.room.domain;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,16 +15,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.seminarRoom.domain.dto.SeminarRoomReqDto;
+import org.example.backend.room.domain.dto.RoomReqDto;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "seminar_room")
-public class SeminarRoom {
+@Table(name = "room")
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seminar_room_id")
+    @Column(name = "room_id")
     private Long id;
 
     @Column(name = "name")
@@ -39,19 +39,19 @@ public class SeminarRoom {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "seminarRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public SeminarRoom(String name, Integer personCapacity, String place, String image) {
+    public Room(String name, Integer personCapacity, String place, String image) {
         this.name = name;
         this.personCapacity = personCapacity;
         this.place = place;
         this.image = image;
     }
 
-    public static SeminarRoom of(SeminarRoomReqDto dto) {
-        return SeminarRoom.builder()
+    public static Room of(RoomReqDto dto) {
+        return Room.builder()
                 .name(dto.getName())
                 .personCapacity(dto.getPersonCapacity())
                 .place(dto.getPlace())
@@ -59,7 +59,7 @@ public class SeminarRoom {
                 .build();
     }
 
-    public void update(SeminarRoomReqDto dto) {
+    public void update(RoomReqDto dto) {
         this.name = dto.getName();
         this.personCapacity = dto.getPersonCapacity();
         this.place = dto.getPlace();
