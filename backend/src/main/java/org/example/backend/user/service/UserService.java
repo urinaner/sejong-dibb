@@ -2,6 +2,7 @@ package org.example.backend.user.service;
 
 import static org.example.backend.user.exception.UserExceptionType.NOT_FOUND_USER;
 
+import java.util.Optional;
 import org.example.backend.user.domain.entity.User;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,15 @@ public class UserService {
                     .studentId(sjProfile.getStudentCode())
                     .major(sjProfile.getMajor())
                     .build();
-            Long userId = saveUser(userReqDto);
+
+            Long userId;
+            Optional<User> optionalUser = findUser(userReqDto);
+            if(optionalUser.isEmpty()){
+                userId = saveUser(userReqDto);
+            }else {
+                userId = Long.valueOf(optionalUser.get().getStudentId());
+            }
+
 
             return jwtUtil.createJwt(String.valueOf(userId), "USER", 60 * 60 * 10L);
         } catch (RuntimeException e) {
@@ -51,6 +60,11 @@ public class UserService {
         User user = User.of(userReqDto);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
+    }
+
+    private Optional<User> findUser(UserReqDto userReqDto){
+        validateRequiredFields(userReqDto);
+        return userRepository.findByStudentId(userReqDto.getStudentId());
     }
 
     private void validateRequiredFields(UserReqDto userReqDto) {
@@ -88,6 +102,4 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(NOT_FOUND_USER));
     }
-
-
 }
