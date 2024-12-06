@@ -191,6 +191,7 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   .react-calendar__tile {
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     border: 1px solid #e6e6e6;
@@ -200,6 +201,16 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
     height: auto; /* aspect-ratio에 의해 자동으로 계산 */
     aspect-ratio: 1 / 0.6;
     font-size: 16px;
+
+    div {
+      width: 100%;
+      font-size: 10px;
+    }
+
+    div:first-child {
+      margin-top: 8px !important;
+      width: 100%;
+    }
 
     ${media.mobile} {
       padding: 0;

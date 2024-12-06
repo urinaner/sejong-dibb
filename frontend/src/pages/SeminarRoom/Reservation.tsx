@@ -14,7 +14,9 @@ import {
   ReservationBtn,
   StyledCalendar,
 } from './ReservationStyle';
+import { Modal, useModal } from '../../components/Modal';
 import moment, { MomentInput } from 'moment';
+import styled from 'styled-components';
 
 const seminarRooms: string[] = ['세미나실1', '세미나실2'];
 
@@ -26,7 +28,7 @@ interface Reservation {
   startTime: string;
   endTime: string;
   userName: string;
-  purpose: 'SEMINAR' | 'STUDY' | 'MEETING' | 'OTHER';
+  purpose: '세미나' | '스터디' | '미팅' | '기타';
   contact: string;
   department?: string;
 }
@@ -36,27 +38,48 @@ const dummyReservations: Reservation[] = [
   {
     id: 1,
     roomId: '세미나실1',
-    date: '2024-11-16',
+    date: '2024-12-02',
     startTime: '09:00',
     endTime: '11:00',
     userName: '김철수',
-    purpose: 'SEMINAR',
+    purpose: '세미나',
     contact: '010-1234-5678',
     department: '컴퓨터공학과',
   },
   {
     id: 2,
     roomId: '세미나실1',
-    date: '2024-11-16',
+    date: '2024-12-02',
+    startTime: '11:00',
+    endTime: '12:00',
+    userName: '이영희',
+    purpose: '스터디',
+    contact: '010-2345-6789',
+  },
+  {
+    id: 2,
+    roomId: '세미나실1',
+    date: '2024-12-02',
     startTime: '13:00',
     endTime: '15:00',
     userName: '이영희',
-    purpose: 'STUDY',
+    purpose: '미팅',
+    contact: '010-2345-6789',
+  },
+  {
+    id: 3,
+    roomId: '세미나실1',
+    date: '2024-12-02',
+    startTime: '16:00',
+    endTime: '17:30',
+    userName: '이영희',
+    purpose: '기타',
     contact: '010-2345-6789',
   },
 ];
 
 function Reservation() {
+  const { openModal, closeModal } = useModal();
   const [selectedRoom, setSelectedRoom] = useState('세미나실1');
   const [selectedDate, setSelectedDate] = useState(
     moment(new Date()).format('YYYY년 MM월 DD일'),
@@ -74,6 +97,26 @@ function Reservation() {
     setSelectedDate(moment(date).format('YYYY년 MM월 DD일'));
   };
 
+  const CustomModalHeader = styled(Modal.Header)`
+    font-size: 24px;
+    font-weight: bold;
+  `;
+
+  const List = styled.p<{ className?: string }>`
+    margin: 0 0 8px 0;
+    padding-left: 12px;
+    color: white;
+
+    background-color: ${({ className }) =>
+      className === '세미나'
+        ? '#1a73e8'
+        : className === '스터디'
+          ? '#34d399'
+          : className === '미팅'
+            ? '#f59e0b'
+            : '#9ca3af'};
+  `;
+
   const tileContent = ({ date }: { date: Date }) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const reservationsForDate = dummyReservations.filter(
@@ -84,6 +127,32 @@ function Reservation() {
 
     if (reservationsForDate.length === 0) return null;
 
+    const visibleReservations = reservationsForDate.slice(0, 2); // 최대 2개 일정만 표시
+    const moreCount = reservationsForDate.length - visibleReservations.length;
+
+    const showAllReservation = (formattedDate: string) => {
+      openModal(
+        <>
+          <CustomModalHeader>
+            {moment(formattedDate).format('YYYY년 MM월 DD일')}
+          </CustomModalHeader>
+          <Modal.Content>
+            <p>
+              {reservationsForDate.map((reservation, index) => (
+                <List key={index} className={reservation.purpose}>
+                  {reservation.startTime}~{reservation.endTime}{' '}
+                  {reservation.purpose}
+                </List>
+              ))}
+            </p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton onClick={() => closeModal()} />
+          </Modal.Footer>
+        </>,
+      );
+    };
+
     return (
       <div
         style={{
@@ -93,7 +162,7 @@ function Reservation() {
           marginTop: '2px',
         }}
       >
-        {reservationsForDate.map((reservation, index) => (
+        {visibleReservations.map((reservation, index) => (
           <div
             key={index}
             style={{
@@ -107,18 +176,31 @@ function Reservation() {
             {reservation.startTime}~{reservation.endTime}
           </div>
         ))}
+        {moreCount > 0 && (
+          <div
+            style={{
+              marginTop: '2px',
+              fontSize: '10px',
+              color: '#555',
+              textAlign: 'center',
+            }}
+            onClick={() => showAllReservation(formattedDate)}
+          >
+            {moreCount}개 더보기
+          </div>
+        )}
       </div>
     );
   };
 
   const getColorByPurpose = (purpose: string) => {
     const colors = {
-      SEMINAR: '#1a73e8',
-      STUDY: '#34d399',
-      MEETING: '#f59e0b',
-      OTHER: '#9ca3af',
+      세미나: '#1a73e8',
+      스터디: '#34d399',
+      미팅: '#f59e0b',
+      기타: '#9ca3af',
     };
-    return colors[purpose as keyof typeof colors] || colors.OTHER;
+    return colors[purpose as keyof typeof colors] || colors.기타;
   };
 
   // 예약이 있는 날짜의 스타일 지정
