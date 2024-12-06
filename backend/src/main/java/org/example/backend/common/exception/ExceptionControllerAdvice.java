@@ -1,6 +1,5 @@
 package org.example.backend.common.exception;
 
-import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +9,7 @@ import org.example.backend.common.exception.paging.InvalidPaginationParameterExc
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,5 +68,13 @@ public class ExceptionControllerAdvice {
             > handleInvalidPaginationParameterException(InvalidPaginationParameterException e) {
         return ResponseEntity.status(BAD_REQUEST)
                 .body(new ExceptionResponse(e.getExceptionType().errorMessage()));
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<ExceptionResponse> validException(
+            MethodArgumentNotValidException e) {
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 }

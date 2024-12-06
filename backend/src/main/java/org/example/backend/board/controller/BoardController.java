@@ -2,6 +2,7 @@ package org.example.backend.board.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
 import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.service.BoardService;
+import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,23 +43,17 @@ public class BoardController {
 
     @Operation(summary = "모든 게시판 조회 API", description = "모든 게시판의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<BoardResDto>> getAllBoards(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "10") int size,
-                                                       @RequestParam(defaultValue = "id") String sort,
-                                                       @RequestParam(defaultValue = "ASC") String sortDirection) {
+    public ResponseDto<List<BoardResDto>> getAllBoards(@Valid PageRequestDto pageRequest) {
 
-        Page<BoardResDto> boardList = boardService.getAllBoards(page, size, sort, sortDirection);
+        Page<BoardResDto> boardList = boardService.getAllBoards(pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
     @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
     @GetMapping("/category/{category}")
     public ResponseDto<List<BoardResDto>> getBoardsByCategory(@PathVariable("category") Category category,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size,
-                                                              @RequestParam(defaultValue = "id") String sort,
-                                                              @RequestParam(defaultValue = "ASC") String sortDirection) {
+                                                              @Valid PageRequestDto pageRequest) {
 
-        Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, page, size, sort, sortDirection);
+        Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
 
