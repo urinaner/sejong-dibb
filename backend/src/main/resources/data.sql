@@ -30,26 +30,26 @@ VALUES ('admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO',
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (name, major, phone, email, position, homepage, lab, profile_image)
 VALUES ('교수1', 'AI', '010-1111-1111', 'prof1@example.com', '교수', 'https://prof1-homepage.com', 'AI 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+008.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-55+001.png'),
        ('교수2', 'Machine Learning', '010-2222-2222', 'prof2@example.com', '교수', 'https://prof2-homepage.com', 'ML 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+007.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-55+002.png'),
        ('교수3', 'Computer Vision', '010-3333-3333', 'prof3@example.com', '교수', 'https://prof3-homepage.com', 'CV 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+006.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-55+003.png'),
        ('교수4', 'NLP', '010-4444-4444', 'prof4@example.com', '교수', 'https://prof4-homepage.com', 'NLP 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+005.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-55+004.png'),
        ('교수5', 'Data Science', '010-5555-5555', 'prof5@example.com', '교수', 'https://prof5-homepage.com', 'DS 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+004.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-56+005.png'),
        ('교수6', 'Software Engineering', '010-6666-6666', 'prof6@example.com', '교수', 'https://prof6-homepage.com',
-        'SE 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-18+003.png'),
+        'SE 연구실', 'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-56+006.png'),
        ('교수7', 'Cyber Security', '010-7777-7777', 'prof7@example.com', '교수', 'https://prof7-homepage.com', 'CS 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-17+002.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-56+007.png'),
        ('교수8', 'Blockchain', '010-8888-8888', 'prof8@example.com', '교수', 'https://prof8-homepage.com', 'Blockchain 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/KakaoTalk_Photo_2024-11-21-17-36-17+001.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-56+008.png'),
        ('교수9', 'Cloud Computing', '010-9999-9999', 'prof9@example.com', '교수', 'https://prof9-homepage.com', 'Cloud 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dibb.png'),
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-57+009.png'),
        ('교수10', 'Computer Graphics', '010-1010-1010', 'prof10@example.com', '교수', 'https://prof10-homepage.com',
         'CG 연구실',
-        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/profile/(1116)%E1%84%83%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A1%E1%84%86%E1%85%B5%E1%86%A8%E1%84%83%E1%85%B2%E1%84%8B%E1%85%A9+%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8E%E1%85%A6%E1%84%8F%E1%85%A5%E1%86%BA(1).jpg');
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-57+010.png');
 
 -- Seminar 더미 데이터 (10개)
 INSERT INTO seminar (name, writer, place, start_date, end_date, speaker, company)
