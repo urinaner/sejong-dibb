@@ -59,12 +59,60 @@ const Curriculum = () => {
       <S.DownloadSection>
         <S.DownloadLink
           href="/curriculum-2025.jpeg"
-          download="curriculum-2025.jpeg"
+          download="세종대학교_바이오융합공학전공_교과과정표_2025.jpeg"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Download size={18} />
           교과과정표 다운로드
+        </S.DownloadLink>
+      </S.DownloadSection>
+
+      <S.ImageWrapper>
+        <S.ImageContainer>
+          <S.CurriculumImage
+            src="/roadmap-2025.jpg"
+            alt="2025학년도 바이오융합공학전공 로드맵 )"
+            style={{
+              transform: `scale(${scale})`,
+              transition: 'transform 0.3s ease',
+            }}
+            onError={(e) => {
+              e.currentTarget.src = '/roadmap-2025.jpg';
+              e.currentTarget.onerror = null;
+            }}
+          />
+
+          <S.ZoomControls>
+            <S.ZoomButton
+              onClick={handleZoomOut}
+              disabled={scale <= MIN_SCALE}
+              aria-label="축소"
+            >
+              <ZoomOut />
+            </S.ZoomButton>
+            <S.ZoomButton
+              onClick={handleZoomIn}
+              disabled={scale >= MAX_SCALE}
+              aria-label="확대"
+            >
+              <ZoomIn />
+            </S.ZoomButton>
+          </S.ZoomControls>
+        </S.ImageContainer>
+
+        <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
+      </S.ImageWrapper>
+
+      <S.DownloadSection>
+        <S.DownloadLink
+          href="/roadmap-2025.jpeg"
+          download="세종대학교_바이오융합공학전공_로드맵_2025.jpeg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Download size={18} />
+          로드맵 다운로드
         </S.DownloadLink>
       </S.DownloadSection>
     </S.Container>
