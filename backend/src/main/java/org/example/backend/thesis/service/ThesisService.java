@@ -46,6 +46,9 @@ public class ThesisService {
     }
 
     private void validateUserRequiredFields(ThesisReqDto dto) {
+        if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
+            throw new ThesisException(ThesisExceptionType.REQUIRED_TITLE);
+        }
         if (dto.getAuthor() == null || dto.getAuthor().isEmpty()) {
             throw new ThesisException(ThesisExceptionType.REQUIRED_AUTHOR);
         }
