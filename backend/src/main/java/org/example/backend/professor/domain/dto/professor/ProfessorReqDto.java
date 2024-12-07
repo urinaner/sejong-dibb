@@ -31,12 +31,12 @@ public class ProfessorReqDto {
     @Schema(description = "교수 연구실 위치", example = "충무관 1128호")
     private String lab;
 
-    @Schema(description = "교수 프로필 이미지", example = "https://www.sju.ac.kr/professor/example/profile.jpg")
+    @Schema(hidden = true)
     private String profileImage;
 
     @Builder
     private ProfessorReqDto(String name, String major, String phoneN, String email,
-                            String position, String homepage, String lab, String profileImage) {
+                            String position, String homepage, String lab) {
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;
@@ -44,11 +44,10 @@ public class ProfessorReqDto {
         this.position = position;
         this.homepage = homepage;
         this.lab = lab;
-        this.profileImage = profileImage;
     }
 
     public static ProfessorReqDto of(String name, String major, String phoneN, String email,
-                                     String position, String homepage, String lab, String profileImage) {
+                                     String position, String homepage, String lab) {
         return ProfessorReqDto.builder()
                 .name(name)
                 .major(major)
@@ -57,7 +56,6 @@ public class ProfessorReqDto {
                 .position(position)
                 .homepage(homepage)
                 .lab(lab)
-                .profileImage(profileImage)
                 .build();
     }
 
