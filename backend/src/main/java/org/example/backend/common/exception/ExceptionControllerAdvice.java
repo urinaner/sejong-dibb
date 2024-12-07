@@ -63,12 +63,6 @@ public class ExceptionControllerAdvice {
                 .body(new ExceptionResponse("데이터 처리 중 오류가 발생했습니다."));
     }
 
-    @ExceptionHandler(InvalidPaginationParameterException.class)
-    public ResponseEntity<ExceptionResponse
-            > handleInvalidPaginationParameterException(InvalidPaginationParameterException e) {
-        return ResponseEntity.status(BAD_REQUEST)
-                .body(new ExceptionResponse(e.getExceptionType().errorMessage()));
-    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ExceptionResponse> validException(
