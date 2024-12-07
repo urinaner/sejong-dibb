@@ -11,10 +11,21 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import axios from 'axios';
-import { apiEndpoints, ProfessorReqDto } from '../../../config/apiConfig';
+import { apiEndpoints } from '../../../config/apiConfig';
 import Button from '../../../common/Button/Button';
 import { Modal, useModal } from '../../../components/Modal';
 import * as S from './ProfessorEditStyle';
+
+interface ProfessorFormData {
+  name: string;
+  major: string;
+  phoneN: string;
+  email: string;
+  position: string;
+  homepage: string;
+  lab: string;
+  profileImage: string;
+}
 
 const ProfessorEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +37,7 @@ const ProfessorEdit: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<ProfessorReqDto>({
+  const [formData, setFormData] = useState<ProfessorFormData>({
     name: '',
     major: '',
     phoneN: '',
@@ -164,18 +175,32 @@ const ProfessorEdit: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const professorReqDto: ProfessorReqDto = {
-        ...formData,
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        position: formData.position.trim(),
-      };
+      const formDataToSend = new FormData();
 
-      // FormData 생성을 apiEndpoints의 helper 함수를 사용하여 처리
-      const formDataToSend = apiEndpoints.professor.update.getFormData(
-        professorReqDto,
-        imageFile,
+      // professorReqDto로 키 이름 변경
+      formDataToSend.append(
+        'professorReqDto',
+        new Blob(
+          [
+            JSON.stringify({
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              position: formData.position.trim(),
+              major: formData.major,
+              phoneN: formData.phoneN,
+              homepage: formData.homepage,
+              lab: formData.lab,
+              departmentId: 1,
+            }),
+          ],
+          { type: 'application/json' },
+        ),
       );
+
+      // profileImage로 키 이름 변경
+      if (imageFile) {
+        formDataToSend.append('profileImage', imageFile);
+      }
 
       await axios.post(
         apiEndpoints.professor.update.url(Number(id)),
