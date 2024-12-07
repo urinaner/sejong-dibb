@@ -1,43 +1,50 @@
 package org.example.backend.reservation.domain.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservation.domain.ReservationPurpose;
+import org.example.backend.common.utils.TimeParsingUtils;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationReqDto {
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private ReservationPurpose purpose;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private String startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private String endTime;
+    private String purpose;
     private String etc;
-    private Long seminarRoomId;
-    private Long userId;
+    private String repetitionType;
 
     @Builder
-    private ReservationReqDto(LocalDateTime startTime, LocalDateTime endTime,
-                              ReservationPurpose purpose, String etc, Long seminarRoomId, Long userId) {
+    private ReservationReqDto(String startTime, String endTime,
+                              String purpose, String etc, String repetitionType) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.seminarRoomId = seminarRoomId;
-        this.userId = userId;
+        this.repetitionType = repetitionType;
     }
 
     public static ReservationReqDto of(LocalDateTime startTime, LocalDateTime endTime,
-                                       ReservationPurpose purpose, String etc, Long seminarRoomId, Long userId) {
+                                       String purpose, String repetitionType, String etc) {
         return ReservationReqDto.builder()
-                .startTime(startTime)
-                .endTime(endTime)
+                .startTime(TimeParsingUtils.formatterString(startTime))
+                .endTime(TimeParsingUtils.formatterString(endTime))
                 .purpose(purpose)
                 .etc(etc)
-                .seminarRoomId(seminarRoomId)
-                .userId(userId)
+                .repetitionType(repetitionType)
                 .build();
+    }
+
+    public boolean isWeeklyReservation() {
+        return !startTime.equals(endTime);
+    }
+
+    public String getDefaultPurpose() {
+        return (purpose == null || purpose.isBlank()) ? "CLASS" : purpose;
     }
 }

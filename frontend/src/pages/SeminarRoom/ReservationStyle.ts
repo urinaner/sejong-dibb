@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import moment, { Moment, MomentInput } from 'moment';
+import { MomentInput } from 'moment';
 
 interface StyledButtonProps {
   isActive?: boolean;
@@ -165,6 +165,7 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   .react-calendar__navigation {
     height: 60px;
+    margin: 0;
 
     ${media.mobile} {
       height: 44px;
@@ -189,11 +190,27 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
   }
 
   .react-calendar__tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid #e6e6e6;
+
     padding: 10px;
     width: auto; /* 부모 컨테이너에 따라 유동적으로 변경 */
     height: auto; /* aspect-ratio에 의해 자동으로 계산 */
     aspect-ratio: 1 / 0.6;
     font-size: 16px;
+
+    div {
+      width: 100%;
+      font-size: 10px;
+    }
+
+    div:first-child {
+      margin-top: 8px !important;
+      width: 100%;
+    }
 
     ${media.mobile} {
       padding: 0;
@@ -210,12 +227,12 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   // 오늘
   .react-calendar__tile--now {
-    background: none;
+    background-color: #a0b4c9;
   }
 
   .react-calendar__tile--now:enabled:hover,
   .react-calendar__tile--now:enabled:focus {
-    background: #e6e6e6;
+    background: #a0b4c9;
   }
 
   .react-calendar__tile--active {
@@ -232,6 +249,8 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
   .react-calendar__month-view__weekdays {
     font-size: 16px;
     font-size: 1rem;
+    padding: 10px 8px;
+    border-bottom: 1px solid #e6e6e6;
   }
 
   // 주말

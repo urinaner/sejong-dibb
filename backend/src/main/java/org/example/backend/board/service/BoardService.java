@@ -54,16 +54,12 @@ public class BoardService {
         return BoardResDto.of(board);
     }
 
-    public Page<BoardResDto> getAllBoards(int pageNo, int pageSize, String sortBy, String sortDirection) {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public Page<BoardResDto> getAllBoards(Pageable pageable) {
         return boardRepository.findAll(pageable)
                 .map(BoardResDto::of);
     }
 
-    public Page<BoardResDto> getBoardsByCategory(Category category, int pageNo, int pageSize, String sortBy, String sortDirection) {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {
         return boardRepository.findAllByCategory(category, pageable)
                 .map(BoardResDto::of);
     }
