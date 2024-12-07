@@ -28,6 +28,8 @@ import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 
+import NotFound from './components/Notfound/NotFound';
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -160,6 +162,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </ContentWrapper>
       <Footer />
