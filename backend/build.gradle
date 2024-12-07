@@ -69,4 +69,5 @@ tasks.named('test') {
 
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs << "-parameters"
 }
