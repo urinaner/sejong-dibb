@@ -1,5 +1,6 @@
 package org.example.backend.board.domain.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,16 +13,15 @@ public class BoardReqDto {
     private String title;
     private String content;
     private String writer;
+    @Schema(hidden = true)
     private List<String> fileList;
     private String category;
 
     @Builder
-    private BoardReqDto(String title, String content, String writer,
-                        List<String> fileList, String category) {
+    private BoardReqDto(String title, String content, String writer, String category) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.fileList = fileList;
         this.category = category;
     }
 
