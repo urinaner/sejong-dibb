@@ -1,36 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  AlertTriangle,
-  CheckCircle,
+  AlertCircle,
   Mail,
   Phone,
   Globe,
   MapPin,
-  Image,
+  Image as ImageIcon,
 } from 'lucide-react';
 import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { apiEndpoints, ProfessorReqDto } from '../../../config/apiConfig';
 import { Modal, useModal } from '../../../components/Modal';
 import Button from '../../../common/Button/Button';
 import * as S from './ProfessorEditStyle';
 
-interface ProfessorFormData {
-  name: string;
-  major: string;
-  phoneN: string;
-  email: string;
-  position: string;
-  homepage: string;
-  lab: string;
-  profileImage: string;
-}
-
 const ProfessorCreate: React.FC = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
-  const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState<ProfessorFormData>({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const [formData, setFormData] = useState<ProfessorReqDto>({
     name: '',
     major: '',
     phoneN: '',
@@ -41,86 +32,134 @@ const ProfessorCreate: React.FC = () => {
     profileImage: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [],
+  );
 
-  const validateForm = () => {
-    if (!formData.name.trim()) {
-      showError('이름은 필수 입력 항목입니다.');
-      return false;
-    }
-    if (!formData.email.trim()) {
-      showError('이메일은 필수 입력 항목입니다.');
-      return false;
-    }
-    if (!formData.position.trim()) {
-      showError('직위는 필수 입력 항목입니다.');
-      return false;
-    }
-    if (!formData.major.trim()) {
-      showError('전공은 필수 입력 항목입니다.');
-      return false;
-    }
-    if (!formData.phoneN.trim()) {
-      showError('전화번호는 필수 입력 항목입니다.');
-      return false;
-    }
-    return true;
-  };
+  const handleImageChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-  const showError = (message: string) => {
-    openModal(
-      <>
-        <Modal.Header>
-          <AlertTriangle size={48} color="#E53E3E" />
-          입력 오류
-        </Modal.Header>
-        <Modal.Content>
-          <p>{message}</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Modal.CloseButton />
-        </Modal.Footer>
-      </>,
-    );
-  };
+      if (file.size > 5 * 1024 * 1024) {
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertCircle size={48} color="#E53E3E" />
+              파일 크기 초과
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
+        );
+        return;
+      }
 
-  const showSuccess = () => {
-    openModal(
-      <>
-        <Modal.Header>
-          <CheckCircle size={48} color="#38A169" />
-          등록 완료
-        </Modal.Header>
-        <Modal.Content>
-          <p>교수 정보가 성공적으로 등록되었습니다.</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Modal.CloseButton onClick={() => navigate('/about/faculty')} />
-        </Modal.Footer>
-      </>,
-    );
-  };
+      if (!file.type.startsWith('image/')) {
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertCircle size={48} color="#E53E3E" />
+              잘못된 파일 형식
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 파일만 업로드할 수 있습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
+        );
+        return;
+      }
+
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    },
+    [openModal],
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
-    setSaving(true);
-
-    try {
-      await axios.post(apiEndpoints.professor.create, formData);
-      showSuccess();
-    } catch (err) {
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.position.trim()
+    ) {
       openModal(
         <>
           <Modal.Header>
-            <AlertTriangle size={48} color="#E53E3E" />
+            <AlertCircle size={48} color="#E53E3E" />
+            입력 오류
+          </Modal.Header>
+          <Modal.Content>
+            <p>이름, 이메일, 직위는 필수 입력 항목입니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append(
+        'professorReqDto',
+        new Blob([JSON.stringify(formData)], {
+          type: 'application/json',
+        }),
+      );
+
+      if (imageFile) {
+        formDataToSend.append('profileImage', imageFile);
+      }
+
+      await axios.post(apiEndpoints.professor.create.url, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertCircle size={48} color="#38A169" />
+            등록 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>교수 정보가 성공적으로 등록되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton onClick={() => navigate('/about/faculty')} />
+          </Modal.Footer>
+        </>,
+      );
+    } catch (error) {
+      console.error('Error creating professor:', error);
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertCircle size={48} color="#E53E3E" />
             등록 실패
           </Modal.Header>
           <Modal.Content>
@@ -131,19 +170,47 @@ const ProfessorCreate: React.FC = () => {
           </Modal.Footer>
         </>,
       );
-      console.error('Error creating professor:', err);
     } finally {
-      setSaving(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <S.Container>
       <S.HeaderContainer>
-        <S.Title>교수 정보 등록</S.Title>
+        <S.Title>교수 등록</S.Title>
       </S.HeaderContainer>
 
       <S.Form onSubmit={handleSubmit}>
+        <S.FormSection>
+          <S.FormTitle>프로필 이미지</S.FormTitle>
+          <S.FormContent>
+            <S.ImageUploadContainer>
+              <S.ImagePreviewContainer>
+                {imagePreview ? (
+                  <img src={imagePreview} alt="프로필 미리보기" />
+                ) : (
+                  <S.FallbackThumbnail>
+                    <ImageIcon size={48} />
+                    <span>이미지를 선택해주세요</span>
+                  </S.FallbackThumbnail>
+                )}
+              </S.ImagePreviewContainer>
+              <S.ImageUploadButton>
+                이미지 업로드
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </S.ImageUploadButton>
+              <S.HelperText>
+                * 최대 5MB, JPG/PNG 파일만 업로드 가능합니다.
+              </S.HelperText>
+            </S.ImageUploadContainer>
+          </S.FormContent>
+        </S.FormSection>
+
         <S.FormSection>
           <S.FormTitle>기본 정보</S.FormTitle>
           <S.FormContent>
@@ -213,16 +280,13 @@ const ProfessorCreate: React.FC = () => {
             </S.InputGroup>
 
             <S.InputGroup>
-              <S.Label htmlFor="phoneN">
-                전화번호<S.RequiredMark>*</S.RequiredMark>
-              </S.Label>
+              <S.Label htmlFor="phoneN">전화번호</S.Label>
               <S.InputWithIcon>
                 <S.Input
                   id="phoneN"
                   name="phoneN"
                   value={formData.phoneN}
                   onChange={handleInputChange}
-                  required
                   placeholder="02-1234-5678"
                 />
                 <Phone size={18} />
@@ -265,20 +329,6 @@ const ProfessorCreate: React.FC = () => {
                 전체 URL을 입력해주세요. (예: https://www.example.com)
               </S.HelperText>
             </S.InputGroup>
-
-            <S.InputGroup>
-              <S.Label htmlFor="profileImage">프로필 이미지 URL</S.Label>
-              <S.InputWithIcon>
-                <S.Input
-                  id="profileImage"
-                  name="profileImage"
-                  value={formData.profileImage}
-                  onChange={handleInputChange}
-                  placeholder="이미지 URL을 입력하세요"
-                />
-                <Image size={18} />
-              </S.InputWithIcon>
-            </S.InputGroup>
           </S.FormContent>
         </S.FormSection>
 
@@ -287,17 +337,17 @@ const ProfessorCreate: React.FC = () => {
             type="button"
             variant="ghost"
             onClick={() => navigate('/about/faculty')}
-            disabled={saving}
+            disabled={isSubmitting}
           >
             취소
           </Button>
           <Button
             type="submit"
             variant="primary"
-            disabled={saving}
-            isLoading={saving}
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
           >
-            {saving ? '등록 중...' : '등록'}
+            {isSubmitting ? '등록 중...' : '등록'}
           </Button>
         </S.ButtonGroup>
       </S.Form>

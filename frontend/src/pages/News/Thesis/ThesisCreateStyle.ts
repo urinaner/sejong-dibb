@@ -80,26 +80,6 @@ export const RequiredMark = styled.span`
   margin-left: 2px;
 `;
 
-export const Input = styled.input`
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    outline: none;
-    border-color: #3182ce;
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
-  }
-
-  ${media.mobile} {
-    padding: 10px 14px;
-    font-size: 0.95rem;
-  }
-`;
-
 export const HelperText = styled.p`
   margin: 4px 0 0;
   font-size: 0.875rem;
@@ -498,5 +478,48 @@ export const ImageUploadButton = styled.label`
 
   ${media.mobile} {
     width: 100%;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  }
+
+  ${media.mobile} {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+`;
+
+export const TextArea = styled.textarea`
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  }
+
+  ${media.mobile} {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    min-height: 100px;
   }
 `;

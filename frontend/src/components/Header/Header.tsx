@@ -116,7 +116,7 @@ const Header: React.FC = () => {
       <Logo>
         <StyledLink to="/">
           <LogoIcon width="50px" height="auto" />
-          <span>세종대학교 바이오융합전공</span>
+          <span>세종대학교 바이오융합공학전공</span>
         </StyledLink>
       </Logo>
       <Nav>

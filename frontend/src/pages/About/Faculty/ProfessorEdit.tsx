@@ -1,14 +1,22 @@
-// types/professor.ts
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AlertCircle, Mail, Phone, Globe, MapPin, Image } from 'lucide-react';
+import {
+  AlertCircle,
+  Mail,
+  Phone,
+  Globe,
+  MapPin,
+  Image as ImageIcon,
+  AlertTriangle,
+  CheckCircle,
+} from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../config/apiConfig';
 import Button from '../../../common/Button/Button';
+import { Modal, useModal } from '../../../components/Modal';
 import * as S from './ProfessorEditStyle';
 
-interface Professor {
-  id: number;
+interface ProfessorFormData {
   name: string;
   major: string;
   phoneN: string;
@@ -22,11 +30,14 @@ interface Professor {
 const ProfessorEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { openModal } = useModal();
+
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
-  const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState<Professor>({
-    id: 0,
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const [formData, setFormData] = useState<ProfessorFormData>({
     name: '',
     major: '',
     phoneN: '',
@@ -44,13 +55,29 @@ const ProfessorEdit: React.FC = () => {
         apiEndpoints.professor.detail(Number(id)),
       );
       setFormData(response.data);
+      if (response.data.profileImage) {
+        setImagePreview(response.data.profileImage);
+      }
     } catch (err) {
-      setError('교수 정보를 불러오는데 실패했습니다.');
       console.error('Error fetching professor:', err);
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            데이터 로드 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>교수 정보를 불러오는데 실패했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton onClick={() => navigate('/about/faculty')} />
+          </Modal.Footer>
+        </>,
+      );
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, navigate, openModal]);
 
   useEffect(() => {
     if (id) {
@@ -58,31 +85,170 @@ const ProfessorEdit: React.FC = () => {
     }
   }, [id, fetchProfessorData]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [],
+  );
+
+  const handleImageChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              파일 크기 초과
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 크기는 5MB를 초과할 수 없습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
+        );
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        openModal(
+          <>
+            <Modal.Header>
+              <AlertTriangle size={48} color="#E53E3E" />
+              잘못된 파일 형식
+            </Modal.Header>
+            <Modal.Content>
+              <p>이미지 파일만 업로드할 수 있습니다.</p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Modal.CloseButton />
+            </Modal.Footer>
+          </>,
+        );
+        return;
+      }
+
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    },
+    [openModal],
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
-    setError('');
+
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.position.trim()
+    ) {
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            입력 오류
+          </Modal.Header>
+          <Modal.Content>
+            <p>이름, 이메일, 직위는 필수 입력 항목입니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
+      return;
+    }
 
     try {
-      await axios.post(apiEndpoints.professor.update(Number(id)), formData);
-      navigate('/about/faculty');
-    } catch (err) {
-      setError('교수 정보 수정에 실패했습니다.');
-      console.error('Error updating professor:', err);
+      setIsSubmitting(true);
+
+      const formDataToSend = new FormData();
+
+      // professorReqDto로 키 이름 변경
+      formDataToSend.append(
+        'professorReqDto',
+        new Blob(
+          [
+            JSON.stringify({
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              position: formData.position.trim(),
+              major: formData.major,
+              phoneN: formData.phoneN,
+              homepage: formData.homepage,
+              lab: formData.lab,
+              departmentId: 1,
+            }),
+          ],
+          { type: 'application/json' },
+        ),
+      );
+
+      // profileImage로 키 이름 변경
+      if (imageFile) {
+        formDataToSend.append('profileImage', imageFile);
+      }
+
+      await axios.post(
+        apiEndpoints.professor.update.url(Number(id)),
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      openModal(
+        <>
+          <Modal.Header>
+            <CheckCircle size={48} color="#38A169" />
+            수정 완료
+          </Modal.Header>
+          <Modal.Content>
+            <p>교수 정보가 성공적으로 수정되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton
+              onClick={() => navigate(`/about/faculty/${id}`)}
+            />
+          </Modal.Footer>
+        </>,
+      );
+    } catch (error) {
+      console.error('Error updating professor:', error);
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            수정 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>교수 정보 수정 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
     } finally {
-      setSaving(false);
+      setIsSubmitting(false);
     }
   };
 
-  // ProfessorEdit.tsx의 return 부분
   if (loading) {
     return (
       <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
@@ -96,12 +262,34 @@ const ProfessorEdit: React.FC = () => {
       </S.HeaderContainer>
 
       <S.Form onSubmit={handleSubmit}>
-        {error && (
-          <S.ErrorMessage>
-            <AlertCircle size={18} />
-            {error}
-          </S.ErrorMessage>
-        )}
+        <S.FormSection>
+          <S.FormTitle>프로필 이미지</S.FormTitle>
+          <S.FormContent>
+            <S.ImageUploadContainer>
+              <S.ImagePreviewContainer>
+                {imagePreview ? (
+                  <img src={imagePreview} alt="프로필 미리보기" />
+                ) : (
+                  <S.FallbackThumbnail>
+                    <ImageIcon size={48} />
+                    <span>이미지를 선택해주세요</span>
+                  </S.FallbackThumbnail>
+                )}
+              </S.ImagePreviewContainer>
+              <S.ImageUploadButton>
+                이미지 업로드
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </S.ImageUploadButton>
+              <S.HelperText>
+                * 최대 5MB, JPG/PNG 파일만 업로드 가능합니다.
+              </S.HelperText>
+            </S.ImageUploadContainer>
+          </S.FormContent>
+        </S.FormSection>
 
         <S.FormSection>
           <S.FormTitle>기본 정보</S.FormTitle>
@@ -172,16 +360,13 @@ const ProfessorEdit: React.FC = () => {
             </S.InputGroup>
 
             <S.InputGroup>
-              <S.Label htmlFor="phoneN">
-                전화번호<S.RequiredMark>*</S.RequiredMark>
-              </S.Label>
+              <S.Label htmlFor="phoneN">전화번호</S.Label>
               <S.InputWithIcon>
                 <S.Input
                   id="phoneN"
                   name="phoneN"
                   value={formData.phoneN}
                   onChange={handleInputChange}
-                  required
                   placeholder="02-1234-5678"
                 />
                 <Phone size={18} />
@@ -224,20 +409,6 @@ const ProfessorEdit: React.FC = () => {
                 전체 URL을 입력해주세요. (예: https://www.example.com)
               </S.HelperText>
             </S.InputGroup>
-
-            <S.InputGroup>
-              <S.Label htmlFor="profileImage">프로필 이미지 URL</S.Label>
-              <S.InputWithIcon>
-                <S.Input
-                  id="profileImage"
-                  name="profileImage"
-                  value={formData.profileImage}
-                  onChange={handleInputChange}
-                  placeholder="이미지 URL을 입력하세요"
-                />
-                <Image size={18} />
-              </S.InputWithIcon>
-            </S.InputGroup>
           </S.FormContent>
         </S.FormSection>
 
@@ -246,17 +417,17 @@ const ProfessorEdit: React.FC = () => {
             type="button"
             variant="ghost"
             onClick={() => navigate('/about/faculty')}
-            disabled={saving}
+            disabled={isSubmitting}
           >
             취소
           </Button>
           <Button
             type="submit"
             variant="primary"
-            disabled={saving}
-            isLoading={saving}
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
           >
-            {saving ? '저장 중...' : '저장'}
+            {isSubmitting ? '저장 중...' : '저장'}
           </Button>
         </S.ButtonGroup>
       </S.Form>
