@@ -1,5 +1,6 @@
 package org.example.backend.thesis.domain.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class ThesisReqDto {
     private String content;
     private String link;
     private String publicationDate;
+    @Schema(hidden = true)
     private String thesisImage;
     private String publicationCollection;
     private String publicationIssue;
@@ -22,14 +24,13 @@ public class ThesisReqDto {
 
     @Builder
     private ThesisReqDto(String author, String journal, String content, String link,
-                         String publicationDate, String thesisImage, String publicationCollection,
+                         String publicationDate, String publicationCollection,
                          String publicationIssue, String publicationPage, String issn, Long professorId) {
         this.author = author;
         this.journal = journal;
         this.content = content;
         this.link = link;
         this.publicationDate = publicationDate;
-        this.thesisImage = thesisImage;
         this.publicationCollection = publicationCollection;
         this.publicationIssue = publicationIssue;
         this.publicationPage = publicationPage;
@@ -38,7 +39,7 @@ public class ThesisReqDto {
     }
 
     public static ThesisReqDto of(String author, String journal, String content, String link,
-                                  String publicationDate, String thesisImage, String publicationCollection,
+                                  String publicationDate, String publicationCollection,
                                   String publicationIssue, String publicationPage, String issn, Long professorId) {
         return ThesisReqDto.builder()
                 .author(author)
@@ -46,7 +47,6 @@ public class ThesisReqDto {
                 .content(content)
                 .link(link)
                 .publicationDate(publicationDate)
-                .thesisImage(thesisImage)
                 .publicationCollection(publicationCollection)
                 .publicationIssue(publicationIssue)
                 .publicationPage(publicationPage)
