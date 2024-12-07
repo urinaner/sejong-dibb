@@ -14,9 +14,7 @@ import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
 import org.example.backend.global.config.aws.S3Uploader;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +44,9 @@ public class BoardService {
         }
         if (dto.getContent() == null || dto.getContent().isEmpty()) {
             throw new BoardException(BoardExceptionType.REQUIRED_CONTENT);
+        }
+        if (dto.getCategory() == null || dto.getCategory().isEmpty() || !Category.contains(dto.getCategory())) {
+            throw new BoardException(BoardExceptionType.REQUIRED_CATEGORY);
         }
     }
 
