@@ -18,6 +18,9 @@ public class Thesis {
     @Column(name = "thesis_id", nullable = false)
     private Long id;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "author")
     private String author;
 
@@ -53,9 +56,10 @@ public class Thesis {
     private Professor professor;
 
     @Builder
-    private Thesis(String author, String journal, String content, String link,
+    private Thesis(String title, String author, String journal, String content, String link,
                    String publicationDate, String thesisImage, String publicationCollection,
                    String publicationIssue, String publicationPage, String issn, Professor professor) {
+        this.title = title;
         this.author = author;
         this.journal = journal;
         this.content = content;
@@ -71,6 +75,7 @@ public class Thesis {
 
     public static Thesis of(ThesisReqDto dto, Professor professor) {
         return Thesis.builder()
+                .title(dto.getTitle())
                 .author(dto.getAuthor())
                 .journal(dto.getJournal())
                 .content(dto.getContent())
@@ -86,6 +91,7 @@ public class Thesis {
     }
 
     public void update(ThesisReqDto dto, Professor professor) {
+        this.title = dto.getTitle();
         this.author = dto.getAuthor();
         this.journal = dto.getJournal();
         this.content = dto.getContent();
