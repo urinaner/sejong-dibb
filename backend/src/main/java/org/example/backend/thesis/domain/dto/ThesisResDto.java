@@ -10,6 +10,7 @@ import org.example.backend.thesis.domain.entity.Thesis;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ThesisResDto {
     private Long id;
+    private String title;
     private String author;
     private String journal;
     private String content;
@@ -23,10 +24,11 @@ public class ThesisResDto {
     private Long professorId;
 
     @Builder
-    private ThesisResDto(Long id, String author, String journal, String content, String link,
+    private ThesisResDto(Long id, String title, String author, String journal, String content, String link,
                          String publicationDate, String thesisImage, String publicationCollection,
                          String publicationIssue, String publicationPage, String issn, Long professorId) {
         this.id = id;
+        this.title = title;
         this.author = author;
         this.journal = journal;
         this.content = content;
@@ -43,6 +45,7 @@ public class ThesisResDto {
     public static ThesisResDto of(Thesis thesis) {
         return ThesisResDto.builder()
                 .id(thesis.getId())
+                .title(thesis.getTitle())
                 .author(thesis.getAuthor())
                 .journal(thesis.getJournal())
                 .content(thesis.getContent())
