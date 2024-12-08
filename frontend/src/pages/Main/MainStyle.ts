@@ -54,46 +54,74 @@ export const Title = styled.div`
 export const Paper = styled.article`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 280px;
   margin: 0 40px 0 40px;
   padding: 24px;
   border: solid 1px #d4d2e3;
   border-radius: 24px;
 
   img {
-    width: 200px;
+    width: 232px;
     height: auto;
     margin-bottom: 12px;
 
     ${media.tablet} {
-      width: auto;
+      width: 180px;
     }
 
     ${media.mobile} {
-      width: auto;
+      width: 120px;
     }
   }
 
   p:first-of-type {
+    width: 232px;
     margin: 0;
+    margin-bottom: 8px;
     font-family: 'Noto Sans KR';
     color: #5d5a88;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 8px;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 표시할 최대 줄 수 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    ${media.tablet} {
+      width: 180px;
+    }
 
     ${media.mobile} {
+      width: 120px;
       font-size: 16px;
     }
   }
 
   p:last-of-type {
+    width: 232px;
     margin: 0;
     font-family: 'Noto Sans KR';
     color: #5d5a88;
     font-size: 16px;
     font-weight: 400;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 표시할 최대 줄 수 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    ${media.tablet} {
+      width: 180px;
+    }
 
     ${media.mobile} {
+      width: 120px;
       font-size: 14px;
     }
   }
@@ -101,6 +129,7 @@ export const Paper = styled.article`
   ${media.tablet} {
     flex: 1 0 calc(25% - 20px); /* 태블릿: 25% 너비 (4열) */
     max-width: 220px;
+    padding: 20px;
   }
 
   ${media.mobile} {
@@ -178,7 +207,7 @@ export const TabButton = styled.button<TabButtonProps>`
 `;
 
 export const ContentContainer = styled.div`
-  margin-top: 8px;
+  /* margin-top: 8px; */
 `;
 
 export const AnnouncementItem = styled.div`
@@ -196,6 +225,23 @@ export const AnnouncementItem = styled.div`
     font-size: 15px;
     font-weight: 400;
     margin-right: 8px;
+  }
+
+  span:first-of-type {
+    flex-shrink: 1;
+    flex-basis: 100%; /* 컨테이너 내부 공간의 100%를 차지 */
+    max-width: calc(100% - 80px); /* 오른쪽 날짜 공간을 확보 */
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1; // 표시할 최대 줄 수
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; // 말줄임표 작동을 위해 normal로 설정
+  }
+
+  span:last-of-type {
+    width: 60px;
   }
 `;
 

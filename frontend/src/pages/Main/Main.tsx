@@ -28,6 +28,7 @@ interface ApiResponse<T> {
 }
 // 논문
 interface Paper {
+  title: string;
   author: string;
   content: string;
   issn: string;
@@ -101,6 +102,7 @@ function Main(): JSX.Element {
   const [activeTab, setActiveTab] = useState('학부');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -109,6 +111,8 @@ function Main(): JSX.Element {
           apiEndpoints.thesis.listWithPage(0, 4),
         );
         setPapers(paperResponse.data.data);
+        console.log(paperResponse.data.data);
+        console.log(paperResponse.data.data);
 
         // 초기 카테고리(학부)의 공지사항 로드
         await fetchAnnouncementsByCategory(CATEGORY_MAP.학부);
@@ -159,7 +163,7 @@ function Main(): JSX.Element {
           {papers.map((paper: Paper) => (
             <Paper key={paper.journal} style={{ margin: '10px' }}>
               <img src={paper.thesisImage} alt="논문 이미지" />
-              <p>{paper.author}</p>
+              <p>{paper.title}</p>
               <p>{paper.content}</p>
             </Paper>
           ))}
