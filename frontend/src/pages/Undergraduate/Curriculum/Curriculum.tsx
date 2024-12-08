@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Download } from 'lucide-react';
 import * as S from './CurriculumStyle';
 
@@ -13,18 +13,15 @@ interface DragState {
   startY: number;
   scrollLeft: number;
   scrollTop: number;
+  lastTouch?: { x: number; y: number };
 }
 
-const Curriculum = () => {
-  // 각 이미지별 독립적인 scale 상태 관리
+const Curriculum: React.FC = () => {
   const [scaleCur, setScaleCur] = useState(0.8);
   const [scaleRoad, setScaleRoad] = useState(0.8);
-
-  // 각 이미지의 위치 상태 관리
   const [positionCur, setPositionCur] = useState<Position>({ x: 0, y: 0 });
   const [positionRoad, setPositionRoad] = useState<Position>({ x: 0, y: 0 });
 
-  // 드래그 상태 ref로 관리
   const dragStateCur = useRef<DragState>({
     isDragging: false,
     startX: 0,
@@ -41,7 +38,6 @@ const Curriculum = () => {
     scrollTop: 0,
   });
 
-  // 이미지 컨테이너 ref
   const curContainerRef = useRef<HTMLDivElement>(null);
   const roadContainerRef = useRef<HTMLDivElement>(null);
 
@@ -49,144 +45,272 @@ const Curriculum = () => {
   const MAX_SCALE = 2;
   const SCALE_STEP = 0.2;
 
-  // 드래그 시작 핸들러
-  const handleMouseDown = (
-    e: React.MouseEvent,
-    dragState: React.RefObject<DragState>,
-    containerRef: React.RefObject<HTMLDivElement>,
-  ) => {
-    if (!containerRef.current || !dragState.current) return;
+  const handleMouseDown = useCallback(
+    (
+      e: React.MouseEvent,
+      dragState: React.RefObject<DragState>,
+      containerRef: React.RefObject<HTMLDivElement>,
+    ) => {
+      if (!containerRef.current || !dragState.current) return;
 
-    dragState.current.isDragging = true;
-    dragState.current.startX = e.pageX - containerRef.current.offsetLeft;
-    dragState.current.startY = e.pageY - containerRef.current.offsetTop;
-    dragState.current.scrollLeft = containerRef.current.scrollLeft;
-    dragState.current.scrollTop = containerRef.current.scrollTop;
+      dragState.current.isDragging = true;
+      dragState.current.startX = e.pageX - containerRef.current.offsetLeft;
+      dragState.current.startY = e.pageY - containerRef.current.offsetTop;
+      containerRef.current.style.cursor = 'grabbing';
+    },
+    [],
+  );
 
-    containerRef.current.style.cursor = 'grabbing';
-  };
+  const handleMouseMove = useCallback(
+    (
+      e: React.MouseEvent,
+      dragState: React.RefObject<DragState>,
+      containerRef: React.RefObject<HTMLDivElement>,
+      setPosition: React.Dispatch<React.SetStateAction<Position>>,
+      currentScale: number,
+    ) => {
+      if (!dragState.current?.isDragging || !containerRef.current) return;
 
-  // 드래그 중 핸들러
-  const handleMouseMove = (
-    e: React.MouseEvent,
-    dragState: React.RefObject<DragState>,
-    containerRef: React.RefObject<HTMLDivElement>,
-    setPosition: (pos: Position) => void,
-  ) => {
-    if (!dragState.current?.isDragging || !containerRef.current) return;
+      e.preventDefault();
 
-    e.preventDefault();
+      const x = e.pageX - containerRef.current.offsetLeft;
+      const y = e.pageY - containerRef.current.offsetTop;
 
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const y = e.pageY - containerRef.current.offsetTop;
+      const walkX = (x - dragState.current.startX) / currentScale;
+      const walkY = (y - dragState.current.startY) / currentScale;
 
-    const walkX = x - dragState.current.startX;
-    const walkY = y - dragState.current.startY;
+      setPosition((prev: Position) => ({
+        x: prev.x + walkX,
+        y: prev.y + walkY,
+      }));
 
-    setPosition({ x: walkX, y: walkY });
-  };
+      dragState.current.startX = x;
+      dragState.current.startY = y;
+    },
+    [],
+  );
 
-  // 드래그 종료 핸들러
-  const handleMouseUp = (
-    dragState: React.RefObject<DragState>,
-    containerRef: React.RefObject<HTMLDivElement>,
-  ) => {
-    if (!dragState.current || !containerRef.current) return;
+  const handleMouseUp = useCallback(
+    (
+      dragState: React.RefObject<DragState>,
+      containerRef: React.RefObject<HTMLDivElement>,
+    ) => {
+      if (!dragState.current || !containerRef.current) return;
 
-    dragState.current.isDragging = false;
-    containerRef.current.style.cursor = 'grab';
-  };
+      dragState.current.isDragging = false;
+      containerRef.current.style.cursor = 'grab';
+    },
+    [],
+  );
 
-  // 교과과정 이미지 줌 컨트롤
-  const handleZoomInCur = () => {
-    setScaleCur((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
-  };
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent, dragState: React.RefObject<DragState>) => {
+      if (!dragState.current) return;
 
-  const handleZoomOutCur = () => {
-    setScaleCur((prev) => {
-      const newScale = Math.max(prev - SCALE_STEP, MIN_SCALE);
-      if (newScale === MIN_SCALE) {
-        setPositionCur({ x: 0, y: 0 });
+      const touch = e.touches[0];
+      dragState.current.isDragging = true;
+      dragState.current.lastTouch = {
+        x: touch.clientX,
+        y: touch.clientY,
+      };
+    },
+    [],
+  );
+
+  const handleTouchMove = useCallback(
+    (
+      e: React.TouchEvent,
+      dragState: React.RefObject<DragState>,
+      setPosition: React.Dispatch<React.SetStateAction<Position>>,
+      currentScale: number,
+    ) => {
+      if (!dragState.current?.isDragging || !dragState.current.lastTouch)
+        return;
+
+      e.preventDefault();
+
+      const touch = e.touches[0];
+      const walkX =
+        (touch.clientX - dragState.current.lastTouch.x) / currentScale;
+      const walkY =
+        (touch.clientY - dragState.current.lastTouch.y) / currentScale;
+
+      setPosition((prev: Position) => ({
+        x: prev.x + walkX,
+        y: prev.y + walkY,
+      }));
+
+      dragState.current.lastTouch = {
+        x: touch.clientX,
+        y: touch.clientY,
+      };
+    },
+    [],
+  );
+
+  const handleTouchEnd = useCallback(
+    (dragState: React.RefObject<DragState>) => {
+      if (!dragState.current) return;
+      dragState.current.isDragging = false;
+      dragState.current.lastTouch = undefined;
+    },
+    [],
+  );
+
+  const handleZoom = useCallback(
+    (
+      type: 'in' | 'out',
+      currentScale: number,
+      setScale: React.Dispatch<React.SetStateAction<number>>,
+      setPosition: React.Dispatch<React.SetStateAction<Position>>,
+    ) => {
+      if (type === 'in') {
+        setScale((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
+      } else {
+        setScale((prev) => {
+          const newScale = Math.max(prev - SCALE_STEP, MIN_SCALE);
+          if (newScale === MIN_SCALE) {
+            setPosition({ x: 0, y: 0 });
+          }
+          return newScale;
+        });
       }
-      return newScale;
-    });
-  };
+    },
+    [MIN_SCALE, MAX_SCALE, SCALE_STEP],
+  );
 
-  // 로드맵 이미지 줌 컨트롤
-  const handleZoomInRoad = () => {
-    setScaleRoad((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
-  };
-
-  const handleZoomOutRoad = () => {
-    setScaleRoad((prev) => {
-      const newScale = Math.max(prev - SCALE_STEP, MIN_SCALE);
-      if (newScale === MIN_SCALE) {
-        setPositionRoad({ x: 0, y: 0 });
-      }
-      return newScale;
-    });
-  };
-
-  // 마우스 이벤트 리스너 정리
   useEffect(() => {
     const handleGlobalMouseUp = () => {
-      handleMouseUp(dragStateCur, curContainerRef);
-      handleMouseUp(dragStateRoad, roadContainerRef);
+      if (curContainerRef.current) {
+        curContainerRef.current.style.cursor = 'grab';
+        dragStateCur.current.isDragging = false;
+      }
+      if (roadContainerRef.current) {
+        roadContainerRef.current.style.cursor = 'grab';
+        dragStateRoad.current.isDragging = false;
+      }
     };
 
     document.addEventListener('mouseup', handleGlobalMouseUp);
-    return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
+    document.addEventListener('touchend', () => {
+      handleTouchEnd(dragStateCur);
+      handleTouchEnd(dragStateRoad);
+    });
+
+    return () => {
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.removeEventListener('touchend', () => {
+        handleTouchEnd(dragStateCur);
+        handleTouchEnd(dragStateRoad);
+      });
+    };
   }, []);
+
+  const renderImage = useCallback(
+    (
+      type: 'curriculum' | 'roadmap',
+      {
+        src,
+        alt,
+        scale,
+        position,
+        dragState,
+        containerRef,
+        setPosition,
+      }: {
+        src: string;
+        alt: string;
+        scale: number;
+        position: Position;
+        dragState: React.RefObject<DragState>;
+        containerRef: React.RefObject<HTMLDivElement>;
+        setPosition: React.Dispatch<React.SetStateAction<Position>>;
+      },
+    ) => (
+      <S.ImageContainer
+        key={type}
+        ref={containerRef}
+        onMouseDown={(e) => handleMouseDown(e, dragState, containerRef)}
+        onMouseMove={(e) =>
+          handleMouseMove(e, dragState, containerRef, setPosition, scale)
+        }
+        onMouseLeave={() => handleMouseUp(dragState, containerRef)}
+        onTouchStart={(e) => handleTouchStart(e, dragState)}
+        onTouchMove={(e) => handleTouchMove(e, dragState, setPosition, scale)}
+        onTouchEnd={() => handleTouchEnd(dragState)}
+        style={{ cursor: scale > MIN_SCALE ? 'grab' : 'default' }}
+      >
+        <S.CurriculumImage
+          src={src}
+          alt={alt}
+          style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+            transition: dragState.current?.isDragging
+              ? 'none'
+              : 'transform 0.3s ease',
+            pointerEvents: scale > MIN_SCALE ? 'none' : 'auto',
+          }}
+          onError={(e) => {
+            e.currentTarget.src = src;
+            e.currentTarget.onerror = null;
+          }}
+          draggable="false"
+        />
+
+        <S.ZoomControls>
+          <S.ZoomButton
+            onClick={() =>
+              handleZoom(
+                'out',
+                scale,
+                type === 'curriculum' ? setScaleCur : setScaleRoad,
+                setPosition,
+              )
+            }
+            disabled={scale <= MIN_SCALE}
+            aria-label={`${type} 축소`}
+          >
+            <ZoomOut />
+          </S.ZoomButton>
+          <S.ZoomButton
+            onClick={() =>
+              handleZoom(
+                'in',
+                scale,
+                type === 'curriculum' ? setScaleCur : setScaleRoad,
+                setPosition,
+              )
+            }
+            disabled={scale >= MAX_SCALE}
+            aria-label={`${type} 확대`}
+          >
+            <ZoomIn />
+          </S.ZoomButton>
+        </S.ZoomControls>
+      </S.ImageContainer>
+    ),
+    [
+      handleMouseDown,
+      handleMouseMove,
+      handleMouseUp,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
+    ],
+  );
 
   return (
     <S.Container>
-      {/* 교과과정 섹션 */}
       <S.ImageWrapper>
-        <S.ImageContainer
-          key="curriculum"
-          ref={curContainerRef}
-          onMouseDown={(e) => handleMouseDown(e, dragStateCur, curContainerRef)}
-          onMouseMove={(e) =>
-            handleMouseMove(e, dragStateCur, curContainerRef, setPositionCur)
-          }
-          onMouseLeave={() => handleMouseUp(dragStateCur, curContainerRef)}
-          style={{ cursor: scaleCur > MIN_SCALE ? 'grab' : 'default' }}
-        >
-          <S.CurriculumImage
-            src="/curriculum-2025.jpeg"
-            alt="2025학년도 전공 교과과정표 (생명과학대학 바이오융합공학전공)"
-            style={{
-              transform: `scale(${scaleCur}) translate(${positionCur.x}px, ${positionCur.y}px)`,
-              transition: dragStateCur.current?.isDragging
-                ? 'none'
-                : 'transform 0.3s ease',
-              pointerEvents: scaleCur > MIN_SCALE ? 'none' : 'auto',
-            }}
-            onError={(e) => {
-              e.currentTarget.src = '/curriculum-2025.jpeg';
-              e.currentTarget.onerror = null;
-            }}
-            draggable="false"
-          />
-
-          <S.ZoomControls key="curriculum-zoom">
-            <S.ZoomButton
-              onClick={handleZoomOutCur}
-              disabled={scaleCur <= MIN_SCALE}
-              aria-label="교과과정 축소"
-            >
-              <ZoomOut />
-            </S.ZoomButton>
-            <S.ZoomButton
-              onClick={handleZoomInCur}
-              disabled={scaleCur >= MAX_SCALE}
-              aria-label="교과과정 확대"
-            >
-              <ZoomIn />
-            </S.ZoomButton>
-          </S.ZoomControls>
-        </S.ImageContainer>
-
+        {renderImage('curriculum', {
+          src: '/curriculum-2025.jpeg',
+          alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
+          scale: scaleCur,
+          position: positionCur,
+          dragState: dragStateCur,
+          containerRef: curContainerRef,
+          setPosition: setPositionCur,
+        })}
         <S.ImageCaption>
           2025학년도 전공 교과과정표 (바이오융합공학전공)
         </S.ImageCaption>
@@ -204,55 +328,16 @@ const Curriculum = () => {
         </S.DownloadLink>
       </S.DownloadSection>
 
-      {/* 로드맵 섹션 */}
       <S.ImageWrapper>
-        <S.ImageContainer
-          key="roadmap"
-          ref={roadContainerRef}
-          onMouseDown={(e) =>
-            handleMouseDown(e, dragStateRoad, roadContainerRef)
-          }
-          onMouseMove={(e) =>
-            handleMouseMove(e, dragStateRoad, roadContainerRef, setPositionRoad)
-          }
-          onMouseLeave={() => handleMouseUp(dragStateRoad, roadContainerRef)}
-          style={{ cursor: scaleRoad > MIN_SCALE ? 'grab' : 'default' }}
-        >
-          <S.CurriculumImage
-            src="/roadmap-2025.jpg"
-            alt="2025학년도 바이오융합공학전공 로드맵"
-            style={{
-              transform: `scale(${scaleRoad}) translate(${positionRoad.x}px, ${positionRoad.y}px)`,
-              transition: dragStateRoad.current?.isDragging
-                ? 'none'
-                : 'transform 0.3s ease',
-              pointerEvents: scaleRoad > MIN_SCALE ? 'none' : 'auto',
-            }}
-            onError={(e) => {
-              e.currentTarget.src = '/roadmap-2025.jpg';
-              e.currentTarget.onerror = null;
-            }}
-            draggable="false"
-          />
-
-          <S.ZoomControls key="roadmap-zoom">
-            <S.ZoomButton
-              onClick={handleZoomOutRoad}
-              disabled={scaleRoad <= MIN_SCALE}
-              aria-label="로드맵 축소"
-            >
-              <ZoomOut />
-            </S.ZoomButton>
-            <S.ZoomButton
-              onClick={handleZoomInRoad}
-              disabled={scaleRoad >= MAX_SCALE}
-              aria-label="로드맵 확대"
-            >
-              <ZoomIn />
-            </S.ZoomButton>
-          </S.ZoomControls>
-        </S.ImageContainer>
-
+        {renderImage('roadmap', {
+          src: '/roadmap-2025.jpg',
+          alt: '2025학년도 바이오융합공학전공 로드맵',
+          scale: scaleRoad,
+          position: positionRoad,
+          dragState: dragStateRoad,
+          containerRef: roadContainerRef,
+          setPosition: setPositionRoad,
+        })}
         <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
       </S.ImageWrapper>
 
