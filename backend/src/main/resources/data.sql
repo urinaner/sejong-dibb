@@ -74,10 +74,11 @@ VALUES
     ('Next-generation sequencing in personalized medicine', '이건', '충무관702', '2024-12-07', '2024-12-07', '류정한', '이화여자대학교 바이오융합학과');
 
 -- Thesis 더미 데이터 (총 50개)
-INSERT INTO thesis (author, journal, content, link, publication_date, thesis_image, publication_collection,
+INSERT INTO thesis (title, author, journal, content, link, publication_date, thesis_image, publication_collection,
                     publication_issue, publication_page, issn, professor_id)
 VALUES
     -- 권병호 관련 논문
+
     ('권병호', 'Journal of Neurobiology', '신경 전달 물질의 새로운 분류를 제안한 논문입니다.', 'https://example.com/thesis1', '2024-01-15',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_12345a.jpg', '12', '1', '15-22',
      '1223-5671', 1),
@@ -189,9 +190,6 @@ VALUES
      '5678-2345', 10),
     ('어재봉', 'Advanced Drug Systems', '차세대 약물전달기술 연구.', 'https://example.com/thesis50', '2024-10-30',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/is_12575y.jpg', '23', '12', '102-110',
-     '2345-9087', 10);
-
-
 
 -- Board 더미 데이터 (10개)
 INSERT INTO board (title, content, view_count, writer, file_list, category, created_at)

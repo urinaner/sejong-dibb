@@ -2,8 +2,10 @@ package org.example.backend.thesis.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
@@ -47,11 +49,8 @@ public class ThesisController {
 
     @Operation(summary = "모든 논문 조회 API", description = "모든 논문의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<ThesisResDto>> getAllBoards(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size,
-                                                        @RequestParam(defaultValue = "id") String sort,
-                                                        @RequestParam(defaultValue = "ASC") String sortDirection) {
-        Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(page, size, sort, sortDirection);
+    public ResponseDto<List<ThesisResDto>> getAllTheses(@Valid PageRequestDto pageRequest) {
+        Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(pageRequest.toPageable());
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 

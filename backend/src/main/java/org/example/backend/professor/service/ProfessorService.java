@@ -13,9 +13,7 @@ import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.service.ThesisService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,9 +64,7 @@ public class ProfessorService {
         return ProfessorResDto.of(professor);
     }
 
-    public Page<ProfessorResDto> getAllProfessors(int pageNo, int pageSize, String sortBy, String sortDirection) {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public Page<ProfessorResDto> getAllProfessors(Pageable pageable) {
         return professorRepository.findAll(pageable)
                 .map(ProfessorResDto::of);
     }
@@ -95,11 +91,10 @@ public class ProfessorService {
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
     }
 
-    public Page<ThesisResDto> getThesisByProfessor(Long professorId, int pageNo, int pageSize, String sortBy, String sortDirection) {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public Page<ThesisResDto> getThesisByProfessor(Long professorId, Pageable pageable) {
         professorRepository.findById(professorId)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
+
         return thesisService.getThesisByProfessor(professorId, pageable);
     }
 }

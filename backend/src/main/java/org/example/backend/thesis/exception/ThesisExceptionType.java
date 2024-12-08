@@ -13,7 +13,7 @@ public enum ThesisExceptionType implements BaseExceptionType {
     NOT_FOUND_THESIS(NOT_FOUND, "논문를 찾을 수 없습니다"),
 
     REQUIRED_AUTHOR(BAD_REQUEST, "저자는 필수 입력값입니다."),
-    ;
+    REQUIRED_TITLE(BAD_REQUEST, "제목은 필수 입력값입니다");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;

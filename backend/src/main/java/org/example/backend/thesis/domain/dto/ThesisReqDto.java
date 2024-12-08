@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ThesisReqDto {
+    private String title;
     private String author;
     private String journal;
     private String content;
@@ -23,9 +24,10 @@ public class ThesisReqDto {
     private Long professorId;
 
     @Builder
-    private ThesisReqDto(String author, String journal, String content, String link,
+    private ThesisReqDto(String title, String author, String journal, String content, String link,
                          String publicationDate, String publicationCollection,
                          String publicationIssue, String publicationPage, String issn, Long professorId) {
+        this.title = title;
         this.author = author;
         this.journal = journal;
         this.content = content;
@@ -38,10 +40,11 @@ public class ThesisReqDto {
         this.professorId = professorId;
     }
 
-    public static ThesisReqDto of(String author, String journal, String content, String link,
+    public static ThesisReqDto of(String title, String author, String journal, String content, String link,
                                   String publicationDate, String publicationCollection,
                                   String publicationIssue, String publicationPage, String issn, Long professorId) {
         return ThesisReqDto.builder()
+                .title(title)
                 .author(author)
                 .journal(journal)
                 .content(content)

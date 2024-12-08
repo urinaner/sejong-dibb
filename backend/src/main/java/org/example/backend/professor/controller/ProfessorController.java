@@ -2,8 +2,10 @@ package org.example.backend.professor.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
@@ -49,24 +51,21 @@ public class ProfessorController {
 
     @Operation(summary = "교수별 논문 조회 API", description = "교수별 논문의 리스트 반환")
     @GetMapping("/{professorId}/thesis")
-    public ResponseDto<List<ThesisResDto>> getThesisByProfessor(@PathVariable(name = "professorId") Long professorId,
-                                                                @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size,
-                                                                @RequestParam(defaultValue = "id") String sort,
-                                                                @RequestParam(defaultValue = "ASC") String sortDirection) {
+    public ResponseDto<List<ThesisResDto>> getThesisByProfessor(
+            @PathVariable(name = "professorId") Long professorId,
+            @Valid PageRequestDto pageRequest) {
 
-        Page<ThesisResDto> thesisResDtos = professorService.getThesisByProfessor(professorId, page, size, sort, sortDirection);
+        Page<ThesisResDto> thesisResDtos = professorService.getThesisByProfessor(
+                professorId,
+                pageRequest.toPageable()
+        );
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 
     @Operation(summary = "모든 교수 조회 API", description = "모든 교수의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<ProfessorResDto>> getAllBoards(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "10") int size,
-                                                           @RequestParam(defaultValue = "id") String sort,
-                                                           @RequestParam(defaultValue = "ASC") String sortDirection) {
-
-        Page<ProfessorResDto> professorResDto = professorService.getAllProfessors(page, size, sort, sortDirection);
+    public ResponseDto<List<ProfessorResDto>> getAllProfessors(@Valid PageRequestDto pageRequest) {
+        Page<ProfessorResDto> professorResDto = professorService.getAllProfessors(pageRequest.toPageable());
         return ResponseDto.ok(professorResDto.getNumber(), professorResDto.getTotalPages(),
                 professorResDto.getContent());
     }
