@@ -17,6 +17,7 @@ import {
   SeminarRoomReservation,
 } from './MainStyle';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
 
@@ -97,6 +98,7 @@ const links = [
 ];
 
 function Main(): JSX.Element {
+  const navigate = useNavigate();
   const [papers, setPapers] = useState<Paper[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [activeTab, setActiveTab] = useState('학부');
@@ -154,6 +156,11 @@ function Main(): JSX.Element {
     }
   };
 
+  // 특정 공지사항 페이지로 이동
+  const handleAnnouncementClick = (id: number) => {
+    navigate(`/news/noticeboard/${id}`);
+  };
+
   return (
     <MainContainer>
       {/* 연구논문 */}
@@ -197,6 +204,7 @@ function Main(): JSX.Element {
                 announcements.map((announcement) => (
                   <AnnouncementItem
                     key={announcement.id}
+                    onClick={() => handleAnnouncementClick(announcement.id)}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
