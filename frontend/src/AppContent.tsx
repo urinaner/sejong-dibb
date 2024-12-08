@@ -26,6 +26,9 @@ import ThesisEdit from './pages/News/Thesis/ThesisEdit';
 import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 
 import mainImage from './assets/images/main_picture.svg';
+import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
+
+import NotFound from './components/Notfound/NotFound';
 
 const PageContainer = styled.div`
   display: flex;
@@ -99,6 +102,7 @@ function AppContent() {
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
           />
+          <Route path="/undergraduate/curriculum" element={<Curriculum />} />
           {/*  about */}
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
@@ -109,7 +113,6 @@ function AppContent() {
           <Route path="/seminar-rooms/reservation" element={<Reservation />} />
           <Route path="/news/thesis" element={<ThesisList />} />
           <Route path="/news/thesis/:id" element={<ThesisDetail />} />
-
           {/* 어드민 권한 보호 Routes */}
           <Route
             path="/about/faculty/edit/:id"
@@ -159,6 +162,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </ContentWrapper>
       <Footer />
