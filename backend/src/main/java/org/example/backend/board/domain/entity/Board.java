@@ -37,7 +37,7 @@ public class Board extends BaseEntity {
     @Column(name = "file_list", length = 1000)
     private List<String> fileList;
 
-    @Column(name = "created_date_time")
+    @Column(name = "created_date")
     private LocalDateTime createdDateTime;
 
     @Enumerated(EnumType.STRING)
