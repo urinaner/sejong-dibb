@@ -17,17 +17,19 @@ public class BoardResDto {
     private String writer;
     private List<String> fileList;
     private LocalDateTime createDate;
+    private int viewCount;
     private String category;
 
     @Builder
     private BoardResDto(Long id, String title, String content, String writer,
-                        List<String> fileList, LocalDateTime createDate, String category) {
+                        List<String> fileList, LocalDateTime createDate, int viewCount, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.fileList = fileList;
         this.createDate = createDate;
+        this.viewCount = viewCount;
         this.category = category;
     }
 
@@ -39,6 +41,7 @@ public class BoardResDto {
                 .writer(board.getWriter())
                 .fileList(board.getFileList())
                 .createDate(board.getCreatedDateTime())
+                .viewCount(board.getViewCount())
                 .category(board.getCategory().name())
                 .build();
     }
