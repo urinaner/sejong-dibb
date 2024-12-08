@@ -40,6 +40,9 @@ export const ImageContainer = styled.div`
   width: 100%;
   background: white;
   overflow: hidden;
+  user-select: none;
+  touch-action: none;
+  min-height: 200px;
 `;
 
 export const CurriculumImage = styled.img`
@@ -48,6 +51,9 @@ export const CurriculumImage = styled.img`
   display: block;
   object-fit: contain;
   transform-origin: center;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
 `;
 
 export const ImageCaption = styled.div`
@@ -103,7 +109,6 @@ export const DownloadLink = styled.a`
     font-size: 0.85rem;
   }
 `;
-
 export const ZoomControls = styled.div`
   position: absolute;
   top: 1rem;
@@ -184,5 +189,40 @@ export const ErrorContainer = styled.div`
     padding: 0.75rem;
     font-size: 0.875rem;
     gap: 0.375rem;
+  }
+`;
+
+export const DragInstructions = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  ${ImageContainer}:hover & {
+    opacity: 1;
+  }
+
+  ${media.mobile} {
+    display: none;
+  }
+`;
+
+export const TouchInstructions = styled.div`
+  display: none;
+  text-align: center;
+  color: #4a5568;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+
+  ${media.mobile} {
+    display: block;
   }
 `;
