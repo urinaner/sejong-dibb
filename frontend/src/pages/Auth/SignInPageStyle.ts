@@ -5,242 +5,152 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: calc(100vh - 64px);
-  margin-top: 64px;
-  position: relative;
-  padding: 40px 20px;
-  box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    padding: 20px;
-    margin-top: 32px;
-  }
-`;
-
-export const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 600px;
-  padding: 60px 50px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-
-  @media (max-width: 768px) {
-    padding: 40px 30px;
-    max-width: 100%;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 20px;
-  }
+  min-height: 100vh;
+  padding: 2rem;
 `;
 
 export const LogoContainer = styled.div`
-  margin-bottom: 40px;
   text-align: center;
+  margin-bottom: 1.5rem;
 
   img {
-    width: 140px;
+    width: 120px;
     height: auto;
-    margin-bottom: 16px;
-
-    @media (max-width: 768px) {
-      width: 120px;
-    }
-
-    @media (max-width: 480px) {
-      width: 100px;
-    }
+    margin-bottom: 1rem;
   }
 `;
+
 export const DepartmentText = styled.p`
-  text-align: center;
   color: #1a1a1a;
-  font-size: 28px;
-  margin: 0 0 20px 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 24px;
-  }
+export const Form = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
+`;
 
-  @media (max-width: 480px) {
-    font-size: 20px;
-  }
+export const Tabs = styled.div`
+  display: flex;
+  margin: -2rem -2rem 2rem -2rem;
+  border-bottom: 1px solid #e2e8f0;
+`;
+
+export const Tab = styled.button<{ active: boolean }>`
+  flex: 1;
+  padding: 1rem;
+  background: ${(props) => (props.active ? 'white' : '#f8fafc')};
+  border: none;
+  border-radius: 12px 12px 0 0;
+  color: ${(props) => (props.active ? '#1a1a1a' : '#666666')};
+  font-weight: ${(props) => (props.active ? '600' : '400')};
+  font-size: 0.95rem;
+  cursor: pointer;
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 18px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  font-size: 0.95rem;
 
   &:focus {
     outline: none;
-    border-color: #0056b3;
-    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
   }
 
   &::placeholder {
-    color: #aaa;
-  }
-
-  @media (max-width: 768px) {
-    padding: 14px 16px;
-    font-size: 16px;
-    margin-bottom: 16px;
+    color: #a0aec0;
   }
 `;
 
 export const Button = styled.button`
   width: 100%;
-  padding: 16px;
-  background-color: #0056b3;
+  padding: 0.875rem;
+  background-color: #3182ce;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-bottom: 20px;
-
-  &:hover {
-    background-color: #004494;
-  }
+  margin-top: 0.5rem;
 
   &:disabled {
-    background-color: #cccccc;
+    background-color: #cbd5e0;
     cursor: not-allowed;
-  }
-
-  @media (max-width: 768px) {
-    padding: 14px;
-    font-size: 16px;
-    margin-bottom: 16px;
   }
 `;
 
 export const ActionButtons = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  width: 100%;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    gap: 12px;
-  }
+  justify-content: center;
+  margin-top: 1.25rem;
 `;
 
-export const LinkButton = styled(Button)`
-  flex: 1;
-  background-color: #6c757d;
-  font-size: 16px;
-  margin-bottom: 0;
-  padding: 14px;
+export const LinkButton = styled.button`
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  text-decoration: underline;
 
   &:hover {
-    background-color: #5a6268;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 14px;
-    padding: 12px;
+    color: #2d3748;
   }
 `;
 
 export const ErrorMessage = styled.div`
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
+  color: #e53e3e;
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
   border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  font-size: 16px;
+  padding: 0.875rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
   text-align: center;
-
-  @media (max-width: 768px) {
-    padding: 12px;
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-`;
-
-export const Tabs = styled.div`
-  display: flex;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #dee2e6;
-
-  @media (max-width: 768px) {
-    margin-bottom: 24px;
-  }
-`;
-
-export const Tab = styled.button<{ active: boolean }>`
-  flex: 1;
-  padding: 16px;
-  background: none;
-  border: none;
-  border-bottom: 2px solid
-    ${(props) => (props.active ? '#0056b3' : 'transparent')};
-  color: ${(props) => (props.active ? '#0056b3' : '#666')};
-  font-weight: ${(props) => (props.active ? '600' : '400')};
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    color: #0056b3;
-  }
-
-  @media (max-width: 768px) {
-    padding: 14px;
-    font-size: 16px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 12px;
-    font-size: 14px;
-  }
 `;
 
 export const NoticeContainer = styled.div`
-  background-color: #f0f4ff;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
+  background-color: #f8fafc;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
   border-radius: 8px;
-  border: 1px solid #e0e7ff;
+  border: 1px solid #e2e8f0;
 `;
 
 export const NoticeTitle = styled.p`
-  color: #1e40af;
+  color: #1a1a1a;
   font-weight: 600;
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 `;
 
 export const NoticeList = styled.ul`
   margin: 0;
-  padding-left: 1.5rem;
+  padding-left: 1.25rem;
 `;
 
 export const NoticeItem = styled.li`
-  color: #3b4566;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin-bottom: 0.25rem;
+  color: #4a5568;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 0.375rem;
 
   &:last-child {
     margin-bottom: 0;

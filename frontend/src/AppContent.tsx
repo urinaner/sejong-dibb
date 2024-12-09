@@ -71,33 +71,24 @@ const MainImageWrapper = styled.div<{ hide: boolean }>`
 function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-  const isAuthPage =
-    location.pathname === '/signin' || location.pathname === '/signup';
 
   return (
     <PageContainer>
       <Header />
-      <MainImageWrapper hide={isAuthPage}>
+      <MainImageWrapper hide={false}>
         <MainImage
           src={mainImage}
           alt="Main Visual"
           isHomePage={isHomePage}
-          hide={isAuthPage}
+          hide={false}
         />
       </MainImageWrapper>
-      <ContentWrapper isAuthPage={isAuthPage}>
+      <ContentWrapper isAuthPage={false}>
         <Routes>
           {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
 
-          <Route
-            path="/signin"
-            element={
-              <ProtectedRoute requireAuth={false}>
-                <SignInPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/signin" element={<SignInPage />} />
           <Route
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
