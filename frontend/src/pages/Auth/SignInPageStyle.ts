@@ -212,3 +212,37 @@ export const Tab = styled.button<{ active: boolean }>`
     font-size: 14px;
   }
 `;
+
+export const NoticeContainer = styled.div`
+  background-color: #f0f4ff;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e0e7ff;
+`;
+
+export const NoticeTitle = styled.p`
+  color: #1e40af;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+`;
+
+export const NoticeList = styled.ul`
+  margin: 0;
+  padding-left: 1.5rem;
+`;
+
+export const NoticeItem = styled.li`
+  color: #3b4566;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.25rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;

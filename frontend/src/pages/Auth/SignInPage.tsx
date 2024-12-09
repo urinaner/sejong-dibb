@@ -12,6 +12,10 @@ import {
   ErrorMessage,
   Tabs,
   Tab,
+  NoticeContainer,
+  NoticeTitle,
+  NoticeList,
+  NoticeItem,
 } from './SignInPageStyle';
 import { AuthContext } from '../../context/AuthContext';
 import { Modal } from '../../components/Modal';
@@ -90,9 +94,24 @@ const SignInForm: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
   return (
     <form onSubmit={handleSubmit}>
       {error && <ErrorMessage>{error}</ErrorMessage>}
+      {!isAdmin && (
+        <NoticeContainer>
+          <NoticeTitle>
+            <span role="img" aria-label="info">
+              ℹ️
+            </span>
+            세종대학교 통합 로그인 안내
+          </NoticeTitle>
+          <NoticeList>
+            <NoticeItem>세종대학교 포털 계정으로 로그인해주세요.</NoticeItem>
+            <NoticeItem>아이디: 학번 (예: 23000123)</NoticeItem>
+            <NoticeItem>비밀번호: 포털 비밀번호</NoticeItem>
+          </NoticeList>
+        </NoticeContainer>
+      )}
       <Input
         type="text"
-        placeholder="아이디"
+        placeholder={isAdmin ? '아이디' : '학번'}
         value={loginId}
         onChange={(e) => setLoginId(e.target.value)}
         disabled={isSubmitting}
@@ -105,23 +124,28 @@ const SignInForm: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
         disabled={isSubmitting}
       />
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? '로그인 중...' : '로그인'}
+        {isSubmitting
+          ? '로그인 중...'
+          : isAdmin
+            ? '로그인'
+            : '포털 계정으로 로그인'}
       </Button>
       <ActionButtons>
-        <LinkButton
-          type="button"
-          onClick={() => navigate('/find-account')}
-          disabled={isSubmitting}
-        >
-          아이디/비밀번호 찾기
-        </LinkButton>
-        {!isAdmin && (
+        {!isAdmin ? (
           <LinkButton
             type="button"
-            onClick={() => navigate('/signup')}
+            onClick={() => window.open('https://portal.sejong.ac.kr', '_blank')}
             disabled={isSubmitting}
           >
-            회원가입
+            세종대학교 포털 바로가기
+          </LinkButton>
+        ) : (
+          <LinkButton
+            type="button"
+            onClick={() => navigate('/find-account')}
+            disabled={isSubmitting}
+          >
+            아이디/비밀번호 찾기
           </LinkButton>
         )}
       </ActionButtons>
