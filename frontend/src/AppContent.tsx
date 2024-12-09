@@ -29,6 +29,7 @@ import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 
 import NotFound from './components/Notfound/NotFound';
+import SignUpPage from './pages/Auth/SignUpPage';
 
 const PageContainer = styled.div`
   display: flex;
@@ -72,8 +73,7 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isAuthPage =
-    location.pathname === '/admin/signin' ||
-    location.pathname === '/admin/signup';
+    location.pathname === '/signin' || location.pathname === '/signup';
 
   return (
     <PageContainer>
@@ -95,6 +95,14 @@ function AppContent() {
             element={
               <ProtectedRoute requireAuth={false}>
                 <SignInPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <ProtectedRoute requireAuth={false}>
+                <SignUpPage />
               </ProtectedRoute>
             }
           />

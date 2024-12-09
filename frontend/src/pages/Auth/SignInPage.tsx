@@ -55,7 +55,6 @@ const SignInForm: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
         <>
           <Modal.Header>로그인 성공</Modal.Header>
           <Modal.Content>
-            <p>환영합니다!</p>
             <p>{isAdmin ? '관리자' : '학생'} 계정으로 로그인 되었습니다.</p>
           </Modal.Content>
           <Modal.Footer>
