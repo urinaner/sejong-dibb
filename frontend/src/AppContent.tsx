@@ -8,7 +8,7 @@ import Footer from './components/Footer/Footer';
 
 // Pages
 import Main from './pages/Main/Main';
-import AdminSignIn from './pages/Auth/AdminSignIn';
+import SignInPage from './pages/Auth/SignInPage';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import Overview from './pages/About/About';
 import Professor from './pages/About/Faculty/Professor';
@@ -91,10 +91,10 @@ function AppContent() {
           {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
           <Route
-            path="/admin/signin"
+            path="/signin"
             element={
               <ProtectedRoute requireAuth={false}>
-                <AdminSignIn />
+                <SignInPage />
               </ProtectedRoute>
             }
           />
