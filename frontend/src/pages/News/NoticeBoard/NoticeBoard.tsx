@@ -1,11 +1,10 @@
-// components/NoticeBoard.tsx
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { apiEndpoints } from '../../../config/apiConfig';
 import * as S from './NoticeBoardStyle';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
 import { useNoticeBoard } from './hooks/useNoticeBoard';
-import type { NoticeItem, ApiResponse } from './types/notice.types';
+import type { NoticeItem, ApiResponse, SortField } from './types/notice.types';
 
 export const CATEGORY_MAP = {
   undergraduate: '학부',
@@ -19,6 +18,21 @@ const NoticeBoard: React.FC = () => {
   const auth = useContext(AuthContext);
   const { notices, loading, error, pageInfo, filters, updateFilters } =
     useNoticeBoard();
+
+  const handleSort = useCallback(
+    (field: SortField) => {
+      updateFilters({
+        sort: {
+          field,
+          direction:
+            filters.sort.field === field && filters.sort.direction === 'asc'
+              ? 'desc'
+              : 'asc',
+        },
+      });
+    },
+    [filters.sort, updateFilters],
+  );
 
   const handleCategoryChange = useCallback(
     (category: string) => {
@@ -100,7 +114,11 @@ const NoticeBoard: React.FC = () => {
       }
     }
 
-    // Next and Last buttons
+    const getSortIcon = (field: SortField) => {
+      if (filters.sort.field !== field) return null;
+      return filters.sort.direction === 'asc' ? ' ↑' : ' ↓';
+    };
+
     pages.push(
       <S.PageButton
         key="next"
@@ -162,11 +180,30 @@ const NoticeBoard: React.FC = () => {
         <thead>
           <tr>
             <S.Th>번호</S.Th>
-            <S.Th>제목</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('title')}
+              isActive={filters.sort.field === 'title'}
+              sortDirection={filters.sort.direction}
+            >
+              제목
+            </S.SortableTh>
             <S.Th>작성자</S.Th>
-            <S.Th>등록일</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('createDate')}
+              isActive={filters.sort.field === 'createDate'}
+              sortDirection={filters.sort.direction}
+            >
+              등록일
+            </S.SortableTh>
             <S.Th>카테고리</S.Th>
-            <S.Th style={{ textAlign: 'right' }}>조회수</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('viewCount')}
+              isActive={filters.sort.field === 'viewCount'}
+              sortDirection={filters.sort.direction}
+              style={{ textAlign: 'right' }}
+            >
+              조회수
+            </S.SortableTh>
           </tr>
         </thead>
         <tbody>

@@ -281,3 +281,32 @@ export const ResponsiveTable = styled(Table)`
     }
   }
 `;
+type SortDirection = 'asc' | 'desc';
+
+export const SortableTh = styled(Th)<{
+  isActive?: boolean;
+  sortDirection?: SortDirection;
+}>`
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 25px; // 화살표 아이콘 공간
+
+  &:hover {
+    background-color: #f1f3f5;
+  }
+
+  &:after {
+    content: '${(props) => {
+      if (!props.isActive) return '↕';
+      return props.sortDirection === 'asc' ? '↑' : '↓';
+    }}';
+    position: absolute;
+    right: 8px;
+    opacity: ${(props) => (props.isActive ? 1 : 0.3)};
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+`;
