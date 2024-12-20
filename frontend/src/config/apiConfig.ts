@@ -218,7 +218,6 @@ export const apiEndpoints = {
             createDate: boardReqDto.createDate,
             category: boardReqDto.category,
             departmentId: 1,
-            fileList: files.map((file) => file.name),
           }),
         );
 
