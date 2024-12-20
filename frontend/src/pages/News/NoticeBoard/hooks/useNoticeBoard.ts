@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FilterState, NoticeState, ApiResponse } from '../types/notice.types';
+import {
+  FilterState,
+  NoticeState,
+  ApiResponse,
+  SortField,
+} from '../types/notice.types';
 import axios from 'axios';
 import { apiEndpoints } from '../../../../config/apiConfig';
 
@@ -38,13 +43,29 @@ export const useNoticeBoard = () => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
+      // URL 파라미터 구성 - 정렬 가능한 필드만 전송
+      const params = new URLSearchParams({
+        page: state.filters.page.toString(),
+        size: state.filters.size.toString(),
+      });
+
+      // 정렬 필드가 허용된 도메인 값인 경우에만 파라미터 추가
+      const allowedSortFields: SortField[] = [
+        'title',
+        'content',
+        'writer',
+        'viewCount',
+      ];
+
+      if (allowedSortFields.includes(state.filters.sort.field)) {
+        params.append('sort', state.filters.sort.field);
+        params.append('sortDirection', state.filters.sort.direction);
+      }
+
       const response = await axios.get<ApiResponse>(
         state.filters.category === 'all'
-          ? apiEndpoints.board.listWithPage(
-              state.filters.page,
-              state.filters.size,
-            )
-          : `${apiEndpoints.board.base}/category/${state.filters.category}?page=${state.filters.page}&size=${state.filters.size}`,
+          ? `${apiEndpoints.board.base}?${params}`
+          : `${apiEndpoints.board.base}/category/${state.filters.category}?${params}`,
       );
 
       if (response.data?.data) {

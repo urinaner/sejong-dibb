@@ -15,7 +15,6 @@ export interface ApiResponse {
   data: NoticeItem[]; // 게시글 데이터 배열
 }
 
-export type SortField = 'title' | 'viewCount' | 'createDate';
 export type SortDirection = 'asc' | 'desc';
 
 export interface NoticeState {
@@ -40,3 +39,10 @@ export interface NoticeItem {
   category: string;
   file?: string;
 }
+
+export type SortField =
+  | 'title'
+  | 'content'
+  | 'writer'
+  | 'viewCount'
+  | 'createDate';
