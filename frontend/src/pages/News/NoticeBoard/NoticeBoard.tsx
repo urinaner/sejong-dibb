@@ -188,7 +188,13 @@ const NoticeBoard: React.FC = () => {
               제목
             </S.SortableTh>
             <S.Th>작성자</S.Th>
-            <S.Th>등록일</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('createdDate')}
+              isActive={filters.sort.field === 'createdDate'}
+              sortDirection={filters.sort.direction}
+            >
+              등록일
+            </S.SortableTh>{' '}
             <S.Th>카테고리</S.Th>
             <S.SortableTh
               onClick={() => handleSort('viewCount')}

@@ -45,4 +45,5 @@ export type SortField =
   | 'content'
   | 'writer'
   | 'viewCount'
-  | 'createDate';
+  | 'createDate'
+  | 'createdDate';

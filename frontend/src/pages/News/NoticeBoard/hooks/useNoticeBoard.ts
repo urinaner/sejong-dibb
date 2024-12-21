@@ -21,7 +21,7 @@ export const useNoticeBoard = () => {
     filters: {
       category: 'all',
       sort: {
-        field: 'createDate',
+        field: 'createdDate',
         direction: 'desc',
       },
       page: 0,
@@ -55,6 +55,7 @@ export const useNoticeBoard = () => {
         'content',
         'writer',
         'viewCount',
+        'createdDate',
       ];
 
       if (allowedSortFields.includes(state.filters.sort.field)) {
