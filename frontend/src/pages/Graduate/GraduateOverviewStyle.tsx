@@ -63,9 +63,11 @@ export const InfoCard = styled.div`
 export const InfoTitle = styled.h3`
   font-size: 1.8rem;
   font-weight: 600;
+  margin-top: 0;
   margin-bottom: 20px;
   border-bottom: 3px solid currentColor;
   padding-bottom: 12px;
+  text-align: center;
 
   @media (max-width: 768px) {
     font-size: 1.5rem; /* 작은 화면에서 폰트 크기 조정 */
