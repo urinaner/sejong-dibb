@@ -41,7 +41,7 @@ public class BoardResDto {
                 .content(board.getContent())
                 .writer(board.getWriter())
                 .fileList(board.getFileList())
-                .createDate(TimeParsingUtils.toRelativeTimeFormat(board.getCreatedDateTime()))
+                .createDate(TimeParsingUtils.toRelativeTimeFormat(board.getCreatedDate()))
                 .viewCount(board.getViewCount())
                 .category(board.getCategory().name())
                 .build();
