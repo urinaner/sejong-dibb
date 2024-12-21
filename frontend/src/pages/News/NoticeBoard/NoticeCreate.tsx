@@ -150,7 +150,6 @@ const NoticeCreate: React.FC = () => {
       </>,
     );
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -166,25 +165,23 @@ const NoticeCreate: React.FC = () => {
       setIsSubmitting(true);
 
       const currentDate = new Date().toISOString().slice(0, 10);
+      const formData = new FormData();
 
-      const boardReqDto: BoardReqDto = {
-        title: title.trim(),
-        content: content.trim(),
-        writer: auth.user || 'admin',
-        category: category,
-        departmentId: 1,
-        createDate: currentDate,
-      };
-
-      // 파일이 있는 경우 fileList 추가
-      if (file) {
-        boardReqDto.fileList = [file.name];
-      }
-
-      const formData = apiEndpoints.board.create.getFormData(
-        boardReqDto,
-        file ? [file] : [],
+      formData.append(
+        'boardReqDto',
+        JSON.stringify({
+          title: title.trim(),
+          content: content.trim(),
+          writer: auth.user || 'admin',
+          createDate: currentDate,
+          category: category,
+          departmentId: 1,
+        }),
       );
+
+      if (file) {
+        formData.append('boardFiles', file);
+      }
 
       const response = await axios.post(
         apiEndpoints.board.create.url,
@@ -206,7 +203,6 @@ const NoticeCreate: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;

@@ -141,102 +141,48 @@ export const ProfileSection = styled.div`
   position: relative;
   margin-left: 2rem;
   height: 100%;
-
-  ${media.mobile} {
-    margin-left: 1rem;
-    height: auto;
-  }
-`;
-
-export const ProfileButton = styled.button`
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  color: ${colors.text.primary};
-  transition: color 0.2s ease;
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  &:hover {
-    color: ${colors.text.dark};
-  }
-`;
-
-export const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  min-width: 300px;
-  padding: 0.8rem 2rem;
-
-  a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  svg {
-    width: 36px;
-    height: auto;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-
-  span {
-    font-size: 1.2rem;
-    font-weight: 600;
-    white-space: nowrap;
-    letter-spacing: -0.5px;
-  }
-
-  ${media.mobile} {
-    min-width: auto;
-    width: 100%;
-    border-bottom: 1px solid ${colors.border};
-    padding: 0.8rem 1rem;
-
-    svg {
-      width: 32px;
-    }
-
-    span {
-      font-size: 1.1rem;
-    }
-  }
-`;
-
-export const ProfileDropdown = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 220px;
   z-index: 1000;
-  overflow: hidden;
 `;
 
-export const ProfileItem = styled.div`
-  padding: 1rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
+export const ModalContainer = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
 
-  &:not(:last-child) {
-    border-bottom: 1px solid ${colors.border};
-  }
+export const ModalHeader = styled.div`
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+`;
+
+export const ModalContent = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+`;
+
+export const Button = styled.button`
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1a73e8;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
 
   &:hover {
-    background-color: ${colors.hover.background};
+    background-color: #1557b0;
   }
 `;
