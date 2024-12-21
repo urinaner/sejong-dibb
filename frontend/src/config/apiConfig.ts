@@ -186,8 +186,8 @@ export const apiEndpoints = {
   },
   user: {
     login: `${API_URL}/api/user/login`,
-    signOut: `${API_URL}/api/user/signOut`,
-    register: `${API_URL}/api/user/join`,
+    signOut: `${API_URL}/logout`,
+    register: `${API_URL}/register`,
   },
   department: {
     get: (id: string) => `${API_URL}/api/departments/${id}`,
@@ -218,7 +218,6 @@ export const apiEndpoints = {
             createDate: boardReqDto.createDate,
             category: boardReqDto.category,
             departmentId: 1,
-            fileList: files.map((file) => file.name),
           }),
         );
 

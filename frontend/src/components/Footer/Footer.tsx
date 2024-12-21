@@ -34,7 +34,7 @@ function Footer() {
             </S.AdminButton>
           </S.AdminSection>
         ) : (
-          <Link to="/admin/signin">
+          <Link to="/signin">
             <S.AdminButton>
               <img src="/adminLoginBtn.svg" alt="관리자 로그인" />
             </S.AdminButton>

@@ -1,82 +1,55 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { apiEndpoints } from '../../../config/apiConfig';
 import * as S from './NoticeBoardStyle';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
+import { useNoticeBoard } from './hooks/useNoticeBoard';
+import type { NoticeItem, ApiResponse, SortField } from './types/notice.types';
 
-interface NoticeItem {
-  id: number;
-  title: string;
-  content: string;
-  viewCount: number;
-  writer: string;
-  createDate: string;
-  category: string;
-  file?: string;
-}
-
-interface ApiResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: NoticeItem[];
-}
-
-const CATEGORY_MAP = {
+export const CATEGORY_MAP = {
   undergraduate: '학부',
   graduate: '대학원',
   employment: '취업',
   scholarship: '장학',
 };
 
-type CategoryKey = keyof typeof CATEGORY_MAP;
-
 const NoticeBoard: React.FC = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const [notices, setNotices] = useState<NoticeItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageInfo, setPageInfo] = useState({
-    currentPage: 0,
-    totalPages: 0,
-    size: 10,
-  });
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { notices, loading, error, pageInfo, filters, updateFilters } =
+    useNoticeBoard();
 
-  const fetchNotices = async (page = 0, category = selectedCategory) => {
-    setLoading(true);
-    try {
-      const response = await axios.get<ApiResponse>(
-        category === 'all'
-          ? apiEndpoints.board.listWithPage(page, pageInfo.size)
-          : `${apiEndpoints.board.base}/category/${category}?page=${page}&size=${pageInfo.size}`,
-      );
-      if (response.data?.data) {
-        setNotices(response.data.data);
-        setPageInfo({
-          currentPage: response.data.page,
-          totalPages: response.data.totalPage,
-          size: pageInfo.size,
-        });
-      }
-    } catch (err) {
-      setError('게시글을 불러오는데 실패했습니다.');
-      console.error('Error fetching notices:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleSort = useCallback(
+    (field: SortField) => {
+      updateFilters({
+        sort: {
+          field,
+          direction:
+            filters.sort.field === field && filters.sort.direction === 'asc'
+              ? 'desc'
+              : 'asc',
+        },
+      });
+    },
+    [filters.sort, updateFilters],
+  );
 
-  useEffect(() => {
-    fetchNotices(currentPage);
-  }, [currentPage]);
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      updateFilters({
+        category,
+        page: 0, // 카테고리 변경 시 첫 페이지로 리셋
+      });
+    },
+    [updateFilters],
+  );
 
-  const getCategoryLabel = (category: string): string => {
-    return CATEGORY_MAP[category as CategoryKey] || category;
-  };
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      updateFilters({ page: newPage });
+    },
+    [updateFilters],
+  );
 
   const formatViewCount = (count: number | undefined): string => {
     if (typeof count === 'undefined') return '0';
@@ -141,7 +114,11 @@ const NoticeBoard: React.FC = () => {
       }
     }
 
-    // Next and Last buttons
+    const getSortIcon = (field: SortField) => {
+      if (filters.sort.field !== field) return null;
+      return filters.sort.direction === 'asc' ? ' ↑' : ' ↓';
+    };
+
     pages.push(
       <S.PageButton
         key="next"
@@ -162,12 +139,6 @@ const NoticeBoard: React.FC = () => {
     return <S.PaginationContainer>{pages}</S.PaginationContainer>;
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < pageInfo.totalPages) {
-      setCurrentPage(newPage);
-    }
-  };
-
   if (loading) {
     return <S.LoadingSpinner>Loading...</S.LoadingSpinner>;
   }
@@ -182,24 +153,16 @@ const NoticeBoard: React.FC = () => {
         <S.Navigation>
           <S.NavButtonGroup>
             <S.NavButton
-              isActive={selectedCategory === 'all'}
-              onClick={() => {
-                setSelectedCategory('all');
-                setCurrentPage(0);
-                fetchNotices(0, 'all');
-              }}
+              isActive={filters.category === 'all'}
+              onClick={() => handleCategoryChange('all')}
             >
               전체
             </S.NavButton>
             {Object.entries(CATEGORY_MAP).map(([key, value]) => (
               <S.NavButton
                 key={key}
-                isActive={selectedCategory === key}
-                onClick={() => {
-                  setSelectedCategory(key);
-                  setCurrentPage(0);
-                  fetchNotices(0, key);
-                }}
+                isActive={filters.category === key}
+                onClick={() => handleCategoryChange(key)}
               >
                 {value}
               </S.NavButton>
@@ -217,15 +180,28 @@ const NoticeBoard: React.FC = () => {
         <thead>
           <tr>
             <S.Th>번호</S.Th>
-            <S.Th>제목</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('title')}
+              isActive={filters.sort.field === 'title'}
+              sortDirection={filters.sort.direction}
+            >
+              제목
+            </S.SortableTh>
             <S.Th>작성자</S.Th>
             <S.Th>등록일</S.Th>
             <S.Th>카테고리</S.Th>
-            <S.Th style={{ textAlign: 'right' }}>조회수</S.Th>
+            <S.SortableTh
+              onClick={() => handleSort('viewCount')}
+              isActive={filters.sort.field === 'viewCount'}
+              sortDirection={filters.sort.direction}
+              style={{ textAlign: 'right' }}
+            >
+              조회수
+            </S.SortableTh>
           </tr>
         </thead>
         <tbody>
-          {notices.map((notice) => (
+          {notices.map((notice: NoticeItem) => (
             <S.Tr key={notice.id}>
               <S.Td>{notice.id}</S.Td>
               <S.Td>
@@ -237,7 +213,10 @@ const NoticeBoard: React.FC = () => {
               </S.Td>
               <S.Td>{notice.writer}</S.Td>
               <S.Td>{notice.createDate}</S.Td>
-              <S.Td>{getCategoryLabel(notice.category)}</S.Td>
+              <S.Td>
+                {CATEGORY_MAP[notice.category as keyof typeof CATEGORY_MAP] ||
+                  notice.category}
+              </S.Td>
               <S.ViewCount>{formatViewCount(notice.viewCount)}</S.ViewCount>
             </S.Tr>
           ))}
