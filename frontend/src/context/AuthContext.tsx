@@ -16,7 +16,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   signin: (
-    userName: string,
+    username: string,
     password: string,
     isAdminLogin?: boolean,
   ) => Promise<void>;
@@ -84,7 +84,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // 로그인 함수
   const signin = async (
     userName: string,
     password: string,
@@ -100,17 +99,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       const formData = new FormData();
-      formData.append('loginId', userName);
-      formData.append('password', password);
 
-      // 관리자/일반 사용자 로그인 엔드포인트 선택
+      // 관리자/학생 로그인에 따라 다른 프로퍼티명 사용
+      if (isAdminLogin) {
+        formData.append('loginId', userName); // 관리자용 ID 프로퍼티
+        formData.append('password', password);
+      } else {
+        formData.append('loginId', String(userName)); // 학생용 ID 프로퍼티
+        formData.append('password', String(password));
+      }
+
+      // 관리자/학생 로그인 엔드포인트 선택
       const loginEndpoint = isAdminLogin
         ? apiEndpoints.admin.login
         : apiEndpoints.user.login;
 
       const response = await axios.post(loginEndpoint, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
 
