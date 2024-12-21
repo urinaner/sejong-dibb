@@ -8,7 +8,7 @@ import Footer from './components/Footer/Footer';
 
 // Pages
 import Main from './pages/Main/Main';
-import AdminSignIn from './pages/Auth/AdminSignIn';
+import SignInPage from './pages/Auth/SignInPage';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import GraduateOverview from './pages/Graduate/GraduateOverview';
 import Overview from './pages/About/About';
@@ -79,27 +79,20 @@ function AppContent() {
   return (
     <PageContainer>
       <Header />
-      <MainImageWrapper hide={isAuthPage}>
+      <MainImageWrapper hide={false}>
         <MainImage
           src={mainImage}
           alt="Main Visual"
           isHomePage={isHomePage}
-          hide={isAuthPage}
+          hide={false}
         />
       </MainImageWrapper>
-      <ContentWrapper isAuthPage={isAuthPage}>
+      <ContentWrapper isAuthPage={false}>
         <Routes>
           {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
-          <Route
-            path="/admin/signin"
-            element={
-              <ProtectedRoute requireAuth={false}>
-                <AdminSignIn />
-              </ProtectedRoute>
-            }
-          />
-          {/* undergraduate */}
+
+          <Route path="/signin" element={<SignInPage />} />
           <Route
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
