@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +50,7 @@ public class ThesisController {
 
     @Operation(summary = "모든 논문 조회 API", description = "모든 논문의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<ThesisResDto>> getAllTheses(@Valid PageRequestDto pageRequest) {
+    public ResponseDto<List<ThesisResDto>> getAllTheses(@Valid @ModelAttribute PageRequestDto pageRequest) {
         Page<ThesisResDto> thesisResDtos = thesisService.getAllTheses(pageRequest.toPageable());
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }

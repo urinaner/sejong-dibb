@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class BoardController {
 
     @Operation(summary = "모든 게시판 조회 API", description = "모든 게시판의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<BoardResDto>> getAllBoards(@Valid PageRequestDto pageRequest) {
+    public ResponseDto<List<BoardResDto>> getAllBoards(@Valid @ModelAttribute PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getAllBoards(pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
@@ -51,7 +52,7 @@ public class BoardController {
     @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
     @GetMapping("/category/{category}")
     public ResponseDto<List<BoardResDto>> getBoardsByCategory(@PathVariable("category") Category category,
-                                                              @Valid PageRequestDto pageRequest) {
+                                                              @Valid @ModelAttribute PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
