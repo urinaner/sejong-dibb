@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer';
 import Main from './pages/Main/Main';
 import AdminSignIn from './pages/Auth/AdminSignIn';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
+import GraduateOverview from './pages/Graduate/GraduateOverview';
 import Overview from './pages/About/About';
 import Professor from './pages/About/Faculty/Professor';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
@@ -98,11 +99,14 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          {/* undergraduate */}
           <Route
             path="/undergraduate/admission-scholarship"
             element={<Hyperlink />}
           />
           <Route path="/undergraduate/curriculum" element={<Curriculum />} />
+          {/* graduate */}
+          <Route path="graduate/overview" element={<GraduateOverview />} />
           {/*  about */}
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
