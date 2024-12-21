@@ -113,8 +113,6 @@ function Main(): JSX.Element {
           apiEndpoints.thesis.listWithPage(0, 4),
         );
         setPapers(paperResponse.data.data);
-        console.log(paperResponse.data.data);
-        console.log(paperResponse.data.data);
 
         // 초기 카테고리(학부)의 공지사항 로드
         await fetchAnnouncementsByCategory(CATEGORY_MAP.학부);
@@ -242,7 +240,10 @@ function Main(): JSX.Element {
               <img src="info.svg" />
             </button>
             <SeminarRoomReservation to="/seminar-rooms/reservation">
-              <span>세미나실 예약</span>
+              <span>
+                세미나실 <br />
+                예약
+              </span>
               <img src="/whiteCalendarIcon.svg" />
             </SeminarRoomReservation>
           </SeminarContainer>

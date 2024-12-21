@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer';
 import Main from './pages/Main/Main';
 import SignInPage from './pages/Auth/SignInPage';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
+import GraduateOverview from './pages/Graduate/GraduateOverview';
 import Overview from './pages/About/About';
 import Professor from './pages/About/Faculty/Professor';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
@@ -71,6 +72,9 @@ const MainImageWrapper = styled.div<{ hide: boolean }>`
 function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isAuthPage =
+    location.pathname === '/admin/signin' ||
+    location.pathname === '/admin/signup';
 
   return (
     <PageContainer>
@@ -94,6 +98,8 @@ function AppContent() {
             element={<Hyperlink />}
           />
           <Route path="/undergraduate/curriculum" element={<Curriculum />} />
+          {/* graduate */}
+          <Route path="graduate/overview" element={<GraduateOverview />} />
           {/*  about */}
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
