@@ -1,6 +1,5 @@
 package org.example.backend.board.domain.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,19 +16,19 @@ public class BoardResDto {
     private String content;
     private String writer;
     private List<String> fileList;
-    private String createDate;
+    private String createdDate;
     private int viewCount;
     private String category;
 
     @Builder
     private BoardResDto(Long id, String title, String content, String writer,
-                        List<String> fileList, String createDate, int viewCount, String category) {
+                        List<String> fileList, String createdDate, int viewCount, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.fileList = fileList;
-        this.createDate = createDate;
+        this.createdDate = createdDate;
         this.viewCount = viewCount;
         this.category = category;
     }
@@ -41,7 +40,7 @@ public class BoardResDto {
                 .content(board.getContent())
                 .writer(board.getWriter())
                 .fileList(board.getFileList())
-                .createDate(TimeParsingUtils.toRelativeTimeFormat(board.getCreatedDate()))
+                .createdDate(TimeParsingUtils.toRelativeTimeFormat(board.getCreatedDate()))
                 .viewCount(board.getViewCount())
                 .category(board.getCategory().name())
                 .build();
