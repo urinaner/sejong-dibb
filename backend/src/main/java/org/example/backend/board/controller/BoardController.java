@@ -44,7 +44,7 @@ public class BoardController {
 
     @Operation(summary = "모든 게시판 조회 API", description = "모든 게시판의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<BoardResDto>> getAllBoards(@ModelAttribute PageRequestDto pageRequest) {
+    public ResponseDto<List<BoardResDto>> getAllBoards(@ModelAttribute @Valid PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getAllBoards(pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
@@ -52,7 +52,7 @@ public class BoardController {
     @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
     @GetMapping("/category/{category}")
     public ResponseDto<List<BoardResDto>> getBoardsByCategory(@PathVariable("category") Category category,
-                                                              @ModelAttribute PageRequestDto pageRequest) {
+                                                              @ModelAttribute @Valid PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
