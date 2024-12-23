@@ -1,5 +1,6 @@
 package org.example.backend.reservation.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class ReservationController {
     @PostMapping("/{roomId}/reservation")
     public ResponseEntity<List<ReservationResDto>> createReservation(
             @PathVariable(value = "roomId") Long roomId,
-            @RequestBody ReservationReqDto reqDto) {
+            @RequestBody @Valid ReservationReqDto reqDto) {
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER));
         List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, user);
