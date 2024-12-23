@@ -1,15 +1,12 @@
 package org.example.backend.professor.service;
 
 import org.example.backend.IntegrationTestSupport;
-import org.example.backend.department.domain.entity.Department;
-import org.example.backend.department.repository.DepartmentRepository;
 import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProfessorServiceTest extends IntegrationTestSupport {
+public class ProfessorServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private ProfessorRepository professorRepository;
@@ -43,12 +40,11 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "younghan@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 401호",
-                "profile.jpg"
+                "충무관 401호"
         );
 
         // when
-        Long savedProfessorId = professorService.saveProfessor(dto);
+        Long savedProfessorId = professorService.saveProfessor(dto, null);
 
         // then
         Optional<Professor> professor = professorRepository.findById(savedProfessorId);
@@ -69,13 +65,12 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "younghan@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 401호",
-                "profile.jpg"
+                "충무관 401호"
         );
 
         // when & then
         ProfessorException exception = assertThrows(ProfessorException.class,
-                () -> professorService.saveProfessor(dto));
+                () -> professorService.saveProfessor(dto, null));
 
         assertEquals(ProfessorExceptionType.REQUIRED_NAME, exception.exceptionType());
     }
@@ -93,8 +88,7 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "younghan@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 401호",
-                "profile1.jpg"
+                "충무관 401호"
         );
 
         ProfessorReqDto dto2 = ProfessorReqDto.of(
@@ -104,16 +98,15 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "yj@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 402호",
-                "profile2.jpg"
+                "충무관 402호"
         );
 
         // when
-        professorService.saveProfessor(dto1);
+        professorService.saveProfessor(dto1, null);
 
         // then
         ProfessorException exception = assertThrows(ProfessorException.class,
-                () -> professorService.saveProfessor(dto2));
+                () -> professorService.saveProfessor(dto2, null));
 
         assertEquals(ProfessorExceptionType.DUPLICATE_PHONE, exception.exceptionType());
     }
@@ -129,11 +122,10 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "younghan@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 401호",
-                "profile.jpg"
+                "충무관 401호"
         );
 
-        Long savedProfessorId = professorService.saveProfessor(dto);
+        Long savedProfessorId = professorService.saveProfessor(dto, null);
 
         // when
         ProfessorResDto professorResDto = professorService.getProfessor(savedProfessorId);
@@ -155,11 +147,10 @@ class ProfessorServiceTest extends IntegrationTestSupport {
                 "lee@sejong.ac.kr",
                 "정교수",
                 "https://prof.sejong.ac.kr",
-                "충무관 403호",
-                "profile.jpg"
+                "충무관 403호"
         );
 
-        Long savedProfessorId = professorService.saveProfessor(dto);
+        Long savedProfessorId = professorService.saveProfessor(dto, null);
 
         // when
         professorService.deleteProfessor(savedProfessorId);
