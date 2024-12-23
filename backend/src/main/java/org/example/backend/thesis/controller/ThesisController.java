@@ -35,7 +35,7 @@ public class ThesisController {
     @Operation(summary = "논문 생성 API", description = "논문 생성")
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Long> createThesis(
-            @RequestPart(value = "thesisReqDto") ThesisReqDto thesisReqDto,
+            @RequestPart(value = "thesisReqDto") @Valid ThesisReqDto thesisReqDto,
             @RequestPart(value = "thesis_image", required = false) MultipartFile multipartFile) {
         Long thesisId = thesisService.saveThesis(thesisReqDto, multipartFile);
         return new ResponseEntity<>(thesisId, HttpStatus.OK);
