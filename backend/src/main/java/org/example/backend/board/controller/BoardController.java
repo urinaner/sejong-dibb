@@ -36,7 +36,7 @@ public class BoardController {
 
     @Operation(summary = "게시판 생성 API 입니다.", description = "게시판 생성입니다.")
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Long> createBoard(@RequestPart(value = "boardReqDto") BoardReqDto boardReqDto,
+    public ResponseEntity<Long> createBoard(@RequestPart(value = "boardReqDto") @Valid BoardReqDto boardReqDto,
                                             @RequestPart(value = "boardFiles", required = false) List<MultipartFile> multipartFileList) {
         Long boardId = boardService.saveBoard(boardReqDto, multipartFileList);
         return new ResponseEntity<>(boardId, HttpStatus.OK);
@@ -44,7 +44,7 @@ public class BoardController {
 
     @Operation(summary = "모든 게시판 조회 API", description = "모든 게시판의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<BoardResDto>> getAllBoards(@Valid @ModelAttribute PageRequestDto pageRequest) {
+    public ResponseDto<List<BoardResDto>> getAllBoards(@ModelAttribute PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getAllBoards(pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
@@ -52,7 +52,7 @@ public class BoardController {
     @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
     @GetMapping("/category/{category}")
     public ResponseDto<List<BoardResDto>> getBoardsByCategory(@PathVariable("category") Category category,
-                                                              @Valid @ModelAttribute PageRequestDto pageRequest) {
+                                                              @ModelAttribute PageRequestDto pageRequest) {
 
         Page<BoardResDto> boardList = boardService.getBoardsByCategory(category, pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
