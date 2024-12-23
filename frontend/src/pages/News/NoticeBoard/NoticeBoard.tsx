@@ -13,6 +13,25 @@ export const CATEGORY_MAP = {
   scholarship: '장학',
 };
 
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  // 유효한 날짜인지 확인
+  if (isNaN(date.getTime())) {
+    return dateString; // 유효하지 않은 날짜면 원본 문자열 반환
+  }
+
+  // 날짜를 YYYY-MM-DD 형식으로 변환
+  return date
+    .toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\. /g, '-')
+    .replace('.', '');
+};
+
 const NoticeBoard: React.FC = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -218,7 +237,8 @@ const NoticeBoard: React.FC = () => {
                 </S.TitleLink>
               </S.Td>
               <S.Td>{notice.writer}</S.Td>
-              <S.Td>{notice.createDate}</S.Td>
+              <S.Td>{formatDate(notice.createdDate)}</S.Td>{' '}
+              {/* 이 부분이 수정됨 */}
               <S.Td>
                 {CATEGORY_MAP[notice.category as keyof typeof CATEGORY_MAP] ||
                   notice.category}

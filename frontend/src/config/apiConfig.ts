@@ -200,6 +200,7 @@ export const apiEndpoints = {
   },
   board: {
     base: `${API_URL}/api/board`,
+    download: `${API_URL}/api/board/download`,
     listWithPage: (page: number, size: number) =>
       `${API_URL}/api/board?page=${page}&size=${size}`,
     create: {

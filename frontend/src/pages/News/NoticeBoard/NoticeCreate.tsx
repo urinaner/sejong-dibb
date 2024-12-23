@@ -173,7 +173,7 @@ const NoticeCreate: React.FC = () => {
           title: title.trim(),
           content: content.trim(),
           writer: auth.user || 'admin',
-          createDate: currentDate,
+          createdDate: currentDate,
           category: category,
           departmentId: 1,
         }),
