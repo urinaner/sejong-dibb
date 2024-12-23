@@ -37,7 +37,7 @@ public class ReservationReqDto {
     }
 
     public static ReservationReqDto of(String startTime, String endTime,
-                                       String purpose, String repetitionType, String etc) {
+                                       String purpose, String etc) {
         return ReservationReqDto.builder()
                 .startTime(startTime)
                 .endTime(endTime)
