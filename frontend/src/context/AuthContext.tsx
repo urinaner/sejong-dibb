@@ -8,7 +8,12 @@ import React, {
 import axios from 'axios';
 import { apiEndpoints } from '../config/apiConfig';
 
-// AuthContext 타입 정의
+// 로그인 크리덴셜 타입 정의
+interface LoginCredentials {
+  loginId: string;
+  password: string;
+}
+
 interface AuthContextType {
   user: string | null;
   isAuthenticated: boolean;
@@ -16,8 +21,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   signin: (
-    username: string,
-    password: string,
+    credentials: FormData | LoginCredentials,
     isAdminLogin?: boolean,
   ) => Promise<void>;
   signout: () => Promise<void>;
@@ -41,7 +45,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => setError(null);
 
-  // 인증 상태 설정 함수
   const setAuthState = (userName: string | null, adminRole = false) => {
     if (userName) {
       localStorage.setItem('user', userName);
@@ -58,7 +61,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // 로그아웃 함수
   const signout = useCallback(async () => {
     try {
       await axios.post(apiEndpoints.admin.signOut);
@@ -70,7 +72,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // 초기화
   useEffect(() => {
     const initializeAuth = () => {
       const savedUser = localStorage.getItem('user');
@@ -85,12 +86,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const signin = async (
-    userName: string,
-    password: string,
+    credentials: FormData | LoginCredentials,
     isAdminLogin = false,
   ) => {
-    if (!userName || !password) {
-      setError('아이디와 비밀번호를 입력해주세요.');
+    if (!credentials) {
+      setError('로그인 정보가 누락되었습니다.');
       return;
     }
 
@@ -98,27 +98,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearError();
 
     try {
-      const formData = new FormData();
-
-      // 관리자/학생 로그인에 따라 다른 프로퍼티명 사용
-      if (isAdminLogin) {
-        formData.append('loginId', userName); // 관리자용 ID 프로퍼티
-        formData.append('password', password);
-      } else {
-        formData.append('loginId', String(userName)); // 학생용 ID 프로퍼티
-        formData.append('password', String(password));
-      }
-
-      // 관리자/학생 로그인 엔드포인트 선택
       const loginEndpoint = isAdminLogin
         ? apiEndpoints.admin.login
         : apiEndpoints.user.login;
 
-      const response = await axios.post(loginEndpoint, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      let response;
+      let userName: string;
+
+      if (isAdminLogin) {
+        // 관리자 로그인: multipart/form-data
+        if (!(credentials instanceof FormData)) {
+          throw new Error('관리자 로그인에는 FormData가 필요합니다.');
+        }
+        response = await axios.post(loginEndpoint, credentials, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        userName = String(credentials.get('loginId'));
+      } else {
+        // 학생 로그인: application/json
+        if (credentials instanceof FormData) {
+          throw new Error('학생 로그인에는 JSON 형식이 필요합니다.');
+        }
+        response = await axios.post(loginEndpoint, credentials, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        userName = credentials.loginId;
+      }
 
       if (response.status === 200) {
         setAuthState(userName, isAdminLogin);
