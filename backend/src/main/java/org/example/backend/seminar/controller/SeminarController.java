@@ -1,16 +1,21 @@
 package org.example.backend.seminar.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.dto.PageRequestDto;
+import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
 import org.example.backend.seminar.service.SeminarService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +34,14 @@ public class SeminarController {
     public ResponseEntity<Long> createSeminar(@RequestBody SeminarReqDto seminarReqDto) {
         Long seminarId = seminarService.saveSeminar(seminarReqDto);
         return new ResponseEntity<>(seminarId, HttpStatus.OK);
+    }
+
+    @Operation(summary = "모든 세미나 조회 API", description = "모든 세미나의 리스트 반환")
+    @GetMapping
+    public ResponseDto<List<SeminarResDto>> getAllBoards(@Valid @ModelAttribute PageRequestDto pageRequest) {
+
+        Page<SeminarResDto> seminarList = seminarService.getAllSeminars(pageRequest.toPageable());
+        return ResponseDto.ok(seminarList.getNumber(), seminarList.getTotalPages(), seminarList.getContent());
     }
 
     @Operation(summary = "단일 세미나 조회 API", description = "단일 세미나의 리스트 반환")

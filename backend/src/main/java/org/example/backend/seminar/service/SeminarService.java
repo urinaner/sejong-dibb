@@ -9,6 +9,8 @@ import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.exception.SeminarException;
 import org.example.backend.seminar.exception.SeminarExceptionType;
 import org.example.backend.seminar.repository.SeminarRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +54,10 @@ public class SeminarService {
     private Seminar findSeminarById(Long seminarId) {
         return seminarRepository.findById(seminarId)
                 .orElseThrow(() -> new SeminarException(NOT_FOUND_SEMINAR));
+    }
+
+    public Page<SeminarResDto> getAllSeminars(Pageable pageable) {
+        return seminarRepository.findAll(pageable)
+                .map(SeminarResDto::of);
     }
 }
