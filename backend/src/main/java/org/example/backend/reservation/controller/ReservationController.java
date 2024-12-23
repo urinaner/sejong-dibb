@@ -34,15 +34,9 @@ public class ReservationController {
             @RequestBody ReservationReqDto reqDto) {
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER));
-        log.debug("Reservation creation request received: {}", reqDto);
-        try {
-            List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, user);
-            log.debug("Reservation created successfully: {}", resDtos);
-            return ResponseEntity.ok(resDtos);
-        } catch (Exception e) {
-            log.error("Error during reservation creation", e);
-            throw e;
-        }
+        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, user);
+        log.debug("Reservation created successfully: {}", resDtos);
+        return ResponseEntity.ok(resDtos);
     }
 
 

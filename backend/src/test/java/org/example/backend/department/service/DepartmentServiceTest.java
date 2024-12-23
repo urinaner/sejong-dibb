@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DepartmentServiceTest extends IntegrationTestSupport {
+public class DepartmentServiceTest extends IntegrationTestSupport {
 
     @Autowired
     DepartmentService departmentService;
