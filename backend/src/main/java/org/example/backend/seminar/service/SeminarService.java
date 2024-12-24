@@ -22,16 +22,9 @@ public class SeminarService {
 
     @Transactional
     public Long saveSeminar(SeminarReqDto seminarReqDto) {
-        validateUserRequiredFields(seminarReqDto);
         Seminar seminar = Seminar.of(seminarReqDto);
         Seminar savedSeminar = seminarRepository.save(seminar);
         return savedSeminar.getId();
-    }
-
-    private void validateUserRequiredFields(SeminarReqDto dto) {
-        if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new SeminarException(SeminarExceptionType.REQUIRED_NAME);
-        }
     }
 
     public SeminarResDto getSeminar(Long seminarId) {

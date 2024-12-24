@@ -12,9 +12,6 @@ public enum ProfessorExceptionType implements BaseExceptionType {
 
     NOT_FOUND_PROFESSOR(NOT_FOUND, "교수를 찾을 수 없습니다"),
     NOT_FOUND_FILE(NOT_FOUND, "파일을 찾을 수 없습니다"),
-
-    REQUIRED_NAME(BAD_REQUEST, "이름은 필수 입력값입니다."),
-
     DUPLICATE_PHONE(BAD_REQUEST, "전화번호가 이미 존재합니다."),
     DUPLICATE_EMAIL(BAD_REQUEST, "이메일이 이미 존재합니다.")
     ;

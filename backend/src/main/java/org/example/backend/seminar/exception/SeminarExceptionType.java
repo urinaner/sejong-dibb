@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 public enum SeminarExceptionType implements BaseExceptionType {
 
         NOT_FOUND_SEMINAR(NOT_FOUND, "세미나를 찾을 수 없습니다"),
-
-        REQUIRED_NAME(BAD_REQUEST, "이름은 필수 입력값입니다."),
         ;
 
         private final HttpStatus httpStatus;

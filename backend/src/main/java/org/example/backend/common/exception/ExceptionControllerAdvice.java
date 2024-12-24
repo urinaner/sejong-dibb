@@ -5,12 +5,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.common.exception.paging.InvalidPaginationParameterException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,14 +24,6 @@ public class ExceptionControllerAdvice {
                 .body(new ExceptionResponse(type.errorMessage()));
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    ResponseEntity<ExceptionResponse> handleMissingParams(MissingServletRequestParameterException e) {
-        String errorMessage = e.getParameterName() + " 값이 누락 되었습니다.";
-        log.info("잘못된 요청이 들어왔습니다. 내용:  {}", errorMessage);
-        return ResponseEntity.status(BAD_REQUEST)
-                .body(new ExceptionResponse(errorMessage));
-    }
-
     @ExceptionHandler(Exception.class)
     ResponseEntity<ExceptionResponse> handleException(HttpServletRequest request, Exception e) {
         log.error("예상하지 못한 예외가 발생했습니다. URI: {}, ", request.getRequestURI(), e);
@@ -49,26 +38,9 @@ public class ExceptionControllerAdvice {
                 .body(new ExceptionResponse("요청 본문이 비어 있습니다."));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        log.error("DataIntegrityViolationException occurred: ", e);
-
-        //참조 제약 조건 위반 확인
-        if (e.getMessage().contains("FOREIGN KEY") || e.getMessage().contains("foreign key")) {
-            return ResponseEntity.badRequest()
-                    .body(new ExceptionResponse("해당 데이터를 삭제하기 전에 연관된 데이터를 먼저 삭제해주세요."));
-        }
-
-        return ResponseEntity.badRequest()
-                .body(new ExceptionResponse("데이터 처리 중 오류가 발생했습니다."));
-    }
-
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ExceptionResponse> validException(
-            MethodArgumentNotValidException e) {
-
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ExceptionResponse> bindException(BindException e) {
         return ResponseEntity.status(BAD_REQUEST)
-                .body(new ExceptionResponse(e.getMessage()));
+                .body(new ExceptionResponse(e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
     }
 }

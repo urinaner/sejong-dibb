@@ -29,7 +29,6 @@ public class ProfessorService {
 
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
-        validateUserRequiredFields(professorReqDto);
         validateUserUniqueFields(professorReqDto);
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
@@ -41,12 +40,6 @@ public class ProfessorService {
         Professor savedProfessor = professorRepository.save(professor);
 
         return savedProfessor.getId();
-    }
-
-    private void validateUserRequiredFields(ProfessorReqDto dto) {
-        if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new ProfessorException(ProfessorExceptionType.REQUIRED_NAME);
-        }
     }
 
     private void validateUserUniqueFields(ProfessorReqDto dto) {

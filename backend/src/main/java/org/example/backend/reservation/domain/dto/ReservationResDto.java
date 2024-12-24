@@ -19,20 +19,18 @@ public class ReservationResDto {
     private String endTime;
     private ReservationPurpose purpose;
     private String etc;
-    private String repetitionType;
     private Long roomId;
     private Long userId;
 
     @Builder
     private ReservationResDto(Long id, String startTime, String endTime,
-                              ReservationPurpose purpose, String etc, String repetitionType,
+                              ReservationPurpose purpose, String etc,
                               Long roomId, Long userId) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.repetitionType = repetitionType;
         this.roomId = roomId;
         this.userId = userId;
     }
@@ -44,7 +42,6 @@ public class ReservationResDto {
                 .endTime(TimeParsingUtils.formatterString(reservation.getEndTime()))
                 .purpose(reservation.getPurpose())
                 .etc(reservation.getEtc())
-                .repetitionType(reservation.getRepetitionType().name())
                 .roomId(reservation.getRoom().getId())
                 .userId(reservation.getUser().getId())
                 .build();

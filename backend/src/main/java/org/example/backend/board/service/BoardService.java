@@ -29,27 +29,12 @@ public class BoardService {
 
     @Transactional
     public Long saveBoard(BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
-        validateUserRequiredFields(boardReqDto);
-
         fileUpload(boardReqDto, multipartFileList);
 
         Board board = Board.of(boardReqDto);
         Board savedBoard = boardRepository.save(board);
         return savedBoard.getId();
     }
-
-    private void validateUserRequiredFields(BoardReqDto dto) {
-        if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
-            throw new BoardException(BoardExceptionType.REQUIRED_TITLE);
-        }
-        if (dto.getContent() == null || dto.getContent().isEmpty()) {
-            throw new BoardException(BoardExceptionType.REQUIRED_CONTENT);
-        }
-        if (dto.getCategory() == null || dto.getCategory().isEmpty() || !Category.contains(dto.getCategory())) {
-            throw new BoardException(BoardExceptionType.REQUIRED_CATEGORY);
-        }
-    }
-
     public BoardResDto getBoard(Long boardId) {
         Board board = findBoardById(boardId);
         return BoardResDto.of(board);
