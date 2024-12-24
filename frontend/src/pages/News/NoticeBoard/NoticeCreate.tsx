@@ -188,7 +188,7 @@ const NoticeCreate: React.FC = () => {
         formData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         },
       );
