@@ -1,5 +1,5 @@
-// Organization.tsx
 import React from 'react';
+import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import {
   OrgWrapper,
   OrgContent,
@@ -7,6 +7,54 @@ import {
   OrgCard,
   MapContainer,
 } from './OrganizationStyle';
+
+// 세종대학교 생명과학대학 좌표
+const center = {
+  lat: 37.5509,
+  lng: 127.0737,
+};
+
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%',
+};
+
+// API 키가 없을 경우를 대비한 에러 메시지 컴포넌트
+const MapError = () => (
+  <div
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f5f5f5',
+      color: '#666',
+    }}
+  >
+    Google Maps API key is not configured
+  </div>
+);
+
+const GoogleMapComponent = () => {
+  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
+  if (!apiKey) {
+    return <MapError />;
+  }
+
+  return (
+    <LoadScript googleMapsApiKey={apiKey}>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={center}
+        zoom={17}
+      >
+        <Marker position={center} title="세종대학교 생명과학대학" />
+      </GoogleMap>
+    </LoadScript>
+  );
+};
 
 const Organization = () => {
   return (
@@ -32,11 +80,8 @@ const Organization = () => {
           </dl>
         </OrgCard>
 
-        {/* Map */}
         <MapContainer>
-          <div className="map-placeholder">
-            <p>Google Maps will be integrated here</p>
-          </div>
+          <GoogleMapComponent />
         </MapContainer>
       </OrgContent>
     </OrgWrapper>
