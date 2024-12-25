@@ -25,6 +25,7 @@ import ThesisList from './pages/News/Thesis/ThesisList';
 import ThesisCreate from './pages/News/Thesis/ThesisCreate';
 import ThesisEdit from './pages/News/Thesis/ThesisEdit';
 import ThesisDetail from './pages/News/Thesis/ThesisDetail';
+import Organization from './pages/About/Organization/Organization';
 
 import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
@@ -73,8 +74,7 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isAuthPage =
-    location.pathname === '/admin/signin' ||
-    location.pathname === '/admin/signup';
+    location.pathname === '/signin' || location.pathname === '/signup';
 
   return (
     <PageContainer>
@@ -104,6 +104,8 @@ function AppContent() {
           <Route path="/about" element={<Overview />} />
           <Route path="/about/faculty" element={<Professor />} />
           <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
+          <Route path="/about/organization" element={<Organization />} />
+
           {/*  news */}
           <Route path="/news/noticeboard" element={<NoticeBoard />} />
           <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
