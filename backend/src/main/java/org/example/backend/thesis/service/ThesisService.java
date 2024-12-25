@@ -10,7 +10,6 @@ import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.domain.entity.Thesis;
 import org.example.backend.thesis.exception.ThesisException;
-import org.example.backend.thesis.exception.ThesisExceptionType;
 import org.example.backend.thesis.repository.ThesisRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +28,6 @@ public class ThesisService {
 
     @Transactional
     public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
-        validateUserRequiredFields(thesisReqDto);
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
@@ -43,14 +41,6 @@ public class ThesisService {
         return savedThesis.getId();
     }
 
-    private void validateUserRequiredFields(ThesisReqDto dto) {
-        if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
-            throw new ThesisException(ThesisExceptionType.REQUIRED_TITLE);
-        }
-        if (dto.getAuthor() == null || dto.getAuthor().isEmpty()) {
-            throw new ThesisException(ThesisExceptionType.REQUIRED_AUTHOR);
-        }
-    }
 
     private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)

@@ -31,7 +31,7 @@ public class SeminarController {
 
     @Operation(summary = "세미나 생성 API", description = "세미나 생성")
     @PostMapping
-    public ResponseEntity<Long> createSeminar(@RequestBody SeminarReqDto seminarReqDto) {
+    public ResponseEntity<Long> createSeminar(@RequestBody @Valid SeminarReqDto seminarReqDto) {
         Long seminarId = seminarService.saveSeminar(seminarReqDto);
         return new ResponseEntity<>(seminarId, HttpStatus.OK);
     }

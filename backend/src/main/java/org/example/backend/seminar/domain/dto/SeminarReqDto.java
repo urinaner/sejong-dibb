@@ -1,14 +1,15 @@
 package org.example.backend.seminar.domain.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SeminarReqDto {
+    @NotBlank(message = "세미나 이름은 필수 입력값입니다.")
     private String name;
     private String writer;
     private String place;

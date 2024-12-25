@@ -45,10 +45,6 @@ public class Reservation extends BaseEntity {
     @Column(name = "etc")
     private String etc;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "repetition_type")
-    private RepetitionType repetitionType;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
@@ -59,23 +55,21 @@ public class Reservation extends BaseEntity {
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, RepetitionType repetitionType, Room room, User user) {
+                        String etc, Room room, User user) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.repetitionType = repetitionType;
         this.room = room;
         this.user = user;
     }
 
     public static Reservation of(ReservationReqDto dto, Room room, User user) {
         return Reservation.builder()
-                .startTime(TimeParsingUtils.formatterLocalDateTime(dto.getStartTime()))
-                .endTime(TimeParsingUtils.formatterLocalDateTime(dto.getEndTime()))
-                .purpose(ReservationPurpose.valueOf(dto.getDefaultPurpose()))
+                .startTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getStartTime())))
+                .endTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getEndTime())))
+                .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
                 .etc(dto.getEtc())
-                .repetitionType(RepetitionType.valueOf(dto.getRepetitionType()))
                 .room(room)
                 .user(user)
                 .build();

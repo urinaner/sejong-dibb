@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +35,7 @@ public class ProfessorController {
     @Operation(summary = "교수 생성 API", description = "교수 생성")
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Long> createProfessor(
-            @RequestPart(value = "professorReqDto") ProfessorReqDto professorReqDto,
+            @RequestPart(value = "professorReqDto") @Valid ProfessorReqDto professorReqDto,
             @RequestPart(value = "profileImage", required = false) MultipartFile multipartFile
     ) {
         Long professorId = professorService.saveProfessor(professorReqDto, multipartFile);

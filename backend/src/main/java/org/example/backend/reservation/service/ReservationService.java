@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.utils.TimeParsingUtils;
-import org.example.backend.reservation.domain.RepetitionType;
 import org.example.backend.reservation.domain.ReservationPurpose;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.room.domain.Room;
@@ -38,42 +37,10 @@ public class ReservationService {
 
         validateReservationOverlap(reqDto, seminarRoomId);
 
-        if (reqDto.isWeeklyReservation()) {
-            List<Reservation> weeklyReservations = createWeeklyReservations(reqDto, room, user);
-            reservationRepository.saveAll(weeklyReservations);
-            return weeklyReservations.stream()
-                    .map(ReservationResDto::of)
-                    .collect(Collectors.toList());
-        } else {
-            Reservation reservation = Reservation.of(reqDto, room, user);
-            reservationRepository.save(reservation);
-            return List.of(ReservationResDto.of(reservation));
-        }
-    }
+        Reservation reservation = Reservation.of(reqDto, room, user);
+        reservationRepository.save(reservation);
+        return List.of(ReservationResDto.of(reservation));
 
-    private List<Reservation> createWeeklyReservations(ReservationReqDto reqDto, Room room, User user) {
-        List<Reservation> reservations = new ArrayList<>();
-        LocalDateTime startDateTime = TimeParsingUtils.formatterLocalDateTime(reqDto.getStartTime());
-        LocalDateTime endDateTime = TimeParsingUtils.formatterLocalDateTime(reqDto.getEndTime());
-
-        LocalDate startDate = startDateTime.toLocalDate();
-        LocalDate endDate = endDateTime.toLocalDate();
-
-        while (!startDate.isAfter(endDate)) {
-            LocalDateTime weeklyStart = LocalDateTime.of(startDate, startDateTime.toLocalTime());
-            LocalDateTime weeklyEnd = LocalDateTime.of(startDate, endDateTime.toLocalTime());
-            reservations.add(Reservation.builder()
-                    .startTime(weeklyStart)
-                    .endTime(weeklyEnd)
-                    .purpose(ReservationPurpose.valueOf(reqDto.getDefaultPurpose()))
-                    .etc(reqDto.getEtc())
-                    .repetitionType(RepetitionType.WEEKLY)
-                    .room(room)
-                    .user(user)
-                    .build());
-            startDate = startDate.plusWeeks(1);
-        }
-        return reservations;
     }
 
     public List<ReservationResDto> getReservationsByRoom(Long seminarRoomId) {
