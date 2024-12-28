@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import * as token from '../../constants/colors';
 
 const media = {
   mobile: '@media(max-width: 768px)',
@@ -9,7 +10,8 @@ const media = {
 export const Footer = styled.footer`
   width: 100%;
   padding: 40px;
-  background-color: #d7e8ff;
+  background-color: ${token.SEJONG_COLORS.GRAY};
+  color: white;
   box-sizing: border-box;
 
   ${media.tablet} {
@@ -105,7 +107,7 @@ export const SightMapHeader = styled.div`
 export const SightMapContent = styled.div`
   font-size: 16px;
   font-weight: 300;
-  margin-top: 8px;
+  margin-top: 18px;
   font-family: 'Noto Sans';
 
   ${media.tablet} {
@@ -120,7 +122,6 @@ export const SightMapContent = styled.div`
 export const Copyright = styled.div`
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid grey;
   margin-top: 36px;
   padding-top: 36px;
   font-weight: 600;
