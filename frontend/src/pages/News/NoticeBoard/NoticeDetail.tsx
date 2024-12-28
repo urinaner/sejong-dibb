@@ -9,14 +9,15 @@ import { AuthContext } from '../../../context/AuthContext';
 import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import 'react-quill/dist/quill.snow.css';
+
 interface BoardDetail {
   id: number;
   title: string;
   content: string;
   writer: string;
-  createDate: string;
+  createdDate: string;
   viewCount: number;
-  file?: string;
+  fileList?: string[];
   category: string;
 }
 
@@ -33,6 +34,9 @@ const NoticeDetail: React.FC = () => {
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
+  const [downloadingFiles, setDownloadingFiles] = useState<Set<string>>(
+    new Set(),
+  );
   const [post, setPost] = useState<BoardDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +53,6 @@ const NoticeDetail: React.FC = () => {
         const response = await axios.get<BoardDetail>(
           apiEndpoints.board.get(id),
         );
-
         setPost(response.data);
       } catch (error: any) {
         console.error('Failed to fetch post details:', error);
@@ -61,6 +64,64 @@ const NoticeDetail: React.FC = () => {
 
     fetchPostDetail();
   }, [id]);
+
+  const getFileName = (fileUrl: string): string => {
+    try {
+      const decodedUrl = decodeURIComponent(fileUrl);
+      const urlParts = decodedUrl.split('/');
+      return urlParts[urlParts.length - 1];
+    } catch {
+      return fileUrl;
+    }
+  };
+
+  const showErrorModal = (title: string, message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          {title}
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const handleFileDownload = async (fileUrl: string) => {
+    if (downloadingFiles.has(fileUrl)) return;
+
+    try {
+      setDownloadingFiles((prev) => new Set(prev).add(fileUrl));
+
+      const fileName = getFileName(fileUrl);
+
+      // 브라우저에서 직접 다운로드 처리
+      const link = document.createElement('a');
+      link.href = fileUrl; // S3 URL 직접 사용
+      link.setAttribute('download', fileName);
+      link.setAttribute('target', '_blank'); // 새 탭에서 열기 (필요한 경우)
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      showErrorModal(
+        '파일 다운로드 실패',
+        '파일을 다운로드하는 중 오류가 발생했습니다.',
+      );
+    } finally {
+      setDownloadingFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(fileUrl);
+        return newSet;
+      });
+    }
+  };
 
   const showConfirmModal = () => {
     openModal(
@@ -152,7 +213,7 @@ const NoticeDetail: React.FC = () => {
           </S.MetaItem>
           <S.MetaItem>
             <S.Label>작성일:</S.Label>
-            <span>{post.createDate}</span>
+            <span>{post.createdDate}</span>
           </S.MetaItem>
           <S.MetaItem>
             <S.Label>조회수:</S.Label>
@@ -182,15 +243,25 @@ const NoticeDetail: React.FC = () => {
         dangerouslySetInnerHTML={createMarkup(post.content)}
       />
 
-      {post.file && (
+      {post.fileList && post.fileList.length > 0 && (
         <S.FileSection>
-          <S.FileLink
-            href={post.file}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📎 첨부파일 다운로드
-          </S.FileLink>
+          <S.FileListHeader>첨부파일 ({post.fileList.length})</S.FileListHeader>
+          <S.FileList>
+            {post.fileList.map((fileUrl, index) => (
+              <S.FileItem key={index}>
+                <S.FileIcon>📎</S.FileIcon>
+                <S.FileName>{getFileName(fileUrl)}</S.FileName>
+                <S.FileDownloadButton
+                  onClick={() => handleFileDownload(fileUrl)}
+                  disabled={downloadingFiles.has(fileUrl)}
+                >
+                  {downloadingFiles.has(fileUrl)
+                    ? '다운로드 중...'
+                    : '다운로드'}
+                </S.FileDownloadButton>
+              </S.FileItem>
+            ))}
+          </S.FileList>
         </S.FileSection>
       )}
 

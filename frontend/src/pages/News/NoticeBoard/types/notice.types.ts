@@ -35,9 +35,9 @@ export interface NoticeItem {
   content: string;
   viewCount: number;
   writer: string;
-  createDate: string;
+  createdDate: string;
   category: string;
-  file?: string;
+  file?: string[];
 }
 
 export type SortField =

@@ -55,15 +55,31 @@ const SignInPage: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      await signin(loginId, password, activeTab === 'admin');
+
+      // 관리자/학생 로그인 데이터 준비
+      const isAdminLogin = activeTab === 'admin';
+      let loginData;
+
+      if (isAdminLogin) {
+        // 관리자 로그인: FormData 형식
+        loginData = new FormData();
+        loginData.append('loginId', loginId);
+        loginData.append('password', password);
+      } else {
+        // 학생 로그인: JSON 형식
+        loginData = {
+          loginId,
+          password,
+        };
+      }
+
+      await signin(loginData, isAdminLogin);
+
       openModal(
         <>
           <Modal.Header>로그인 성공</Modal.Header>
           <Modal.Content>
-            <p>
-              {activeTab === 'admin' ? '관리자' : '학생'} 계정으로
-              로그인되었습니다.
-            </p>
+            <p>{isAdminLogin ? '관리자' : '학생'} 계정으로 로그인되었습니다.</p>
           </Modal.Content>
           <Modal.Footer>
             <Button
@@ -94,6 +110,8 @@ const SignInPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  // ... 나머지 JSX 반환 부분은 동일 ...
 
   return (
     <Container>
