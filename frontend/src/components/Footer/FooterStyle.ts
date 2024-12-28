@@ -122,7 +122,6 @@ export const SightMapContent = styled.div`
 export const Copyright = styled.div`
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid grey;
   margin-top: 36px;
   padding-top: 36px;
   font-weight: 600;
