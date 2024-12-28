@@ -66,11 +66,7 @@ const GoogleMapComponent = () => {
           ],
         }}
       >
-        <Marker
-          position={center}
-          title="세종대학교 생명과학대학"
-          animation={google.maps.Animation.DROP}
-        />
+        <Marker position={center} title="세종대학교 생명과학대학" />
       </GoogleMap>
     </LoadScript>
   );
@@ -115,5 +111,4 @@ const Organization = () => {
     </OrgWrapper>
   );
 };
-
 export default Organization;
