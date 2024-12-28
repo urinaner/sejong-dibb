@@ -105,7 +105,7 @@ export const SightMapHeader = styled.div`
 export const SightMapContent = styled.div`
   font-size: 16px;
   font-weight: 300;
-  margin-top: 8px;
+  margin-top: 18px;
   font-family: 'Noto Sans';
 
   ${media.tablet} {
