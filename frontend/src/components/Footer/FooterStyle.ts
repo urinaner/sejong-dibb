@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import * as token from '../../constants/colors';
 
 const media = {
   mobile: '@media(max-width: 768px)',
@@ -9,7 +10,8 @@ const media = {
 export const Footer = styled.footer`
   width: 100%;
   padding: 40px;
-  background-color: #d7e8ff;
+  background-color: ${token.SEJONG_COLORS.GRAY};
+  color: white;
   box-sizing: border-box;
 
   ${media.tablet} {
