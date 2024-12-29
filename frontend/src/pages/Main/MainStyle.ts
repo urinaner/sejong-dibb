@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import * as token from '../../constants/colors';
 
 const media = {
   mobile: '@media(max-width: 768px)',
@@ -197,8 +198,10 @@ interface TabButtonProps {
 export const TabButton = styled.button<TabButtonProps>`
   flex: 1;
   padding: 12px 0 12px 0;
-  background: ${({ isActive }) => (isActive ? '#D7E8FF' : '#F1F1F3')};
-  border: ${({ isActive }) => (isActive ? '1px solid #65B2D3' : 'none')};
+  background: ${({ isActive }) =>
+    isActive ? `${token.SEJONG_COLORS.CRIMSON_RED}` : '#F1F1F3'};
+  border: ${({ isActive }) =>
+    isActive ? `1px solid ${token.SEJONG_COLORS.CRIMSON_RED}` : 'none'};
   font-family: 'Noto Sans KR';
   font-size: 16px;
   font-weight: 400;
@@ -206,9 +209,7 @@ export const TabButton = styled.button<TabButtonProps>`
   transition: background-color 0.5s;
 `;
 
-export const ContentContainer = styled.div`
-  /* margin-top: 8px; */
-`;
+export const ContentContainer = styled.div``;
 
 export const AnnouncementItem = styled.div`
   display: flex;
@@ -259,7 +260,7 @@ export const SeminarContainer = styled.div`
     justify-content: center;
     margin-right: 24px;
     padding: 0 30px;
-    background-color: #3271c7;
+    background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
 
     border-radius: 0;
     border: none;
@@ -365,7 +366,7 @@ export const SeminarRoomReservation = styled(Link)`
   justify-content: center;
   padding: 0 24px 0 24px;
   font-size: 22px;
-  background-color: #358bbf;
+  background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
   text-decoration: none;
 
   ${media.tablet} {
@@ -392,17 +393,18 @@ export const ShortcutContainer = styled.section`
   gap: 50px 0; /* 요소들 사이의 간격 설정 */
   padding: 95px 0 95px 0;
 
-  background: linear-gradient(135deg, #d1f1ff 0%, #d1f1ff 50%, #71c9ff0a 100%);
+  /* background: linear-gradient(135deg, #d1f1ff 0%, #d1f1ff 50%, #71c9ff0a 100%); */
+  background-color: #e9dfda;
 
   a {
     width: 100%;
     text-decoration: none;
-    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Noto Sans KR';
-    font-size: 22px;
+    font-size: 20px;
+    color: ${token.SEJONG_COLORS.GRAY};
   }
 
   ${media.mobile} {
