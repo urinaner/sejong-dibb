@@ -221,13 +221,7 @@ function Main(): JSX.Element {
           </AnnouncementContainer>
           <SeminarContainer>
             {/* TODO: 최신 세미나 링크 연결 필요 */}
-            <button
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
+            <button>
               <p>세미나</p>
               <p>최신 세미나 제목</p>
               <div>
