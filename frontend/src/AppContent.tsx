@@ -41,6 +41,15 @@ const PageContainer = styled.div`
   scroll-behavior: smooth;
 `;
 
+const InnerContainer = styled.div`
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
 const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
@@ -69,10 +78,9 @@ const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
     }
   }
 `;
-
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
   position: relative;
-  width: 100%;
+  width: 100vw;
   z-index: 0;
   margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
 `;
@@ -132,85 +140,90 @@ function AppContent() {
           )}
         </AnimatePresence>
       </BannerWrapper>
-      <ContentWrapper isAuthPage={isAuthPage}>
-        <Routes>
-          {/* 공개 Routes */}
-          <Route path="/" element={<Main />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route
-            path="/undergraduate/admission-scholarship"
-            element={<Hyperlink />}
-          />
-          <Route path="/undergraduate/curriculum" element={<Curriculum />} />
+      <InnerContainer>
+        <ContentWrapper isAuthPage={isAuthPage}>
+          <Routes>
+            {/* 공개 Routes */}
+            <Route path="/" element={<Main />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route
+              path="/undergraduate/admission-scholarship"
+              element={<Hyperlink />}
+            />
+            <Route path="/undergraduate/curriculum" element={<Curriculum />} />
 
-          {/* graduate */}
-          <Route path="graduate/overview" element={<GraduateOverview />} />
+            {/* graduate */}
+            <Route path="graduate/overview" element={<GraduateOverview />} />
 
-          {/* about */}
-          <Route path="/about" element={<Overview />} />
-          <Route path="/about/faculty" element={<Professor />} />
-          <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
-          <Route path="/about/organization" element={<Organization />} />
+            {/* about */}
+            <Route path="/about" element={<Overview />} />
+            <Route path="/about/faculty" element={<Professor />} />
+            <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
+            <Route path="/about/organization" element={<Organization />} />
 
-          {/* news */}
-          <Route path="/news/noticeboard" element={<NoticeBoard />} />
-          <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
-          <Route path="/seminar-rooms/reservation" element={<Reservation />} />
-          <Route path="/news/thesis" element={<ThesisList />} />
-          <Route path="/news/thesis/:id" element={<ThesisDetail />} />
+            {/* news */}
+            <Route path="/news/noticeboard" element={<NoticeBoard />} />
+            <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
+            <Route
+              path="/seminar-rooms/reservation"
+              element={<Reservation />}
+            />
+            <Route path="/news/thesis" element={<ThesisList />} />
+            <Route path="/news/thesis/:id" element={<ThesisDetail />} />
 
-          {/* 어드민 권한 보호 Routes */}
-          <Route
-            path="/about/faculty/edit/:id"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <ProfessorEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/about/faculty/create"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <ProfessorCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/news/noticeboard/create"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <NoticeCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/news/noticeboard/edit/:id"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <NoticeEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/news/thesis/create"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <ThesisCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/news/thesis/edit/:id"
-            element={
-              <ProtectedRoute requireAuth requireAdmin>
-                <ThesisEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </ContentWrapper>
+            {/* 어드민 권한 보호 Routes */}
+            <Route
+              path="/about/faculty/edit/:id"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <ProfessorEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/about/faculty/create"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <ProfessorCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/news/noticeboard/create"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <NoticeCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/news/noticeboard/edit/:id"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <NoticeEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/news/thesis/create"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <ThesisCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/news/thesis/edit/:id"
+              element={
+                <ProtectedRoute requireAuth requireAdmin>
+                  <ThesisEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ContentWrapper>
+      </InnerContainer>
       <Footer />
     </PageContainer>
   );

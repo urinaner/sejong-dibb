@@ -1,23 +1,26 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 export const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   width: 100%;
   background-color: #f8f9fa;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   box-sizing: border-box;
-  height: 64px; // 기본 헤더 높이 64px로 통일
+  height: 64px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+`;
+
+export const HeaderInner = styled.div`
+  max-width: 1920px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   padding: 0 2rem;
 
   @media (max-width: 768px) {
-    position: relative;
-    height: auto;
-    min-height: 64px;
     flex-direction: column;
     padding: 0;
   }

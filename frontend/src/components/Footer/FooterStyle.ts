@@ -9,31 +9,30 @@ const media = {
 
 export const Footer = styled.footer`
   width: 100%;
-  padding: 40px;
   background-color: ${token.SEJONG_COLORS.GRAY};
   color: white;
   box-sizing: border-box;
+`;
+
+export const FooterInner = styled.div`
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px;
 
   ${media.tablet} {
     padding: 24px 40px;
   }
 
   ${media.mobile} {
-    padding: 24px 40px;
+    padding: 24px 20px;
   }
 `;
-
 export const FooterContainer = styled.div`
   display: flex;
   justify-content: space-between;
 
   ${media.tablet} {
-    flex-direction: column; /* 태블릿에서는 세로 정렬 */
-    align-items: center;
-    gap: 20px;
-  }
-
-  ${media.mobile} {
     flex-direction: column;
     align-items: center;
     gap: 20px;
