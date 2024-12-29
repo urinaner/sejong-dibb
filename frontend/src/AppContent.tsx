@@ -1,8 +1,7 @@
-// src/AppContent.tsx
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -39,6 +38,7 @@ const PageContainer = styled.div`
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 `;
 
 const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
@@ -53,15 +53,59 @@ const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
     position: relative;
     z-index: 1;
     background-color: white;
-    margin: ${(props) => (props.isAuthPage ? '0' : '-60px 0 0 0')};
+    margin-top: ${(props) => (props.isAuthPage ? '0' : '0')};
     border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in-out forwards;
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+
+const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
+    position: relative;
+    width: 100%;
+    z-index: 0;
+    margin-bottom: ${props => props.isAuthPage ? '0' : '-60px'};
 `;
 
 function AppContent() {
   const location = useLocation();
+  const containerRef = useRef<HTMLDivElement>(null);
   const isHomePage = location.pathname === '/';
   const isAuthPage =
     location.pathname === '/signin' || location.pathname === '/signup';
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        });
+        document.documentElement.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // 약간의 지연 후 스크롤 실행 (페이지 전환 애니메이션이 완료된 후)
+    const timeoutId = setTimeout(scrollToTop, 50);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [location.pathname]);
 
   const getCurrentPageContent = () => {
     const path = location.pathname.split('/')[1];
@@ -73,19 +117,21 @@ function AppContent() {
   const pageContent = getCurrentPageContent();
 
   return (
-    <PageContainer>
+    <PageContainer ref={containerRef}>
       <Header />
-      <AnimatePresence mode="wait">
-        {isHomePage ? (
-          <MainBanner
-            videoSrc={MAIN_CONTENT.videoSrc}
-            title={MAIN_CONTENT.title}
-            logo={MAIN_CONTENT.logoSrc}
-          />
-        ) : (
-          !isAuthPage && pageContent && <PageBanner content={pageContent} />
-        )}
-      </AnimatePresence>
+      <BannerWrapper isAuthPage={isAuthPage}>
+        <AnimatePresence mode="wait">
+          {isHomePage ? (
+            <MainBanner
+              videoSrc={MAIN_CONTENT.videoSrc}
+              title={MAIN_CONTENT.title}
+              logo={MAIN_CONTENT.logoSrc}
+            />
+          ) : (
+            !isAuthPage && pageContent && <PageBanner content={pageContent} />
+          )}
+        </AnimatePresence>
+      </BannerWrapper>
       <ContentWrapper isAuthPage={isAuthPage}>
         <Routes>
           {/* 공개 Routes */}
