@@ -39,7 +39,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,ts,tsx}'",
-    "prettier": "prettier --write 'src/**/*.{js,ts,tsx}'"
+    "prettier": "prettier --write 'src/**/*.{js,ts,tsx}'",
+    "deploy": "npm run build && aws s3 sync build/ s3://sejong-bioconvergence-temp --cache-control \"no-cache\""
   },
   "eslintConfig": {
     "extends": [
