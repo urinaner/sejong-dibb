@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a6e3d3fc-848e-4894-8316-22619bc14f6d" name="Changes" comment="#223 chore: 학부교과과정, 커리큘럼 최신화">
+      <change beforePath="$PROJECT_DIR$/frontend/src/AppContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AppContent.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EndpointsView">
+    <option name="showSidePanel" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="feature/78" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="refactor/199" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SWAP_SIDES_IN_COMPARE_BRANCHES" value="true" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOMwmWp86AtmIX&quot;,
+        &quot;number&quot;: 102
+      },
+      &quot;lastSeen&quot;: 1730641004807
+    }
+  ]
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/223" />
+                    <option name="lastUsedInstant" value="1735479653" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/194" />
+                    <option name="lastUsedInstant" value="1733638892" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/183" />
+                    <option name="lastUsedInstant" value="1733493225" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="refactor/185" />
+                    <option name="lastUsedInstant" value="1733151453" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/128" />
+                    <option name="lastUsedInstant" value="1732541975" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/urinaner/sejong-dibb.git&quot;,
+    &quot;accountId&quot;: &quot;85e19c8a-b9ef-4c52-b180-a34b9661e785&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2mbk1PpdZvxUm29wQAteRzqhnoJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.backend.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/223에 #227개",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ehdck/WebstormProjects/sejong-dibb/frontend/package.json",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/ehdck/AppData/Roaming/JetBrains/WebStorm2024.3/node/versions/22.11.0/node",
+    "nodejs_package_manager_path": "npm",
+    "npm.start.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ehdck\\WebstormProjects\\sejong-dibb\\frontend\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
+    "settings.editor.splitter.proportion": "0.37295082",
+    "ts.external.directory.path": "C:\\Users\\ehdck\\WebstormProjects\\sejong-dibb\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\src\assets\images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\public" />
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\src\components" />
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\src/components" />
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\src\pages\About\Faculty" />
+      <recent name="C:\Users\ehdck\WebstormProjects\sejong-dibb\frontend\src\context" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.start">
+    <configuration name="backend" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="sourceFilePath" value="backend/docker-compose-dev.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="start" />
+      <node-interpreter value="$PROJECT_DIR$/../../../../Program Files/nodejs/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.backend" />
+      <item itemvalue="npm.start" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.112" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a6e3d3fc-848e-4894-8316-22619bc14f6d" name="Changes" comment="" />
+      <created>1727352447907</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727352447907</updated>
+      <workItem from="1727352449048" duration="19000" />
+      <workItem from="1727352474583" duration="1012000" />
+      <workItem from="1727528240775" duration="36000" />
+      <workItem from="1727528310403" duration="2579000" />
+      <workItem from="1727530985325" duration="50000" />
+      <workItem from="1727703010932" duration="179000" />
+      <workItem from="1727789177170" duration="1682000" />
+      <workItem from="1727790885198" duration="81000" />
+      <workItem from="1727790971586" duration="300000" />
+      <workItem from="1727950491170" duration="5761000" />
+      <workItem from="1728111678068" duration="2971000" />
+      <workItem from="1728116241311" duration="309000" />
+      <workItem from="1728192020187" duration="264000" />
+      <workItem from="1728196806220" duration="386000" />
+      <workItem from="1728197201779" duration="1787000" />
+      <workItem from="1728199331645" duration="6157000" />
+      <workItem from="1728206396826" duration="3337000" />
+      <workItem from="1728389720565" duration="890000" />
+      <workItem from="1728392621514" duration="1910000" />
+      <workItem from="1728457724385" duration="5016000" />
+      <workItem from="1728565891079" duration="1302000" />
+      <workItem from="1728731144970" duration="303000" />
+      <workItem from="1728737003221" duration="2559000" />
+      <workItem from="1728743727556" duration="1839000" />
+      <workItem from="1728746664432" duration="600000" />
+      <workItem from="1728794445324" duration="9197000" />
+      <workItem from="1728825719612" duration="1479000" />
+      <workItem from="1729088787991" duration="618000" />
+      <workItem from="1730294864210" duration="36000" />
+      <workItem from="1730294910836" duration="1984000" />
+      <workItem from="1730635437471" duration="4285000" />
+      <workItem from="1730730172314" duration="1656000" />
+      <workItem from="1730816964218" duration="2882000" />
+      <workItem from="1730988097672" duration="18000" />
+      <workItem from="1731132711721" duration="760000" />
+      <workItem from="1731230173049" duration="2694000" />
+      <workItem from="1731333073554" duration="420000" />
+      <workItem from="1731333553083" duration="3468000" />
+      <workItem from="1731927228240" duration="7235000" />
+      <workItem from="1732284296845" duration="18000" />
+      <workItem from="1732284319305" duration="4334000" />
+      <workItem from="1732371338321" duration="1295000" />
+      <workItem from="1732373862200" duration="1008000" />
+      <workItem from="1732375983099" duration="1205000" />
+      <workItem from="1732429070074" duration="1206000" />
+      <workItem from="1732541934396" duration="870000" />
+      <workItem from="1733151426337" duration="1280000" />
+      <workItem from="1733230946440" duration="1263000" />
+      <workItem from="1733407134948" duration="747000" />
+      <workItem from="1733493164139" duration="1899000" />
+      <workItem from="1733495234236" duration="593000" />
+      <workItem from="1733638729557" duration="2223000" />
+      <workItem from="1733750040844" duration="1243000" />
+      <workItem from="1733924665518" duration="1435000" />
+      <workItem from="1734001847941" duration="7600000" />
+      <workItem from="1734711615414" duration="683000" />
+      <workItem from="1735479582521" duration="2359000" />
+    </task>
+    <task id="LOCAL-00001" summary="#36 fix: 코멘트 내용 (eslint 오류) 해결">
+      <option name="closed" value="true" />
+      <created>1727790060875</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727790060875</updated>
+    </task>
+    <task id="LOCAL-00002" summary="#43 fix: gitignore에 '.idea/' 추가">
+      <option name="closed" value="true" />
+      <created>1727791026179</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727791026179</updated>
+    </task>
+    <task id="LOCAL-00003" summary="#42 feat ModalContext 작성">
+      <option name="closed" value="true" />
+      <created>1727950786358</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727950786358</updated>
+    </task>
+    <task id="LOCAL-00004" summary="#42 feat: useModal 훅 추가">
+      <option name="closed" value="true" />
+      <created>1727958614628</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727958614628</updated>
+    </task>
+    <task id="LOCAL-00005" summary="#42 feat: 모달 애니메이션 추가">
+      <option name="closed" value="true" />
+      <created>1727959487245</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727959487245</updated>
+    </task>
+    <task id="LOCAL-00006" summary="#42 feat: ModalProvider app에 적용">
+      <option name="closed" value="true" />
+      <created>1727960025629</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727960025629</updated>
+    </task>
+    <task id="LOCAL-00007" summary="#42 feat: ModalProvider 및 Modal 수정">
+      <option name="closed" value="true" />
+      <created>1727960039121</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727960039121</updated>
+    </task>
+    <task id="LOCAL-00008" summary="#42 feat: SignIn.tsx에 모달 적용">
+      <option name="closed" value="true" />
+      <created>1727960057602</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727960057602</updated>
+    </task>
+    <task id="LOCAL-00009" summary="#60 refactor: uri 주소 변경 및 로그인 json 값 수정">
+      <option name="closed" value="true" />
+      <created>1728201353800</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1728201353800</updated>
+    </task>
+    <task id="LOCAL-00010" summary="#60 refactor: uri 주소 변경 api/admin/login&#10;및 토큰 저장 방식 수정">
+      <option name="closed" value="true" />
+      <created>1728209335977</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1728209335977</updated>
+    </task>
+    <task id="LOCAL-00011" summary="#65 feat: 학과 소개, 교육 목표 본문 내용 추가 및 CSS 수정">
+      <option name="closed" value="true" />
+      <created>1728390512152</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1728390512152</updated>
+    </task>
+    <task id="LOCAL-00012" summary="#65 feat: md형식 적용 및 레이아웃 수정">
+      <option name="closed" value="true" />
+      <created>1728460433626</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1728460433626</updated>
+    </task>
+    <task id="LOCAL-00013" summary="#65 feat: 반응형 css 적용">
+      <option name="closed" value="true" />
+      <created>1728460609109</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1728460609109</updated>
+    </task>
+    <task id="LOCAL-00014" summary="#65 fix: 의존성 추가 잘못된 경로 수정">
+      <option name="closed" value="true" />
+      <created>1728461336571</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1728461336571</updated>
+    </task>
+    <task id="LOCAL-00015" summary="#78 feat: 보안 정보 .env 설정">
+      <option name="closed" value="true" />
+      <created>1728815777204</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1728815777204</updated>
+    </task>
+    <task id="LOCAL-00016" summary="#78 fix: 윈도우 경로 관련 오류 수정">
+      <option name="closed" value="true" />
+      <created>1728815799329</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1728815799329</updated>
+    </task>
+    <task id="LOCAL-00017" summary="#83 refactor: apiConfig 수정">
+      <option name="closed" value="true" />
+      <created>1728826553722</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1728826553722</updated>
+    </task>
+    <task id="LOCAL-00018" summary="#83 refactor: apiConfig 적용">
+      <option name="closed" value="true" />
+      <created>1728826960720</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1728826960720</updated>
+    </task>
+    <task id="LOCAL-00019" summary="#87 feat: 헤더 레이아웃 반응형 로직 개선">
+      <option name="closed" value="true" />
+      <created>1730296434183</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1730296434183</updated>
+    </task>
+    <task id="LOCAL-00020" summary="#105 feat: 헤더 및 푸터에 로그인시 사용자 아이콘 렌더링 구현">
+      <option name="closed" value="true" />
+      <created>1730640512501</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1730640512501</updated>
+    </task>
+    <task id="LOCAL-00021" summary="#105 feat: 새로고침시에도 로그인 정보 유지 설정">
+      <option name="closed" value="true" />
+      <created>1730640776035</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1730640776035</updated>
+    </task>
+    <task id="LOCAL-00022" summary="#105 refactor: 헤더, 푸터, 모달 스타일 디렉터리 경로 변경">
+      <option name="closed" value="true" />
+      <created>1730641135413</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1730641135413</updated>
+    </task>
+    <task id="LOCAL-00023" summary="#105 fix: svg가 너무 작게 렌더링 되는 것 수정">
+      <option name="closed" value="true" />
+      <created>1730641434444</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1730641434444</updated>
+    </task>
+    <task id="LOCAL-00024" summary="#105 fix: 로그인 페이지 렌더링 문제 수정">
+      <option name="closed" value="true" />
+      <created>1730641645651</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1730641645651</updated>
+    </task>
+    <task id="LOCAL-00025" summary="#108 fix: DB 초기화 문제 해결, 경로 변경">
+      <option name="closed" value="true" />
+      <created>1730818884145</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1730818884145</updated>
+    </task>
+    <task id="LOCAL-00026" summary="#77 refactor: 디렉터리 구조 리펙토링">
+      <option name="closed" value="true" />
+      <created>1731334510319</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1731334510319</updated>
+    </task>
+    <task id="LOCAL-00027" summary="#77 feat: 재사용을 위한 공통 레이아웃 버튼 구현">
+      <option name="closed" value="true" />
+      <created>1731335070970</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1731335070970</updated>
+    </task>
+    <task id="LOCAL-00028" summary="#77 feat: 관리자 로그인 시 수정 및 교수 추가 버튼 렌더링 구현, 레이아웃 UI 개선">
+      <option name="closed" value="true" />
+      <created>1731336730037</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1731336730037</updated>
+    </task>
+    <task id="LOCAL-00029" summary="#126 feat: 라우트 가능 기능 구현 / admin 로그인 페이지 uri 변경 /signin -&gt; /admin/signin&#10;관리자 권한 보호 페이지 : Professor(C,U,D) Notice(C,U,D)">
+      <option name="closed" value="true" />
+      <created>1731929299513</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1731929299513</updated>
+    </task>
+    <task id="LOCAL-00030" summary="#126 fix: 로그아웃 시 잘못된 uri 리다이렉트 해결, 타입 정의 에러 수정">
+      <option name="closed" value="true" />
+      <created>1731930243776</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1731930243776</updated>
+    </task>
+    <task id="LOCAL-00031" summary="#126 style: pm 요구사항 적용, 헤더 드롭다운 메뉴 크기 조정, 공지사항조회,세미나실조회 삭제">
+      <option name="closed" value="true" />
+      <created>1731932471186</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1731932471186</updated>
+    </task>
+    <task id="LOCAL-00032" summary="#149 feat: 논문 생성시 썸네일 이미지 업로드 로직 추가">
+      <option name="closed" value="true" />
+      <created>1732285204367</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1732285204367</updated>
+    </task>
+    <task id="LOCAL-00033" summary="#149 feat: 논문 수정 페이지 삭제 버튼 추가">
+      <option name="closed" value="true" />
+      <created>1732285942378</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1732285942378</updated>
+    </task>
+    <task id="LOCAL-00034" summary="#149 fix: 공지사항 페이지 네이션 기능 롤백, 카테고리 동작 하도록 픽스">
+      <option name="closed" value="true" />
+      <created>1732286933414</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1732286933414</updated>
+    </task>
+    <task id="LOCAL-00035" summary="#149 fix: 카테고리 잘못된 URI 수정">
+      <option name="closed" value="true" />
+      <created>1732287278908</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1732287278908</updated>
+    </task>
+    <task id="LOCAL-00036" summary="#185 fix: 교수 프로필 업로드 객체 프로퍼티 명 수정">
+      <option name="closed" value="true" />
+      <created>1733152211633</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1733152211633</updated>
+    </task>
+    <task id="LOCAL-00037" summary="#223 fix: 빌드된 css 다른 부분 픽스">
+      <option name="closed" value="true" />
+      <created>1735480193343</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1735480193343</updated>
+    </task>
+    <task id="LOCAL-00038" summary="#223 style: 넓은 화면에서 비율 조정 및 요소 가운데 배치">
+      <option name="closed" value="true" />
+      <created>1735481234639</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1735481234639</updated>
+    </task>
+    <task id="LOCAL-00039" summary="#223 chore: 학부교과과정, 커리큘럼 최신화">
+      <option name="closed" value="true" />
+      <created>1735481651313</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1735481651313</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/feature/48" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="#78 feat: 보안 정보 .env 설정" />
+    <MESSAGE value="#78 fix: 윈도우 경로 관련 오류 수정" />
+    <MESSAGE value="#83 refactor: apiConfig 수정" />
+    <MESSAGE value="#83 refactor: apiConfig 적용" />
+    <MESSAGE value="#87 feat: 헤더 레이아웃 반응형 로직 개선" />
+    <MESSAGE value="#105 feat: 헤더 및 푸터에 로그인시 사용자 아이콘 렌더링 구현" />
+    <MESSAGE value="#105 feat: 새로고침시에도 로그인 정보 유지 설정" />
+    <MESSAGE value="#105 refactor: 헤더, 푸터, 모달 스타일 디렉터리 경로 변경" />
+    <MESSAGE value="#105 fix: svg가 너무 작게 렌더링 되는 것 수정" />
+    <MESSAGE value="#105 fix: 로그인 페이지 렌더링 문제 수정" />
+    <MESSAGE value="#108 fix: DB 초기화 문제 해결, 경로 변경" />
+    <MESSAGE value="#77 refactor: 디렉터리 구조 리펙토링" />
+    <MESSAGE value="#77 feat: 재사용을 위한 공통 레이아웃 버튼 구현" />
+    <MESSAGE value="#77 feat: 관리자 로그인 시 수정 및 교수 추가 버튼 렌더링 구현, 레이아웃 UI 개선" />
+    <MESSAGE value="#126 feat: 라우트 가능 기능 구현 / admin 로그인 페이지 uri 변경 /signin -&gt; /admin/signin&#10;관리자 권한 보호 페이지 : Professor(C,U,D) Notice(C,U,D)" />
+    <MESSAGE value="#126 fix: 로그아웃 시 잘못된 uri 리다이렉트 해결, 타입 정의 에러 수정" />
+    <MESSAGE value="#126 style: pm 요구사항 적용, 헤더 드롭다운 메뉴 크기 조정, 공지사항조회,세미나실조회 삭제" />
+    <MESSAGE value="#149 feat: 논문 생성시 썸네일 이미지 업로드 로직 추가" />
+    <MESSAGE value="#149 feat: 논문 수정 페이지 삭제 버튼 추가" />
+    <MESSAGE value="#149 fix: 공지사항 페이지 네이션 기능 롤백, 카테고리 동작 하도록 픽스" />
+    <MESSAGE value="#149 fix: 카테고리 잘못된 URI 수정" />
+    <MESSAGE value="#185 fix: 교수 프로필 업로드 객체 프로퍼티 명 수정" />
+    <MESSAGE value="#223 fix: 빌드된 css 다른 부분 픽스" />
+    <MESSAGE value="#223 style: 넓은 화면에서 비율 조정 및 요소 가운데 배치" />
+    <MESSAGE value="#223 chore: 학부교과과정, 커리큘럼 최신화" />
+    <option name="LAST_COMMIT_MESSAGE" value="#223 chore: 학부교과과정, 커리큘럼 최신화" />
+  </component>
+</project>
