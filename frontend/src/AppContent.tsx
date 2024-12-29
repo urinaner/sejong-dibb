@@ -45,16 +45,15 @@ const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
     align-items: center;
     justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
     padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
     position: relative;
     z-index: 1;
-    margin-top: ${(props) => (props.isAuthPage ? '0' : '-60px')};
     background-color: white;
+    margin: ${(props) => (props.isAuthPage ? '0' : '-60px 0 0 0')};
     border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
 `;
 
