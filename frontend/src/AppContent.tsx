@@ -33,48 +33,48 @@ import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 import NotFound from './components/Notfound/NotFound';
 
 const PageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 `;
 
 const ContentWrapper = styled.main<{ isAuthPage: boolean }>`
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
-    padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
-    position: relative;
-    z-index: 1;
-    background-color: white;
-    margin-top: ${(props) => (props.isAuthPage ? '0' : '0')};
-    border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
-    opacity: 0;
-    animation: fadeIn 0.3s ease-in-out forwards;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
+  padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
+  position: relative;
+  z-index: 1;
+  background-color: white;
+  margin-top: ${(props) => (props.isAuthPage ? '0' : '0')};
+  border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
-    position: relative;
-    width: 100%;
-    z-index: 0;
-    margin-bottom: ${props => props.isAuthPage ? '0' : '-60px'};
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
 `;
 
 function AppContent() {
@@ -90,11 +90,11 @@ function AppContent() {
         containerRef.current.scrollIntoView({
           behavior: 'smooth',
           block: 'start',
-          inline: 'nearest'
+          inline: 'nearest',
         });
         document.documentElement.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     };
@@ -109,8 +109,8 @@ function AppContent() {
 
   const getCurrentPageContent = () => {
     const path = location.pathname.split('/')[1];
-    return Object.values(PAGE_CONTENTS).find(content =>
-      content.path.startsWith(`/${path}`)
+    return Object.values(PAGE_CONTENTS).find((content) =>
+      content.path.startsWith(`/${path}`),
     );
   };
 
@@ -137,7 +137,10 @@ function AppContent() {
           {/* 공개 Routes */}
           <Route path="/" element={<Main />} />
           <Route path="/signin" element={<SignInPage />} />
-          <Route path="/undergraduate/admission-scholarship" element={<Hyperlink />} />
+          <Route
+            path="/undergraduate/admission-scholarship"
+            element={<Hyperlink />}
+          />
           <Route path="/undergraduate/curriculum" element={<Curriculum />} />
 
           {/* graduate */}
