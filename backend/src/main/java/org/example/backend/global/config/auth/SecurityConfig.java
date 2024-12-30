@@ -1,6 +1,7 @@
 package org.example.backend.global.config.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.global.config.auth.CustomAuthenticationFailureHandler;
 import org.example.backend.jwt.JWTFilter;
@@ -63,8 +64,10 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "http://localhost:3000",
+                                "http://sejong-bioconvergence-temp.s3-website.ap-northeast-2.amazonaws.com"
+                        ));                        configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
