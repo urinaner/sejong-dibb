@@ -1,16 +1,33 @@
 import React from 'react';
-import { ReactComponent as LogoIcon } from '../../../assets/images/sejong-icon.svg';
-import { LogoContainer, LogoLink, LogoTitle } from './LogoStyle';
-import { useResponsive } from '../../../hooks/useResponsive';
+import { ReactComponent as LogoIcon } from '../../../assets/images/sejong-icon-w.svg';
+import {
+  LogoContainer,
+  LogoLink,
+  LogoImage,
+  LogoTitle,
+  LogoWrapper,
+  Department,
+} from './LogoStyle';
 
-const Logo: React.FC = () => {
-  const { isMobile } = useResponsive();
+interface LogoProps {
+  compact?: boolean;
+}
 
+const Logo: React.FC<LogoProps> = ({ compact = false }) => {
   return (
     <LogoContainer>
-      <LogoLink to="/">
-        <LogoIcon width={isMobile ? '32px' : '36px'} height="auto" />
-        <LogoTitle>세종대학교 바이오융합공학전공</LogoTitle>
+      <LogoLink to="/" aria-label="홈으로 가기">
+        <LogoWrapper>
+          <LogoImage>
+            <LogoIcon style={{ fill: 'white' }} />
+          </LogoImage>
+          {!compact && (
+            <LogoTitle>
+              SEJONG UNIVERSITY
+              <Department>바이오융합공학전공</Department>
+            </LogoTitle>
+          )}
+        </LogoWrapper>
       </LogoLink>
     </LogoContainer>
   );

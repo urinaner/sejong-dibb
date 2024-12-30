@@ -1,48 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { Menu } from 'lucide-react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { HeaderContainer, HeaderInner, HeaderNav } from './HeaderStyle';
+import Logo from './Logo/Logo';
+import Navigation from './Navigation/Navigation';
+import MobileMenu from './MobileMenu/MobileMenu';
+import Profile from './Profile/Profile';
 import { useHeaderScroll } from './hooks/useHeaderScroll';
-import {
-  HeaderContainer,
-  HeaderInner,
-  HeaderNav,
-  HeaderNavList,
-  HeaderActions,
-  MobileMenuButton,
-} from './HeaderStyle';
 
 const Header: React.FC = () => {
   const auth = useContext(AuthContext);
-  const { isScrolled, isVisible } = useHeaderScroll();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isScrolled } = useHeaderScroll();
 
   return (
     <HeaderContainer
-      initial={{ y: 0 }}
-      animate={{
-        y: isVisible ? 0 : -100,
+      style={{
         backgroundColor: isScrolled ? '#A30027' : '#C3002F',
+        boxShadow: isScrolled ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
       }}
-      transition={{ duration: 0.3 }}
     >
       <HeaderInner>
-        {/* Logo will be added here */}
+        <Logo />
         <HeaderNav>
-          <HeaderNavList>
-            {/* Navigation items will be added here */}
-          </HeaderNavList>
-          <HeaderActions>
-            <MobileMenuButton
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-            >
-              <Menu size={24} />
-            </MobileMenuButton>
-            {/* Profile component will be added here */}
-          </HeaderActions>
+          <Navigation />
+          <MobileMenu />
+          {auth?.isAuthenticated && <Profile />}
         </HeaderNav>
       </HeaderInner>
-      {/* Mobile menu will be added here */}
     </HeaderContainer>
   );
 };

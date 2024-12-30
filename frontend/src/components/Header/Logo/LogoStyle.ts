@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { media } from '../../../styles/media';
+import { motion } from 'framer-motion';
 
-export const LogoContainer = styled.div`
+export const LogoContainer = styled(motion.div)`
   display: flex;
   align-items: center;
-  padding: 0.8rem 2rem;
-  min-width: 300px;
+  padding: 1rem 2rem;
+  min-width: 320px;
 
-  ${media.mobile} {
+  @media (max-width: 768px) {
     min-width: auto;
-    width: 100%;
     padding: 0.8rem 1rem;
   }
 `;
@@ -19,21 +18,64 @@ export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: ${({ theme }) => theme.colors.white};
-  transition: opacity ${({ theme }) => theme.transitions.fast};
+  color: white;
+  transition: opacity 0.2s ease;
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.9;
   }
 `;
 
-export const LogoTitle = styled.span`
+export const LogoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 2px;
+`;
+
+export const LogoImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  width: 100%; // Take full width of parent to center properly
+
+  svg {
+    width: 42px;
+    height: auto;
+
+    @media (max-width: 768px) {
+      width: 36px;
+    }
+  }
+`;
+
+export const LogoTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.9;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
+
+export const Department = styled.span`
   font-size: 1.1rem;
   font-weight: 600;
-  white-space: nowrap;
-  margin-left: 12px;
+  letter-spacing: -0.02em;
+  text-transform: none;
 
-  ${media.mobile} {
+  @media (max-width: 768px) {
     font-size: 1rem;
   }
 `;
