@@ -24,7 +24,7 @@ function Footer() {
         </S.FooterContainer>
         <S.Copyright>
           <span>
-            Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
+            Copyright©2025 . 세종대학교 바이오융합공학전공 All rights reserved
           </span>
           {auth?.isAuthenticated ? (
             <S.AdminSection>

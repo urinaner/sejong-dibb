@@ -26,27 +26,26 @@ export const MobileMenuButton = styled.button`
     stroke-width: 2px;
   }
 `;
-
 export const MobileMenuWrapper = styled.div<{ isOpen: boolean }>`
   display: none;
 
-  ${({ theme }) => theme.media.mobile} {
+  @media (max-width: 768px) {
     display: block;
     position: fixed;
-    top: ${({ theme }) => theme.layout.headerHeight.mobile};
+    top: 80px;
     left: 0;
     width: 100%;
-    height: calc(100vh - ${({ theme }) => theme.layout.headerHeight.mobile});
-    background-color: ${({ theme }) => theme.colors.primary.crimson};
+    height: calc(100vh - 80px);
+    background-color: #a31432;
     transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
-    transition: transform ${({ theme }) => theme.transitions.default};
+    transition: transform 0.3s;
     overflow-y: auto;
-    z-index: ${({ theme }) => theme.zIndex.dropdown};
+    z-index: 100;
   }
 `;
 
 export const MobileMenuItem = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.colors.primary.crimsonLight};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 interface MenuTitleProps {

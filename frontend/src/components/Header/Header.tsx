@@ -20,7 +20,7 @@ const Header: React.FC = () => {
     <HeaderContainer
       $isDropdownOpen={isDropdownOpen}
       style={{
-        backgroundColor: isScrolled ? '#A30027' : '#C3002F',
+        backgroundColor: '#A30027',
         boxShadow: isScrolled ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
       }}
     >

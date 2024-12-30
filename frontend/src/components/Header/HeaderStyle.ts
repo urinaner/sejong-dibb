@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
 export const HeaderContainer = styled(motion.header)<{
   $isDropdownOpen: boolean;
 }>`
