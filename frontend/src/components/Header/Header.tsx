@@ -1,32 +1,48 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { Menu } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
-import { HeaderContainer, HeaderInner, HeaderNav } from './HeaderStyles';
-import Logo from './Logo/Logo';
-import Navigation from './Navigation/Navigation';
-import MobileMenu from './MobileMenu/MobileMenu';
-import Profile from './Profile/Profile';
-import { useHeaderScroll } from './Hooks/useHeaderScroll';
+import { useHeaderScroll } from './hooks/useHeaderScroll';
+import {
+  HeaderContainer,
+  HeaderInner,
+  HeaderNav,
+  HeaderNavList,
+  HeaderActions,
+  MobileMenuButton,
+} from './HeaderStyle';
 
-const Header = () => {
+const Header: React.FC = () => {
   const auth = useContext(AuthContext);
   const { isScrolled, isVisible } = useHeaderScroll();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <HeaderContainer
-      style={{
-        transform: `translateY(${!isVisible ? '-100%' : '0'})`,
+      initial={{ y: 0 }}
+      animate={{
+        y: isVisible ? 0 : -100,
         backgroundColor: isScrolled ? '#A30027' : '#C3002F',
-        boxShadow: isScrolled ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
       }}
+      transition={{ duration: 0.3 }}
     >
       <HeaderInner>
-        <Logo />
+        {/* Logo will be added here */}
         <HeaderNav>
-          <Navigation />
-          <MobileMenu />
-          {auth?.isAuthenticated && <Profile />}
+          <HeaderNavList>
+            {/* Navigation items will be added here */}
+          </HeaderNavList>
+          <HeaderActions>
+            <MobileMenuButton
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              <Menu size={24} />
+            </MobileMenuButton>
+            {/* Profile component will be added here */}
+          </HeaderActions>
         </HeaderNav>
       </HeaderInner>
+      {/* Mobile menu will be added here */}
     </HeaderContainer>
   );
 };
