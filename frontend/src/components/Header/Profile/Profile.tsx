@@ -1,3 +1,4 @@
+// Profile.tsx
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
@@ -7,6 +8,7 @@ import {
   ProfileButton,
   ProfileDropdown,
   ProfileDropdownItem,
+  LoginButton,
 } from './ProfileStyle';
 
 const Profile = () => {
@@ -14,13 +16,20 @@ const Profile = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleSignIn = () => {
+    navigate('/signin');
+  };
+
   const handleSignOut = async () => {
     if (auth?.signout) {
       await auth.signout();
       setIsOpen(false);
-      navigate('/signin');
     }
   };
+
+  if (!auth?.isAuthenticated) {
+    return <LoginButton onClick={handleSignIn}>로그인</LoginButton>;
+  }
 
   return (
     <ProfileWrapper onMouseLeave={() => setIsOpen(false)}>
@@ -31,7 +40,9 @@ const Profile = () => {
       {isOpen && (
         <ProfileDropdown>
           <ProfileDropdownItem>
-            <span>관리자: {auth?.user}</span>
+            <span>
+              {auth?.isAdmin ? '관리자' : '사용자'}: {auth?.user}
+            </span>
           </ProfileDropdownItem>
           <ProfileDropdownItem onClick={handleSignOut}>
             로그아웃

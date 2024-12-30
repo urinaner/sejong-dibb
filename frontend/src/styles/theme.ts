@@ -1,51 +1,58 @@
-// src/styles/theme.ts
-import { SEJONG_COLORS } from '../constants/colors';
+// theme.ts
+const breakpoints = {
+  mobile: '320px',
+  tablet: '768px',
+  laptop: '1024px',
+  desktop: '1440px',
+};
 
-const theme = {
+export const theme = {
   colors: {
+    white: '#FFFFFF',
     primary: {
-      crimson: SEJONG_COLORS.CRIMSON_RED,
-      crimsonDark: '#A30027',
-      crimsonLight: '#D4193F',
+      crimson: '#a31432',
+      crimsonDark: '#8a1029',
+      crimsonLight: '#c41a3e',
     },
     grey: {
-      50: '#F8F9FA',
-      100: '#EAEAEA',
-      200: SEJONG_COLORS.COOL_GRAY,
-      300: SEJONG_COLORS.WARM_GRAY1,
-      400: SEJONG_COLORS.WARM_GRAY2,
-      500: SEJONG_COLORS.GRAY,
+      50: '#F9FAFB',
+      100: '#F3F4F6',
+      200: '#D5D6D2',
+      300: '#B7B1A9',
+      400: '#837259',
+      500: '#51626F',
     },
-    white: '#FFFFFF',
   },
-  breakpoints: {
-    mobile: '768px',
-    tablet: '1024px',
-    desktop: '1280px',
-  },
+  breakpoints,
   media: {
-    mobile: '@media (max-width: 768px)',
-    tablet: '@media (min-width: 769px) and (max-width: 1024px)',
-    desktop: '@media (min-width: 1025px)',
+    mobile: `@media (max-width: ${breakpoints.mobile})`,
+    tablet: `@media (max-width: ${breakpoints.tablet})`,
+    laptop: `@media (max-width: ${breakpoints.laptop})`,
+    desktop: `@media (max-width: ${breakpoints.desktop})`,
   },
-  layout: {
-    maxWidth: '1280px',
-    headerHeight: {
-      desktop: '80px',
-      mobile: '64px',
-    },
+  fontSizes: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
   },
-  zIndex: {
-    header: 1000,
-    dropdown: 1001,
-    modal: 1002,
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    base: '1rem',
+    lg: '1.25rem',
+    xl: '1.5rem',
+    '2xl': '2rem',
+    '3xl': '2.5rem',
   },
   transitions: {
-    default: '0.3s ease-in-out',
-    fast: '0.15s ease-in-out',
-    slow: '0.45s ease-in-out',
+    fast: '0.2s',
+    base: '0.3s',
   },
-};
+} as const;
 
 export type Theme = typeof theme;
 export default theme;

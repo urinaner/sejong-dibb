@@ -1,14 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState } from 'react';
 import { HeaderContainer, HeaderInner, HeaderNav } from './HeaderStyle';
 import Logo from './Logo/Logo';
 import Navigation from './Navigation/Navigation';
 import MobileMenu from './MobileMenu/MobileMenu';
-import Profile from './Profile/Profile';
 import { useHeaderScroll } from './hooks/useHeaderScroll';
 
 const Header: React.FC = () => {
-  const auth = useContext(AuthContext);
   const { isScrolled } = useHeaderScroll();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -29,7 +26,6 @@ const Header: React.FC = () => {
         <HeaderNav>
           <Navigation onDropdownChange={handleDropdownOpen} />
           <MobileMenu />
-          {auth?.isAuthenticated && <Profile />}
         </HeaderNav>
       </HeaderInner>
     </HeaderContainer>

@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+// Navigation.tsx
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { AuthContext } from '../../../context/AuthContext';
 import NavItem from './NavItem';
+import Profile from '../Profile/Profile';
 import {
   NavigationWrapper,
   MobileNavigationWrapper,
   MobileNavItem,
   MobileNavButton,
   MobileSubMenu,
+  LoginButton,
+  NavigationRightSection,
 } from './NavigationStyle';
-import { PAGE_CONTENTS } from '../../../constants/pageContents';
 
 interface NavigationProps {
   onDropdownChange?: (isOpen: boolean) => void;
@@ -76,6 +81,8 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
     {},
   );
   const [isAnyDropdownOpen, setIsAnyDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
 
   const toggleSubMenu = (index: number) => {
     setOpenSubMenus((prev) => ({
@@ -102,6 +109,18 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
     setOpenSubMenus({});
   };
 
+  const handleSignIn = () => {
+    navigate('/signin');
+    closeMobileMenu();
+  };
+
+  const renderAuthSection = () => {
+    if (auth?.isAuthenticated) {
+      return <Profile />;
+    }
+    return <LoginButton onClick={handleSignIn}>로그인</LoginButton>;
+  };
+
   if (isMobile) {
     return (
       <MobileNavigationWrapper isOpen={mobileMenuOpen}>
@@ -124,6 +143,7 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
             </MobileSubMenu>
           </MobileNavItem>
         ))}
+        <MobileNavItem>{renderAuthSection()}</MobileNavItem>
       </MobileNavigationWrapper>
     );
   }
@@ -141,7 +161,9 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
           menuItems={item.menuItems}
         />
       ))}
+      <NavigationRightSection>{renderAuthSection()}</NavigationRightSection>
     </NavigationWrapper>
   );
 };
+
 export default Navigation;
