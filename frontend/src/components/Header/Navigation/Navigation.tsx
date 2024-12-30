@@ -27,39 +27,45 @@ interface NavigationItem {
 
 const navigationItems: NavigationItem[] = [
   {
-    title: PAGE_CONTENTS.about.title,
-    path: PAGE_CONTENTS.about.path,
+    title: '학과',
+    path: '/about',
     menuItems: [
       { name: '학과소개', path: '/about' },
-      { name: '교수진', path: '/about/faculty' },
       { name: '조직도', path: '/about/organization' },
+      { name: '교수소개', path: '/about/faculty' },
     ],
   },
   {
-    title: PAGE_CONTENTS.undergraduate.title,
-    path: PAGE_CONTENTS.undergraduate.path,
+    title: '대학',
+    path: '/undergraduate/curriculum',
     menuItems: [
-      { name: '교과과정', path: '/undergraduate/curriculum' },
-      { name: '관련사이트', path: '/undergraduate/hyperlinks' },
+      { name: '학사안내', path: '/college/guide' },
+      { name: '학부교과과정', path: '/undergraduate/curriculum' },
+      { name: '입학/장학', path: '/undergraduate/admission-scholarship' },
     ],
   },
   {
-    title: PAGE_CONTENTS.graduate.title,
-    path: PAGE_CONTENTS.graduate.path,
-    menuItems: [{ name: '대학원 소개', path: '/graduate' }],
-  },
-  {
-    title: PAGE_CONTENTS.news.title,
-    path: PAGE_CONTENTS.news.path,
+    title: '대학원',
+    path: '/graduate/overview',
     menuItems: [
-      { name: '공지사항', path: '/news/notice' },
-      { name: '학술논문', path: '/news/thesis' },
+      { name: '소개', path: '/graduate/overview' },
+      { name: '교과과정', path: '/graduate/curriculum' },
+      { name: '학칙/규정', path: '/graduate/rules' },
     ],
   },
   {
-    title: PAGE_CONTENTS.seminar.title,
-    path: PAGE_CONTENTS.seminar.path,
-    menuItems: [{ name: '예약하기', path: '/seminar-rooms' }],
+    title: '바융소식',
+    path: '/news/noticeboard',
+    menuItems: [
+      { name: '공지사항', path: '/news/noticeboard' },
+      { name: '세미나', path: '/news' },
+      { name: '연구논문', path: '/news/thesis' },
+    ],
+  },
+  {
+    title: '세미나실 예약',
+    path: '/seminar-rooms/reservation',
+    menuItems: [{ name: '예약 페이지', path: '/seminar-rooms/reservation' }],
   },
 ];
 
@@ -138,5 +144,4 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
     </NavigationWrapper>
   );
 };
-
 export default Navigation;

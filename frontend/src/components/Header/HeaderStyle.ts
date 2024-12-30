@@ -10,7 +10,7 @@ export const HeaderContainer = styled(motion.header)<{
   right: 0;
   height: ${({ $isDropdownOpen }) => ($isDropdownOpen ? 'auto' : '100px')};
   min-height: 100px;
-  background-color: #c3002f;
+  background-color: #a31432;
   color: white;
   z-index: 50;
   transition: all 0.3s ease;
