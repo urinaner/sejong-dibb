@@ -135,10 +135,26 @@ function AppContent() {
   }, [location.pathname]);
 
   const getCurrentPageContent = () => {
-    const path = location.pathname.split('/')[1];
-    return Object.values(PAGE_CONTENTS).find((content) =>
-      content.path.startsWith(`/${path}`),
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+    if (pathSegments.length === 0) return null;
+
+    const mainCategory = Object.values(PAGE_CONTENTS).find(
+      (content) => content.path === `/${pathSegments[0]}`,
     );
+
+    if (!mainCategory) return null;
+
+    // If we're at the main category page, return the main category content
+    if (pathSegments.length === 1) return mainCategory;
+
+    // If we're at a sub-page, find the matching sub-page content
+    const subPath = `/${pathSegments.join('/')}`;
+    const subPage = Object.values(mainCategory.subPages || {}).find(
+      (content) => content.path === subPath,
+    );
+
+    return subPage || mainCategory;
   };
 
   const pageContent = getCurrentPageContent();
