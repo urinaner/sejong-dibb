@@ -14,7 +14,7 @@ export const PAGE_CONTENTS = {
     path: '/about',
     subPages: {
       faculty: {
-        title: '교수진',
+        title: '교수 소개',
         description:
           '최고의 전문성과 열정을 가진 바이오융합공학전공 교수진을 소개합니다',
         image: aboutImg,
@@ -44,7 +44,7 @@ export const PAGE_CONTENTS = {
         path: '/undergraduate/curriculum',
       },
       admissionScholarship: {
-        title: '입학/장학금',
+        title: '입학/장학',
         description:
           '바이오융합공학전공의 입학정보와 다양한 장학제도를 확인하실 수 있습니다',
         image: undergraduateImg,
