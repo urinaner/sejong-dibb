@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 export const MobileMenuButton = styled.button`
   display: none;
   padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
   color: ${({ theme }) => theme.colors.white};
+  transition: opacity ${({ theme }) => theme.transitions.fast};
 
   ${({ theme }) => theme.media.mobile} {
     display: flex;
@@ -12,9 +16,14 @@ export const MobileMenuButton = styled.button`
     justify-content: center;
   }
 
+  &:hover {
+    opacity: 0.8;
+  }
+
   svg {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+    stroke-width: 2px;
   }
 `;
 
@@ -76,6 +85,7 @@ export const MobileSubMenuItem = styled(Link)`
   color: ${({ theme }) => theme.colors.white};
   font-size: 0.9rem;
   opacity: 0.9;
+  text-decoration: none;
 
   &:hover {
     opacity: 1;
