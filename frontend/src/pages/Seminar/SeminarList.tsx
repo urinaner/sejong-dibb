@@ -63,6 +63,24 @@ const SeminarList = () => {
     }
   };
 
+  const handleEdit = (e: React.MouseEvent, seminarId: number) => {
+    e.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
+    navigate(`/news/seminar/edit/${seminarId}`);
+  };
+
+  const handleDelete = async (e: React.MouseEvent, seminarId: number) => {
+    e.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
+    if (window.confirm('정말로 이 세미나를 삭제하시겠습니까?')) {
+      try {
+        await axios.delete(apiEndpoints.seminar.delete(seminarId));
+        alert('세미나가 성공적으로 삭제되었습니다.');
+        fetchSeminars(); // 목록 새로고침
+      } catch (error) {
+        alert('세미나 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   const handlePageChange = (newPage: number) => {
     setPageInfo((prev) => ({
       ...prev,
@@ -115,6 +133,7 @@ const SeminarList = () => {
             >
               날짜
             </SortableTh>
+            {auth?.isAuthenticated && <Th>관리</Th>}
           </tr>
         </thead>
         <tbody>
@@ -129,6 +148,22 @@ const SeminarList = () => {
               <Td>{seminar.company}</Td>
               <Td>{seminar.place}</Td>
               <Td>{formatDate(seminar.startDate)}</Td>
+              {auth?.isAuthenticated && (
+                <ActionTd>
+                  <ActionButton
+                    onClick={(e) => handleEdit(e, seminar.id)}
+                    color="blue"
+                  >
+                    수정
+                  </ActionButton>
+                  <ActionButton
+                    onClick={(e) => handleDelete(e, seminar.id)}
+                    color="red"
+                  >
+                    삭제
+                  </ActionButton>
+                </ActionTd>
+              )}
             </Tr>
           ))}
         </tbody>
@@ -368,6 +403,39 @@ const EmptyMessage = styled.div`
   border-radius: 8px;
   margin-top: 1.5rem;
   font-size: 1.1rem;
+`;
+
+const ActionTd = styled(Td)`
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+`;
+
+const ActionButton = styled.button<{ color: 'blue' | 'red' }>`
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: 1px solid
+    ${(props) =>
+      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+  background-color: white;
+  color: ${(props) =>
+    props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 `;
 
 export default SeminarList;
