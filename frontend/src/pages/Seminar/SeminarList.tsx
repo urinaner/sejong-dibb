@@ -82,7 +82,7 @@ const SeminarList = () => {
   };
 
   const handleCreateClick = () => {
-    navigate('/seminar/create');
+    navigate('/news/seminar/create');
   };
 
   if (loading) return <LoadingSpinner>Loading...</LoadingSpinner>;
@@ -120,7 +120,7 @@ const SeminarList = () => {
           {seminars.map((seminar) => (
             <Tr
               key={seminar.id}
-              onClick={() => navigate(`/seminar/${seminar.id}`)}
+              onClick={() => navigate(`/news/seminar/${seminar.id}`)}
             >
               <Td>{seminar.id}</Td>
               <TitleTd>{seminar.name}</TitleTd>

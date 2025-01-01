@@ -32,6 +32,7 @@ import Organization from './pages/About/Organization/Organization';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 import NotFound from './components/Notfound/NotFound';
 import SeminarList from './pages/Seminar/SeminarList';
+import SeminarDetail from './pages/Seminar/SeminarDetail';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -206,6 +207,7 @@ function AppContent() {
                 element={<Reservation />}
               />
               <Route path="/news/seminar" element={<SeminarList />} />
+              <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />
               <Route path="/news/thesis/:id" element={<ThesisDetail />} />
               {/* 어드민 권한 보호 Routes */}
