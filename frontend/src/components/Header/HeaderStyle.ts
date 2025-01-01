@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+
 export const HeaderContainer = styled(motion.header)<{
   $isDropdownOpen: boolean;
 }>`
@@ -28,6 +29,7 @@ export const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 
   @media (max-width: 768px) {
     padding: 0 1rem;
@@ -45,6 +47,23 @@ export const HeaderNav = styled.nav`
 
   @media (max-width: 768px) {
     gap: 1rem;
+  }
+`;
+
+export const MobileTitle = styled.h1`
+  display: none;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
