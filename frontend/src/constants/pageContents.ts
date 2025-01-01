@@ -87,6 +87,12 @@ export const PAGE_CONTENTS = {
         image: newsImg,
         path: '/news/thesis',
       },
+      seminar: {
+        title: '세미나',
+        description: '바이오융합공학전공 세미나 조회',
+        image: newsImg,
+        path: '/news/seminar',
+      },
     },
   },
   seminar: {

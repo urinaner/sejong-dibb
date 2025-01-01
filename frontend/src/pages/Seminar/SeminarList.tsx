@@ -4,6 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
 import { apiEndpoints } from '../../config/apiConfig';
+import { SEJONG_COLORS } from '../../constants/colors';
 
 interface SeminarItem {
   id: number;
@@ -180,36 +181,76 @@ const Container = styled.div`
   max-width: 1400px;
   width: 95%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
 `;
 
 const Title = styled.h1`
-  font-size: 1.8rem;
-  color: #1a202c;
+  font-size: 2rem;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
+  font-weight: 600;
+`;
+
+const CreateButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED};
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #8b0000;
+    box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
 `;
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 1rem;
   background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 `;
 
 const Th = styled.th`
-  padding: 1rem;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  background-color: #f8f9fa;
+  padding: 1.25rem 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}20;
+  color: ${SEJONG_COLORS.GRAY};
   font-weight: 600;
   text-align: center;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+
+  &:first-child {
+    border-top-left-radius: 8px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 8px;
+  }
 `;
 
 const SortableTh = styled(Th)<{
@@ -219,48 +260,44 @@ const SortableTh = styled(Th)<{
   cursor: pointer;
   position: relative;
   padding-right: 25px;
+  transition: background-color 0.2s;
 
   &:after {
     content: '${(props) => (props.sortDirection === 'asc' ? '↑' : '↓')}';
     position: absolute;
     right: 8px;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
   }
 
   &:hover {
-    background-color: #f1f3f5;
+    background-color: ${SEJONG_COLORS.COOL_GRAY}30;
   }
 `;
 
 const Tr = styled.tr`
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
   &:hover {
-    background-color: #f8f9fa;
+    background-color: ${SEJONG_COLORS.COOL_GRAY}10;
   }
 `;
 
 const Td = styled.td`
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
+  padding: 1.25rem 1rem;
   text-align: center;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+  color: ${SEJONG_COLORS.GRAY};
 `;
 
 const TitleTd = styled(Td)`
   text-align: left;
   font-weight: 500;
-`;
-
-const CreateButton = styled.button`
-  padding: 0.5rem 1rem;
-  background-color: #b71c1c;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
 
   &:hover {
-    background-color: #8b0000;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 `;
 
@@ -269,16 +306,23 @@ const PaginationContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
 `;
 
 const PageButton = styled.button<{ isActive?: boolean }>`
   padding: 0.5rem 1rem;
-  border: 1px solid ${(props) => (props.isActive ? '#666' : '#ddd')};
-  background-color: ${(props) => (props.isActive ? '#666' : 'white')};
-  color: ${(props) => (props.isActive ? 'white' : '#333')};
+  border: 1px solid
+    ${(props) =>
+      props.isActive ? SEJONG_COLORS.CRIMSON_RED : SEJONG_COLORS.COOL_GRAY};
+  background-color: ${(props) =>
+    props.isActive ? SEJONG_COLORS.CRIMSON_RED : 'white'};
+  color: ${(props) => (props.isActive ? 'white' : SEJONG_COLORS.GRAY)};
   cursor: pointer;
   min-width: 40px;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
 
   &:disabled {
     cursor: not-allowed;
@@ -286,34 +330,44 @@ const PageButton = styled.button<{ isActive?: boolean }>`
   }
 
   &:hover:not(:disabled) {
-    background-color: ${(props) => (props.isActive ? '#555' : '#f8f9fa')};
+    background-color: ${(props) =>
+      props.isActive ? '#8b0000' : SEJONG_COLORS.COOL_GRAY}10;
+    border-color: ${(props) =>
+      props.isActive ? '#8b0000' : SEJONG_COLORS.CRIMSON_RED};
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
   }
 `;
 
 const LoadingSpinner = styled.div`
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  padding: 3rem;
+  color: ${SEJONG_COLORS.GRAY};
+  font-size: 1.1rem;
 `;
 
 const ErrorMessage = styled.div`
   text-align: center;
-  padding: 1rem;
-  margin: 1rem 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
   background-color: #fff5f5;
-  color: #e53e3e;
-  border-radius: 4px;
-  border: 1px solid #feb2b2;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  border-radius: 8px;
+  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED}20;
+  font-weight: 500;
 `;
 
 const EmptyMessage = styled.div`
   text-align: center;
-  padding: 2rem;
-  color: #666;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-top: 1rem;
+  padding: 3rem;
+  color: ${SEJONG_COLORS.GRAY};
+  background-color: ${SEJONG_COLORS.COOL_GRAY}10;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
 `;
 
 export default SeminarList;

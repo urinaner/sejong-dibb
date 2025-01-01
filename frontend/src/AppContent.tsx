@@ -34,6 +34,7 @@ import NotFound from './components/Notfound/NotFound';
 import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
 import SeminarCreate from './pages/Seminar/SeminarCreate';
+import SeminarEdit from './pages/Seminar/SeminarEdit';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -272,7 +273,7 @@ function AppContent() {
                 path="/news/seminar/edit/:id"
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
-                    <SeminarCreate />
+                    <SeminarEdit />
                   </ProtectedRoute>
                 }
               />

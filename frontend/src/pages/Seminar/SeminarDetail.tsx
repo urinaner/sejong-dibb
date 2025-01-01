@@ -71,7 +71,7 @@ const SeminarDetail: React.FC = () => {
           {auth?.isAuthenticated && (
             <ButtonGroup>
               <EditButton
-                onClick={() => navigate(`/seminar/edit/${seminar.id}`)}
+                onClick={() => navigate(`/news/seminar/edit/${seminar.id}`)}
               >
                 수정
               </EditButton>
