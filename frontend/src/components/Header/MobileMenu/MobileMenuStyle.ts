@@ -1,20 +1,15 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 export const MobileMenuButton = styled.button`
-  display: none;
   padding: 0.5rem;
   background: none;
   border: none;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.white};
   transition: opacity ${({ theme }) => theme.transitions.fast};
-
-  ${({ theme }) => theme.media.mobile} {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     opacity: 0.8;

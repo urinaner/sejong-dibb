@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { HeaderContainer, HeaderInner, HeaderNav } from './HeaderStyle';
 import Logo from './Logo/Logo';
 import Navigation from './Navigation/Navigation';
-import MobileMenu from './MobileMenu/MobileMenu';
 import { useHeaderScroll } from './hooks/useHeaderScroll';
+import { useResponsive } from '../../hooks/useResponsive';
+import MobileMenu from './MobileMenu/MobileMenu';
 
 const Header: React.FC = () => {
   const { isScrolled } = useHeaderScroll();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { isMobile } = useResponsive();
 
   const handleDropdownOpen = (isOpen: boolean) => {
     setIsDropdownOpen(isOpen);
@@ -24,8 +26,11 @@ const Header: React.FC = () => {
       <HeaderInner>
         <Logo />
         <HeaderNav>
-          <Navigation onDropdownChange={handleDropdownOpen} />
-          <MobileMenu />
+          {isMobile ? (
+            <MobileMenu />
+          ) : (
+            <Navigation onDropdownChange={handleDropdownOpen} />
+          )}
         </HeaderNav>
       </HeaderInner>
     </HeaderContainer>
