@@ -18,21 +18,25 @@ export const PaperContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
 `;
 
 export const TMP = styled.div`
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  width: 100%;
+
   ${media.tablet} {
-    display: flex;
-    flex-wrap: wrap; /* 태블릿에서는 기존 flex 레이아웃 */
-    justify-content: space-between; /* 태블릿에서는 4열로 가로 배치 */
+    gap: 20px;
   }
 
   ${media.mobile} {
-    display: grid; /* 모바일에서는 grid 레이아웃 */
-    grid-template-columns: repeat(2, 1fr); /* 2열 */
-    grid-template-rows: repeat(2, auto); /* 2행 */
-    justify-items: center; /* 카드 중앙 정렬 */
+    gap: 15px;
   }
 `;
 
@@ -53,89 +57,103 @@ export const Title = styled.div`
 `;
 
 export const Paper = styled.article`
+  cursor: pointer;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 280px;
-  margin: 0 40px 0 40px;
+  width: 320px;
   padding: 24px;
   border: solid 1px #d4d2e3;
   border-radius: 24px;
+  background-color: white;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
 
   img {
-    width: 232px;
+    width: 272px;
     height: auto;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    border-radius: 12px;
 
     ${media.tablet} {
-      width: 180px;
+      width: 220px;
     }
 
     ${media.mobile} {
-      width: 120px;
+      width: 160px;
     }
   }
 
-  p:first-of-type {
-    width: 232px;
+  p {
+    width: 272px;
     margin: 0;
     margin-bottom: 8px;
     font-family: 'Noto Sans KR';
     color: #5d5a88;
-    font-size: 18px;
-    font-weight: 700;
     word-break: break-all;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* 표시할 최대 줄 수 */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    ${media.tablet} {
-      width: 180px;
-    }
-
-    ${media.mobile} {
-      width: 120px;
-      font-size: 16px;
-    }
   }
 
-  p:last-of-type {
-    width: 232px;
-    margin: 0;
-    font-family: 'Noto Sans KR';
-    color: #5d5a88;
-    font-size: 16px;
-    font-weight: 400;
-    word-break: break-all;
-
+  p:nth-of-type(1) {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* 표시할 최대 줄 수 */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    height: 54px;
+  }
 
-    ${media.tablet} {
-      width: 180px;
-    }
+  p:nth-of-type(2) {
+    font-size: 16px;
+    font-weight: 500;
+    color: #7a7a7a;
+  }
 
-    ${media.mobile} {
-      width: 120px;
-      font-size: 14px;
-    }
+  p:nth-of-type(3) {
+    font-size: 14px;
+    font-weight: 400;
+    color: #9e9e9e;
   }
 
   ${media.tablet} {
-    flex: 1 0 calc(25% - 20px); /* 태블릿: 25% 너비 (4열) */
-    max-width: 220px;
+    width: calc(50% - 30px);
+    max-width: 280px;
     padding: 20px;
+
+    p {
+      width: 220px;
+    }
   }
 
   ${media.mobile} {
-    max-width: 160px; /* 모바일에서 카드 크기 축소 */
-    padding: 18px;
+    width: calc(100% - 30px);
+    max-width: 240px;
+    padding: 16px;
+
+    p {
+      width: 160px;
+    }
+
+    p:nth-of-type(1) {
+      font-size: 16px;
+      height: 48px;
+    }
+
+    p:nth-of-type(2) {
+      font-size: 14px;
+    }
+
+    p:nth-of-type(3) {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -156,7 +174,6 @@ export const AnnouncementAndSeminar = styled.section`
   width: 90%;
   margin-right: 100px;
   font-family: 'Noto Sans KR';
-
   display: flex;
   flex-direction: column;
 
@@ -230,15 +247,15 @@ export const AnnouncementItem = styled.div`
 
   span:first-of-type {
     flex-shrink: 1;
-    flex-basis: 100%; /* 컨테이너 내부 공간의 100%를 차지 */
-    max-width: calc(100% - 80px); /* 오른쪽 날짜 공간을 확보 */
+    flex-basis: 100%;
+    max-width: calc(100% - 80px);
 
     display: -webkit-box;
-    -webkit-line-clamp: 1; // 표시할 최대 줄 수
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: normal; // 말줄임표 작동을 위해 normal로 설정
+    white-space: normal;
   }
 
   span:last-of-type {
@@ -251,7 +268,6 @@ export const SeminarContainer = styled.div`
   display: flex;
   align-items: flex-end;
 
-  // 세미나 정보
   button:first-of-type {
     height: 200px;
     flex: 1;
@@ -261,7 +277,6 @@ export const SeminarContainer = styled.div`
     margin-right: 24px;
     padding: 0 30px;
     background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
-
     border-radius: 0;
     border: none;
     color: white;
@@ -327,7 +342,6 @@ export const SeminarContainer = styled.div`
     ${media.mobile} {
       height: 148px;
       margin-right: 8px;
-
       padding: 0;
       flex: 1;
     }
@@ -338,7 +352,6 @@ export const SeminarContainer = styled.div`
   }
 `;
 
-// 세미나실 예약
 export const SeminarRoomReservation = styled(Link)`
   height: 200px;
   flex: 1;
@@ -347,10 +360,13 @@ export const SeminarRoomReservation = styled(Link)`
   color: white;
   font-family: 'Noto Sans KR';
   cursor: pointer;
-
-  p {
-    margin: 16px 0 16px 0;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px 0 24px;
+  font-size: 22px;
+  background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
+  text-decoration: none;
 
   span {
     margin-right: 20px;
@@ -360,14 +376,6 @@ export const SeminarRoomReservation = styled(Link)`
       margin-bottom: 8px;
     }
   }
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px 0 24px;
-  font-size: 22px;
-  background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
-  text-decoration: none;
 
   ${media.tablet} {
     height: 180px;
@@ -388,12 +396,10 @@ export const ShortcutContainer = styled.section`
   flex: 45%;
   display: grid;
   justify-items: center;
-  grid-template-rows: repeat(3, auto); /* 3개의 행 */
-  grid-template-columns: repeat(2, 1fr); /* 2개의 열 */
-  gap: 50px 0; /* 요소들 사이의 간격 설정 */
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px 0;
   padding: 95px 0 95px 0;
-
-  /* background: linear-gradient(135deg, #d1f1ff 0%, #d1f1ff 50%, #71c9ff0a 100%); */
   background-color: #e9dfda;
 
   a {
@@ -441,7 +447,7 @@ export const Shortcut = styled.div`
     font-size: 20px;
   }
 
-  ${media.tablet} {
+  ${media.mobile} {
     font-size: 18px;
   }
 `;

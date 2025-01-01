@@ -159,6 +159,10 @@ function Main(): JSX.Element {
     navigate(`/news/noticeboard/${id}`);
   };
 
+  const handlePaperClick = (id: number) => {
+    navigate(`/news/thesis/${id}`);
+  };
+
   return (
     <MainContainer>
       {/* 연구논문 */}
@@ -166,10 +170,26 @@ function Main(): JSX.Element {
         <Title>연구 논문</Title>
         <TMP>
           {papers.map((paper: Paper) => (
-            <Paper key={paper.journal} style={{ margin: '10px' }}>
-              <img src={paper.thesisImage} alt="논문 이미지" />
+            <Paper
+              key={paper.journal}
+              style={{ margin: '20px' }}
+              onClick={() =>
+                window.open(paper.link, '_blank', 'noopener,noreferrer')
+              }
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  window.open(paper.link, '_blank', 'noopener,noreferrer');
+                }
+              }}
+            >
+              <img src={paper.thesisImage} alt={`${paper.title} 논문 이미지`} />
               <p>{paper.title}</p>
-              <p>{paper.content}</p>
+              <p>{paper.author}</p>
+              <p>
+                {paper.journal} ({paper.publicationDate})
+              </p>
             </Paper>
           ))}
         </TMP>

@@ -70,7 +70,7 @@ const navigationItems: NavigationItem[] = [
   {
     title: '⏱ 서비스',
     path: '/seminar-rooms/reservation',
-    menuItems: [{ name: '예약 페이지', path: '/seminar-rooms/reservation' }],
+    menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/reservation' }],
   },
 ];
 
