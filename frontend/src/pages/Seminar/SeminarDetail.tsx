@@ -64,73 +64,92 @@ const SeminarDetail: React.FC = () => {
   if (!seminar) return <ErrorMessage>세미나를 찾을 수 없습니다.</ErrorMessage>;
 
   return (
-    <Container>
-      <Card>
-        <Header>
-          <Title>{seminar.name}</Title>
-          {auth?.isAuthenticated && (
-            <ButtonGroup>
-              <EditButton
-                onClick={() => navigate(`/news/seminar/edit/${seminar.id}`)}
-              >
-                수정
-              </EditButton>
-              <DeleteButton onClick={() => {}}>삭제</DeleteButton>
-            </ButtonGroup>
-          )}
-        </Header>
+    <PageContainer>
+      <ContentWrapper>
+        <Card>
+          <Header>
+            <TitleSection>
+              <Title>{seminar.name}</Title>
+              <SubInfo>
+                <WriterInfo>
+                  <InfoLabel>작성자:</InfoLabel>
+                  <span>{seminar.writer}</span>
+                </WriterInfo>
+                <DateInfo>
+                  {formatDate(seminar.startDate)}
+                  {seminar.startDate !== seminar.endDate &&
+                    ` ~ ${formatDate(seminar.endDate)}`}
+                </DateInfo>
+              </SubInfo>
+            </TitleSection>
+            {auth?.isAuthenticated && (
+              <ButtonGroup>
+                <EditButton
+                  onClick={() => navigate(`/news/seminar/edit/${seminar.id}`)}
+                >
+                  수정
+                </EditButton>
+                <DeleteButton onClick={() => {}}>삭제</DeleteButton>
+              </ButtonGroup>
+            )}
+          </Header>
 
-        <InfoGrid>
-          <InfoRow>
-            <InfoLabel>발표자</InfoLabel>
-            <InfoValue>{seminar.speaker}</InfoValue>
-          </InfoRow>
-          <InfoRow>
-            <InfoLabel>소속</InfoLabel>
-            <InfoValue>{seminar.company}</InfoValue>
-          </InfoRow>
-          <InfoRow>
-            <InfoLabel>장소</InfoLabel>
-            <InfoValue>{seminar.place}</InfoValue>
-          </InfoRow>
-          <InfoRow>
-            <InfoLabel>일시</InfoLabel>
-            <InfoValue>
-              {formatDate(seminar.startDate)}
-              {seminar.startDate !== seminar.endDate &&
-                ` ~ ${formatDate(seminar.endDate)}`}
-            </InfoValue>
-          </InfoRow>
-          <InfoRow>
-            <InfoLabel>작성자</InfoLabel>
-            <InfoValue>{seminar.writer}</InfoValue>
-          </InfoRow>
-        </InfoGrid>
+          <MainContent>
+            <InfoSection>
+              <InfoGrid>
+                <InfoRow>
+                  <InfoLabel>발표자</InfoLabel>
+                  <InfoValue>{seminar.speaker}</InfoValue>
+                </InfoRow>
+                <InfoRow>
+                  <InfoLabel>소속</InfoLabel>
+                  <InfoValue>{seminar.company}</InfoValue>
+                </InfoRow>
+                <InfoRow>
+                  <InfoLabel>장소</InfoLabel>
+                  <InfoValue>{seminar.place}</InfoValue>
+                </InfoRow>
+              </InfoGrid>
+            </InfoSection>
+          </MainContent>
 
-        <ButtonGroup style={{ marginTop: '2rem' }}>
-          <BackButton onClick={() => navigate('/news/seminar')}>
-            목록으로
-          </BackButton>
-        </ButtonGroup>
-      </Card>
-    </Container>
+          <Footer>
+            <BackButton onClick={() => navigate('/news/seminar')}>
+              목록으로
+            </BackButton>
+          </Footer>
+        </Card>
+      </ContentWrapper>
+    </PageContainer>
   );
 };
 
-const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
+const PageContainer = styled.div`
+  min-height: 100vh;
+  background-color: #fff;
   padding: 40px 20px;
+`;
+
+const ContentWrapper = styled.div`
+  width: 1000px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-width: 1000px;
+  }
 `;
 
 const Card = styled.div`
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 3rem;
-  max-width: 1000px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem 4rem;
   margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    padding: 2rem;
+  }
 
   @media (max-width: 768px) {
     padding: 1.5rem;
@@ -141,16 +160,49 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
   border-bottom: 2px solid #e2e8f0;
 `;
 
+const TitleSection = styled.div`
+  flex: 1;
+`;
+
 const Title = styled.h1`
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 700;
   color: #1a202c;
-  margin: 0;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
+
+const SubInfo = styled.div`
+  display: flex;
+  gap: 2rem;
+  color: #64748b;
+  font-size: 0.95rem;
+`;
+
+const WriterInfo = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const DateInfo = styled.div`
+  color: #64748b;
+`;
+
+const MainContent = styled.div`
+  margin: 2rem 0;
+`;
+
+const InfoSection = styled.section`
+  padding: 2rem 0;
 `;
 
 const InfoGrid = styled.div`
@@ -159,87 +211,95 @@ const InfoGrid = styled.div`
 `;
 
 const InfoRow = styled.div`
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 1rem;
-  align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #e2e8f0;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
 const InfoLabel = styled.span`
   font-weight: 600;
-  color: #4a5568;
+  color: #64748b;
+  font-size: 0.9rem;
 `;
 
 const InfoValue = styled.span`
-  color: #2d3748;
+  color: #1e293b;
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
 `;
 
 const Button = styled.button`
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
   background-color: white;
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  min-width: 80px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-weight: 500;
 
   &:hover {
     background-color: #f8f9fa;
-    border-color: #ccc;
+    border-color: #cbd5e1;
   }
 `;
 
 const BackButton = styled(Button)`
-  background-color: white;
+  background-color: #f8fafc;
+  min-width: 120px;
 `;
 
 const EditButton = styled(Button)`
-  background-color: white;
+  background-color: #fff;
+  color: #3b82f6;
+  border-color: #3b82f6;
+
+  &:hover {
+    background-color: #eff6ff;
+  }
 `;
 
 const DeleteButton = styled(Button)`
-  background-color: white;
-  color: #dc3545;
+  background-color: #fff;
+  color: #dc2626;
+  border-color: #dc2626;
 
   &:hover {
-    background-color: #fff5f5;
-    border-color: #dc3545;
+    background-color: #fef2f2;
   }
 `;
 
 const LoadingSpinner = styled.div`
   text-align: center;
-  padding: 2rem;
-  color: #666;
-  font-size: 1.1rem;
+  padding: 4rem;
+  color: #64748b;
+  font-size: 1.2rem;
 `;
 
 const ErrorMessage = styled.div`
   text-align: center;
-  padding: 1rem;
-  margin: 1rem 0;
-  background-color: #fff5f5;
-  color: #e53e3e;
-  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-radius: 8px;
   font-size: 1rem;
-  border: 1px solid #feb2b2;
+  border: 1px solid #fecaca;
 `;
 
 export default SeminarDetail;
