@@ -33,6 +33,7 @@ import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 import NotFound from './components/Notfound/NotFound';
 import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
+import SeminarCreate from './pages/Seminar/SeminarCreate';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -256,6 +257,22 @@ function AppContent() {
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
                     <ThesisEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/seminar/create"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <SeminarCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/seminar/edit/:id"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <SeminarCreate />
                   </ProtectedRoute>
                 }
               />
