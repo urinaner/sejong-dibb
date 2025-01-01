@@ -4,6 +4,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
 import { apiEndpoints } from '../../config/apiConfig';
+import { Modal, useModal } from '../../components/Modal';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface SeminarDetail {
   id: number;
@@ -20,9 +22,11 @@ const SeminarDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
+  const { openModal } = useModal();
   const [seminar, setSeminar] = useState<SeminarDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchSeminarDetail = async () => {
@@ -59,6 +63,73 @@ const SeminarDetail: React.FC = () => {
       .replace('.', '');
   };
 
+  const showConfirmModal = () => {
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#F59E0B" />
+          세미나 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>정말로 이 세미나를 삭제하시겠습니까?</p>
+          <p>삭제된 세미나는 복구할 수 없습니다.</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <DeleteButton onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const showResultModal = (success: boolean) => {
+    openModal(
+      <>
+        <Modal.Header>
+          {success ? (
+            <CheckCircle size={48} color="#38A169" />
+          ) : (
+            <AlertTriangle size={48} color="#E53E3E" />
+          )}
+          {success ? '삭제 완료' : '삭제 실패'}
+        </Modal.Header>
+        <Modal.Content>
+          <p>
+            {success
+              ? '세미나가 성공적으로 삭제되었습니다.'
+              : '세미나 삭제 중 오류가 발생했습니다.'}
+          </p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton
+            onClick={() => {
+              if (success) {
+                navigate('/news/seminar');
+              }
+            }}
+          />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const handleDelete = async () => {
+    if (!id || !seminar) return;
+
+    try {
+      setIsDeleting(true);
+      await axios.delete(apiEndpoints.seminar.delete(id));
+      showResultModal(true);
+    } catch (error) {
+      console.error('Failed to delete seminar:', error);
+      showResultModal(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (loading) return <LoadingSpinner>Loading...</LoadingSpinner>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
   if (!seminar) return <ErrorMessage>세미나를 찾을 수 없습니다.</ErrorMessage>;
@@ -89,7 +160,9 @@ const SeminarDetail: React.FC = () => {
                 >
                   수정
                 </EditButton>
-                <DeleteButton onClick={() => {}}>삭제</DeleteButton>
+                <DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
+                  {isDeleting ? '삭제 중...' : '삭제'}
+                </DeleteButton>
               </ButtonGroup>
             )}
           </Header>
