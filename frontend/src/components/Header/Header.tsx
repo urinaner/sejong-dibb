@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  HeaderContainer,
-  HeaderInner,
-  HeaderNav,
-  MobileTitle,
-} from './HeaderStyle';
+import { HeaderContainer, HeaderInner, HeaderNav } from './HeaderStyle';
 import Logo from './Logo/Logo';
 import Navigation from './Navigation/Navigation';
 import { useHeaderScroll } from './hooks/useHeaderScroll';
@@ -29,8 +24,7 @@ const Header: React.FC = () => {
       }}
     >
       <HeaderInner>
-        <Logo />
-        <MobileTitle>세종대학교 바이오융합공학전공</MobileTitle>
+        <Logo compact={isMobile} />
         <HeaderNav>
           {isMobile ? (
             <MobileMenu />
