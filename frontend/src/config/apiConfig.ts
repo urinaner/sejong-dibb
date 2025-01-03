@@ -1,4 +1,9 @@
+import axios from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL;
+
+axios.defaults.withCredentials = true;  // 모든 요청에 대해 크리덴셜 전송
+axios.defaults.baseURL = API_URL;       // 기본 URL 설정
 
 export interface BoardReqDto {
   title: string;
