@@ -50,18 +50,18 @@ public class News {
     public static News of(NewsReqDto dto) {
         return News.builder()
                 .title(dto.getTitle())
-                .content(dto.getWriter())
-                .createDate(dto.getPlace())
-                .link(dto.getStartDate())
-                .image(dto.getEndDate())
+                .content(dto.getContent())
+                .createDate(dto.getCreateDate())
+                .link(dto.getLink())
+                .image(dto.getImage())
                 .build();
     }
 
     public void update(NewsReqDto dto) {
         this.title = dto.getTitle();
-        this.content = dto.getWriter();
-        this.createDate = dto.getPlace();
-        this.link = dto.getStartDate();
-        this.image = dto.getEndDate();
+        this.content = dto.getContent();
+        this.createDate = dto.getCreateDate();
+        this.link = dto.getLink();
+        this.image = dto.getImage();
     }
 }
