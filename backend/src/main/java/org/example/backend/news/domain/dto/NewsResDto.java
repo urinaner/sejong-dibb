@@ -12,29 +12,32 @@ public class NewsResDto {
     private Long id;
     private String title;
     private String content;
+    private int view;
     private String createDate;
     private String link;
     private String image;
 
     @Builder
-    private NewsResDto(Long id, String title, String content, String createDate,
+    private NewsResDto(Long id, String title, int view, String content, String createDate,
                        String link, String image) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.view = view;
         this.createDate = createDate;
         this.link = link;
         this.image = image;
     }
 
-    public static NewsResDto of(News seminar) {
+    public static NewsResDto of(News news) {
         return NewsResDto.builder()
-                .id(seminar.getId())
-                .title(seminar.getTitle())
-                .content(seminar.getContent())
-                .createDate(seminar.getCreateDate())
-                .link(seminar.getLink())
-                .image(seminar.getImage())
+                .id(news.getId())
+                .title(news.getTitle())
+                .content(news.getContent())
+                .view(news.getView())
+                .createDate(news.getCreateDate())
+                .link(news.getLink())
+                .image(news.getImage())
                 .build();
     }
 }

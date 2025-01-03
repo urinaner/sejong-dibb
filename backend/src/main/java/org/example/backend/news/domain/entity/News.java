@@ -9,12 +9,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.common.domain.BaseEntity;
 import org.example.backend.news.domain.dto.NewsReqDto;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class News {
+public class News extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,9 @@ public class News {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "view")
+    private int view;
+
     @Column(name = "create_date")
     private String createDate;
 
@@ -38,10 +42,11 @@ public class News {
 
 
     @Builder
-    private News(String title, String content, String createDate, String link,
+    private News(String title, String content, int view, String createDate, String link,
                  String image) {
         this.title = title;
         this.content = content;
+        this.view = view;
         this.createDate = createDate;
         this.link = link;
         this.image = image;
@@ -51,6 +56,7 @@ public class News {
         return News.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
+                .view(0)
                 .createDate(dto.getCreateDate())
                 .link(dto.getLink())
                 .image(dto.getImage())
