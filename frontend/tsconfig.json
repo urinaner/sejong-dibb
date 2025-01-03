@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "typeRoots": ["./node_modules/@types", "src/types"],
-    "types": ["node"] // Node.js 타입을 포함시킴
   },
-  "include": ["src/**/*", "src/types/**/*"]
+  "include": ["src/**/*", "src/types/**/*",    "src/**/*.ts",    "src/**/*.tsx",     "src/**/*.d.ts"
+  ]
 }

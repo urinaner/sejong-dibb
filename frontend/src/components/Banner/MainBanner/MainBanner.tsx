@@ -6,25 +6,9 @@ import { MainBannerProps } from '../../../types/banner';
 const VideoContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 95vh;
   overflow: hidden;
   background-color: #000;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.65) 0%,
-      rgba(0, 0, 0, 0.4) 50%,
-      rgba(0, 0, 0, 0.65) 100%
-    );
-    z-index: 1;
-  }
 
   @media (max-width: 768px) {
     height: 60vh;
@@ -35,7 +19,6 @@ const Video = styled.video`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: contrast(1.1) brightness(0.6);
 `;
 
 const Content = styled(motion.div)`
@@ -43,11 +26,11 @@ const Content = styled(motion.div)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-align: left;
+  text-align: right;
   z-index: 2;
   width: 90%;
   max-width: 1200px;
-  padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const TitleContainer = styled(motion.div)`
@@ -55,6 +38,7 @@ const TitleContainer = styled(motion.div)`
   flex-direction: column;
   gap: 0.5rem;
   max-width: 600px;
+  margin-left: auto;
 `;
 
 const Title = styled.h1`

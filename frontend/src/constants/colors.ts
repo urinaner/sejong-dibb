@@ -1,5 +1,5 @@
 export const SEJONG_COLORS = {
-  CRIMSON_RED: '#C3002F',
+  CRIMSON_RED: '#a31432',
   GRAY: '#51626F',
   COOL_GRAY: '#D5D6D2',
   WARM_GRAY1: '#B7B1A9',

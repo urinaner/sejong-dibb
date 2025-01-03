@@ -20,7 +20,7 @@ function preventScroll(scrollPosition: ScrollPosition) {
   const scrollBarWidth =
     window.innerWidth - document.documentElement.clientWidth;
 
-  // body style 설정으로 스크롤 방지
+  // body styles 설정으로 스크롤 방지
   Object.assign(document.body.style, {
     position: 'fixed',
     top: `-${scrollPosition.y}px`,
@@ -34,7 +34,7 @@ function preventScroll(scrollPosition: ScrollPosition) {
 }
 
 function restoreScroll(scrollPosition: ScrollPosition) {
-  // body style 초기화
+  // body styles 초기화
   Object.assign(document.body.style, {
     position: '',
     top: '',
