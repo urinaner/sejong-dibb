@@ -9,38 +9,40 @@ function Footer() {
 
   return (
     <S.Footer>
-      <S.FooterContainer>
-        <S.Address>
-          <S.AddressTitle>세종대학교</S.AddressTitle>
-          바이오융합공학전공
-          <br />
-          Tel : 02) 3408-3334
-          <br />
-          서울특별시 광진구 능동로 209 (군자동) 충무관 103A
-          <br />
-        </S.Address>
-        <S.SightMap>{renderSightMapSections()}</S.SightMap>
-      </S.FooterContainer>
-      <S.Copyright>
-        <span>
-          Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
-        </span>
-        {auth?.isAuthenticated ? (
-          <S.AdminSection>
-            <span>관리자: {auth.user}</span>
-            <S.AdminButton onClick={auth.signout}>
-              <AdminIcon />
-              로그아웃
-            </S.AdminButton>
-          </S.AdminSection>
-        ) : (
-          <Link to="/signin">
-            <S.AdminButton>
-              <img src="/adminLoginBtn.svg" alt="관리자 로그인" />
-            </S.AdminButton>
-          </Link>
-        )}
-      </S.Copyright>
+      <S.FooterInner>
+        <S.FooterContainer>
+          <S.Address>
+            <S.AddressTitle>세종대학교</S.AddressTitle>
+            바이오융합공학전공
+            <br />
+            Tel : 02) 3408-3334
+            <br />
+            서울특별시 광진구 능동로 209 (군자동) 충무관 103A
+            <br />
+          </S.Address>
+          <S.SightMap>{renderSightMapSections()}</S.SightMap>
+        </S.FooterContainer>
+        <S.Copyright>
+          <span>
+            Copyright©2024 . 세종대학교 바이오융합공학전공 All rights reserved
+          </span>
+          {auth?.isAuthenticated ? (
+            <S.AdminSection>
+              <span>관리자: {auth.user}</span>
+              <S.AdminButton onClick={auth.signout}>
+                <AdminIcon />
+                로그아웃
+              </S.AdminButton>
+            </S.AdminSection>
+          ) : (
+            <Link to="/signin">
+              <S.AdminButton>
+                <img src="/adminLoginBtn.svg" alt="관리자 로그인" />
+              </S.AdminButton>
+            </Link>
+          )}
+        </S.Copyright>
+      </S.FooterInner>
     </S.Footer>
   );
 }
