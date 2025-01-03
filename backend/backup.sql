@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS `admin_SEQ`;
 DROP TABLE IF EXISTS `admin`;
 DROP TABLE IF EXISTS `UserEntity`;
 DROP TABLE IF EXISTS `professor_SEQ`;
+DROP TABLE IF EXISTS `news`;
 
 -- Admin table
 CREATE TABLE `admin` (
@@ -120,3 +121,15 @@ CREATE TABLE `reservation` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Continue for other tables like `thesis`, `board`, and `users`
+
+-- News 테이블 생성
+CREATE TABLE `news` (
+                        `news_id` BIGINT NOT NULL AUTO_INCREMENT,
+                        `name` VARCHAR(255),
+                        `content` TEXT,
+                        `view` INT DEFAULT 0,
+                        `link` VARCHAR(255),
+                        `image` VARCHAR(1000),
+                        `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`news_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

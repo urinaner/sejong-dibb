@@ -14,6 +14,7 @@ import Main from './pages/Main/Main';
 import SignInPage from './pages/Auth/SignInPage';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
 import GraduateOverview from './pages/Graduate/GraduateOverview';
+import GraduateCurriculum from './pages/Graduate/GraduateCurriculum';
 import Overview from './pages/About/About';
 import Professor from './pages/About/Faculty/Professor';
 import NoticeBoard from './pages/News/NoticeBoard/NoticeBoard';
@@ -29,7 +30,10 @@ import ThesisCreate from './pages/News/Thesis/ThesisCreate';
 import ThesisEdit from './pages/News/Thesis/ThesisEdit';
 import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 import Organization from './pages/About/Organization/Organization';
+
+import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
+
 import NotFound from './components/Notfound/NotFound';
 import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
@@ -194,13 +198,17 @@ function AppContent() {
                 path="/undergraduate/curriculum"
                 element={<Curriculum />}
               />
+
               {/* graduate */}
               <Route path="graduate/overview" element={<GraduateOverview />} />
+              <Route path="graduate/curriculum" element={<GraduateCurriculum />} />
+
               {/* about */}
               <Route path="/about" element={<Overview />} />
               <Route path="/about/faculty" element={<Professor />} />
               <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
               <Route path="/about/organization" element={<Organization />} />
+
               {/* news */}
               <Route path="/news/noticeboard" element={<NoticeBoard />} />
               <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
@@ -212,6 +220,7 @@ function AppContent() {
               <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />
               <Route path="/news/thesis/:id" element={<ThesisDetail />} />
+
               {/* 어드민 권한 보호 Routes */}
               <Route
                 path="/about/faculty/edit/:id"
