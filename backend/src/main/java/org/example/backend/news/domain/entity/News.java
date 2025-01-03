@@ -37,7 +37,7 @@ public class News extends BaseEntity {
     @Column(name = "link")
     private String link;
 
-    @Column(name = "image")
+    @Column(name = "image", length = 1000)
     private String image;
 
 
