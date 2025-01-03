@@ -201,7 +201,11 @@ function AppContent() {
 
               {/* graduate */}
               <Route path="graduate/overview" element={<GraduateOverview />} />
-              <Route path="graduate/curriculum" element={<GraduateCurriculum />} />
+
+              <Route
+                path="graduate/curriculum"
+                element={<GraduateCurriculum />}
+              />
 
               {/* about */}
               <Route path="/about" element={<Overview />} />
