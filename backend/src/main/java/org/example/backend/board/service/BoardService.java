@@ -2,6 +2,9 @@ package org.example.backend.board.service;
 
 import static org.example.backend.board.exception.BoardExceptionType.NOT_FOUND_BOARD;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -82,5 +85,41 @@ public class BoardService {
             }
             boardReqDto.setFileList(updateImageUrlList);
         }
+    }
+
+    @Transactional
+    public void incrementViewCount(Long boardId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                    break;
+                }
+            }
+        }
+
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + boardId + "]")) {
+                readCount(boardId);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            readCount(boardId);
+            Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+        }
+    }
+
+    @Transactional
+    public void readCount(Long boardId) {
+        boardRepository.incrementViewCount(boardId);
     }
 }
