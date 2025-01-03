@@ -26,7 +26,6 @@ public class NewsService {
 
     @Transactional
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
-        validateUserRequiredFields(newsReqDto);
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
@@ -35,12 +34,6 @@ public class NewsService {
         News news = News.of(newsReqDto);
         News savedNews = newsRepository.save(news);
         return savedNews.getId();
-    }
-
-    private void validateUserRequiredFields(NewsReqDto dto) {
-        if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
-            throw new NewsException(NewsExceptionType.REQUIRED_TITLE);
-        }
     }
 
     public NewsResDto getNews(Long newsId) {

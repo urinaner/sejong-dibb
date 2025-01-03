@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum NewsExceptionType implements BaseExceptionType {
 
-    NOT_FOUND_NEWS(NOT_FOUND, "뉴스를 찾을 수 없습니다"),
-
-    REQUIRED_TITLE(BAD_REQUEST, "제목은 필수 입력값입니다."),
+    NOT_FOUND_NEWS(NOT_FOUND, "뉴스를 찾을 수 없습니다")
     ;
 
     private final HttpStatus httpStatus;
