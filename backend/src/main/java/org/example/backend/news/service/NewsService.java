@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class NewsService {
     private final NewsRepository newsRepository;
     private final S3Uploader s3Uploader;
-    private static final String dirName = "profile";
+    private static final String dirName = "news";
 
     @Transactional
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
