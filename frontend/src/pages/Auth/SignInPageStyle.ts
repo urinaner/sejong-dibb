@@ -14,6 +14,7 @@ export const ContentWrapper = styled.div`
   width: 100%;
   max-width: 460px;
   text-align: center;
+  margin-top: 64px;
 `;
 
 // Logo and header components

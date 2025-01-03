@@ -303,7 +303,7 @@ const Curriculum: React.FC = () => {
     <S.Container>
       <S.ImageWrapper>
         {renderImage('curriculum', {
-          src: '/curriculum-2025.jpeg',
+          src: '/curriculum-2025.jpg',
           alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
           scale: scaleCur,
           position: positionCur,
@@ -330,7 +330,7 @@ const Curriculum: React.FC = () => {
 
       <S.ImageWrapper>
         {renderImage('roadmap', {
-          src: '/roadmap-2025.jpg',
+          src: '/roadmap-2025.png',
           alt: '2025학년도 바이오융합공학전공 로드맵',
           scale: scaleRoad,
           position: positionRoad,
@@ -343,7 +343,7 @@ const Curriculum: React.FC = () => {
 
       <S.DownloadSection>
         <S.DownloadLink
-          href="/roadmap-2025.jpeg"
+          href="/roadmap-2025.png"
           download="세종대학교_바이오융합공학전공_로드맵_2025.jpeg"
           target="_blank"
           rel="noopener noreferrer"
