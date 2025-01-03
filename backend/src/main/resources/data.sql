@@ -16,6 +16,8 @@ DELETE
 FROM admin;
 DELETE
 FROM users;
+DELETE
+FROM news;
 
 
 -- Department 더미 데이터 (1개)
@@ -314,3 +316,75 @@ VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교�
        ('2024-12-07 13:30:00', '2024-12-07 15:30:00', 'MEETING', '김민수교수님 랩미팅', 1, 2, NOW(), NOW()),
        ('2024-12-08 11:00:00', '2024-12-08 13:00:00', 'MEETING', '전종훈교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-09 16:00:00', '2024-12-09 18:00:00', 'MEETING', '서민석교수님 랩미팅', 1, 4, NOW(), NOW());
+
+INSERT INTO news (name, content, view, link, image, created_at)
+VALUES
+    ('세종대학교 바이오융합공학과, 혁신 연구 성과 발표',
+     '세종대학교 바이오융합공학과가 올해 혁신적인 연구 성과를 발표했습니다.',
+     320,
+     'https://example.com/news1',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image1.jpg',
+     NOW()),
+
+    ('바이오융합공학과, 신입생 환영회 개최',
+     '세종대학교 바이오융합공학과가 신입생들을 위한 환영회를 열었습니다.',
+     150,
+     'https://example.com/news2',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image2.jpg',
+     NOW()),
+
+    ('세종대, 바이오 분야 특화 교육 프로그램 개설',
+     '세종대학교가 바이오 분야를 중심으로 한 특화 교육 프로그램을 개설하였습니다.',
+     200,
+     'https://example.com/news3',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image3.jpg',
+     NOW()),
+
+    ('바이오융합공학과 졸업생, 글로벌 기업 취업 성공',
+     '세종대학교 바이오융합공학과 졸업생이 글로벌 기업에 성공적으로 취업했습니다.',
+     400,
+     'https://example.com/news4',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image4.jpg',
+     NOW()),
+
+    ('바이오융합공학과, 국제 학술대회 논문 발표',
+     '바이오융합공학과 교수진이 국제 학술대회에서 연구 논문을 발표했습니다.',
+     280,
+     'https://example.com/news5',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image5.jpg',
+     NOW()),
+
+    ('세종대, 바이오 산업 연구 지원 강화',
+     '세종대학교는 바이오 산업 연구를 위한 지원을 강화하고 있습니다.',
+     170,
+     'https://example.com/news6',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image6.jpg',
+     NOW()),
+
+    ('세종대 바이오융합공학과, 혁신적인 실험실 설립',
+     '세종대학교 바이오융합공학과가 혁신적인 실험실을 설립하였습니다.',
+     310,
+     'https://example.com/news7',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image7.jpg',
+     NOW()),
+
+    ('세종대 바이오융합공학과, 신약 개발 프로젝트 시작',
+     '세종대학교 바이오융합공학과가 신약 개발 프로젝트를 시작했습니다.',
+     250,
+     'https://example.com/news8',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image8.jpg',
+     NOW()),
+
+    ('세종대학교, 바이오융합공학과 신임 교수 임용',
+     '세종대학교는 바이오융합공학과에 새로운 교수님을 임용했습니다.',
+     180,
+     'https://example.com/news9',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image9.jpg',
+     NOW()),
+
+    ('세종대 바이오융합공학과, 학술 논문 출판',
+     '바이오융합공학과 교수진이 학술 논문을 성공적으로 출판하였습니다.',
+     210,
+     'https://example.com/news10',
+     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/image10.jpg',
+     NOW());
