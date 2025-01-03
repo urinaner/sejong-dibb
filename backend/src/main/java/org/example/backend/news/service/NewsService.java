@@ -3,6 +3,7 @@ package org.example.backend.news.service;
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.global.config.aws.S3Uploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
 import org.example.backend.news.domain.entity.News;
@@ -13,16 +14,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class NewsService {
     private final NewsRepository newsRepository;
+    private final S3Uploader s3Uploader;
+    private static final String dirName = "profile";
 
     @Transactional
-    public Long saveNews(NewsReqDto newsReqDto) {
+    public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
         validateUserRequiredFields(newsReqDto);
+
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            newsReqDto.setImage(uploadImageUrl);
+        }
         News news = News.of(newsReqDto);
         News savedNews = newsRepository.save(news);
         return savedNews.getId();
@@ -40,7 +49,12 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsResDto updateNews(Long newsId, NewsReqDto newsReqDto) {
+    public NewsResDto updateNews(Long newsId, NewsReqDto newsReqDto, MultipartFile multipartFile) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            newsReqDto.setImage(uploadImageUrl);
+        }
+
         News news = findNewsById(newsId);
         news.update(newsReqDto);
         return NewsResDto.of(news);
