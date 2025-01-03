@@ -1,6 +1,6 @@
 package org.example.backend.news.domain.dto;
 
-정import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
