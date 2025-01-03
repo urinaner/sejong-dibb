@@ -11,36 +11,30 @@ import org.example.backend.news.domain.entity.News;
 public class NewsResDto {
     private Long id;
     private String title;
-    private String writer;
-    private String place;
-    private String startDate;
-    private String endDate;
-    private String speaker;
-    private String company;
+    private String content;
+    private String createDate;
+    private String link;
+    private String image;
 
     @Builder
-    private NewsResDto(Long id, String title, String writer, String place,
-                       String startDate, String endDate, String speaker, String company) {
+    private NewsResDto(Long id, String title, String content, String createDate,
+                       String link, String image) {
         this.id = id;
         this.title = title;
-        this.writer = writer;
-        this.place = place;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.speaker = speaker;
-        this.company = company;
+        this.content = content;
+        this.createDate = createDate;
+        this.link = link;
+        this.image = image;
     }
 
     public static NewsResDto of(News seminar) {
         return NewsResDto.builder()
                 .id(seminar.getId())
                 .title(seminar.getTitle())
-                .writer(seminar.getWriter())
-                .place(seminar.getPlace())
-                .startDate(seminar.getStartDate())
-                .endDate(seminar.getEndDate())
-                .speaker(seminar.getSpeaker())
-                .company(seminar.getCompany())
+                .content(seminar.getContent())
+                .createDate(seminar.getCreateDate())
+                .link(seminar.getLink())
+                .image(seminar.getImage())
                 .build();
     }
 }
