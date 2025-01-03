@@ -1,5 +1,6 @@
 package org.example.backend.news.domain.dto;
 
+정import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class NewsResDto {
                 .title(news.getTitle())
                 .content(news.getContent())
                 .view(news.getView())
-                .createDate(news.getCreateDate())
+                .createDate(news.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .link(news.getLink())
                 .image(news.getImage())
                 .build();

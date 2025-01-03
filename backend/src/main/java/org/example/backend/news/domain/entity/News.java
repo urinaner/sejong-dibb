@@ -31,9 +31,6 @@ public class News extends BaseEntity {
     @Column(name = "view")
     private int view;
 
-    @Column(name = "create_date")
-    private String createDate;
-
     @Column(name = "link")
     private String link;
 
@@ -42,12 +39,11 @@ public class News extends BaseEntity {
 
 
     @Builder
-    private News(String title, String content, int view, String createDate, String link,
+    private News(String title, String content, int view, String link,
                  String image) {
         this.title = title;
         this.content = content;
         this.view = view;
-        this.createDate = createDate;
         this.link = link;
         this.image = image;
     }
@@ -57,7 +53,6 @@ public class News extends BaseEntity {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .view(0)
-                .createDate(dto.getCreateDate())
                 .link(dto.getLink())
                 .image(dto.getImage())
                 .build();
@@ -66,7 +61,6 @@ public class News extends BaseEntity {
     public void update(NewsReqDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
-        this.createDate = dto.getCreateDate();
         this.link = dto.getLink();
         this.image = dto.getImage();
     }
