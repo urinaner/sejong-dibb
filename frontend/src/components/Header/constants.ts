@@ -32,7 +32,7 @@ export const navItems = [
     path: '/news/noticeboard',
     menuItems: [
       { name: '공지사항', path: '/news/noticeboard' },
-      { name: '세미나', path: '/news' },
+      { name: '세미나', path: '/news/seminar' },
       { name: '연구 논문', path: '/news/thesis' },
     ],
   },

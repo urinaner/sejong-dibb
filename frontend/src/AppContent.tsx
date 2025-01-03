@@ -35,6 +35,10 @@ import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
 
 import NotFound from './components/Notfound/NotFound';
+import SeminarList from './pages/Seminar/SeminarList';
+import SeminarDetail from './pages/Seminar/SeminarDetail';
+import SeminarCreate from './pages/Seminar/SeminarCreate';
+import SeminarEdit from './pages/Seminar/SeminarEdit';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -212,6 +216,8 @@ function AppContent() {
                 path="/seminar-rooms/reservation"
                 element={<Reservation />}
               />
+              <Route path="/news/seminar" element={<SeminarList />} />
+              <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />
               <Route path="/news/thesis/:id" element={<ThesisDetail />} />
 
@@ -261,6 +267,22 @@ function AppContent() {
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
                     <ThesisEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/seminar/create"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <SeminarCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/seminar/edit/:id"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <SeminarEdit />
                   </ProtectedRoute>
                 }
               />

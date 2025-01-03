@@ -7,6 +7,7 @@ import {
   LogoTitle,
   LogoWrapper,
   Department,
+  MobileLogoTitle,
 } from './LogoStyle';
 
 interface LogoProps {
@@ -26,6 +27,9 @@ const Logo: React.FC<LogoProps> = ({ compact = false }) => {
               SEJONG UNIVERSITY
               <Department>바이오융합공학전공</Department>
             </LogoTitle>
+          )}
+          {compact && (
+            <MobileLogoTitle>세종대학교 바이오융합공학전공</MobileLogoTitle>
           )}
         </LogoWrapper>
       </LogoLink>

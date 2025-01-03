@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+
 export const HeaderContainer = styled(motion.header)<{
   $isDropdownOpen: boolean;
 }>`
@@ -28,6 +29,7 @@ export const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 
   @media (max-width: 768px) {
     padding: 0 1rem;
@@ -68,4 +70,24 @@ export const HeaderActions = styled.div`
   align-items: center;
   gap: 1rem;
   color: white;
+`;
+
+export const MobileTitle = styled.h1`
+  display: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none; // 텍스트 뒤의 요소들과 상호작용 가능하도록
+    z-index: 1; // 다른 요소들 위에 표시
+  }
 `;

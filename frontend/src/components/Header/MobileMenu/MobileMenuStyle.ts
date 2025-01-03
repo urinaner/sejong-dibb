@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
 export const MobileMenuButton = styled.button`
   padding: 0.5rem;
   background: none;
@@ -21,6 +22,7 @@ export const MobileMenuButton = styled.button`
     stroke-width: 2px;
   }
 `;
+
 export const MobileMenuWrapper = styled.div<{ isOpen: boolean }>`
   display: none;
 
@@ -84,5 +86,50 @@ export const MobileSubMenuItem = styled(Link)`
   &:hover {
     opacity: 1;
     background-color: ${({ theme }) => theme.colors.primary.crimsonDark};
+  }
+`;
+
+export const MobileAuthSection = styled.div`
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+`;
+
+export const MobileLoginButton = styled.button`
+  width: 100%;
+  padding: 0.8rem;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+export const MobileUserProfile = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  color: white;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+export const MobileLogoutButton = styled(MobileLoginButton)`
+  margin-top: 0.5rem;
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+
+  &:hover {
+    background-color: rgba(255, 107, 107, 0.1);
   }
 `;

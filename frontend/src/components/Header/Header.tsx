@@ -24,7 +24,7 @@ const Header: React.FC = () => {
       }}
     >
       <HeaderInner>
-        <Logo />
+        <Logo compact={isMobile} />
         <HeaderNav>
           {isMobile ? (
             <MobileMenu />

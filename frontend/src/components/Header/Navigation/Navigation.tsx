@@ -63,14 +63,14 @@ const navigationItems: NavigationItem[] = [
     path: '/news/noticeboard',
     menuItems: [
       { name: '공지사항', path: '/news/noticeboard' },
-      { name: '세미나', path: '/news' },
+      { name: '세미나', path: '/news/seminar' },
       { name: '연구논문', path: '/news/thesis' },
     ],
   },
   {
     title: '⏱ 서비스',
     path: '/seminar-rooms/reservation',
-    menuItems: [{ name: '예약 페이지', path: '/seminar-rooms/reservation' }],
+    menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/reservation' }],
   },
 ];
 
