@@ -17,24 +17,13 @@ import {
 import { Modal, useModal } from '../../components/Modal';
 import moment, { MomentInput } from 'moment';
 import styled from 'styled-components';
+import { ReservationModal } from './ReservationModal';
+import { ReservationData } from './types/reservation.types';
 
 const seminarRooms: string[] = ['세미나실1', '세미나실2'];
 
-// 더미 데이터 타입 정의
-interface Reservation {
-  id: number;
-  roomId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  userName: string;
-  purpose: '세미나' | '스터디' | '미팅' | '기타';
-  contact: string;
-  department?: string;
-}
-
 // 더미 데이터
-const dummyReservations: Reservation[] = [
+const dummyReservations: ReservationData[] = [
   {
     id: 1,
     roomId: '세미나실1',
@@ -57,24 +46,14 @@ const dummyReservations: Reservation[] = [
     contact: '010-2345-6789',
   },
   {
-    id: 2,
+    id: 3,
     roomId: '세미나실1',
     date: '2024-12-02',
     startTime: '13:00',
     endTime: '15:00',
-    userName: '이영희',
+    userName: '박지민',
     purpose: '미팅',
-    contact: '010-2345-6789',
-  },
-  {
-    id: 3,
-    roomId: '세미나실1',
-    date: '2024-12-02',
-    startTime: '16:00',
-    endTime: '17:30',
-    userName: '이영희',
-    purpose: '기타',
-    contact: '010-2345-6789',
+    contact: '010-3456-7890',
   },
 ];
 
@@ -82,30 +61,35 @@ function Reservation() {
   const { openModal, closeModal } = useModal();
   const [selectedRoom, setSelectedRoom] = useState('세미나실1');
   const [selectedDate, setSelectedDate] = useState(
-    moment(new Date()).format('YYYY년 MM월 DD일'),
+    moment(new Date()).format('YYYY-MM-DD'),
   );
 
   const handleRoomChange = (room: string) => {
     setSelectedRoom(room);
   };
 
-  const handleBtnClick = () => {
-    console.log(selectedDate);
+  const handleReservationClick = () => {
+    openModal(
+      <ReservationModal
+        isOpen={true}
+        onClose={closeModal}
+        selectedDate={selectedDate}
+        selectedRoom={selectedRoom}
+        existingReservations={dummyReservations}
+      />,
+    );
   };
 
   const handleDateChange = (date: MomentInput) => {
-    setSelectedDate(moment(date).format('YYYY년 MM월 DD일'));
+    setSelectedDate(moment(date).format('YYYY-MM-DD'));
   };
-
-  const CustomModalHeader = styled(Modal.Header)`
-    font-size: 24px;
-    font-weight: bold;
-  `;
 
   const List = styled.p<{ className?: string }>`
     margin: 0 0 8px 0;
     padding-left: 12px;
     color: white;
+    border-radius: 4px;
+    padding: 8px 12px;
 
     background-color: ${({ className }) =>
       className === '세미나'
@@ -127,27 +111,29 @@ function Reservation() {
 
     if (reservationsForDate.length === 0) return null;
 
-    const visibleReservations = reservationsForDate.slice(0, 2); // 최대 2개 일정만 표시
+    const visibleReservations = reservationsForDate.slice(0, 2);
     const moreCount = reservationsForDate.length - visibleReservations.length;
 
     const showAllReservation = (formattedDate: string) => {
       openModal(
         <>
-          <CustomModalHeader>
-            {moment(formattedDate).format('YYYY년 MM월 DD일')}
-          </CustomModalHeader>
+          <Modal.Header>
+            {moment(formattedDate).format('YYYY년 MM월 DD일')} 예약 현황
+          </Modal.Header>
           <Modal.Content>
-            <p>
+            <div>
               {reservationsForDate.map((reservation, index) => (
                 <List key={index} className={reservation.purpose}>
                   {reservation.startTime}~{reservation.endTime}{' '}
-                  {reservation.purpose}
+                  {reservation.purpose} ({reservation.userName})
                 </List>
               ))}
-            </p>
+            </div>
           </Modal.Content>
           <Modal.Footer>
-            <Modal.CloseButton onClick={() => closeModal()} />
+            <Modal.CloseButton onClick={() => closeModal()}>
+              닫기
+            </Modal.CloseButton>
           </Modal.Footer>
         </>,
       );
@@ -183,6 +169,7 @@ function Reservation() {
               fontSize: '10px',
               color: '#555',
               textAlign: 'center',
+              cursor: 'pointer',
             }}
             onClick={() => showAllReservation(formattedDate)}
           >
@@ -203,7 +190,6 @@ function Reservation() {
     return colors[purpose as keyof typeof colors] || colors.기타;
   };
 
-  // 예약이 있는 날짜의 스타일 지정
   const tileClassName = ({ date }: { date: Date }) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const hasReservations = dummyReservations.some(
@@ -234,11 +220,11 @@ function Reservation() {
       <RoomContainer>
         <RoomInfo>
           <RoomName>{selectedRoom}</RoomName>
-          <div style={{ display: 'flex' }}>
-            <div style={{ flexGrow: '1' }}>
-              <RoomImg src="/seminarRoom1.jpg" />
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <div>
+              <RoomImg src="/seminarRoom1.jpg" alt={selectedRoom} />
             </div>
-            <div style={{ flexGrow: '1' }}>
+            <div>
               <Capacity>수용인원</Capacity>
               <span>30명</span>
               <br />
@@ -249,7 +235,9 @@ function Reservation() {
         </RoomInfo>
       </RoomContainer>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <ReservationBtn onClick={handleBtnClick}>예약하기</ReservationBtn>
+        <ReservationBtn onClick={handleReservationClick}>
+          예약하기
+        </ReservationBtn>
       </div>
       <StyledCalendar
         calendarType="gregory"
@@ -261,6 +249,7 @@ function Reservation() {
         onChange={handleDateChange}
         tileContent={tileContent}
         tileClassName={tileClassName}
+        minDate={new Date()}
       />
     </Container>
   );

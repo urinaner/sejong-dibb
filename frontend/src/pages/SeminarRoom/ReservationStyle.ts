@@ -87,21 +87,14 @@ export const NavButton = styled.button<StyledButtonProps>`
   }
 `;
 
-// export const RoomContainer = styled.div``;
-// export const RoomInfo = styled.div``;
-// export const RoomName = styled.div``;
-// export const RoomImg = styled.img``;
-// export const Capacity = styled.span``;
-// export const Location = styled.span``;
-
 export const RoomContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
   background-color: ${colors.hover};
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
 
   ${media.mobile} {
     padding: 15px;
@@ -115,10 +108,10 @@ export const RoomInfo = styled.div`
 `;
 
 export const RoomName = styled.div`
-  font-size: 18px;
+  font-size: 1.5rem;
   font-weight: bold;
-  color: black; /* 검은색으로 변경 */
-  margin-bottom: 10px;
+  color: #333;
+  margin-bottom: 15px;
 
   ${media.mobile} {
     font-size: 1.2rem;
@@ -126,46 +119,67 @@ export const RoomName = styled.div`
 `;
 
 export const RoomImg = styled.img`
-  width: 200px;
-  height: auto;
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  ${media.mobile} {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const Capacity = styled.span`
   font-weight: 600;
   color: ${colors.primaryLight};
-  margin-right: 20px;
+  margin-right: 10px;
+  display: inline-block;
+  margin-bottom: 10px;
 `;
 
 export const Location = styled.span`
   font-weight: 600;
   color: ${colors.primaryLight};
-  margin-right: 50px;
+  margin-right: 10px;
+  display: inline-block;
 `;
 
 export const ReservationBtn = styled.button`
-  padding: 12px 20px;
-  margin-top: 40px;
-  border: 1px solid #ddd;
-  background-color: white;
-  font-size: 14px;
+  padding: 12px 24px;
+  background-color: ${colors.primary};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${colors.primaryDark};
+  }
 
   ${media.mobile} {
-    padding: 8px 16px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 `;
 
-// 캘린더 스타일 추가
 export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
-  width: 100%; /* Container 크기와 동일하게 설정 */
+  width: 100%;
   margin: 12px auto;
   background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Noto Sans KR';
 
   .react-calendar__navigation {
     height: 60px;
     margin: 0;
+    background-color: ${colors.primary};
+    border-radius: 8px 8px 0 0;
 
     ${media.mobile} {
       height: 44px;
@@ -174,33 +188,34 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
 
   .react-calendar__navigation button {
     min-width: 44px;
-    background-color: #324d60;
     color: white;
     font-size: 16px;
     font-weight: 600;
-  }
 
-  .react-calendar__navigation button:disabled {
-    background: #324d60;
-  }
+    &:disabled {
+      background: ${colors.primaryDark};
+    }
 
-  .react-calendar__navigation button:enabled:hover,
-  .react-calendar__navigation button:enabled:focus {
-    background: #324d60;
+    &:enabled:hover,
+    &:enabled:focus {
+      background: ${colors.primaryDark};
+    }
   }
-
   .react-calendar__tile {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     border: 1px solid #e6e6e6;
-
     padding: 10px;
-    width: auto; /* 부모 컨테이너에 따라 유동적으로 변경 */
-    height: auto; /* aspect-ratio에 의해 자동으로 계산 */
-    aspect-ratio: 1 / 0.6;
+    height: auto;
+    aspect-ratio: 1 / 0.8;
     font-size: 16px;
+    position: relative;
+
+    &:enabled:hover {
+      background-color: ${colors.hover};
+    }
 
     div {
       width: 100%;
@@ -208,65 +223,138 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
     }
 
     div:first-child {
-      margin-top: 8px !important;
+      margin-top: 8px;
       width: 100%;
     }
 
     ${media.mobile} {
-      padding: 0;
-      width: auto;
-      height: auto;
+      padding: 5px;
       aspect-ratio: 1 / 0.6;
+      font-size: 14px;
     }
   }
 
-  .react-calendar__tile--active {
-    background-color: #8ca2b1;
-    color: white;
-  }
-
-  // 오늘
   .react-calendar__tile--now {
-    background-color: #a0b4c9;
+    background-color: #e8f0fe;
+    color: ${colors.primary};
   }
 
   .react-calendar__tile--now:enabled:hover,
   .react-calendar__tile--now:enabled:focus {
-    background: #a0b4c9;
+    background-color: #d9e7fd;
   }
 
   .react-calendar__tile--active {
-    background: #8ca2b1;
+    background-color: ${colors.primary} !important;
     color: white !important;
   }
 
   .react-calendar__tile--active:enabled:hover,
   .react-calendar__tile--active:enabled:focus {
-    background: #8ca2b1;
+    background-color: ${colors.primaryDark} !important;
   }
 
-  // 요일
   .react-calendar__month-view__weekdays {
-    font-size: 16px;
-    font-size: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.9rem;
     padding: 10px 8px;
+    background-color: ${colors.hover};
     border-bottom: 1px solid #e6e6e6;
   }
 
-  // 주말
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 0.5rem;
+    abbr {
+      text-decoration: none;
+      cursor: default;
+    }
+  }
+
   .react-calendar__month-view__days__day--weekend {
-    color: inherit;
+    color: ${colors.primary};
   }
 
-  .react-calendar__month-view__weekdays__weekday abbr {
-    text-decoration: none;
-  }
-
-  // 저번달, 다음달 날짜
   .react-calendar__month-view__days__day--neighboringMonth {
-    /* color: lightgray; */
     color: #999999;
+  }
+
+  .has-reservation {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: ${colors.primary};
+    }
   }
 `;
 
-// export const RoomContainer = styled.div``;
+// Modal 관련 스타일 추가
+export const ModalForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const Label = styled.label`
+  font-weight: 500;
+  color: #333;
+`;
+
+export const Input = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: ${colors.primary};
+  }
+
+  &:disabled {
+    background-color: ${colors.hover};
+  }
+`;
+
+export const Select = styled.select`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+
+  &:focus {
+    outline: none;
+    border-color: ${colors.primary};
+  }
+`;
+
+export const TimeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+export const ErrorMessage = styled.p`
+  color: ${colors.primary};
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+`;
