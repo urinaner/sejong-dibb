@@ -264,6 +264,26 @@ export const apiEndpoints = {
     getByCategory: (category: string, page: number, size: number) =>
       `${API_URL}/api/board/category/${category}?page=${page}&size=${size}`,
   },
+
+  seminar: {
+    list: `${API_URL}/api/seminar`,
+    listWithPage: (page: number, size: number, sortDirection?: string) => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      });
+      if (sortDirection) {
+        params.append('sortDirection', sortDirection);
+      }
+      return `${API_URL}/api/seminar?${params.toString()}`;
+    },
+    get: (seminarId: string | number) => `${API_URL}/api/seminar/${seminarId}`,
+    create: `${API_URL}/api/seminar`,
+    update: (seminarId: string | number) =>
+      `${API_URL}/api/seminar/${seminarId}`,
+    delete: (seminarId: string | number) =>
+      `${API_URL}/api/seminar/${seminarId}`,
+  },
   seminarRoom: {
     // 세미나실 목록 생성
     create: `${API_URL}/api/seminar-rooms`,
