@@ -51,6 +51,24 @@ export interface SeminarDto {
   company: string;
 }
 
+export interface SeminarRoomReqDto {
+  name: string;
+  personCapacity: number;
+  place: string;
+  image: string;
+}
+
+export interface ReservationReqDto {
+  roomId: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  userName: string;
+  purpose: '세미나' | '스터디' | '미팅' | '기타';
+  contact: string;
+  department?: string;
+}
+
 export const apiEndpoints = {
   thesis: {
     list: `${API_URL}/api/thesis`,
@@ -265,6 +283,25 @@ export const apiEndpoints = {
       `${API_URL}/api/seminar/${seminarId}`,
     delete: (seminarId: string | number) =>
       `${API_URL}/api/seminar/${seminarId}`,
+  },
+  seminarRoom: {
+    base: `${API_URL}/api/seminar-rooms`,
+    list: `${API_URL}/api/seminar-rooms`,
+    get: (roomId: number) => `${API_URL}/api/seminar-rooms/${roomId}`,
+    reservations: {
+      list: (roomId: number) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations`,
+      create: (roomId: number) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations`,
+      get: (roomId: number, reservationId: number) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
+      update: (roomId: number, reservationId: number) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
+      delete: (roomId: number, reservationId: number) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
+      getByDate: (roomId: number, date: string) =>
+        `${API_URL}/api/seminar-rooms/${roomId}/reservations/date/${date}`,
+    },
   },
 };
 
