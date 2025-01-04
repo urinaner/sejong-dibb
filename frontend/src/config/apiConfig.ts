@@ -264,44 +264,15 @@ export const apiEndpoints = {
     getByCategory: (category: string, page: number, size: number) =>
       `${API_URL}/api/board/category/${category}?page=${page}&size=${size}`,
   },
-
-  seminar: {
-    list: `${API_URL}/api/seminar`,
-    listWithPage: (page: number, size: number, sortDirection?: string) => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        size: size.toString(),
-      });
-      if (sortDirection) {
-        params.append('sortDirection', sortDirection);
-      }
-      return `${API_URL}/api/seminar?${params.toString()}`;
-    },
-    get: (seminarId: string | number) => `${API_URL}/api/seminar/${seminarId}`,
-    create: `${API_URL}/api/seminar`,
-    update: (seminarId: string | number) =>
-      `${API_URL}/api/seminar/${seminarId}`,
-    delete: (seminarId: string | number) =>
-      `${API_URL}/api/seminar/${seminarId}`,
-  },
   seminarRoom: {
-    base: `${API_URL}/api/seminar-rooms`,
-    list: `${API_URL}/api/seminar-rooms`,
-    get: (roomId: number) => `${API_URL}/api/seminar-rooms/${roomId}`,
-    reservations: {
-      list: (roomId: number) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations`,
-      create: (roomId: number) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations`,
-      get: (roomId: number, reservationId: number) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
-      update: (roomId: number, reservationId: number) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
-      delete: (roomId: number, reservationId: number) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations/${reservationId}`,
-      getByDate: (roomId: number, date: string) =>
-        `${API_URL}/api/seminar-rooms/${roomId}/reservations/date/${date}`,
-    },
+    // 세미나실 목록 생성
+    create: `${API_URL}/api/seminar-rooms`,
+    // 특정 세미나실 조회
+    get: (id: number) => `${API_URL}/api/seminar-rooms/${id}`,
+    // 특정 세미나실 수정
+    update: (id: number) => `${API_URL}/api/seminar-rooms/${id}`,
+    // 특정 세미나실 삭제
+    delete: (id: number) => `${API_URL}/api/seminar-rooms/${id}`,
   },
 };
 
