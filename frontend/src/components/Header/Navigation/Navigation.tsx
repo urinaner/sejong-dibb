@@ -55,7 +55,6 @@ const navigationItems: NavigationItem[] = [
     menuItems: [
       { name: '소개', path: '/graduate/overview' },
       { name: '교과과정', path: '/graduate/curriculum' },
-      { name: '학칙/규정', path: '/graduate/rules' },
     ],
   },
   {

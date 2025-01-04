@@ -65,6 +65,12 @@ export const PAGE_CONTENTS = {
         image: graduateImg,
         path: '/graduate/overview',
       },
+      curriculum: {
+        title: '대학원 교과과정',
+        description: '바이오융합공학전공 대학원의 커리큘럼',
+        image: graduateImg,
+        path: '/graduate/curriculum',
+      },
     },
   },
   news: {
