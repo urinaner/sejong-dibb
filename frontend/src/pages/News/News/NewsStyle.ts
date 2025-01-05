@@ -39,6 +39,14 @@ export const NewsCard = styled.div`
   }
 `;
 
+export const NewsImageWrapper = styled.div`
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: ${SEJONG_COLORS.COOL_GRAY};
+  position: relative;
+`;
+
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 100%;
   height: 200px;
@@ -46,6 +54,37 @@ export const NewsImage = styled.div<{ imageUrl: string }>`
   background-size: cover;
   background-position: center;
   background-color: ${SEJONG_COLORS.COOL_GRAY};
+  transition: transform 0.3s ease;
+
+  ${NewsCard}:hover & {
+    transform: scale(1.05);
+  }
+
+  &.error {
+    background-image: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${SEJONG_COLORS.GRAY};
+    font-size: 14px;
+    &::after {
+      content: '이미지를 불러올 수 없습니다';
+    }
+  }
+`;
+
+export const ImageFallback = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${SEJONG_COLORS.COOL_GRAY};
+  color: ${SEJONG_COLORS.GRAY};
+  font-size: 14px;
 `;
 
 export const NewsContent = styled.div`
