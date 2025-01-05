@@ -129,15 +129,6 @@ export const NewsDescription = styled.p`
   }
 `;
 
-export const NewsFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-`;
-
 export const NewsViews = styled.span`
   display: flex;
   align-items: center;
@@ -279,4 +270,103 @@ export const NoResults = styled.div`
   padding: 40px;
   color: ${SEJONG_COLORS.GRAY};
   font-size: 16px;
+`;
+
+export const AdminButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+
+  ${media.mobile} {
+    margin-bottom: 16px;
+  }
+`;
+
+export const CreateButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${SEJONG_COLORS.DARK_RED};
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  ${media.mobile} {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+`;
+
+export const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 4px;
+  background: white;
+  color: ${SEJONG_COLORS.GRAY};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${SEJONG_COLORS.IVORY};
+    border-color: ${SEJONG_COLORS.CRIMSON_RED};
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+  }
+
+  &:last-child:hover {
+    border-color: ${SEJONG_COLORS.RED};
+    color: ${SEJONG_COLORS.RED};
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  ${media.mobile} {
+    padding: 4px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+`;
+
+export const AdminActions = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+
+  ${media.mobile} {
+    gap: 6px;
+  }
+`;
+
+export const NewsFooter = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+
+  ${media.mobile} {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
 `;

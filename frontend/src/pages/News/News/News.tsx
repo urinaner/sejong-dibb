@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Eye, PlusCircle, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
+import { Modal, useModal } from '../../../components/Modal';
 import { apiEndpoints } from '../../../config/apiConfig';
+import { AuthContext } from '../../../context/AuthContext';
 import {
   Container,
   NewsGrid,
@@ -22,6 +24,10 @@ import {
   LoadingSpinner,
   ErrorMessage,
   NoResults,
+  AdminButtonGroup,
+  CreateButton,
+  ActionButton,
+  AdminActions,
 } from './NewsStyle';
 
 interface NewsItem {
@@ -49,6 +55,8 @@ const News = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const pageSize = 10;
+  const auth = useContext(AuthContext);
+  const { openModal } = useModal();
 
   useEffect(() => {
     fetchNews();
@@ -74,8 +82,72 @@ const News = () => {
       setIsLoading(false);
     }
   };
+
   const handleNewsClick = (newsId: number) => {
     navigate(`/news/${newsId}`);
+  };
+
+  const handleEdit = (e: React.MouseEvent, newsId: number) => {
+    e.stopPropagation();
+    navigate(`/news/edit/${newsId}`);
+  };
+
+  const handleDelete = (e: React.MouseEvent, newsId: number) => {
+    e.stopPropagation();
+
+    openModal(
+      <>
+        <Modal.Header>뉴스 삭제</Modal.Header>
+        <Modal.Content>
+          <p>정말로 이 뉴스를 삭제하시겠습니까?</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <Modal.DeleteButton onClick={() => confirmDelete(newsId)}>
+            삭제
+          </Modal.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const confirmDelete = async (newsId: number) => {
+    try {
+      const response = await fetch(apiEndpoints.news.delete(newsId), {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete news');
+      }
+
+      fetchNews();
+
+      openModal(
+        <>
+          <Modal.Header>삭제 완료</Modal.Header>
+          <Modal.Content>
+            <p>뉴스가 성공적으로 삭제되었습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
+    } catch (error) {
+      console.error('Error deleting news:', error);
+      openModal(
+        <>
+          <Modal.Header>삭제 실패</Modal.Header>
+          <Modal.Content>
+            <p>뉴스를 삭제하는 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
+    }
   };
 
   const handlePageChange = (newPage: number) => {
@@ -192,6 +264,14 @@ const News = () => {
   if (!news.length) {
     return (
       <Container>
+        {auth?.isAdmin && (
+          <AdminButtonGroup>
+            <CreateButton onClick={() => navigate('/news/create')}>
+              <PlusCircle size={20} />
+              뉴스 작성
+            </CreateButton>
+          </AdminButtonGroup>
+        )}
         <NoResults>등록된 뉴스가 없습니다.</NoResults>
       </Container>
     );
@@ -199,6 +279,14 @@ const News = () => {
 
   return (
     <Container>
+      {auth?.isAdmin && (
+        <AdminButtonGroup>
+          <CreateButton onClick={() => navigate('/news/create')}>
+            <PlusCircle size={20} />
+            뉴스 작성
+          </CreateButton>
+        </AdminButtonGroup>
+      )}
       <NewsGrid>
         {news.map((item) => (
           <NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
@@ -219,6 +307,16 @@ const News = () => {
                   <Eye size={16} />
                   {item.view}
                 </NewsViews>
+                {auth?.isAdmin && (
+                  <AdminActions>
+                    <ActionButton onClick={(e) => handleEdit(e, item.id)}>
+                      <Edit2 size={16} />
+                    </ActionButton>
+                    <ActionButton onClick={(e) => handleDelete(e, item.id)}>
+                      <Trash2 size={16} />
+                    </ActionButton>
+                  </AdminActions>
+                )}
               </NewsFooter>
             </NewsContent>
           </NewsCard>
