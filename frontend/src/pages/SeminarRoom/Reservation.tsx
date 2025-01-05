@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import {
   Container,
-  HeaderContainer,
-  Navigation,
-  NavButton,
-  NavButtonGroup,
   RoomContainer,
   RoomInfo,
   RoomName,
@@ -20,14 +16,12 @@ import styled from 'styled-components';
 import { ReservationModal } from './ReservationModal';
 import { ReservationData } from './types/reservation.types';
 
-const seminarRooms: string[] = ['세미나실1', '세미나실2'];
-
 // 더미 데이터
 const dummyReservations: ReservationData[] = [
   {
     id: 1,
-    roomId: '세미나실1',
-    date: '2024-12-02',
+    roomId: '세미나실',
+    date: '2025-01-04',
     startTime: '09:00',
     endTime: '11:00',
     userName: '김철수',
@@ -35,38 +29,14 @@ const dummyReservations: ReservationData[] = [
     contact: '010-1234-5678',
     department: '컴퓨터공학과',
   },
-  {
-    id: 2,
-    roomId: '세미나실1',
-    date: '2024-12-02',
-    startTime: '11:00',
-    endTime: '12:00',
-    userName: '이영희',
-    purpose: '스터디',
-    contact: '010-2345-6789',
-  },
-  {
-    id: 3,
-    roomId: '세미나실1',
-    date: '2024-12-02',
-    startTime: '13:00',
-    endTime: '15:00',
-    userName: '박지민',
-    purpose: '미팅',
-    contact: '010-3456-7890',
-  },
+  // ... other dummy data with updated roomId
 ];
 
 function Reservation() {
   const { openModal, closeModal } = useModal();
-  const [selectedRoom, setSelectedRoom] = useState('세미나실1');
   const [selectedDate, setSelectedDate] = useState(
     moment(new Date()).format('YYYY-MM-DD'),
   );
-
-  const handleRoomChange = (room: string) => {
-    setSelectedRoom(room);
-  };
 
   const handleReservationClick = () => {
     openModal(
@@ -74,7 +44,7 @@ function Reservation() {
         isOpen={true}
         onClose={closeModal}
         selectedDate={selectedDate}
-        selectedRoom={selectedRoom}
+        selectedRoom="세미나실"
         existingReservations={dummyReservations}
       />,
     );
@@ -86,10 +56,9 @@ function Reservation() {
 
   const List = styled.p<{ className?: string }>`
     margin: 0 0 8px 0;
-    padding-left: 12px;
+    padding: 8px 12px;
     color: white;
     border-radius: 4px;
-    padding: 8px 12px;
 
     background-color: ${({ className }) =>
       className === '세미나'
@@ -104,9 +73,7 @@ function Reservation() {
   const tileContent = ({ date }: { date: Date }) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const reservationsForDate = dummyReservations.filter(
-      (reservation) =>
-        reservation.date === formattedDate &&
-        reservation.roomId === selectedRoom,
+      (reservation) => reservation.date === formattedDate,
     );
 
     if (reservationsForDate.length === 0) return null;
@@ -193,36 +160,19 @@ function Reservation() {
   const tileClassName = ({ date }: { date: Date }) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const hasReservations = dummyReservations.some(
-      (reservation) =>
-        reservation.date === formattedDate &&
-        reservation.roomId === selectedRoom,
+      (reservation) => reservation.date === formattedDate,
     );
     return hasReservations ? 'has-reservation' : '';
   };
 
   return (
     <Container>
-      <HeaderContainer>
-        <Navigation>
-          <NavButtonGroup>
-            {seminarRooms.map((room) => (
-              <NavButton
-                key={room}
-                isActive={selectedRoom === room}
-                onClick={() => handleRoomChange(room)}
-              >
-                {room}
-              </NavButton>
-            ))}
-          </NavButtonGroup>
-        </Navigation>
-      </HeaderContainer>
       <RoomContainer>
         <RoomInfo>
-          <RoomName>{selectedRoom}</RoomName>
+          <RoomName>세미나실</RoomName>
           <div style={{ display: 'flex', gap: '20px' }}>
             <div>
-              <RoomImg src="/seminarRoom1.jpg" alt={selectedRoom} />
+              <RoomImg src="/seminarRoom1.jpg" alt="세미나실" />
             </div>
             <div>
               <Capacity>수용인원</Capacity>

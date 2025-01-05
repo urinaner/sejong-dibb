@@ -3,10 +3,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { MomentInput } from 'moment';
 
-interface StyledButtonProps {
-  isActive?: boolean;
-}
-
 interface StyledCalendarProps {
   onChange: (date: MomentInput) => void;
 }
@@ -36,58 +32,7 @@ export const Container = styled.div`
   }
 `;
 
-export const HeaderContainer = styled.div`
-  margin-bottom: 30px;
-`;
-
-export const Navigation = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid ${colors.primary};
-`;
-
-export const NavButtonGroup = styled.div`
-  display: flex;
-`;
-
-export const NavButton = styled.button<StyledButtonProps>`
-  padding: 12px 32px;
-  font-size: 1.1rem;
-  border: none;
-  background: ${(props) => (props.isActive ? colors.primary : 'transparent')};
-  color: ${(props) => (props.isActive ? 'white' : '#333')};
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  position: relative;
-
-  &:hover {
-    background-color: ${(props) =>
-      props.isActive ? colors.primaryDark : colors.hover};
-    color: ${(props) => (props.isActive ? 'white' : colors.primary)};
-  }
-
-  ${(props) =>
-    props.isActive &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: ${colors.primary};
-    }
-  `}
-
-  ${media.mobile} {
-    padding: 10px 20px;
-    font-size: 1rem;
-  }
-`;
-
-export const RoomContainer = styled.div`
+export const RoomContainer = styled.div`ㅌ
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -201,6 +146,7 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
       background: ${colors.primaryDark};
     }
   }
+
   .react-calendar__tile {
     display: flex;
     flex-direction: column;
@@ -293,68 +239,4 @@ export const StyledCalendar = styled(Calendar)<StyledCalendarProps>`
       background-color: ${colors.primary};
     }
   }
-`;
-
-// Modal 관련 스타일 추가
-export const ModalForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-export const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-export const Label = styled.label`
-  font-weight: 500;
-  color: #333;
-`;
-
-export const Input = styled.input`
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: ${colors.primary};
-  }
-
-  &:disabled {
-    background-color: ${colors.hover};
-  }
-`;
-
-export const Select = styled.select`
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  background-color: white;
-
-  &:focus {
-    outline: none;
-    border-color: ${colors.primary};
-  }
-`;
-
-export const TimeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-export const ErrorMessage = styled.p`
-  color: ${colors.primary};
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
 `;
