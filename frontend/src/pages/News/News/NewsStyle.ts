@@ -3,29 +3,31 @@ import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
+  max-width: 90%;
+  width: 90%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 2.5rem 1rem;
 
   ${media.mobile} {
-    padding: 20px 10px;
+    width: 95%;
+    padding: 2rem 0.5rem;
   }
 `;
 
 export const NewsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+  gap: 1.75rem;
+  margin-top: 1.75rem;
 
   ${media.mobile} {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 1.25rem;
   }
 `;
 
 export const NewsCard = styled.div`
+  display: flex;
   border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
   border-radius: 8px;
   overflow: hidden;
@@ -35,20 +37,13 @@ export const NewsCard = styled.div`
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 `;
 
-export const NewsImageWrapper = styled.div`
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  background-color: ${SEJONG_COLORS.COOL_GRAY};
-  position: relative;
-`;
-
 export const NewsImage = styled.div<{ imageUrl: string }>`
-  width: 100%;
+  width: 280px;
+  min-width: 280px;
   height: 200px;
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
@@ -66,34 +61,29 @@ export const NewsImage = styled.div<{ imageUrl: string }>`
     align-items: center;
     justify-content: center;
     color: ${SEJONG_COLORS.GRAY};
-    font-size: 14px;
+    font-size: 0.875rem;
     &::after {
       content: '이미지를 불러올 수 없습니다';
     }
   }
-`;
 
-export const ImageFallback = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${SEJONG_COLORS.COOL_GRAY};
-  color: ${SEJONG_COLORS.GRAY};
-  font-size: 14px;
+  ${media.mobile} {
+    width: 120px;
+    min-width: 120px;
+    height: 120px;
+  }
 `;
 
 export const NewsContent = styled.div`
-  padding: 20px;
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const NewsTitle = styled.h3`
   margin: 0;
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: ${SEJONG_COLORS.GRAY};
   line-height: 1.4;
@@ -101,212 +91,114 @@ export const NewsTitle = styled.h3`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 2.8rem;
 
   ${media.mobile} {
-    font-size: 16px;
+    font-size: 1.25rem;
   }
 `;
 
 export const NewsDate = styled.p`
-  margin: 8px 0 0 0;
-  font-size: 14px;
+  margin: 1rem 0 0 0;
+  font-size: 0.95rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 `;
 
 export const NewsDescription = styled.p`
-  margin: 12px 0;
-  font-size: 14px;
+  margin: 0.875rem 0;
+  font-size: 1rem;
   color: ${SEJONG_COLORS.WARM_GRAY2};
   line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 4.8em;
+  min-height: 3.2em;
 
   ${media.mobile} {
-    font-size: 13px;
+    font-size: 0.95rem;
+  }
+`;
+
+export const NewsFooter = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+
+  ${media.mobile} {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
   }
 `;
 
 export const NewsViews = styled.span`
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 14px;
+  gap: 0.5rem;
+  font-size: 0.95rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 1.25rem;
+    height: 1.25rem;
     color: ${SEJONG_COLORS.WARM_GRAY1};
   }
-`;
-
-export const PaginationButton = styled.button<{
-  direction?: 'prev' | 'next';
-  disabled?: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  min-width: 80px;
-  height: 36px;
-  border: 1px solid
-    ${(props) =>
-      props.disabled ? SEJONG_COLORS.COOL_GRAY : SEJONG_COLORS.CRIMSON_RED};
-  background-color: white;
-  color: ${(props) =>
-    props.disabled ? SEJONG_COLORS.LIGHT_GRAY : SEJONG_COLORS.CRIMSON_RED};
-  font-size: 14px;
-  border-radius: 4px;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  transition: all 0.2s;
-
-  &:hover:not(:disabled) {
-    background-color: ${SEJONG_COLORS.IVORY};
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    margin: ${(props) =>
-      props.direction === 'prev' ? '0 4px 0 0' : '0 0 0 4px'};
-  }
-
-  ${media.mobile} {
-    min-width: 60px;
-    padding: 6px 8px;
-    font-size: 13px;
-  }
-`;
-
-export const PageEllipsis = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  color: ${SEJONG_COLORS.GRAY};
-
-  ${media.mobile} {
-    width: 32px;
-    height: 32px;
-  }
-`;
-
-export const Pagination = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-`;
-
-export const PageList = styled.ul`
-  display: flex;
-  list-style: none;
-  padding: 0;
-  gap: 8px;
-`;
-
-export const PageItem = styled.li`
-  margin: 0;
-  padding: 0;
-`;
-
-export const PageButton = styled.button<{ isActive?: boolean }>`
-  min-width: 36px;
-  height: 36px;
-  padding: 0 12px;
-  border: 1px solid
-    ${(props) =>
-      props.isActive ? SEJONG_COLORS.CRIMSON_RED : SEJONG_COLORS.COOL_GRAY};
-  background: ${(props) =>
-    props.isActive ? SEJONG_COLORS.CRIMSON_RED : 'white'};
-  color: ${(props) => (props.isActive ? 'white' : SEJONG_COLORS.GRAY)};
-  font-size: 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: ${(props) =>
-      props.isActive ? SEJONG_COLORS.CRIMSON_RED : SEJONG_COLORS.IVORY};
-  }
-
-  &:disabled {
-    background: ${SEJONG_COLORS.COOL_GRAY};
-    border-color: ${SEJONG_COLORS.COOL_GRAY};
-    color: ${SEJONG_COLORS.LIGHT_GRAY};
-    cursor: not-allowed;
-  }
-
-  ${media.mobile} {
-    min-width: 32px;
-    height: 32px;
-    padding: 0 8px;
-    font-size: 13px;
-  }
-`;
-
-export const LoadingSpinner = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-`;
-
-export const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 40px;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  font-size: 16px;
-`;
-
-export const NoResults = styled.div`
-  text-align: center;
-  padding: 40px;
-  color: ${SEJONG_COLORS.GRAY};
-  font-size: 16px;
 `;
 
 export const AdminButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 
   ${media.mobile} {
-    margin-bottom: 16px;
+    margin-bottom: 1.5rem;
   }
 `;
 
 export const CreateButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
   background-color: ${SEJONG_COLORS.CRIMSON_RED};
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
     background-color: ${SEJONG_COLORS.DARK_RED};
+    box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
   }
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   ${media.mobile} {
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.95rem;
+  }
+`;
+
+export const AdminActions = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+
+  ${media.mobile} {
+    gap: 0.375rem;
   }
 `;
 
@@ -314,9 +206,9 @@ export const ActionButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 0.5rem;
   border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 4px;
+  border-radius: 6px;
   background: white;
   color: ${SEJONG_COLORS.GRAY};
   cursor: pointer;
@@ -334,39 +226,148 @@ export const ActionButton = styled.button`
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   ${media.mobile} {
-    padding: 4px;
+    padding: 0.375rem;
 
     svg {
-      width: 14px;
-      height: 14px;
+      width: 1.125rem;
+      height: 1.125rem;
     }
   }
 `;
 
-export const AdminActions = styled.div`
+export const Pagination = styled.nav`
   display: flex;
-  gap: 8px;
-  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+`;
+
+export const PageList = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const PageItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const PageButton = styled.button<{ isActive?: boolean }>`
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid
+    ${(props) =>
+      props.isActive ? SEJONG_COLORS.CRIMSON_RED : SEJONG_COLORS.COOL_GRAY};
+  background: ${(props) =>
+    props.isActive ? SEJONG_COLORS.CRIMSON_RED : 'white'};
+  color: ${(props) => (props.isActive ? 'white' : SEJONG_COLORS.GRAY)};
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background: ${(props) =>
+      props.isActive ? '#8b0000' : SEJONG_COLORS.COOL_GRAY}10;
+    border-color: ${(props) =>
+      props.isActive ? '#8b0000' : SEJONG_COLORS.CRIMSON_RED};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
 
   ${media.mobile} {
-    gap: 6px;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.5rem;
+    font-size: 0.95rem;
   }
 `;
 
-export const NewsFooter = styled.div`
+export const PaginationButton = styled.button<{
+  direction?: 'prev' | 'next';
+  disabled?: boolean;
+}>`
   display: flex;
   align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  min-width: 6rem;
+  border: 1px solid
+    ${(props) =>
+      props.disabled ? SEJONG_COLORS.COOL_GRAY : SEJONG_COLORS.CRIMSON_RED};
+  background-color: white;
+  color: ${(props) =>
+    props.disabled ? SEJONG_COLORS.LIGHT_GRAY : SEJONG_COLORS.CRIMSON_RED};
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background: ${SEJONG_COLORS.COOL_GRAY}10;
+    border-color: ${(props) =>
+      props.disabled ? SEJONG_COLORS.COOL_GRAY : '#8b0000'};
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
 
   ${media.mobile} {
-    margin-top: 10px;
-    padding-top: 10px;
+    padding: 0.625rem 1rem;
+    min-width: 5rem;
+    font-size: 0.95rem;
   }
+`;
+
+export const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-size: 1.125rem;
+`;
+
+export const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 2.5rem;
+  margin: 2rem 0;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-size: 1.125rem;
+  background-color: #fff5f5;
+  border-radius: 8px;
+  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED}20;
+`;
+
+export const NoResults = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: ${SEJONG_COLORS.GRAY};
+  background-color: ${SEJONG_COLORS.COOL_GRAY}10;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 8px;
+  margin-top: 2rem;
+  font-size: 1.125rem;
 `;
