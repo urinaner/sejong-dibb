@@ -42,6 +42,7 @@ import SeminarEdit from './pages/Seminar/SeminarEdit';
 import News from './pages/News/News/News';
 import NewsDetail from './pages/News/News/NewsDetail';
 import NewsCreate from './pages/News/News/NewsCreate';
+import NewsEdit from './pages/News/News/NewsEdit';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -300,6 +301,14 @@ function AppContent() {
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
                     <NewsCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/edit/:newsId"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <NewsEdit />
                   </ProtectedRoute>
                 }
               />
