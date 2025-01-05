@@ -60,8 +60,9 @@ const navigationItems: NavigationItem[] = [
   },
   {
     title: '바융소식',
-    path: '/news/noticeboard',
+    path: '/news',
     menuItems: [
+      { name: '학부 뉴스', path: '/news' },
       { name: '공지사항', path: '/news/noticeboard' },
       { name: '세미나', path: '/news/seminar' },
       { name: '연구논문', path: '/news/thesis' },

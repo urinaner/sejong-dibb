@@ -39,6 +39,7 @@ import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
 import SeminarCreate from './pages/Seminar/SeminarCreate';
 import SeminarEdit from './pages/Seminar/SeminarEdit';
+import News from './pages/News/News/News';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -201,7 +202,10 @@ function AppContent() {
 
               {/* graduate */}
               <Route path="graduate/overview" element={<GraduateOverview />} />
-              <Route path="graduate/curriculum" element={<GraduateCurriculum />} />
+              <Route
+                path="graduate/curriculum"
+                element={<GraduateCurriculum />}
+              />
 
               {/* about */}
               <Route path="/about" element={<Overview />} />
@@ -210,6 +214,7 @@ function AppContent() {
               <Route path="/about/organization" element={<Organization />} />
 
               {/* news */}
+              <Route path="/news" element={<News />} />
               <Route path="/news/noticeboard" element={<NoticeBoard />} />
               <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
               <Route

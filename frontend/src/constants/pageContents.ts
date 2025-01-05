@@ -68,7 +68,7 @@ export const PAGE_CONTENTS = {
     },
   },
   news: {
-    title: '바융소식',
+    title: '학부 뉴스',
     description: '바이오융합공학전공의 최신 소식과 연구 성과를 전달합니다',
     image: newsImg,
     path: '/news',

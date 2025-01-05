@@ -29,9 +29,10 @@ export const navItems = [
   },
   {
     title: '바융소식',
-    path: '/news/noticeboard',
+    path: '/news',
     menuItems: [
-      { name: '공지사항', path: '/news/noticeboard' },
+      { name: '학부 뉴스', path: '/news' },
+      { name: '공지 사항', path: '/news/noticeboard' },
       { name: '세미나', path: '/news/seminar' },
       { name: '연구 논문', path: '/news/thesis' },
     ],
