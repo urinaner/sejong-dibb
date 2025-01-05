@@ -74,7 +74,6 @@ const News = () => {
       setIsLoading(false);
     }
   };
-
   const handleNewsClick = (newsId: number) => {
     navigate(`/news/${newsId}`);
   };

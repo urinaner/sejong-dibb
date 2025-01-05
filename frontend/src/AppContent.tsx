@@ -40,6 +40,7 @@ import SeminarDetail from './pages/Seminar/SeminarDetail';
 import SeminarCreate from './pages/Seminar/SeminarCreate';
 import SeminarEdit from './pages/Seminar/SeminarEdit';
 import News from './pages/News/News/News';
+import NewsDetail from './pages/News/News/NewsDetail';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -214,7 +215,6 @@ function AppContent() {
               <Route path="/about/organization" element={<Organization />} />
 
               {/* news */}
-              <Route path="/news" element={<News />} />
               <Route path="/news/noticeboard" element={<NoticeBoard />} />
               <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
               <Route
@@ -225,6 +225,9 @@ function AppContent() {
               <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />
               <Route path="/news/thesis/:id" element={<ThesisDetail />} />
+              {/*학부 뉴스*/}
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:newsId" element={<NewsDetail />} />
 
               {/* 어드민 권한 보호 Routes */}
               <Route
