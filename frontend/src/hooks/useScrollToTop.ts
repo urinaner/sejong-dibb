@@ -7,7 +7,7 @@ export const useScrollToTop = () => {
   useEffect(() => {
     window.scroll({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }, [pathname]);
 };
