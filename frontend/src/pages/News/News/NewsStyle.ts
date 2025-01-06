@@ -15,45 +15,47 @@ export const Container = styled.div`
 `;
 
 export const NewsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
-  gap: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   margin-top: 1.75rem;
-
-  ${media.mobile} {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
 `;
 
 export const NewsCard = styled.div`
   display: flex;
-  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: white;
+  gap: 2rem;
+  padding: 1.5rem 0;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}15;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+  }
+
+  ${media.mobile} {
+    gap: 1rem;
+    padding: 1rem 0;
   }
 `;
 
 export const NewsImage = styled.div<{ imageUrl: string }>`
-  width: 280px;
-  min-width: 280px;
-  height: 200px;
+  width: 200px;
+  min-width: 200px;
+  height: 150px;
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
   background-position: center;
   background-color: ${SEJONG_COLORS.COOL_GRAY};
-  transition: transform 0.3s ease;
-
-  ${NewsCard}:hover & {
-    transform: scale(1.05);
-  }
 
   &.error {
     background-image: none;
@@ -70,15 +72,15 @@ export const NewsImage = styled.div<{ imageUrl: string }>`
   ${media.mobile} {
     width: 120px;
     min-width: 120px;
-    height: 120px;
+    height: 90px;
   }
 `;
 
 export const NewsContent = styled.div`
   flex: 1;
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
 `;
 
 export const NewsTitle = styled.h3`
@@ -91,21 +93,20 @@ export const NewsTitle = styled.h3`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.8rem;
 
   ${media.mobile} {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
 `;
 
 export const NewsDate = styled.p`
-  margin: 1rem 0 0 0;
-  font-size: 0.95rem;
+  margin: 0;
+  font-size: 0.875rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 `;
 
 export const NewsDescription = styled.p`
-  margin: 0.875rem 0;
+  margin: 0;
   font-size: 1rem;
   color: ${SEJONG_COLORS.WARM_GRAY2};
   line-height: 1.6;
@@ -113,40 +114,34 @@ export const NewsDescription = styled.p`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 3.2em;
 
   ${media.mobile} {
-    font-size: 0.95rem;
+    font-size: 0.875rem;
+    -webkit-line-clamp: 3;
   }
 `;
 
 export const NewsFooter = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
-
-  ${media.mobile} {
-    margin-top: 1.25rem;
-    padding-top: 1.25rem;
-  }
+  margin-top: auto;
 `;
 
 export const NewsViews = styled.span`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 
   svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
     color: ${SEJONG_COLORS.WARM_GRAY1};
   }
 `;
 
+// 관리자 관련 스타일
 export const AdminButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -173,12 +168,6 @@ export const CreateButton = styled.button`
 
   &:hover {
     background-color: ${SEJONG_COLORS.DARK_RED};
-    box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: none;
   }
 
   svg {
@@ -196,10 +185,6 @@ export const AdminActions = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-left: auto;
-
-  ${media.mobile} {
-    gap: 0.375rem;
-  }
 `;
 
 export const ActionButton = styled.button`
@@ -282,7 +267,7 @@ export const PageButton = styled.button<{ isActive?: boolean }>`
 
   &:hover:not(:disabled) {
     background: ${(props) =>
-      props.isActive ? '#8b0000' : SEJONG_COLORS.COOL_GRAY}10;
+      props.isActive ? '#8b0000' : `${SEJONG_COLORS.COOL_GRAY}10`};
     border-color: ${(props) =>
       props.isActive ? '#8b0000' : SEJONG_COLORS.CRIMSON_RED};
   }
@@ -290,10 +275,6 @@ export const PageButton = styled.button<{ isActive?: boolean }>`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(1px);
   }
 
   ${media.mobile} {
@@ -328,10 +309,6 @@ export const PaginationButton = styled.button<{
     background: ${SEJONG_COLORS.COOL_GRAY}10;
     border-color: ${(props) =>
       props.disabled ? SEJONG_COLORS.COOL_GRAY : '#8b0000'};
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(1px);
   }
 
   ${media.mobile} {

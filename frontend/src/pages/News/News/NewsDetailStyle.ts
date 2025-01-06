@@ -1,126 +1,133 @@
-// NewsDetailStyle.ts
 import styled from 'styled-components';
 import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const Container = styled.div`
-  max-width: 1000px;
-  width: 95%;
+  max-width: 780px;
+  width: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 3rem 1.5rem;
 
   ${media.mobile} {
-    padding: 20px 10px;
+    padding: 2rem 1rem;
   }
 `;
 
 export const BackButton = styled.button`
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 4px;
-  background: white;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  background: none;
   color: ${SEJONG_COLORS.GRAY};
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: ${SEJONG_COLORS.IVORY};
     color: ${SEJONG_COLORS.CRIMSON_RED};
+    transform: translateX(-4px);
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 `;
 
 export const NewsWrapper = styled.article`
-  margin-top: 24px;
+  margin-top: 2rem;
   background: white;
-  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 8px;
-  overflow: hidden;
 `;
 
 export const NewsHeader = styled.header`
-  padding: 24px;
+  margin-bottom: 2rem;
 `;
 
 export const NewsTitle = styled.h1`
   margin: 0;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
   color: ${SEJONG_COLORS.GRAY};
   line-height: 1.4;
+  letter-spacing: -0.02em;
 
   ${media.mobile} {
-    font-size: 20px;
+    font-size: 1.5rem;
   }
 `;
 
 export const NewsMetadata = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}15;
 `;
 
 export const NewsDate = styled.span`
-  font-size: 14px;
+  font-size: 0.875rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 `;
 
 export const NewsViews = styled.span`
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 14px;
+  gap: 0.25rem;
+  font-size: 0.875rem;
   color: ${SEJONG_COLORS.LIGHT_GRAY};
 
   svg {
+    width: 1rem;
+    height: 1rem;
     color: ${SEJONG_COLORS.WARM_GRAY1};
   }
 `;
 
 export const NewsDivider = styled.hr`
-  margin: 0;
-  border: none;
-  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  display: none;
 `;
 
 export const NewsImage = styled.img`
   display: block;
   width: 100%;
-  max-height: 500px;
+  max-height: 480px;
   object-fit: cover;
-  margin: 0 auto;
+  margin: 2rem 0;
+  border-radius: 0.5rem;
 `;
 
 export const NewsContent = styled.div`
-  padding: 24px;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.8;
   color: ${SEJONG_COLORS.GRAY};
   white-space: pre-wrap;
+  letter-spacing: -0.01em;
 
   ${media.mobile} {
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
 `;
 
 export const NewsLink = styled.a`
-  display: inline-block;
-  margin: 0 24px 24px;
-  padding: 8px 16px;
-  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED};
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED}10;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: all 0.2s;
 
   &:hover {
-    background: ${SEJONG_COLORS.CRIMSON_RED};
-    color: white;
+    background-color: ${SEJONG_COLORS.CRIMSON_RED}20;
+    transform: translateY(-2px);
   }
 `;
 
@@ -128,13 +135,16 @@ export const LoadingSpinner = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
+  min-height: 50vh;
   color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-size: 0.875rem;
 `;
 
 export const ErrorMessage = styled.div`
   text-align: center;
-  padding: 40px;
+  padding: 3rem 2rem;
   color: ${SEJONG_COLORS.CRIMSON_RED};
-  font-size: 16px;
+  font-size: 0.875rem;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED}10;
+  border-radius: 0.5rem;
 `;
