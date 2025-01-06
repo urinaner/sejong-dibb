@@ -1,13 +1,15 @@
+//Main.tsx
 import {
   MainContainer,
   PaperContainer,
   TMP,
   Title,
+  NewsTitle,
+  Paper,
   AnnouncementAndSeminar,
   AnnouncementContainer,
   SeminarContainer,
   ShortcutContainer,
-  Paper,
   Shortcut,
   ContentWrapper,
   TabContainer,
@@ -15,11 +17,13 @@ import {
   ContentContainer,
   AnnouncementItem,
   SeminarRoomReservation,
+  NewsSection,
 } from './MainStyle';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
+import NewsSlider from '../../components/NewsSlider/NewsSlider';
 
 interface ApiResponse<T> {
   message: string;
@@ -27,6 +31,7 @@ interface ApiResponse<T> {
   totalPage: number;
   data: T[];
 }
+
 // 논문
 interface Paper {
   title: string;
@@ -42,6 +47,17 @@ interface Paper {
   thesisImage: string;
 }
 
+// 뉴스
+interface NewsItem {
+  id: number;
+  title: string;
+  content: string;
+  createDate: string;
+  image: string;
+  view: number;
+  category?: string;
+}
+
 const CATEGORY_MAP = {
   학부: 'undergraduate',
   대학원: 'graduate',
@@ -51,13 +67,11 @@ const CATEGORY_MAP = {
 
 type CategoryKey = (typeof CATEGORY_MAP)[keyof typeof CATEGORY_MAP];
 
-// 공지사항
 const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
 
 interface Announcement {
   category: string;
   createDate: string;
-  // file: string;
   id: number;
   title: string;
   viewCount: number;
@@ -100,6 +114,7 @@ const links = [
 function Main(): JSX.Element {
   const navigate = useNavigate();
   const [papers, setPapers] = useState<Paper[]>([]);
+  const [news, setNews] = useState<NewsItem[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [activeTab, setActiveTab] = useState('학부');
   const [loading, setLoading] = useState(false);
@@ -114,7 +129,12 @@ function Main(): JSX.Element {
         );
         setPapers(paperResponse.data.data);
 
-        // 초기 카테고리(학부)의 공지사항 로드
+        // 뉴스 데이터 로드
+        const newsResponse = await axios.get<ApiResponse<NewsItem>>(
+          apiEndpoints.news.listWithPage(0, 8),
+        );
+        setNews(newsResponse.data.data);
+
         await fetchAnnouncementsByCategory(CATEGORY_MAP.학부);
       } catch (err) {
         console.error('초기 데이터 로드 실패:', err);
@@ -145,7 +165,6 @@ function Main(): JSX.Element {
     }
   };
 
-  // 탭 변경 핸들러
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     const categoryKey = CATEGORY_MAP[tab as keyof typeof CATEGORY_MAP];
@@ -154,18 +173,17 @@ function Main(): JSX.Element {
     }
   };
 
-  // 특정 공지사항 페이지로 이동
   const handleAnnouncementClick = (id: number) => {
     navigate(`/news/noticeboard/${id}`);
   };
 
-  const handlePaperClick = (id: number) => {
-    navigate(`/news/thesis/${id}`);
+  const handleNewsClick = (id: number) => {
+    navigate(`/news/${id}`);
   };
 
   return (
     <MainContainer>
-      {/* 연구논문 */}
+      {/* 연구논문 섹션 */}
       <PaperContainer>
         <Title>연구 논문</Title>
         <TMP>
@@ -196,7 +214,6 @@ function Main(): JSX.Element {
       </PaperContainer>
 
       <ContentWrapper>
-        {/* 공지사항, 세미나 */}
         <AnnouncementAndSeminar>
           <AnnouncementContainer>
             <p>공지사항</p>
@@ -223,11 +240,6 @@ function Main(): JSX.Element {
                   <AnnouncementItem
                     key={announcement.id}
                     onClick={() => handleAnnouncementClick(announcement.id)}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      padding: '10px 0',
-                    }}
                   >
                     <span>
                       <img src="/bullet.svg" alt="bullet" />
@@ -239,8 +251,8 @@ function Main(): JSX.Element {
               )}
             </ContentContainer>
           </AnnouncementContainer>
+
           <SeminarContainer>
-            {/* TODO: 최신 세미나 링크 연결 필요 */}
             <button>
               <p>세미나</p>
               <p>최신 세미나 제목</p>
@@ -251,19 +263,18 @@ function Main(): JSX.Element {
                 <br />
                 최신 세미나 진행 장소
               </div>
-              <img src="info.svg" />
+              <img src="info.svg" alt="info" />
             </button>
             <SeminarRoomReservation to="/seminar-rooms/reservation">
               <span>
                 세미나실 <br />
                 예약
               </span>
-              <img src="/whiteCalendarIcon.svg" />
+              <img src="/whiteCalendarIcon.svg" alt="calendar" />
             </SeminarRoomReservation>
           </SeminarContainer>
         </AnnouncementAndSeminar>
 
-        {/* 바로가기 */}
         <ShortcutContainer>
           {links.map((item) => (
             <a
@@ -272,14 +283,27 @@ function Main(): JSX.Element {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Shortcut key={item.title}>
-                <img src={item.icon} />
+              <Shortcut>
+                <img src={item.icon} alt={item.title} />
                 {item.title}
               </Shortcut>
             </a>
           ))}
         </ShortcutContainer>
       </ContentWrapper>
+
+      {/* 뉴스 슬라이더 섹션 */}
+      <NewsSection>
+        <NewsTitle>DIBB NEWS</NewsTitle>
+        <p style={{ textAlign: 'center', color: '#666', marginBottom: '40px' }}>
+          바이오융학공학전공의 주요 새소식을 전해드립니다.
+        </p>
+        <NewsSlider
+          news={news}
+          autoPlayInterval={5000}
+          onNewsClick={handleNewsClick}
+        />
+      </NewsSection>
     </MainContainer>
   );
 }

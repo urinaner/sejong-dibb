@@ -1,3 +1,4 @@
+//MainStyle.ts
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as token from '../../constants/colors';
@@ -24,6 +25,22 @@ export const PaperContainer = styled.section`
   padding: 0 20px;
 `;
 
+export const NewsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto 40px;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+
+  ${media.mobile} {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+`;
+
 export const TMP = styled.div`
   display: flex;
   justify-content: center;
@@ -40,7 +57,7 @@ export const TMP = styled.div`
   }
 `;
 
-export const Title = styled.div`
+export const Title = styled.h2`
   margin: 50px 0 40px 0;
   font-size: 30px;
   font-weight: 700;
@@ -53,6 +70,22 @@ export const Title = styled.div`
   ${media.mobile} {
     margin: 30px 0 20px 0;
     font-size: 24px;
+  }
+`;
+
+export const NewsTitle = styled.h2`
+  margin: 0 0 20px 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: ${token.SEJONG_COLORS.CRIMSON_RED};
+  text-align: center;
+
+  ${media.tablet} {
+    font-size: 32px;
+  }
+
+  ${media.mobile} {
+    font-size: 28px;
   }
 `;
 
@@ -110,13 +143,6 @@ export const Paper = styled.article`
     text-overflow: ellipsis;
     height: 54px;
   }
-
-  p:nth-of-type(2) {
-    font-size: 16px;
-    font-weight: 500;
-    color: #7a7a7a;
-  }
-
   p:nth-of-type(3) {
     font-size: 14px;
     font-weight: 400;
@@ -214,16 +240,22 @@ interface TabButtonProps {
 
 export const TabButton = styled.button<TabButtonProps>`
   flex: 1;
-  padding: 12px 0 12px 0;
+  padding: 12px 0;
   background: ${({ isActive }) =>
     isActive ? `${token.SEJONG_COLORS.CRIMSON_RED}` : '#F1F1F3'};
   border: ${({ isActive }) =>
     isActive ? `1px solid ${token.SEJONG_COLORS.CRIMSON_RED}` : 'none'};
+  color: ${({ isActive }) => (isActive ? 'white' : '#333')};
   font-family: 'Noto Sans KR';
   font-size: 16px;
   font-weight: 400;
   cursor: pointer;
-  transition: background-color 0.5s;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ isActive }) =>
+      isActive ? token.SEJONG_COLORS.CRIMSON_RED : '#e9e9eb'};
+  }
 `;
 
 export const ContentContainer = styled.div``;
@@ -234,9 +266,14 @@ export const AnnouncementItem = styled.div`
   padding: 16px 0;
   border-bottom: 1px solid #e2e3e5;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
 
   img {
-    margin: 0 8px 0 8px;
+    margin: 0 8px;
   }
 
   span {
@@ -249,7 +286,6 @@ export const AnnouncementItem = styled.div`
     flex-shrink: 1;
     flex-basis: 100%;
     max-width: calc(100% - 80px);
-
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -260,6 +296,7 @@ export const AnnouncementItem = styled.div`
 
   span:last-of-type {
     width: 60px;
+    text-align: right;
   }
 `;
 
@@ -282,9 +319,14 @@ export const SeminarContainer = styled.div`
     color: white;
     font-family: 'Noto Sans KR';
     cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: ${token.SEJONG_COLORS.WARM_GRAY2};
+    }
 
     p {
-      margin: 16px 0 16px 0;
+      margin: 16px 0;
 
       ${media.mobile} {
         margin: 0 0 0 8px;
@@ -297,8 +339,7 @@ export const SeminarContainer = styled.div`
 
       ${media.mobile} {
         font-size: 16px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin: 10px 0;
       }
     }
 
@@ -363,10 +404,15 @@ export const SeminarRoomReservation = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 24px 0 24px;
+  padding: 0 24px;
   font-size: 22px;
   background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
   text-decoration: none;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${token.SEJONG_COLORS.WARM_GRAY2};
+  }
 
   span {
     margin-right: 20px;
@@ -399,7 +445,7 @@ export const ShortcutContainer = styled.section`
   grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, 1fr);
   gap: 50px 0;
-  padding: 95px 0 95px 0;
+  padding: 95px 0;
   background-color: #e9dfda;
 
   a {
@@ -424,10 +470,14 @@ export const Shortcut = styled.div`
   flex-direction: column;
   align-items: center;
   width: fit-content;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 
   img {
     width: 90px;
     height: auto;
+    margin-bottom: 10px;
 
     ${media.tablet} {
       width: 80px;

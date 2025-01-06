@@ -1,0 +1,57 @@
+// NewsCard.tsx
+import React from 'react';
+import moment from 'moment';
+import { Eye } from 'lucide-react'; // 조회수 아이콘 추가
+import {
+  NewsCardWrapper,
+  NewsImage,
+  NewsContent,
+  NewsTitle,
+  NewsDate,
+  NewsFooter,
+  ViewCount,
+} from './NewsSliderStyle';
+
+interface NewsCardProps {
+  id: number;
+  title: string;
+  createDate: string;
+  image: string;
+  view: number; // 조회수 추가
+  imageBaseUrl: string; // 이미지 base URL 추가
+  onClick: (id: number) => void;
+}
+
+const NewsCard: React.FC<NewsCardProps> = ({
+  id,
+  title,
+  createDate,
+  image,
+  view,
+  imageBaseUrl,
+  onClick,
+}) => {
+  return (
+    <NewsCardWrapper onClick={() => onClick?.(id)}>
+      <NewsImage
+        imageUrl={`${imageBaseUrl}/${image}`}
+        onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
+          e.currentTarget.style.backgroundColor = '#f1f1f1';
+          e.currentTarget.innerHTML = '이미지를 불러올 수 없습니다';
+        }}
+      />
+      <NewsContent>
+        <NewsTitle>{title}</NewsTitle>
+        <NewsFooter>
+          <NewsDate>{moment(createDate).format('YYYY.MM.DD')}</NewsDate>
+          <ViewCount>
+            <Eye size={16} />
+            {view}
+          </ViewCount>
+        </NewsFooter>
+      </NewsContent>
+    </NewsCardWrapper>
+  );
+};
+
+export default NewsCard;
