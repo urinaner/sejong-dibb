@@ -55,7 +55,6 @@ function renderSightMapSections() {
       contents: [
         { name: '소개', link: '/graduate/overview' },
         { name: '교과과정', link: '/graduate/curriculum' },
-        { name: '학칙/규정', link: '/graduate/rules' },
       ],
     },
     {
