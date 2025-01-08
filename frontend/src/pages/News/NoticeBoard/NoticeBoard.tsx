@@ -168,6 +168,7 @@ const NoticeBoard: React.FC = () => {
 
   return (
     <S.Container>
+      <S.Title>공지사항</S.Title>
       <S.HeaderContainer>
         <S.Navigation>
           <S.NavButtonGroup>
@@ -219,7 +220,7 @@ const NoticeBoard: React.FC = () => {
               onClick={() => handleSort('viewCount')}
               isActive={filters.sort.field === 'viewCount'}
               sortDirection={filters.sort.direction}
-              style={{ textAlign: 'right' }}
+              style={{ width: '7rem' }}
             >
               조회수
             </S.SortableTh>
@@ -229,7 +230,7 @@ const NoticeBoard: React.FC = () => {
           {notices.map((notice: NoticeItem) => (
             <S.Tr key={notice.id}>
               <S.Td>{notice.id}</S.Td>
-              <S.Td>
+              <S.Td style={{ textAlign: 'left' }}>
                 <S.TitleLink
                   onClick={() => navigate(`/news/noticeboard/${notice.id}`)}
                 >
