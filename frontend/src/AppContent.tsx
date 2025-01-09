@@ -80,39 +80,30 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100vw; // 추가
   position: relative;
   overflow-x: hidden;
   scroll-behavior: smooth;
 `;
 
 const InnerContainer = styled.div`
-  max-width: 1920px;
-  width: 100%;
+  width: 100%; // max-width 제거
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-x: hidden; // 추가
 `;
 const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 100%; // 추가
   height: 100%;
   align-items: center;
-  justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
+  overflow-x: hidden; // 추가
   padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
-  position: relative;
-  z-index: 1;
-  background-color: white;
-  margin-top: ${(props) =>
-    props.isAuthPage ? '0' : '125px'}; // TopHeader(45px) + Header(80px)
-  border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
-
-  @media (max-width: 768px) {
-    margin-top: ${(props) =>
-      props.isAuthPage ? '0' : '125px'}; // 모바일에서도 동일한 여백 유지
-  }
 `;
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
   position: relative;

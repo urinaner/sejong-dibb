@@ -6,23 +6,15 @@ const media = {
   mobile: '@media(max-width: 768px)',
   tablet: '@media(max-width: 1024px)',
 };
-
 export const MainContainer = styled.div`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
-
-  ${media.tablet} {
-    max-width: 90%;
-  }
-
-  ${media.mobile} {
-    max-width: 100%;
-    padding: 0 12px;
-    display: flex;
-    flex-direction: column;
-  }
+  padding: 0 20px;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const PaperContainer = styled.section`
@@ -50,21 +42,12 @@ export const NewsSection = styled.section`
 `;
 
 export const TMP = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 24px;
   width: 100%;
-
-  ${media.tablet} {
-    gap: 20px;
-  }
-
-  ${media.mobile} {
-    gap: 16px;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 0; // 패딩 조정
 `;
-
 export const Title = styled.h2`
   margin: 40px 0 32px 0;
   font-size: 28px;
@@ -98,91 +81,14 @@ export const NewsTitle = styled.h2`
     margin: 0 0 12px 0;
   }
 `;
-
 export const Paper = styled.article`
-  cursor: pointer;
-  transition:
-    transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 280px;
-  padding: 20px;
-  border: solid 1px #d4d2e3;
-  border-radius: 16px;
-  background-color: white;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  img {
-    width: 240px;
-    height: auto;
-    margin-bottom: 16px;
-    border-radius: 8px;
-
-    ${media.tablet} {
-      width: 200px;
-    }
-
-    ${media.mobile} {
-      width: 160px;
-    }
-  }
-
-  p {
-    width: 100%;
-    margin: 0;
-    margin-bottom: 8px;
-    color: #5d5a88;
-    word-break: break-all;
-  }
-
-  p:nth-of-type(1) {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    height: 48px;
-  }
-
-  p:nth-of-type(2) {
-    font-size: 14px;
-  }
-
-  p:nth-of-type(3) {
-    font-size: 14px;
-    color: #9e9e9e;
-  }
-
-  ${media.tablet} {
-    width: 240px;
-    padding: 16px;
-  }
-
-  ${media.mobile} {
-    width: 100%;
-    max-width: 200px;
-    padding: 12px;
-
-    p:nth-of-type(1) {
-      font-size: 14px;
-      height: 42px;
-    }
-
-    p:nth-of-type(2),
-    p:nth-of-type(3) {
-      font-size: 12px;
-    }
-  }
+  padding: 16px;
+  margin: 0; // 마진 제거
 `;
-
 export const ContentWrapper = styled.section`
   display: flex;
   justify-content: space-around;
