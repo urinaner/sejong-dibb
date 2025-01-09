@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { LoadingWrapper, ErrorMessage } from '../TabSectionStyle';
+import * as token from '../../../../constants/colors';
 
 export { LoadingWrapper, ErrorMessage };
 
@@ -173,6 +174,38 @@ export const EmptyMessage = styled.div`
   background: #f8fafc;
   border-radius: 8px;
   border: 1px dashed #e2e8f0;
+`;
+
+export const THead = styled.thead``;
+
+export const Th = styled.th`
+  white-space: nowrap;
+  padding: 1rem 0 2rem 0;
+  border-bottom: 1px solid ${token.SEJONG_COLORS.COOL_GRAY};
+
+  &:nth-child(1) {
+    width: 2rem;
+  }
+  &:nth-child(2) {
+    width: 23.25rem;
+  }
+  &:nth-child(3) {
+    width: 5rem;
+  }
+`;
+
+export const Td = styled.td`
+  word-wrap: break-word;
+  text-align: center;
+  padding: 1.5rem 0.75rem;
+`;
+
+export const Table = styled.table`
+  border-collapse: collapse;
+
+  tr:nth-child(2) {
+    padding-top: 2rem !important;
+  }
 `;
 
 export const Pagination = styled.div`
