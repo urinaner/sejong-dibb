@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 interface NewsCardWrapperProps {
   itemsPerView: number;
 }
@@ -14,46 +15,73 @@ const media = {
   small: '@media(max-width: 480px)',
 };
 
+// 최상위 컨테이너 - 버튼을 포함한 전체 영역
+export const OuterContainer = styled.div`
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 0 20px;
+
+  ${media.mobile} {
+    padding: 0 16px;
+  }
+`;
+
+// 실제 슬라이더를 감싸는 컨테이너
 export const SliderContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 40px; // 네비게이션 버튼을 위한 여백
+
+  ${media.mobile} {
+    padding: 0 32px;
+  }
+
+  ${media.small} {
+    padding: 0 28px;
+  }
+`;
+
+// 슬라이더 내용물을 감싸는 래퍼
+export const SliderWrapper = styled.div`
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-
-  ${media.mobile} {
-    padding: 16px;
-  }
 `;
+
+// 실제 슬라이딩되는 트랙
 export const SliderTrack = styled.div<SliderTrackProps>`
   display: flex;
   gap: ${(props) => props.gap}px;
   transition: transform 0.5s ease-in-out;
   transform: ${(props) => props.transform};
   width: 100%;
-
-  ${media.mobile} {
-    gap: ${(props) => props.gap * 0.75}px;
-    padding: 0 20px;
-  }
 `;
+
+// 개별 카드 래퍼
 export const NewsCardWrapper = styled.div<NewsCardWrapperProps>`
-  flex: 0 0 calc(100% / ${(props) => props.itemsPerView});
-  max-width: 300px;
-  min-width: 200px;
-  margin: 0 auto;
+  flex: 0 0
+    calc(
+      (100% - ${(props) => (props.itemsPerView - 1) * 20}px) /
+        ${(props) => props.itemsPerView}
+    );
   background: white;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
 
-  ${media.mobile} {
-    max-width: 100%;
-    margin: 0;
+  &:hover {
+    transform: translateY(-2px);
   }
 `;
 
+// 나머지 스타일 컴포넌트들...
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 100%;
   height: 180px;
@@ -97,11 +125,6 @@ export const NewsTitle = styled.h3`
     font-size: 14px;
     height: 40px;
   }
-
-  ${media.small} {
-    font-size: 15px;
-    height: 42px;
-  }
 `;
 
 export const NewsFooter = styled.div`
@@ -123,10 +146,6 @@ export const NewsDate = styled.p`
   ${media.mobile} {
     font-size: 12px;
   }
-
-  ${media.small} {
-    font-size: 13px;
-  }
 `;
 
 export const ViewCount = styled.div`
@@ -138,21 +157,10 @@ export const ViewCount = styled.div`
 
   svg {
     color: #999;
-    width: 16px;
-    height: 16px;
   }
 
   ${media.mobile} {
     font-size: 12px;
-
-    svg {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
-  ${media.small} {
-    font-size: 13px;
   }
 `;
 
@@ -171,6 +179,7 @@ const BaseButton = styled.button`
   cursor: pointer;
   z-index: 2;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover:not(:disabled) {
     background: #f5f5f5;
@@ -194,17 +203,9 @@ const BaseButton = styled.button`
 `;
 
 export const PrevButton = styled(BaseButton)`
-  left: 10px;
-
-  ${media.small} {
-    left: 5px;
-  }
+  left: 0;
 `;
 
 export const NextButton = styled(BaseButton)`
-  right: 10px;
-
-  ${media.small} {
-    right: 5px;
-  }
+  right: 0;
 `;
