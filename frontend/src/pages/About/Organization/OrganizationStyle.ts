@@ -2,18 +2,18 @@ import styled from 'styled-components';
 import { Wrapper, Content, Title, InfoCard } from '../AboutStyle';
 
 export const OrgWrapper = styled(Wrapper)`
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.white};
   padding: 40px 20px;
 `;
 
 export const OrgContent = styled(Content)`
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.white};
   max-width: 800px;
   margin: 0 auto;
 `;
 
 export const OrgTitle = styled(Title)`
-  font-size: 28px;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
   color: #1a1a1a;
   text-align: center;
   margin-bottom: 50px;
@@ -28,21 +28,27 @@ export const OrgTitle = styled(Title)`
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background-color: #3182ce;
+    background-color: ${({ theme }) => theme.colors.primary.crimson};
     border-radius: 2px;
+  }
+
+  ${({ theme }) => theme.media.tablet} {
+    font-size: ${({ theme }) => theme.fontSizes.xl};
   }
 `;
 
 export const OrgCard = styled(InfoCard)`
-  padding: 40px;
+  padding: ${({ theme }) => theme.spacing['3xl']};
   margin: 0 auto 50px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  background: linear-gradient(to bottom right, #ffffff, #f8fafc);
-  border: 1px solid #e2e8f0;
+  transition: all ${({ theme }) => theme.transitions.fast};
+  background: linear-gradient(
+    to bottom right,
+    ${({ theme }) => theme.colors.white},
+    #f8fafc
+  );
+  border: 1px solid ${({ theme }) => theme.colors.grey[200]};
 
   &:hover {
     transform: translateY(-2px);
@@ -52,55 +58,91 @@ export const OrgCard = styled(InfoCard)`
   dl {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 20px 30px;
-    align-items: baseline;
+    gap: 24px 30px;
+    align-items: start;
 
     dt {
       font-weight: 600;
-      color: #2d3748;
-      font-size: 16px;
+      color: ${({ theme }) => theme.colors.grey[500]};
+      font-size: ${({ theme }) => theme.fontSizes.base};
       display: flex;
       align-items: center;
       white-space: nowrap;
+
+      svg {
+        color: ${({ theme }) => theme.colors.primary.crimson};
+      }
 
       &:before {
         content: '';
         display: inline-block;
         width: 6px;
         height: 6px;
-        background-color: #3182ce;
+        background-color: ${({ theme }) => theme.colors.primary.crimson};
         border-radius: 50%;
         margin-right: 10px;
       }
     }
 
     dd {
-      color: #4a5568;
+      color: ${({ theme }) => theme.colors.grey[400]};
       margin: 0;
-      font-size: 15px;
+      font-size: ${({ theme }) => theme.fontSizes.base};
       line-height: 1.6;
-      padding-bottom: 4px;
-      border-bottom: 1px solid #edf2f7;
 
-      &:last-child {
-        border-bottom: none;
+      .time-period {
+        display: block;
+        margin-top: ${({ theme }) => theme.spacing.lg};
+        padding: ${({ theme }) => theme.spacing.xl};
+        background-color: ${({ theme }) => theme.colors.grey[50]};
+        border-radius: 8px;
+        border-left: 3px solid ${({ theme }) => theme.colors.primary.crimson};
+
+        .period-label {
+          font-weight: 600;
+          color: ${({ theme }) => theme.colors.grey[500]};
+          margin-bottom: ${({ theme }) => theme.spacing.xs};
+        }
+      }
+
+      &:not(:last-child) {
+        padding-bottom: ${({ theme }) => theme.spacing.xl};
+        border-bottom: 1px dashed ${({ theme }) => theme.colors.grey[200]};
       }
     }
 
-    @media (max-width: 640px) {
+    ${({ theme }) => theme.media.mobile} {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: ${({ theme }) => theme.spacing.xl};
 
       dt {
-        margin-top: 16px;
+        margin-top: ${({ theme }) => theme.spacing.xl};
+        padding: ${({ theme }) => theme.spacing.base};
+        background-color: ${({ theme }) => theme.colors.grey[50]};
+        border-radius: 6px;
+        padding-left: ${({ theme }) => theme.spacing.xl};
 
         &:first-child {
           margin-top: 0;
         }
+
+        svg {
+          margin-right: ${({ theme }) => theme.spacing.base};
+        }
+
+        &:before {
+          display: none;
+        }
       }
 
       dd {
-        padding-left: 16px;
+        padding-left: ${({ theme }) => theme.spacing.xl};
+
+        .time-period {
+          margin-left: -${({ theme }) => theme.spacing.xl};
+          margin-right: -${({ theme }) => theme.spacing.xl};
+          border-radius: 0;
+        }
       }
     }
   }
@@ -112,10 +154,8 @@ export const MapContainer = styled.div`
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  border: 1px solid ${({ theme }) => theme.colors.grey[200]};
+  transition: all ${({ theme }) => theme.transitions.fast};
 
   &:hover {
     transform: translateY(-2px);
@@ -128,8 +168,8 @@ export const MapContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f7fafc;
-    color: #4a5568;
-    font-size: 15px;
+    background-color: ${({ theme }) => theme.colors.grey[50]};
+    color: ${({ theme }) => theme.colors.grey[400]};
+    font-size: ${({ theme }) => theme.fontSizes.base};
   }
 `;
