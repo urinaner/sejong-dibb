@@ -10,8 +10,6 @@ import {
   MobileNavItem,
   MobileNavButton,
   MobileSubMenu,
-  LoginButton,
-  NavigationRightSection,
 } from './NavigationStyle';
 
 interface NavigationProps {
@@ -107,19 +105,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
     setMobileMenuOpen(false);
     setOpenSubMenus({});
   };
-
-  const handleSignIn = () => {
-    navigate('/signin');
-    closeMobileMenu();
-  };
-
-  const renderAuthSection = () => {
-    if (auth?.isAuthenticated) {
-      return <Profile />;
-    }
-    return <LoginButton onClick={handleSignIn}>로그인</LoginButton>;
-  };
-
   if (isMobile) {
     return (
       <MobileNavigationWrapper isOpen={mobileMenuOpen}>
@@ -142,7 +127,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
             </MobileSubMenu>
           </MobileNavItem>
         ))}
-        <MobileNavItem>{renderAuthSection()}</MobileNavItem>
       </MobileNavigationWrapper>
     );
   }
@@ -160,7 +144,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
           menuItems={item.menuItems}
         />
       ))}
-      <NavigationRightSection>{renderAuthSection()}</NavigationRightSection>
     </NavigationWrapper>
   );
 };

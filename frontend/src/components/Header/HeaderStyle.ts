@@ -15,15 +15,22 @@ export const TopHeaderContainer = styled.div`
 export const TopHeaderInner = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 2rem;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
 
   @media (max-width: 768px) {
     padding: 0 1rem;
   }
+`;
+
+export const TopHeaderTitle = styled.div`
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 `;
 
 export const TopNavList = styled.ul`
@@ -67,11 +74,10 @@ export const HeaderContainer = styled(motion.header)<{
     min-height: 80px;
   }
 `;
-
 export const HeaderInner = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 2rem;
   height: 100%;
   display: flex;
   align-items: center;
