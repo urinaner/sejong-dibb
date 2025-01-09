@@ -17,10 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
-import org.example.backend.common.utils.TimeParsingUtils;
-import org.example.backend.reservation.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.room.domain.Room;
-import org.example.backend.user.domain.entity.User;
 
 @Entity
 @Getter
@@ -49,29 +47,37 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_name")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
+    public boolean isPasswordMatch(String inputPassword) {
+        return this.password.equals(inputPassword);
+    }
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, User user) {
+                        String etc, Room room, String username, String password) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.room = room;
-        this.user = user;
+        this.username = username;
+        this.password = password;
     }
 
-    public static Reservation of(ReservationReqDto dto, Room room, User user) {
+    public static Reservation of(ReservationCreateDto dto, Room room) {
         return Reservation.builder()
-                .startTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getStartTime())))
-                .endTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getEndTime())))
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
                 .etc(dto.getEtc())
                 .room(room)
-                .user(user)
+                .username(dto.getUserName())
+                .password(dto.getPassword())
                 .build();
     }
 
