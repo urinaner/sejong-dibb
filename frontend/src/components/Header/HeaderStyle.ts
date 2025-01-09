@@ -59,19 +59,16 @@ export const HeaderContainer = styled(motion.header)<{
   $isDropdownOpen: boolean;
 }>`
   position: fixed;
-  top: 45px; // TopHeader 높이만큼 아래로 이동
+  top: 45px;
   left: 0;
   right: 0;
-  height: ${({ $isDropdownOpen }) => ($isDropdownOpen ? 'auto' : '100px')};
-  min-height: 100px;
+  height: 100px;
   background-color: #a30027;
   color: white;
   z-index: 50;
-  transition: all 0.3s ease;
 
   @media (max-width: 768px) {
     height: 80px;
-    min-height: 80px;
   }
 `;
 export const HeaderInner = styled.div`
@@ -82,25 +79,11 @@ export const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-
-  @media (max-width: 768px) {
-    padding: 0 1rem;
-    height: 80px;
-  }
 `;
 
-export const HeaderNav = styled.nav`
+export const HeaderNav = styled.div`
   display: flex;
-  align-items: center;
-  gap: 2rem;
   height: 100%;
-  color: white;
-  position: relative;
-
-  @media (max-width: 768px) {
-    gap: 1rem;
-  }
 `;
 
 // 기본 페이지 컨텐츠를 위한 래퍼 컴포넌트 추가

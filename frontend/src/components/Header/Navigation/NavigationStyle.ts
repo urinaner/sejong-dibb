@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const NavigationWrapper = styled.nav`
   display: flex;
-  align-items: center;
   height: 100%;
-  color: white;
-  background-color: ${({ theme }) => theme.colors.primary.crimson};
 `;
 
 export const NavigationRightSection = styled.div`
