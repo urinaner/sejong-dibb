@@ -105,14 +105,21 @@ const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   position: relative;
   z-index: 1;
   background-color: white;
-  margin-top: ${(props) => (props.isAuthPage ? '0' : '0')};
+  margin-top: ${(props) =>
+    props.isAuthPage ? '0' : '125px'}; // TopHeader(45px) + Header(80px)
   border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
-`;
 
+  @media (max-width: 768px) {
+    margin-top: ${(props) =>
+      props.isAuthPage ? '0' : '125px'}; // 모바일에서도 동일한 여백 유지
+  }
+`;
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
   position: relative;
   width: 100vw;
   z-index: 0;
+  margin-top: ${(props) =>
+    props.isAuthPage ? '0' : '125px'}; // TopHeader + Header 높이
   margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
 `;
 
