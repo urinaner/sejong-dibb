@@ -55,13 +55,15 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setItemsPerView(getItemsPerView());
+      const newItemsPerView = getItemsPerView();
+      setItemsPerView(newItemsPerView);
+      const newMaxIndex = Math.max(0, news.length - newItemsPerView);
+      setCurrentIndex((prev) => Math.min(prev, newMaxIndex));
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  }, [news.length]);
   const maxIndex = Math.max(0, news.length - itemsPerView);
 
   const handlePrev = useCallback(() => {
@@ -93,6 +95,7 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
     >
       <SliderTrack
         transform={`translateX(-${currentIndex * (100 / itemsPerView)}%)`}
+        gap={20}
       >
         {news.map((item) => (
           <NewsCard
@@ -101,8 +104,9 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
             title={item.title}
             createDate={item.createDate}
             image={item.image}
-            view={item.view || 0} // view가 없을 경우 기본값 0
-            imageBaseUrl={IMAGE_BASE_URL} // 이미지 base URL 추가
+            view={item.view || 0}
+            imageBaseUrl={IMAGE_BASE_URL}
+            itemsPerView={itemsPerView} // itemsPerView 전달
             onClick={onNewsClick}
           />
         ))}

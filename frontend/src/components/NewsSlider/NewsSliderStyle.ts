@@ -1,4 +1,12 @@
 import styled from 'styled-components';
+interface NewsCardWrapperProps {
+  itemsPerView: number;
+}
+
+interface SliderTrackProps {
+  transform: string;
+  gap: number;
+}
 
 const media = {
   tablet: '@media(max-width: 1024px)',
@@ -18,21 +26,22 @@ export const SliderContainer = styled.div`
     padding: 16px;
   }
 `;
-export const SliderTrack = styled.div<{ transform: string }>`
+export const SliderTrack = styled.div<SliderTrackProps>`
   display: flex;
-  gap: 20px;
+  gap: ${(props) => props.gap}px;
   transition: transform 0.5s ease-in-out;
   transform: ${(props) => props.transform};
   width: 100%;
 
   ${media.mobile} {
-    gap: 16px;
+    gap: ${(props) => props.gap * 0.75}px;
     padding: 0 20px;
   }
 `;
-export const NewsCardWrapper = styled.div`
-  width: 100%;
+export const NewsCardWrapper = styled.div<NewsCardWrapperProps>`
+  flex: 0 0 calc(100% / ${(props) => props.itemsPerView});
   max-width: 300px;
+  min-width: 200px;
   margin: 0 auto;
   background: white;
   border-radius: 8px;
