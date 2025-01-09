@@ -4,6 +4,17 @@ import { Link } from 'react-router-dom';
 export const NavigationWrapper = styled.nav`
   display: flex;
   height: 100%;
+  justify-content: flex-end;
+  padding-right: 0; // 패딩 제거하고 TopNavList의 패딩 사용
+  gap: 0; // gap 제거하고 NavItemLink의 padding 사용
+`;
+
+export const HeaderNav = styled.div`
+  display: flex;
+  height: 100%;
+  flex: 1;
+  justify-content: flex-end;
+  padding-right: 0; // 패딩 제거
 `;
 
 export const NavigationRightSection = styled.div`

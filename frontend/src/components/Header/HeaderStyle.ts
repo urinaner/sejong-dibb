@@ -35,10 +35,11 @@ export const TopHeaderTitle = styled.div`
 
 export const TopNavList = styled.ul`
   display: flex;
-  gap: 1.5rem;
+  gap: 2.25rem;
   margin: 0;
-  padding: 0;
+  padding-right: 1.125rem;
   list-style: none;
+  justify-content: flex-end;
 `;
 
 export const TopNavItem = styled.li`
@@ -47,6 +48,8 @@ export const TopNavItem = styled.li`
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
+    padding: 0;
+    white-space: nowrap;
 
     &:hover {
       text-decoration: underline;
@@ -71,6 +74,7 @@ export const HeaderContainer = styled(motion.header)<{
     height: 80px;
   }
 `;
+
 export const HeaderInner = styled.div`
   max-width: 1400px;
   margin: 0 auto;
@@ -79,11 +83,17 @@ export const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `;
 
 export const HeaderNav = styled.div`
   display: flex;
   height: 100%;
+  flex: 1;
+  justify-content: flex-end;
 `;
 
 // 기본 페이지 컨텐츠를 위한 래퍼 컴포넌트 추가
