@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SEJONG_COLORS } from './../../../constants/colors';
 
 interface StyledButtonProps {
   isActive?: boolean;
@@ -11,7 +12,7 @@ const media = {
 
 // 세종대학교 컬러 상수
 const colors = {
-  primary: '#B71C1C', // 세종대 메인 레드
+  primary: `${SEJONG_COLORS.CRIMSON_RED}`, // 세종대 메인 레드
   primaryDark: '#8B0000', // 더 진한 레드
   primaryLight: '#D32F2F', // 더 밝은 레드
   hover: '#F5F5F5', // 호버시 밝은 회색
@@ -26,6 +27,16 @@ export const Container = styled.div`
   ${media.mobile} {
     padding: 20px 10px;
   }
+`;
+
+export const Title = styled.h1`
+  margin: 0 0 2.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+
+  font-size: 2rem;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-weight: 600;
 `;
 
 export const HeaderContainer = styled.div`
@@ -115,20 +126,43 @@ export const Table = styled.table`
   font-size: 1rem;
   background-color: #fff;
   text-align: center;
+  table-layout: fixed;
 `;
 
 export const Th = styled.th`
-  padding: 16px 24px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  font-weight: 600;
-  color: #333;
-  background-color: #f8f9fa;
-  text-align: center;
-
+  /*
   ${media.mobile} {
     padding: 12px 16px;
     font-size: 0.9rem;
+  } */
+
+  padding: 1.25rem 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}20;
+  color: ${SEJONG_COLORS.GRAY};
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+  white-space: nowrap;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+    width: 5rem;
+  }
+  &:nth-child(2) {
+    width: 30rem;
+  }
+  &:nth-child(3) {
+    width: 7rem;
+  }
+  &:nth-child(4) {
+    width: 9rem;
+  }
+  &:nth-child(5) {
+    width: 9rem;
+  }
+  &:last-child {
+    border-top-right-radius: 8px;
+    width: 9rem;
   }
 `;
 
@@ -151,7 +185,6 @@ export const Tr = styled.tr`
 `;
 
 export const ViewCount = styled.td`
-  text-align: right;
   padding: 16px 24px;
   border-bottom: 1px solid #ddd;
 
@@ -165,7 +198,7 @@ export const TitleLink = styled.span`
   cursor: pointer;
   font-weight: 500;
   color: #333;
-  text-align: left;
+  text-align: left !important;
 
   &:hover {
     color: #666;

@@ -65,6 +65,7 @@ export const TabButton = styled.button<{ $isActive: boolean }>`
 export const TabContent = styled.div`
   padding: 2rem;
   min-height: 400px;
+  width: fit-content;
 
   ${media.mobile} {
     padding: 1.5rem;

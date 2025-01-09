@@ -278,6 +278,7 @@ const Th = styled.th`
   font-weight: 600;
   text-align: center;
   border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+  white-space: nowrap;
 
   &:first-child {
     border-top-left-radius: 8px;

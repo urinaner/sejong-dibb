@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import * as token from '../../../constants/colors';
+import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const media = {
   mobile: '@media(max-width: 768px)',
@@ -7,10 +9,18 @@ export const media = {
 
 // Container & Layout
 export const Container = styled.div`
+  /* max-width: 1400px;
+  width: 95%;
+  margin: 0 auto;
+  padding: 40px 20px; */
+
   max-width: 1400px;
   width: 95%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   ${media.mobile} {
     width: 100%;
@@ -41,14 +51,19 @@ export const TopSection = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 28px;
+  /* font-size: 28px;
   font-weight: 600;
   color: #1a202c;
   margin-bottom: 8px;
 
   ${media.mobile} {
     font-size: 24px;
-  }
+  } */
+
+  font-size: 2rem;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0;
+  font-weight: 600;
 `;
 
 export const Description = styled.p`
@@ -198,6 +213,88 @@ export const ThesisList = styled.div`
   gap: 24px;
 `;
 
+export const ThesisTable = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  table-layout: fixed;
+`;
+
+export const Th = styled.th`
+  padding: 1.25rem 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}20;
+  color: ${SEJONG_COLORS.GRAY};
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+  white-space: nowrap;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+    width: 5rem;
+  }
+
+  &:nth-child(2) {
+    width: 7rem;
+  }
+
+  &:nth-child(3) {
+    width: 27rem;
+  }
+
+  &:nth-child(4) {
+    width: 5rem;
+  }
+
+  &:nth-child(5) {
+    width: 10rem;
+  }
+
+  &:nth-child(6) {
+    width: 9rem;
+  }
+
+  &:last-child {
+    border-top-right-radius: 8px;
+    width: 10rem;
+  }
+`;
+
+export const Tr = styled.tr`
+  /* cursor: pointer; */
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${SEJONG_COLORS.COOL_GRAY}10;
+  }
+`;
+
+export const Td = styled.td`
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+  color: ${SEJONG_COLORS.GRAY};
+  word-wrap: break-word;
+`;
+
+export const TitleTd = styled(Td)`
+  text-align: left;
+  font-weight: 500;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  word-wrap: break-word;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+`;
+
 export const ThesisItem = styled.div`
   display: flex;
   gap: 24px;
@@ -222,8 +319,8 @@ export const ThesisItem = styled.div`
   }
 `;
 
-export const ThesisThumbnail = styled.div`
-  width: 140px;
+export const ThesisThumbnail = styled.img`
+  /* width: 140px;
   height: 180px;
   background-color: #f7fafc;
   border: 1px solid #e2e8f0;
@@ -247,7 +344,10 @@ export const ThesisThumbnail = styled.div`
   ${media.mobile} {
     width: 100%;
     height: 200px;
-  }
+  } */
+
+  width: 5rem;
+  height: auto;
 `;
 
 export const ThesisContent = styled.div`

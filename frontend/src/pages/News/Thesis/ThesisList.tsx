@@ -100,58 +100,54 @@ const ThesisList: React.FC = () => {
         )}
       </S.Header>
 
-      <S.ThesisList>
-        {theses.length > 0 ? (
-          theses.map((thesis) => (
-            <S.ThesisItem key={thesis.id}>
-              <S.ThesisThumbnail>
-                <img
-                  src={thesis.thesisImage || '/paperImage.png'}
-                  alt="논문 썸네일"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/paperImage.png';
-                  }}
-                />
-              </S.ThesisThumbnail>
-              <S.ThesisContent
-                onClick={() => navigate(`/news/thesis/${thesis.id}`)}
-              >
-                <S.ThesisTitle>{thesis.content}</S.ThesisTitle>
-                <S.ThesisInfo>
-                  <span>저자: {thesis.author}</span>
-                  <span>저널: {thesis.journal}</span>
-                  <span>발행일: {formatDate(thesis.publicationDate)}</span>
-                </S.ThesisInfo>
-                {thesis.publicationCollection && (
-                  <S.PublicationInfo>
-                    {`Vol. ${thesis.publicationCollection}${
-                      thesis.publicationIssue
-                        ? `, No. ${thesis.publicationIssue}`
-                        : ''
-                    }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
-                  </S.PublicationInfo>
-                )}
-                {auth?.isAuthenticated && (
-                  <S.ActionButtonGroup>
-                    <S.EditButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/news/thesis/edit/${thesis.id}`);
-                      }}
-                    >
-                      <Edit size={16} />
-                      수정
-                    </S.EditButton>
-                  </S.ActionButtonGroup>
-                )}
-              </S.ThesisContent>
-            </S.ThesisItem>
-          ))
-        ) : (
-          <S.EmptyMessage>등록된 논문이 없습니다.</S.EmptyMessage>
-        )}
-      </S.ThesisList>
+      <S.ThesisTable>
+        <thead>
+          <S.Tr>
+            <S.Th>번호</S.Th>
+            <S.Th></S.Th>
+            <S.Th>논문 제목</S.Th>
+            <S.Th>저자</S.Th>
+            <S.Th>저널</S.Th>
+            <S.Th>발행일</S.Th>
+            <S.Th>출판 정보</S.Th>
+          </S.Tr>
+        </thead>
+        <tbody>
+          {theses.length > 0 ? (
+            theses.map((thesis, index) => (
+              <tr key={thesis.id}>
+                <S.Td>{index + 1}</S.Td>
+                <S.Td>
+                  <S.ThesisThumbnail
+                    src={thesis.thesisImage || '/paperImage.png'}
+                    alt="논문 썸네일"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/paperImage.png';
+                    }}
+                  />
+                </S.Td>
+                <S.TitleTd
+                  onClick={() => navigate(`/news/thesis/${thesis.id}`)}
+                >
+                  {thesis.content}
+                </S.TitleTd>
+                <S.Td style={{ wordWrap: 'break-word' }}>{thesis.author}</S.Td>
+                <S.Td>{thesis.journal}</S.Td>
+                <S.Td>{formatDate(thesis.publicationDate)}</S.Td>
+                <S.Td>
+                  {thesis.publicationCollection &&
+                    `${thesis.publicationCollection}, ${thesis.publicationIssue ? `No. ${thesis.publicationIssue}` : ''} ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
+                </S.Td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7}>등록된 논문이 없습니다.</td>
+            </tr>
+          )}
+        </tbody>
+      </S.ThesisTable>
 
       {totalPages > 1 && (
         <S.Pagination>
