@@ -37,7 +37,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({ videos }) => {
       timeoutRef.current = setTimeout(() => {
         setCurrentIndex(newIndex);
         setExitingIndex(null);
-      }, 600); // Half of the animation duration
+      }, 1200); // Half of the animation duration
     },
     [currentIndex],
   );
