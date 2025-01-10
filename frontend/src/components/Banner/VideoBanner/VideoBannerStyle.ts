@@ -22,27 +22,36 @@ export const SlideTrack = styled.div<{ transform: string }>`
 
 export const Controls = styled.div`
   position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
   z-index: 3;
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
+  padding: 0 2rem;
 `;
 
 export const ControlButton = styled.button`
   background: rgba(255, 255, 255, 0.2);
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 
   &:hover {
     background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
   }
 `;
