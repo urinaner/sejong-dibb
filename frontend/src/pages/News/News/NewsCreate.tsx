@@ -9,7 +9,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
 import { Modal, useModal } from '../../../components/Modal';
-import { AlertTriangle, CheckCircle, PlusCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Container,
   ContentWrapper,
@@ -20,7 +20,6 @@ import {
   Input,
   QuillWrapper,
   ButtonGroup,
-  CreateButton,
   CancelButton,
   SubmitButton,
   FileInputLabel,
@@ -48,7 +47,6 @@ const NewsCreate: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
-  const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
   const modules = useMemo(
@@ -132,47 +130,40 @@ const NewsCreate: React.FC = () => {
     try {
       setIsSubmitting(true);
 
+      const formData = new FormData();
       const newsReqDto: NewsReqDto = {
         title: title.trim(),
         content: content.trim(),
-        createDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식
-        link: link.trim() || undefined,
+        createDate: new Date().toISOString().split('T')[0],
       };
 
-      // 이미지 파일이 있는 경우
+      if (link.trim()) {
+        newsReqDto.link = link.trim();
+      }
+
+      formData.append(
+        'newsReqDto',
+        new Blob([JSON.stringify(newsReqDto)], {
+          type: 'application/json',
+        }),
+      );
+
       if (imageFile) {
-        const formData = new FormData();
-        formData.append(
-          'newsReqDto',
-          new Blob([JSON.stringify(newsReqDto)], {
-            type: 'application/json',
-          }),
-        );
-        formData.append('news_image', imageFile);
+        formData.append('newsImage', imageFile);
+      }
 
-        const response = await axios.post(
-          apiEndpoints.news.create.url,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+      const response = await axios.post(
+        apiEndpoints.news.create.url,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-        );
+        },
+      );
 
-        if (response.status === 200) {
-          showSuccessModal(response.data);
-        }
-      } else {
-        // 이미지 파일이 없는 경우
-        const response = await axios.post(
-          apiEndpoints.news.create.url,
-          newsReqDto,
-        );
-
-        if (response.status === 200) {
-          showSuccessModal(response.data);
-        }
+      if (response.status === 200) {
+        showSuccessModal(response.data);
       }
     } catch (error: any) {
       console.error('Error creating news:', error);
