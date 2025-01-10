@@ -176,8 +176,8 @@ function AppContent() {
         <AnimatePresence mode="wait">
           {isHomePage ? (
             <MainBanner
-              videoSrc={MAIN_CONTENT.videoSrc}
-              title={MAIN_CONTENT.title}
+              videos={MAIN_CONTENT.videos}
+              autoPlayInterval={5000}
               logo={MAIN_CONTENT.logoSrc}
             />
           ) : (

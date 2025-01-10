@@ -1,3 +1,5 @@
+import { Video } from '../components/Banner/VideoBanner/types';
+
 export interface PageContent {
   title: string;
   description: string;
@@ -10,17 +12,11 @@ export interface BannerBaseProps {
   overlayOpacity?: number;
 }
 
-export interface VideoContent {
-  id: string;
-  src: string;
-  title: string[];
-}
-
 export interface MainBannerProps extends BannerBaseProps {
-  videoSrc: string;
+  videoSrc?: string;
+  title?: string;
   logo?: string;
-  title: string;
-  videos?: VideoContent[];
+  videos?: Video[];
   autoPlayInterval?: number;
 }
 

@@ -2,8 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { MainBannerProps } from '../../../types/banner';
+import { useVideoBanner } from '../VideoBanner/hooks/useVideoBanner';
+import SlideControls from '../VideoBanner/SlideControls';
+import { Video } from '../VideoBanner/types';
 
-const VideoContainer = styled.div`
+const Container = styled.div`
   position: relative;
   width: 100%;
   height: 95vh;
@@ -15,7 +18,20 @@ const VideoContainer = styled.div`
   }
 `;
 
-const Video = styled.video`
+const SlideTrack = styled.div<{ transform: string }>`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transform: ${(props) => props.transform};
+  transition: transform 0.5s ease-in-out;
+`;
+
+const VideoContainer = styled.div`
+  flex: 0 0 100%;
+  position: relative;
+`;
+
+const VideoElement = styled.video`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -56,7 +72,30 @@ const Title = styled.h1`
   }
 `;
 
-const MainBanner: React.FC<MainBannerProps> = ({ videoSrc }) => {
+const MainBanner: React.FC<MainBannerProps> = ({
+  videos = [],
+  videoSrc,
+  title,
+  autoPlayInterval = 5000,
+  logo,
+}) => {
+  const videoArray: Video[] =
+    videos.length > 0
+      ? videos
+      : videoSrc && title
+        ? [
+            {
+              id: '1',
+              src: videoSrc,
+              title: title.split('\n'),
+            },
+          ]
+        : [];
+
+  const { currentIndex, isPaused, setIsPaused, handleNext, handlePrev } =
+    useVideoBanner(videoArray, autoPlayInterval);
+
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -83,17 +122,35 @@ const MainBanner: React.FC<MainBannerProps> = ({ videoSrc }) => {
     },
   };
 
+  if (videoArray.length === 0) return null;
+
   return (
-    <VideoContainer>
-      <Video autoPlay loop muted playsInline src={videoSrc} />
-      <Content variants={containerVariants} initial="hidden" animate="visible">
-        <TitleContainer variants={itemVariants}>
-          <Title>integrative</Title>
-          <Title>bioscience and</Title>
-          <Title>biotechnology</Title>
-        </TitleContainer>
-      </Content>
-    </VideoContainer>
+    <Container
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <SlideTrack transform={`translateX(-${currentIndex * 100}%)`}>
+        {videoArray.map((video) => (
+          <VideoContainer key={video.id}>
+            <VideoElement autoPlay loop muted playsInline src={video.src} />
+            <Content
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <TitleContainer variants={itemVariants}>
+                {video.title.map((line, index) => (
+                  <Title key={index}>{line}</Title>
+                ))}
+              </TitleContainer>
+            </Content>
+          </VideoContainer>
+        ))}
+      </SlideTrack>
+      {videoArray.length > 1 && (
+        <SlideControls onPrev={handlePrev} onNext={handleNext} />
+      )}
+    </Container>
   );
 };
 
