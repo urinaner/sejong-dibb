@@ -131,9 +131,14 @@ const NewsCreate: React.FC = () => {
       setIsSubmitting(true);
 
       const formData = new FormData();
+      // HTML 태그 제거
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = content;
+      const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
+
       const newsReqDto: NewsReqDto = {
         title: title.trim(),
-        content: content.trim(),
+        content: cleanContent.trim(),
         createDate: new Date().toISOString().split('T')[0],
       };
 
