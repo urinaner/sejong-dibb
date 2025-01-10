@@ -31,15 +31,15 @@ export const navItems = [
     title: '바융소식',
     path: '/news',
     menuItems: [
-      { name: '학부 뉴스', path: '/news' },
-      { name: '공지 사항', path: '/news/noticeboard' },
+      { name: '학부뉴스', path: '/news' },
+      { name: '공지사항', path: '/news/noticeboard' },
       { name: '세미나', path: '/news/seminar' },
-      { name: '연구 논문', path: '/news/thesis' },
+      { name: '연구논문', path: '/news/thesis' },
     ],
   },
   {
-    title: '세미나실 예약',
+    title: '⏱ 서비스',
     path: '/seminar-rooms/reservation',
-    menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/reservation' }],
+    menuItems: [{ name: '예약센터', path: '/seminar-rooms/reservation' }],
   },
 ];
