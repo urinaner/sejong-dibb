@@ -9,7 +9,7 @@ import { Video } from '../VideoBanner/types';
 const Container = styled.div`
   position: relative;
   width: 100%;
-  height: 95vh;
+  height: 60vh;
   overflow: hidden;
   background-color: #000;
 
@@ -76,7 +76,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
   videos = [],
   videoSrc,
   title,
-  autoPlayInterval = 5000,
+  autoPlayInterval = 10000,
   logo,
 }) => {
   const videoArray: Video[] =
