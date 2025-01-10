@@ -3,7 +3,6 @@ import React, {
   useRef,
   useMemo,
   useCallback,
-  useContext,
   useEffect,
 } from 'react';
 import ReactQuill from 'react-quill-new';
@@ -27,9 +26,8 @@ import {
   FileInput,
   FileList,
   FileItem,
-} from './NewsCreateStyle'; // 기존 스타일 재사용
+} from './NewsCreateStyle';
 import { apiEndpoints } from '../../../config/apiConfig';
-import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
 
 interface NewsData {
@@ -40,6 +38,14 @@ interface NewsData {
   createDate: string;
   link: string;
   image: string;
+}
+
+interface NewsReqDto {
+  title: string;
+  content: string;
+  createDate: string;
+  link?: string;
+  image?: string;
 }
 
 const NewsEdit: React.FC = () => {
@@ -53,7 +59,6 @@ const NewsEdit: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
-  const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
   useEffect(() => {
@@ -166,53 +171,52 @@ const NewsEdit: React.FC = () => {
       return;
     }
 
+    if (!newsId) {
+      showErrorModal('오류', '뉴스 ID가 없습니다.');
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
-      const newsReqDto = {
+      const formData = new FormData();
+      const newsReqDto: NewsReqDto = {
         title: title.trim(),
         content: content.trim(),
         createDate: new Date().toISOString().split('T')[0],
-        link: link.trim() || undefined,
-        image: currentImage,
       };
 
-      if (!newsId) {
-        throw new Error('뉴스 ID가 없습니다.');
+      if (link.trim()) {
+        newsReqDto.link = link.trim();
       }
 
+      if (currentImage) {
+        newsReqDto.image = currentImage;
+      }
+
+      formData.append(
+        'newsReqDto',
+        new Blob([JSON.stringify(newsReqDto)], {
+          type: 'application/json',
+        }),
+      );
+
       if (imageFile) {
-        const formData = new FormData();
-        formData.append(
-          'newsReqDto',
-          new Blob([JSON.stringify(newsReqDto)], {
-            type: 'application/json',
-          }),
-        );
-        formData.append('news_image', imageFile);
+        formData.append('newsImage', imageFile);
+      }
 
-        const response = await axios.put(
-          apiEndpoints.news.update.url(newsId),
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+      const response = await axios.post(
+        apiEndpoints.news.update.url(newsId),
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-        );
+        },
+      );
 
-        if (response.status === 200) {
-          showSuccessModal();
-        }
-      } else {
-        const response = await axios.post(
-          apiEndpoints.news.update.url(newsId),
-          newsReqDto,
-        );
-
-        if (response.status === 200) {
-          showSuccessModal();
-        }
+      if (response.status === 200) {
+        showSuccessModal();
       }
     } catch (error: any) {
       console.error('Error updating news:', error);
