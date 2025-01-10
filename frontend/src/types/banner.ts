@@ -10,20 +10,20 @@ export interface BannerBaseProps {
   overlayOpacity?: number;
 }
 
+export interface VideoContent {
+  id: string;
+  src: string;
+  title: string[];
+}
+
 export interface MainBannerProps extends BannerBaseProps {
   videoSrc: string;
   logo?: string;
   title: string;
+  videos?: VideoContent[];
+  autoPlayInterval?: number;
 }
 
 export interface PageBannerProps extends BannerBaseProps {
-  content: PageContent;
-}
-export interface MainBannerProps {
-  videoSrc: string;
-  title: string;
-  logo?: string;
-}
-export interface PageBannerProps {
   content: PageContent;
 }
