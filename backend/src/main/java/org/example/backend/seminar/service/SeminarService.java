@@ -39,6 +39,7 @@ public class SeminarService {
         return SeminarResDto.of(seminar);
     }
 
+    @Transactional
     public void deleteSeminar(Long seminarId) {
         Seminar seminar = findSeminarById(seminarId);
         seminarRepository.delete(seminar);
