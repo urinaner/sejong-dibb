@@ -14,6 +14,7 @@ export const MainContainer = styled.div`
   }
 `;
 
+// 연구논문
 export const PaperContainer = styled.section`
   display: flex;
   flex-direction: column;
@@ -21,14 +22,13 @@ export const PaperContainer = styled.section`
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 20px;
 `;
 
 export const TMP = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 40px;
+  /* gap: 0px; */
   width: 100%;
 
   ${media.tablet} {
@@ -64,7 +64,8 @@ export const Paper = styled.article`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 320px;
+  width: 18rem;
+  margin: 1rem;
   padding: 24px;
   border: solid 1px #d4d2e3;
   border-radius: 24px;
@@ -75,11 +76,21 @@ export const Paper = styled.article`
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
+  /* 첫 번째 Paper 요소 */
+  &:first-child {
+    margin-left: 0;
+  }
+
+  /* 마지막 Paper 요소 */
+  &:last-child {
+    margin-right: 0;
+  }
+
   img {
-    width: 272px;
+    width: 15rem;
     height: auto;
-    margin-bottom: 16px;
-    border-radius: 12px;
+    margin-bottom: 1rem;
+    border-radius: 0.75rem;
 
     ${media.tablet} {
       width: 220px;
@@ -91,7 +102,7 @@ export const Paper = styled.article`
   }
 
   p {
-    width: 272px;
+    width: 15rem;
     margin: 0;
     margin-bottom: 8px;
     font-family: 'Noto Sans KR';
@@ -170,12 +181,9 @@ export const ContentWrapper = styled.section`
 `;
 
 export const AnnouncementAndSeminar = styled.section`
-  flex: 45%;
-  width: 90%;
-  margin-right: 100px;
+  width: 100%;
   font-family: 'Noto Sans KR';
   display: flex;
-  flex-direction: column;
 
   ${media.tablet} {
     margin-right: 40px;
@@ -188,7 +196,8 @@ export const AnnouncementAndSeminar = styled.section`
 `;
 
 export const AnnouncementContainer = styled.div`
-  flex: 2;
+  flex: 1;
+  margin-right: 2rem;
 
   p {
     font-size: 22px;

@@ -54,7 +54,7 @@ const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
 
 interface Announcement {
   category: string;
-  createDate: string;
+  createdDate: string;
   // file: string;
   id: number;
   title: string;
@@ -140,7 +140,6 @@ function Main(): JSX.Element {
             {papers.map((paper: Paper) => (
               <Paper
                 key={paper.journal}
-                style={{ margin: '20px' }}
                 onClick={() =>
                   window.open(paper.link, '_blank', 'noopener,noreferrer')
                 }
@@ -205,7 +204,7 @@ function Main(): JSX.Element {
                       <img src="/bullet.svg" alt="bullet" />
                       {announcement.title}
                     </span>
-                    <span>{announcement.createDate}</span>
+                    <span>{announcement.createdDate}</span>
                   </AnnouncementItem>
                 ))
               )}
