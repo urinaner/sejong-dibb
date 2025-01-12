@@ -9,7 +9,6 @@ import {
 } from './OrganizationStyle';
 import { Mail, Phone, Clock, MapPin } from 'lucide-react';
 
-// 세종대학교 생명과학대학 좌표
 const center = {
   lat: 37.5509,
   lng: 127.0737,
@@ -20,7 +19,6 @@ const mapContainerStyle = {
   height: '100%',
 };
 
-// API 키가 없을 경우를 대비한 에러 메시지 컴포넌트
 const MapError = () => (
   <div
     style={{
@@ -76,16 +74,12 @@ const Organization = () => {
   return (
     <OrgWrapper>
       <OrgContent>
-        <OrgTitle>세종대학교 바이오융합공학전공 조직도</OrgTitle>
-
         <OrgCard>
           <dl>
             <dt>
               <MapPin size={18} style={{ marginRight: '8px' }} /> 위치
             </dt>
-            <dd>
-              서울특별시 광진구 능동로 209 (군자동) 생명과학대학 통합사무실
-            </dd>
+            <dd>서울특별시 광진구 능동로 209 (군자동) 충무관 103A</dd>
 
             <dt>
               <Phone size={18} style={{ marginRight: '8px' }} /> TEL
@@ -100,7 +94,25 @@ const Organization = () => {
             <dt>
               <Clock size={18} style={{ marginRight: '8px' }} /> 근무시간
             </dt>
-            <dd>09:00 - 17:30 (점심시간 12:00 - 13:00 / 주말,공휴일 휴무)</dd>
+            <dd>
+              <div className="time-period">
+                <div className="period-label">학기 중</div>
+                09:00 - 17:30 (점심시간 12:00 - 13:00)
+              </div>
+              <div className="time-period">
+                <div className="period-label">방학 중</div>
+                10:00 - 16:30 (점심시간 12:00 - 13:00)
+              </div>
+              <div
+                style={{
+                  marginTop: '8px',
+                  fontSize: '14px',
+                  color: '#666',
+                }}
+              >
+                * 주말 및 공휴일 휴무
+              </div>
+            </dd>
           </dl>
         </OrgCard>
 
@@ -111,4 +123,5 @@ const Organization = () => {
     </OrgWrapper>
   );
 };
+
 export default Organization;
