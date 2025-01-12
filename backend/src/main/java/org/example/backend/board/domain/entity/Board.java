@@ -44,6 +44,7 @@ public class Board extends BaseEntity {
     @Column(name = "category")
     private Category category;
 
+
     @Builder
     private Board(String title, String content, String writer,
                   List<String> fileList, Category category) {
