@@ -6,9 +6,7 @@ import {
   AnnouncementAndSeminar,
   AnnouncementContainer,
   SeminarContainer,
-  ShortcutContainer,
   Paper,
-  Shortcut,
   ContentWrapper,
   TabContainer,
   TabButton,
@@ -56,46 +54,13 @@ const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
 
 interface Announcement {
   category: string;
-  createDate: string;
+  createdDate: string;
   // file: string;
   id: number;
   title: string;
   viewCount: number;
   writer: string;
 }
-
-const links = [
-  {
-    icon: '/homeIcon.svg',
-    title: '세종대학교 홈',
-    link: 'http://sejong.ac.kr/',
-  },
-  {
-    icon: '/desktopIcon.svg',
-    title: '교내 공지사항',
-    link: 'http://sejong.ac.kr/community/index.html',
-  },
-  {
-    icon: '/calendarIcon.svg',
-    title: '학사일정',
-    link: 'http://www.sejong.ac.kr/unilife/program_01.html?menu_id=1.1',
-  },
-  {
-    icon: '/faxIcon.svg',
-    title: '입시홈페이지',
-    link: 'https://ipsi.sejong.ac.kr/',
-  },
-  {
-    icon: '/webIcon.svg',
-    title: '일반대학원',
-    link: 'https://graduate.sejong.ac.kr/graduate/index.do',
-  },
-  {
-    icon: '/walletIcon.svg',
-    title: '교내 양식',
-    link: 'https://board.sejong.ac.kr/boardlist.do?bbsConfigFK=692',
-  },
-];
 
 function Main(): JSX.Element {
   const navigate = useNavigate();
@@ -168,31 +133,37 @@ function Main(): JSX.Element {
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
-        <TMP>
-          {papers.map((paper: Paper) => (
-            <Paper
-              key={paper.journal}
-              style={{ margin: '20px' }}
-              onClick={() =>
-                window.open(paper.link, '_blank', 'noopener,noreferrer')
-              }
-              role="button"
-              tabIndex={0}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  window.open(paper.link, '_blank', 'noopener,noreferrer');
+        {papers.length === 0 ? (
+          <p>논문이 없습니다.</p>
+        ) : (
+          <TMP>
+            {papers.map((paper: Paper) => (
+              <Paper
+                key={paper.journal}
+                onClick={() =>
+                  window.open(paper.link, '_blank', 'noopener,noreferrer')
                 }
-              }}
-            >
-              <img src={paper.thesisImage} alt={`${paper.title} 논문 이미지`} />
-              <p>{paper.title}</p>
-              <p>{paper.author}</p>
-              <p>
-                {paper.journal} ({paper.publicationDate})
-              </p>
-            </Paper>
-          ))}
-        </TMP>
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    window.open(paper.link, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+              >
+                <img
+                  src={paper.thesisImage}
+                  alt={`${paper.title} 논문 이미지`}
+                />
+                <p>{paper.title}</p>
+                <p>{paper.author}</p>
+                <p>
+                  {paper.journal} ({paper.publicationDate})
+                </p>
+              </Paper>
+            ))}
+          </TMP>
+        )}
       </PaperContainer>
 
       <ContentWrapper>
@@ -233,7 +204,7 @@ function Main(): JSX.Element {
                       <img src="/bullet.svg" alt="bullet" />
                       {announcement.title}
                     </span>
-                    <span>{announcement.createDate}</span>
+                    <span>{announcement.createdDate}</span>
                   </AnnouncementItem>
                 ))
               )}
@@ -262,23 +233,6 @@ function Main(): JSX.Element {
             </SeminarRoomReservation>
           </SeminarContainer>
         </AnnouncementAndSeminar>
-
-        {/* 바로가기 */}
-        <ShortcutContainer>
-          {links.map((item) => (
-            <a
-              href={item.link}
-              key={item.title}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Shortcut key={item.title}>
-                <img src={item.icon} />
-                {item.title}
-              </Shortcut>
-            </a>
-          ))}
-        </ShortcutContainer>
       </ContentWrapper>
     </MainContainer>
   );
