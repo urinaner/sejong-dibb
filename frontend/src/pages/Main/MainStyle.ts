@@ -41,7 +41,7 @@ export const TMP = styled.div`
 `;
 
 export const Title = styled.div`
-  margin: 50px 0 40px 0;
+  margin: 2rem 0 2rem 0;
   font-size: 30px;
   font-weight: 700;
   color: #5d5a88;

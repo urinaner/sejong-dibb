@@ -130,42 +130,6 @@ function Main(): JSX.Element {
 
   return (
     <MainContainer>
-      {/* 연구논문 */}
-      <PaperContainer>
-        <Title>연구 논문</Title>
-        {papers.length === 0 ? (
-          <p>논문이 없습니다.</p>
-        ) : (
-          <TMP>
-            {papers.map((paper: Paper) => (
-              <Paper
-                key={paper.journal}
-                onClick={() =>
-                  window.open(paper.link, '_blank', 'noopener,noreferrer')
-                }
-                role="button"
-                tabIndex={0}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    window.open(paper.link, '_blank', 'noopener,noreferrer');
-                  }
-                }}
-              >
-                <img
-                  src={paper.thesisImage}
-                  alt={`${paper.title} 논문 이미지`}
-                />
-                <p>{paper.title}</p>
-                <p>{paper.author}</p>
-                <p>
-                  {paper.journal} ({paper.publicationDate})
-                </p>
-              </Paper>
-            ))}
-          </TMP>
-        )}
-      </PaperContainer>
-
       <ContentWrapper>
         {/* 공지사항, 세미나 */}
         <AnnouncementAndSeminar>
@@ -234,6 +198,41 @@ function Main(): JSX.Element {
           </SeminarContainer>
         </AnnouncementAndSeminar>
       </ContentWrapper>
+      {/* 연구논문 */}
+      <PaperContainer>
+        <Title>연구 논문</Title>
+        {papers.length === 0 ? (
+          <p>논문이 없습니다.</p>
+        ) : (
+          <TMP>
+            {papers.map((paper: Paper) => (
+              <Paper
+                key={paper.journal}
+                onClick={() =>
+                  window.open(paper.link, '_blank', 'noopener,noreferrer')
+                }
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    window.open(paper.link, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+              >
+                <img
+                  src={paper.thesisImage}
+                  alt={`${paper.title} 논문 이미지`}
+                />
+                <p>{paper.title}</p>
+                <p>{paper.author}</p>
+                <p>
+                  {paper.journal} ({paper.publicationDate})
+                </p>
+              </Paper>
+            ))}
+          </TMP>
+        )}
+      </PaperContainer>
     </MainContainer>
   );
 }
