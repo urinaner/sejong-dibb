@@ -6,10 +6,23 @@ const media = {
   mobile: '@media(max-width: 768px)',
   tablet: '@media(max-width: 1024px)',
 };
+
 export const MainContainer = styled.div`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 16px;
+
+  ${media.tablet} {
+    max-width: 90%;
+  }
+
+  ${media.mobile} {
+    max-width: 100%;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+  }
   padding: 0 20px;
   overflow-x: hidden;
   display: flex;
@@ -24,20 +37,43 @@ export const PaperContainer = styled.section`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 20px;
+
+  ${media.mobile} {
+    padding: 16px;
+  }
+`;
+export const NewsSection = styled.section`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+
+  ${media.mobile} {
+    padding: 20px;
+  }
 `;
 
 export const TMP = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 24px;
   width: 100%;
+
+  ${media.tablet} {
+    gap: 20px;
+  }
+
+  ${media.mobile} {
+    gap: 16px;
+  }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
   padding: 0; // 패딩 조정
 `;
+
 export const Title = styled.h2`
   margin: 40px 0 32px 0;
   font-size: 28px;
@@ -71,16 +107,21 @@ export const NewsTitle = styled.h2`
     margin: 0 0 12px 0;
   }
 `;
+
 export const Paper = styled.article`
+  cursor: pointer;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 320px;
-  padding: 24px;
+  width: 280px;
+  padding: 20px;
   border: solid 1px #d4d2e3;
-  border-radius: 24px;
+  border-radius: 16px;
   background-color: white;
 
   &:hover {
@@ -89,13 +130,13 @@ export const Paper = styled.article`
   }
 
   img {
-    width: 272px;
+    width: 240px;
     height: auto;
     margin-bottom: 16px;
-    border-radius: 12px;
+    border-radius: 8px;
 
     ${media.tablet} {
-      width: 220px;
+      width: 200px;
     }
 
     ${media.mobile} {
@@ -104,71 +145,57 @@ export const Paper = styled.article`
   }
 
   p {
-    width: 272px;
+    width: 100%;
     margin: 0;
     margin-bottom: 8px;
-    font-family: 'Noto Sans KR';
     color: #5d5a88;
     word-break: break-all;
   }
 
   p:nth-of-type(1) {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    height: 54px;
+    height: 48px;
   }
 
   p:nth-of-type(2) {
-    font-size: 16px;
-    font-weight: 500;
-    color: #7a7a7a;
+    font-size: 14px;
   }
 
   p:nth-of-type(3) {
     font-size: 14px;
-    font-weight: 400;
     color: #9e9e9e;
   }
 
   ${media.tablet} {
-    width: calc(50% - 30px);
-    max-width: 280px;
-    padding: 20px;
-
-    p {
-      width: 220px;
-    }
+    width: 240px;
+    padding: 16px;
   }
 
   ${media.mobile} {
-    width: calc(100% - 30px);
-    max-width: 240px;
-    padding: 16px;
-
-    p {
-      width: 160px;
-    }
+    width: 100%;
+    max-width: 200px;
+    padding: 12px;
 
     p:nth-of-type(1) {
-      font-size: 16px;
-      height: 48px;
-    }
-
-    p:nth-of-type(2) {
       font-size: 14px;
+      height: 42px;
     }
 
+    p:nth-of-type(2),
     p:nth-of-type(3) {
       font-size: 12px;
     }
   }
+  padding: 16px;
+  margin: 0; // 마진 제거
 `;
+
 export const ContentWrapper = styled.section`
   display: flex;
   justify-content: space-around;
@@ -192,16 +219,12 @@ export const ContentWrapper = styled.section`
 `;
 
 export const AnnouncementAndSeminar = styled.section`
-  flex: 45%;
-  width: 90%;
-  margin-right: 100px;
-  font-family: 'Noto Sans KR';
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
-
-  ${media.tablet} {
-    margin-right: 40px;
-  }
+  gap: 24px;
 
   ${media.mobile} {
     max-width: 100%;
@@ -210,7 +233,11 @@ export const AnnouncementAndSeminar = styled.section`
 `;
 
 export const AnnouncementContainer = styled.div`
-  flex: 2;
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   > p {
     font-size: 20px;
@@ -302,7 +329,22 @@ export const AnnouncementItem = styled.div`
   }
 
   span:last-of-type {
-    width: 60px;
+    color: #666;
+    white-space: nowrap;
+  }
+
+  ${media.mobile} {
+    padding: 10px 6px;
+
+    span {
+      font-size: 13px;
+    }
+
+    span:first-of-type img {
+      margin-right: 6px;
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
@@ -416,29 +458,21 @@ export const SeminarRoomReservation = styled(Link)`
 `;
 
 export const ShortcutContainer = styled.section`
-  flex: 45%;
   display: grid;
-  justify-items: center;
-  grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, 1fr);
-  gap: 50px 0;
-  padding: 95px 0 95px 0;
+  gap: 24px;
+  padding: 40px 20px;
   background-color: #e9dfda;
+  border-radius: 8px;
 
   a {
-    width: 100%;
     text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Noto Sans KR';
-    font-size: 20px;
-    color: ${token.SEJONG_COLORS.GRAY};
+    color: inherit;
   }
 
   ${media.mobile} {
-    width: 90%;
-    padding: 40px 0;
+    padding: 20px;
+    gap: 16px;
   }
 `;
 
@@ -446,31 +480,33 @@ export const Shortcut = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: fit-content;
+  justify-content: center;
+  padding: 16px;
+  gap: 12px;
+  text-align: center;
+  color: ${token.SEJONG_COLORS.GRAY};
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 
   img {
-    width: 90px;
-    height: auto;
-
-    ${media.tablet} {
-      width: 80px;
-    }
-
-    ${media.mobile} {
-      width: 72px;
-    }
+    width: 48px;
+    height: 48px;
   }
 
   &:hover {
-    background-color: rgba(240, 240, 240, 0.3);
-    cursor: pointer;
-  }
-
-  ${media.tablet} {
-    font-size: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
   }
 
   ${media.mobile} {
-    font-size: 18px;
+    padding: 12px;
+    gap: 8px;
+    font-size: 14px;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
   }
 `;
