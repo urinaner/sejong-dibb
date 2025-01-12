@@ -60,7 +60,10 @@ export const useNoticeBoard = () => {
 
       if (allowedSortFields.includes(state.filters.sort.field)) {
         params.append('sort', state.filters.sort.field);
-        params.append('sortDirection', state.filters.sort.direction);
+        params.append(
+          'sortDirection',
+          state.filters.sort.direction.toUpperCase(),
+        );
       }
 
       const response = await axios.get<ApiResponse>(

@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  AlertTriangle,
-  Search,
-  Calendar,
-  Book,
-  ExternalLink,
-  FileText,
-} from 'lucide-react';
+import { AlertTriangle, Search, ExternalLink } from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../../config/apiConfig';
 import * as S from './PublicationsStyle';
@@ -142,7 +135,7 @@ const Publications: React.FC<PublicationsProps> = ({ professorId }) => {
           value={selectedYear}
           onChange={(e) => setSelectedYear(e.target.value)}
         >
-          <option value="all">전체 년도</option>
+          <option value="all">전체 연도</option>
           {years.slice(1).map((year) => (
             <option key={year} value={year}>
               {year}년
@@ -155,51 +148,60 @@ const Publications: React.FC<PublicationsProps> = ({ professorId }) => {
         {filteredTheses.length === 0 ? (
           <S.EmptyMessage>검색 결과가 없습니다.</S.EmptyMessage>
         ) : (
-          filteredTheses.map((thesis, index) => (
-            <S.ThesisCard key={index}>
-              <S.ThesisHeader>
-                <S.Content>{thesis.content}</S.Content>
-                {thesis.link && (
-                  <S.LinkButton
-                    onClick={() =>
-                      window.open(thesis.link, '_blank', 'noopener noreferrer')
-                    }
-                    aria-label="논문 링크 열기"
-                  >
-                    <ExternalLink size={18} />
-                  </S.LinkButton>
-                )}
-              </S.ThesisHeader>
-
-              <S.ThesisInfo>
-                <S.InfoItem>
-                  <Book size={16} />
-                  <span>{thesis.author}</span>
-                </S.InfoItem>
-                <S.InfoItem>
-                  <FileText size={16} />
-                  <span>{thesis.journal}</span>
-                </S.InfoItem>
-                <S.InfoItem>
-                  <Calendar size={16} />
-                  <span>{new Date(thesis.publicationDate).getFullYear()}</span>
-                </S.InfoItem>
-              </S.ThesisInfo>
-
-              {(thesis.publicationCollection ||
-                thesis.publicationIssue ||
-                thesis.publicationPage) && (
-                <S.ThesisDetails>
-                  {`Vol. ${thesis.publicationCollection || '-'}${
-                    thesis.publicationIssue
-                      ? `, No. ${thesis.publicationIssue}`
-                      : ''
-                  }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
-                  {thesis.issn && ` (ISSN: ${thesis.issn})`}
-                </S.ThesisDetails>
-              )}
-            </S.ThesisCard>
-          ))
+          <S.Table>
+            <thead>
+              <tr>
+                <S.Th>번호</S.Th>
+                <S.Th>논문 제목</S.Th>
+                <S.Th>저자</S.Th>
+                <S.Th>학술지</S.Th>
+                <S.Th>출판 연도</S.Th>
+                <S.Th>출판 정보</S.Th>
+                <S.Th>바로가기</S.Th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTheses.map((thesis, index) => (
+                <tr key={index}>
+                  <S.Td>{index + 1}</S.Td>
+                  <S.Td>{thesis.content}</S.Td>
+                  <S.Td>{thesis.author}</S.Td>
+                  <S.Td>{thesis.journal}</S.Td>
+                  <S.Td>{new Date(thesis.publicationDate).getFullYear()}</S.Td>
+                  <S.Td>
+                    {thesis.publicationCollection ||
+                    thesis.publicationIssue ||
+                    thesis.publicationPage ? (
+                      <span>
+                        {`Vol. ${thesis.publicationCollection || '-'}${
+                          thesis.publicationIssue
+                            ? `, No. ${thesis.publicationIssue}`
+                            : ''
+                        }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
+                        {thesis.issn && ` (ISSN: ${thesis.issn})`}
+                      </span>
+                    ) : (
+                      '-'
+                    )}
+                  </S.Td>
+                  <S.Td>
+                    <S.LinkButton
+                      onClick={() =>
+                        window.open(
+                          thesis.link,
+                          '_blank',
+                          'noopener noreferrer',
+                        )
+                      }
+                      aria-label="논문 링크 열기"
+                    >
+                      <ExternalLink size={18} />
+                    </S.LinkButton>
+                  </S.Td>
+                </tr>
+              ))}
+            </tbody>
+          </S.Table>
         )}
       </S.ThesisList>
 

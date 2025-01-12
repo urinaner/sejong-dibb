@@ -320,3 +320,64 @@ export const StatusMessage = styled.div<{ type: 'success' | 'error' | 'info' }>`
     }
   }}
 `;
+
+export const FileListHeader = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+`;
+
+export const FileList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+export const FileItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f7fafc;
+  }
+`;
+
+export const FileIcon = styled.span`
+  font-size: 1.2rem;
+`;
+
+export const FileName = styled.span`
+  flex: 1;
+  font-size: 0.95rem;
+  color: #4a5568;
+  word-break: break-all;
+`;
+
+export const FileDownloadButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #3182ce;
+  background-color: transparent;
+  border: 1px solid #3182ce;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #3182ce;
+    color: white;
+  }
+
+  ${media.mobile} {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.85rem;
+  }
+`;

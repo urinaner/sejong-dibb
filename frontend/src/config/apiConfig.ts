@@ -41,6 +41,16 @@ interface ThesisEndpoint {
   getFormData: (thesisReqDto: ThesisReqDto, file?: File | null) => FormData;
 }
 
+export interface SeminarDto {
+  name: string;
+  writer: string;
+  place: string;
+  startDate: string;
+  endDate: string;
+  speaker: string;
+  company: string;
+}
+
 export const apiEndpoints = {
   thesis: {
     list: `${API_URL}/api/thesis`,
@@ -200,6 +210,7 @@ export const apiEndpoints = {
   },
   board: {
     base: `${API_URL}/api/board`,
+    download: `${API_URL}/api/board/download`,
     listWithPage: (page: number, size: number) =>
       `${API_URL}/api/board?page=${page}&size=${size}`,
     create: {
@@ -234,6 +245,26 @@ export const apiEndpoints = {
     delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
     getByCategory: (category: string, page: number, size: number) =>
       `${API_URL}/api/board/category/${category}?page=${page}&size=${size}`,
+  },
+
+  seminar: {
+    list: `${API_URL}/api/seminar`,
+    listWithPage: (page: number, size: number, sortDirection?: string) => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      });
+      if (sortDirection) {
+        params.append('sortDirection', sortDirection);
+      }
+      return `${API_URL}/api/seminar?${params.toString()}`;
+    },
+    get: (seminarId: string | number) => `${API_URL}/api/seminar/${seminarId}`,
+    create: `${API_URL}/api/seminar`,
+    update: (seminarId: string | number) =>
+      `${API_URL}/api/seminar/${seminarId}`,
+    delete: (seminarId: string | number) =>
+      `${API_URL}/api/seminar/${seminarId}`,
   },
 };
 

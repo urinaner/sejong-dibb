@@ -173,7 +173,7 @@ const NoticeCreate: React.FC = () => {
           title: title.trim(),
           content: content.trim(),
           writer: auth.user || 'admin',
-          createDate: currentDate,
+          createdDate: currentDate,
           category: category,
           departmentId: 1,
         }),
@@ -188,7 +188,7 @@ const NoticeCreate: React.FC = () => {
         formData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         },
       );
