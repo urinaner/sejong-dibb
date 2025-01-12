@@ -268,7 +268,8 @@ export const AnnouncementItem = styled.div`
   }
 
   span:last-of-type {
-    width: 60px;
+    /* width: 60px; */
+    width: fit-content;
   }
 `;
 
