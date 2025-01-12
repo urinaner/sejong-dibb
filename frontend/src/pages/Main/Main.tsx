@@ -10,7 +10,6 @@ import {
   AnnouncementContainer,
   SeminarContainer,
   ShortcutContainer,
-  Paper,
   Shortcut,
   ContentWrapper,
   TabContainer,
