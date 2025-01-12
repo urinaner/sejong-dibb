@@ -4,21 +4,16 @@ import static org.example.backend.reservation.exception.ReservationExceptionType
 import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.common.utils.TimeParsingUtils;
-import org.example.backend.reservation.domain.ReservationPurpose;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
 import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.repository.ReservationRepository;
-import org.example.backend.user.domain.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -32,12 +27,12 @@ public class ReservationService {
     private final RoomRepository roomRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationReqDto reqDto, User user) {
+    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto) {
         Room room = getSeminarRoomById(seminarRoomId);
 
         validateReservationOverlap(reqDto, seminarRoomId);
 
-        Reservation reservation = Reservation.of(reqDto, room, user);
+        Reservation reservation = Reservation.of(reqDto, room);
         reservationRepository.save(reservation);
         return List.of(ReservationResDto.of(reservation));
 
@@ -77,16 +72,21 @@ public class ReservationService {
 
 
     @Transactional
-    public void deleteReservation(Long id) {
+    public void deleteReservation(Long id, String password) {
         Reservation reservation = getReservationById(id);
+        System.out.println(reservation.getPassword());
+        if (!reservation.isPasswordMatch(password)) {
+            throw new ReservationException(NOT_VALID_RESERVATION_PASSWORD);
+        }
+
         reservationRepository.delete(reservation);
     }
 
-    private void validateReservationOverlap(ReservationReqDto reqDto, Long seminarRoomId) {
+    private void validateReservationOverlap(ReservationCreateDto reqDto, Long seminarRoomId) {
         boolean hasReservationConflict = reservationRepository.existsByTimePeriod(
                 seminarRoomId,
-                TimeParsingUtils.formatterLocalDateTime(reqDto.getStartTime()),
-                TimeParsingUtils.formatterLocalDateTime(reqDto.getEndTime())
+                reqDto.getStartTime(),
+                reqDto.getEndTime()
         );
 
         if (hasReservationConflict) {

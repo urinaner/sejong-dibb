@@ -1,11 +1,10 @@
 package org.example.backend.reservation.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.common.utils.TimeParsingUtils;
 import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.ReservationPurpose;
 
@@ -13,37 +12,39 @@ import org.example.backend.reservation.domain.ReservationPurpose;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationResDto {
     private Long id;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private String startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private String endTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime endTime;
     private ReservationPurpose purpose;
     private String etc;
     private Long roomId;
-    private Long userId;
+    private String userName;
+    private String password;
 
-    @Builder
-    private ReservationResDto(Long id, String startTime, String endTime,
-                              ReservationPurpose purpose, String etc,
-                              Long roomId, Long userId) {
+    public ReservationResDto(Long id, LocalDateTime startTime, LocalDateTime endTime,
+                             ReservationPurpose purpose, String etc,
+                             Long roomId, String userName, String password) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.roomId = roomId;
-        this.userId = userId;
+        this.userName = userName;
+        this.password = password;
     }
 
     public static ReservationResDto of(Reservation reservation) {
-        return ReservationResDto.builder()
-                .id(reservation.getId())
-                .startTime(TimeParsingUtils.formatterString(reservation.getStartTime()))
-                .endTime(TimeParsingUtils.formatterString(reservation.getEndTime()))
-                .purpose(reservation.getPurpose())
-                .etc(reservation.getEtc())
-                .roomId(reservation.getRoom().getId())
-                .userId(reservation.getUser().getId())
-                .build();
+        return new ReservationResDto(
+                reservation.getId(),
+                reservation.getStartTime(),
+                reservation.getEndTime(),
+                reservation.getPurpose(),
+                reservation.getEtc(),
+                reservation.getRoom().getId(),
+                reservation.getUsername(),
+                reservation.getPassword()
+        );
     }
 }
