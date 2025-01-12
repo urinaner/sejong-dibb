@@ -15,8 +15,6 @@ FROM department;
 DELETE
 FROM admin;
 DELETE
-FROM users;
-DELETE
 FROM news;
 
 
