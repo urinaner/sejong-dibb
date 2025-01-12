@@ -4,6 +4,8 @@ import newsImg from '../assets/images/pages/news.jpg';
 import aboutImg from '../assets/images/pages/about.jpg';
 import mainVideo from '../assets/videos/main.mp4';
 import sejongIcon from '../assets/images/sejong-icon.svg';
+import mainVideo1 from '../assets/videos/main.mp4';
+import mainVideo2 from '../assets/videos/main_2.mp4';
 
 export const PAGE_CONTENTS = {
   about: {
@@ -68,7 +70,7 @@ export const PAGE_CONTENTS = {
     },
   },
   news: {
-    title: '바융소식',
+    title: '학부 뉴스',
     description: '바이오융합공학전공의 최신 소식과 연구 성과를 전달합니다',
     image: newsImg,
     path: '/news',
@@ -110,13 +112,31 @@ export const PAGE_CONTENTS = {
     },
   },
 } as const;
+export interface MainContent {
+  title: string;
+  videos: {
+    id: string;
+    src: string;
+    title: string[];
+  }[];
+  logoSrc?: string;
+}
 
-export const MAIN_CONTENT = {
-  videoSrc: mainVideo,
-  title: '세종대학교 바이오융합공학전공',
-  logoSrc: sejongIcon,
-} as const;
-
+export const MAIN_CONTENT: MainContent = {
+  title: 'integrative\n' + 'bioscience and\n' + 'biotechnology',
+  videos: [
+    {
+      id: 'video1',
+      src: mainVideo1,
+      title: ['integrative', 'bioscience', 'biotechnology'],
+    },
+    {
+      id: 'video2',
+      src: mainVideo2,
+      title: ['integrative', 'bioscience', 'biotechnology'],
+    },
+  ],
+};
 export type PageContent = {
   title: string;
   description: string;

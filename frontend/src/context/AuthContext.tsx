@@ -202,7 +202,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       setAuthState(null);
-      window.location.href = '/admin/signin';
+      window.location.href = '/signin';
     }
   }, []);
 

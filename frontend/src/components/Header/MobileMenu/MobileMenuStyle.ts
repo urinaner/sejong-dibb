@@ -29,10 +29,10 @@ export const MobileMenuWrapper = styled.div<{ isOpen: boolean }>`
   @media (max-width: 768px) {
     display: block;
     position: fixed;
-    top: 80px;
+    top: 125px; // TopHeader(45px) + Header(80px)
     left: 0;
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 125px); // 전체 높이에서 TopHeader + Header 높이를 뺌
     background-color: #a31432;
     transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
     transition: transform 0.3s;

@@ -55,13 +55,13 @@ function renderSightMapSections() {
       contents: [
         { name: '소개', link: '/graduate/overview' },
         { name: '교과과정', link: '/graduate/curriculum' },
-        { name: '학칙/규정', link: '/graduate/rules' },
       ],
     },
     {
       title: '바융소식',
-      titleLink: '/news/noticeboard',
+      titleLink: '/news',
       contents: [
+        { name: '학부뉴스', link: '/news' },
         { name: '공지사항', link: '/news/noticeboard' },
         { name: '세미나', link: '/news' },
         { name: '연구논문', link: '/news/thesis' },
