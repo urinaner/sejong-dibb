@@ -53,6 +53,7 @@ public class Reservation extends BaseEntity {
     @Column(name = "password")
     private String password;
 
+
     public boolean isPasswordMatch(String inputPassword) {
         return this.password.equals(inputPassword);
     }
