@@ -12,6 +12,7 @@ import type {
   PaginationParams,
   PaginatedResponse,
 } from '../types';
+import { apiEndpoints } from '../config/apiConfig';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -96,12 +97,23 @@ export const useGetNews = (id: number): UseQueryResult<NewsResponse> => {
   });
 };
 
-export const useGetNewsList = (
-  params: PaginationParams,
-): UseQueryResult<PaginatedResponse<NewsResponse>> => {
+export const useGetNewsList = (params: PaginationParams) => {
   return useQuery({
     queryKey: newsKeys.list(params),
-    queryFn: () => getNewsList(params),
+    queryFn: async () => {
+      const response = await fetch(
+        apiEndpoints.news.listWithPage(params.page, params.size),
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch news');
+      }
+      const data: NewsResponse = await response.json();
+      return {
+        data: data.data,
+        totalPages: data.totalPage,
+        page: data.page,
+      };
+    },
   });
 };
 

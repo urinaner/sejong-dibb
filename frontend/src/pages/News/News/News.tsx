@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, PlusCircle, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import { Modal, useModal } from '../../../components/Modal';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import { AuthContext } from '../../../context/AuthContext';
+import { useGetNewsList, useDeleteNews, newsKeys } from '../../../api/news';
+import { queryClient } from '../../../lib/react-query/queryClient';
 import {
   Container,
   NewsGrid,
@@ -21,7 +23,6 @@ import {
   PageItem,
   PageButton,
   PaginationButton,
-  LoadingSpinner,
   ErrorMessage,
   NoResults,
   AdminButtonGroup,
@@ -30,58 +31,21 @@ import {
   AdminActions,
 } from './NewsStyle';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  content: string;
-  view: number;
-  createDate: string;
-  link: string;
-  image: string;
-}
-
-interface NewsResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: NewsItem[];
-}
-
 const News = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = React.useState(0);
   const pageSize = 10;
+  const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
-  useEffect(() => {
-    fetchNews();
-  }, [currentPage]);
+  const {
+    data: newsData,
+    isLoading,
+    isError,
+    error,
+  } = useGetNewsList({ page: currentPage, size: pageSize });
 
-  const fetchNews = async () => {
-    try {
-      setIsLoading(true);
-      setError('');
-      const response = await fetch(
-        apiEndpoints.news.listWithPage(currentPage, pageSize),
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch news');
-      }
-      const data: NewsResponse = await response.json();
-      setNews(data.data);
-      setTotalPages(data.totalPage);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-      setError('뉴스를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const deleteMutation = useDeleteNews();
 
   const handleNewsClick = (newsId: number) => {
     navigate(`/news/${newsId}`);
@@ -94,7 +58,6 @@ const News = () => {
 
   const handleDelete = (e: React.MouseEvent, newsId: number) => {
     e.stopPropagation();
-
     openModal(
       <>
         <Modal.Header>뉴스 삭제</Modal.Header>
@@ -113,29 +76,24 @@ const News = () => {
 
   const confirmDelete = async (newsId: number) => {
     try {
-      const response = await fetch(apiEndpoints.news.delete(newsId), {
-        method: 'DELETE',
+      await deleteMutation.mutateAsync(newsId, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
+
+          openModal(
+            <>
+              <Modal.Header>삭제 완료</Modal.Header>
+              <Modal.Content>
+                <p>뉴스가 성공적으로 삭제되었습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton />
+              </Modal.Footer>
+            </>,
+          );
+        },
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete news');
-      }
-
-      fetchNews();
-
-      openModal(
-        <>
-          <Modal.Header>삭제 완료</Modal.Header>
-          <Modal.Content>
-            <p>뉴스가 성공적으로 삭제되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
     } catch (error) {
-      console.error('Error deleting news:', error);
       openModal(
         <>
           <Modal.Header>삭제 실패</Modal.Header>
@@ -151,15 +109,18 @@ const News = () => {
   };
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < totalPages) {
+    if (newPage >= 0 && newPage < (newsData?.totalPages ?? 0)) {
       setCurrentPage(newPage);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const renderPagination = () => {
+    if (!newsData) return null;
+
     const pages = [];
     const currentPageNum = currentPage + 1;
+    const totalPages = newsData.totalPages;
 
     // 첫 페이지와 이전 버튼
     pages.push(
@@ -184,7 +145,6 @@ const News = () => {
     // 페이지 번호 렌더링
     const pageItems = [];
     if (totalPages <= 10) {
-      // 10페이지 이하일 경우 모든 페이지 표시
       for (let i = 1; i <= totalPages; i++) {
         pageItems.push(
           <PageItem key={i}>
@@ -198,7 +158,6 @@ const News = () => {
         );
       }
     } else {
-      // 10페이지 초과시 페이지 범위 계산하여 표시
       let startPage = Math.max(1, currentPageNum - 4);
       const endPage = Math.min(totalPages, startPage + 9);
 
@@ -248,20 +207,24 @@ const News = () => {
   if (isLoading) {
     return (
       <Container>
-        <LoadingSpinner>로딩 중...</LoadingSpinner>
+        <LoadingSpinner text="뉴스를 불러오는 중입니다..." />
       </Container>
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <Container>
-        <ErrorMessage>{error}</ErrorMessage>
+        <ErrorMessage>
+          {error instanceof Error
+            ? error.message
+            : '뉴스를 불러오는데 실패했습니다.'}
+        </ErrorMessage>
       </Container>
     );
   }
 
-  if (!news.length) {
+  if (!newsData?.data || newsData.data.length === 0) {
     return (
       <Container>
         {auth?.isAdmin && (
@@ -288,7 +251,7 @@ const News = () => {
         </AdminButtonGroup>
       )}
       <NewsGrid>
-        {news.map((item) => (
+        {newsData.data.map((item) => (
           <NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <NewsImage
               imageUrl={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${item.image}`}
@@ -322,7 +285,7 @@ const News = () => {
           </NewsCard>
         ))}
       </NewsGrid>
-      {totalPages > 1 && renderPagination()}
+      {newsData.totalPages > 1 && renderPagination()}
     </Container>
   );
 };
