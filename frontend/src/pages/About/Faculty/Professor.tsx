@@ -7,6 +7,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import Button from '../../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 
 const ITEMS_PER_PAGE = 10;
 const DEFAULT_PROFILE_IMAGE = '/professor_example.jpg';
@@ -152,9 +153,7 @@ const Professor = () => {
 
   const renderContent = () => {
     if (loading) {
-      return (
-        <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
-      );
+      return <LoadingSpinner text={'정보를 불러오는 중'} />;
     }
 
     if (error) {

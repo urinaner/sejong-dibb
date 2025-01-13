@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { AuthContext } from '../../../context/AuthContext';
 import NavItem from './NavItem';
+
 import Profile from '../Profile/Profile';
 import {
   NavigationWrapper,
@@ -41,7 +42,6 @@ const navigationItems: NavigationItem[] = [
     title: '대학',
     path: '/undergraduate/curriculum',
     menuItems: [
-      { name: '학사안내', path: '/college/guide' },
       { name: '학부교과과정', path: '/undergraduate/curriculum' },
       { name: '입학/장학', path: '/undergraduate/admission-scholarship' },
     ],
