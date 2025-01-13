@@ -10,7 +10,7 @@ export interface NoticeItem {
   createdDate: string;
   viewCount: number;
   category: string;
-  fileList: string[];
+  fileList?: string[];
 }
 
 export interface NoticeListResponse {

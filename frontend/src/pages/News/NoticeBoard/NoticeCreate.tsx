@@ -28,20 +28,20 @@ import {
   FileList,
   FileItem,
 } from './NoticeCreateStyle';
-import { apiEndpoints, BoardReqDto } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
-import axios from 'axios';
+import useNotice from '../../../hooks/queries/useNotice';
 
 const NoticeCreate: React.FC = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [category, setCategory] = useState<string>('undergraduate');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
+  const { useCreateNotice } = useNotice;
+  const { mutate: createNotice, isPending: isSubmitting } = useCreateNotice();
 
   if (!auth) {
     throw new Error('AuthContext must be used within AuthProvider');
@@ -91,15 +91,12 @@ const NoticeCreate: React.FC = () => {
     setContent(value);
   }, []);
 
-  // 파일 유효성 검사
   const validateFile = (file: File): string | null => {
-    // 파일 크기 제한 (5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return '파일 크기는 5MB를 초과할 수 없습니다.';
     }
 
-    // 허용된 파일 타입
     const allowedTypes = [
       'image/jpeg',
       'image/png',
@@ -150,6 +147,7 @@ const NoticeCreate: React.FC = () => {
       </>,
     );
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -161,53 +159,34 @@ const NoticeCreate: React.FC = () => {
       return;
     }
 
-    try {
-      setIsSubmitting(true);
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const noticeData = {
+      data: {
+        title: title.trim(),
+        content: content.trim(),
+        writer: auth.user || 'admin',
+        createDate: currentDate,
+        category: category,
+        departmentId: 1 as const,
+      },
+      files: file ? [file] : undefined,
+    };
 
-      const currentDate = new Date().toISOString().slice(0, 10);
-      const formData = new FormData();
-
-      formData.append(
-        'boardReqDto',
-        JSON.stringify({
-          title: title.trim(),
-          content: content.trim(),
-          writer: auth.user || 'admin',
-          createdDate: currentDate,
-          category: category,
-          departmentId: 1,
-        }),
-      );
-
-      if (file) {
-        formData.append('boardFiles', file);
-      }
-
-      const response = await axios.post(
-        apiEndpoints.board.create.url,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-
-      if (response.status === 200 || response.status === 201) {
+    createNotice(noticeData, {
+      onSuccess: () => {
         showSuccessModal();
-      }
-    } catch (error) {
-      console.error('Error creating post:', error);
-      showErrorModal('등록 실패', '게시글 등록 중 오류가 발생했습니다');
-    } finally {
-      setIsSubmitting(false);
-    }
+      },
+      onError: (error) => {
+        console.error('Error creating post:', error);
+        showErrorModal('등록 실패', '게시글 등록 중 오류가 발생했습니다');
+      },
+    });
   };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    // 파일 유효성 검사
     const error = validateFile(selectedFile);
     if (error) {
       showErrorModal('파일 업로드 오류', error);
