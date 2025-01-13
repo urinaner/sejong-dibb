@@ -5,9 +5,10 @@ import {
   UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { newsApi, NewsFormRequest } from '../../api/news';
 import type { NewsResponse, PaginationParams } from '../../types/api';
+import { apiEndpoints } from '../../config/apiConfig';
 
 export interface NewsItem {
   id: number;
@@ -24,6 +25,7 @@ export interface NewsListResponse {
   totalPage: number;
   data: NewsItem[]; // 이미 배열 타입임
 }
+
 export const newsKeys = {
   all: ['news'] as const,
   lists: () => [...newsKeys.all, 'list'] as const,
@@ -50,7 +52,11 @@ export const useGetNews = (
 ): UseQueryResult<NewsItem, AxiosError> => {
   return useQuery({
     queryKey: newsKeys.detail(id),
-    queryFn: () => newsApi.getNews(id),
+    queryFn: async () => {
+      const response = await axios.get<NewsItem>(apiEndpoints.news.get(id));
+      return response.data; // response.data에서 실제 뉴스 데이터 추출
+    },
+    enabled: !!id,
   });
 };
 

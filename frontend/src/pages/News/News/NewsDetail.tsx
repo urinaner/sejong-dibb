@@ -1,9 +1,9 @@
-// NewsDetail.tsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Eye, ArrowLeft } from 'lucide-react';
 import moment from 'moment';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { useGetNews } from '../../../hooks/queries/useNews';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import {
   Container,
   BackButton,
@@ -17,59 +17,19 @@ import {
   NewsImage,
   NewsContent,
   NewsLink,
-  LoadingSpinner,
   ErrorMessage,
 } from './NewsDetailStyle';
-
-interface NewsDetailData {
-  id: number;
-  title: string;
-  content: string;
-  view: number;
-  createDate: string;
-  link: string;
-  image: string;
-}
 
 const NewsDetail = () => {
   const { newsId } = useParams();
   const navigate = useNavigate();
-  const [newsData, setNewsData] = useState<NewsDetailData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>('');
 
-  useEffect(() => {
-    const fetchNewsDetail = async () => {
-      try {
-        setIsLoading(true);
-        if (!newsId) return;
-
-        const response = await fetch(apiEndpoints.news.get(parseInt(newsId)));
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('뉴스를 찾을 수 없습니다.');
-          }
-          throw new Error('뉴스를 불러오는데 실패했습니다.');
-        }
-
-        const data = await response.json();
-        setNewsData(data);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : '알 수 없는 오류가 발생했습니다.',
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (newsId) {
-      fetchNewsDetail();
-    }
-  }, [newsId]);
+  const {
+    data: newsItems,
+    isLoading,
+    isError,
+    error,
+  } = useGetNews(parseInt(newsId || '0'));
 
   const handleBack = () => {
     navigate(-1);
@@ -78,21 +38,29 @@ const NewsDetail = () => {
   if (isLoading) {
     return (
       <Container>
-        <LoadingSpinner>로딩 중...</LoadingSpinner>
+        <LoadingSpinner text="뉴스를 불러오는 중입니다..." />
       </Container>
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <Container>
-        <ErrorMessage>{error}</ErrorMessage>
+        <ErrorMessage>
+          {error instanceof Error
+            ? error.message
+            : '뉴스를 불러오는데 실패했습니다.'}
+        </ErrorMessage>
       </Container>
     );
   }
 
-  if (!newsData) {
-    return null;
+  if (!newsItems) {
+    return (
+      <Container>
+        <ErrorMessage>뉴스를 찾을 수 없습니다.</ErrorMessage>
+      </Container>
+    );
   }
 
   return (
@@ -103,28 +71,28 @@ const NewsDetail = () => {
       </BackButton>
       <NewsWrapper>
         <NewsHeader>
-          <NewsTitle>{newsData.title}</NewsTitle>
+          <NewsTitle>{newsItems.title}</NewsTitle>
           <NewsMetadata>
             <NewsDate>
-              {moment(newsData.createDate).format('YYYY.MM.DD')}
+              {moment(newsItems.createDate).format('YYYY.MM.DD')}
             </NewsDate>
             <NewsViews>
               <Eye size={16} />
-              {newsData.view}
+              {newsItems.view}
             </NewsViews>
           </NewsMetadata>
         </NewsHeader>
         <NewsDivider />
-        {newsData.image && (
+        {newsItems.image && (
           <NewsImage
-            src={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${newsData.image}`}
-            alt={newsData.title}
+            src={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${newsItems.image}`}
+            alt={newsItems.title}
           />
         )}
-        <NewsContent>{newsData.content}</NewsContent>
-        {newsData.link && (
+        <NewsContent>{newsItems.content}</NewsContent>
+        {newsItems.link && (
           <NewsLink
-            href={newsData.link}
+            href={newsItems.link}
             target="_blank"
             rel="noopener noreferrer"
           >
