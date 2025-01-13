@@ -133,8 +133,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     // 주기적으로 토큰 만료 체크
-    const interval = setInterval(checkTokenExpiration, 60000); // 1분마다 체크
-    return () => clearInterval(interval);
+    // const interval = setInterval(checkTokenExpiration, 6000000); // 1분마다 체크
+    // return () => clearInterval(interval);
   }, [checkTokenExpiration]);
 
   const signin = async (
