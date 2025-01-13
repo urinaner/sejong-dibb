@@ -42,10 +42,15 @@ const noticeApi = {
   },
 
   getById: async (id: number): Promise<NoticeSingleResponse> => {
-    const response = await axios.get<NoticeSingleResponse>(
-      apiEndpoints.board.get(id.toString()),
-    );
-    return response.data;
+    try {
+      const response = await axios.get<NoticeSingleResponse>(
+        apiEndpoints.board.get(id.toString()),
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching notice by ID:', error);
+      throw error;
+    }
   },
 
   create: async ({
@@ -55,19 +60,28 @@ const noticeApi = {
     data: NoticeRequest;
     files?: File[];
   }): Promise<NoticeCreateResponse> => {
-    const boardData = {
-      ...data,
-      departmentId: 1 as const, // 리터럴 타입으로 명시적 지정
-    };
+    try {
+      const boardData = {
+        ...data,
+        departmentId: 1 as const,
+      };
 
-    const formData = apiEndpoints.board.create.getFormData(
-      boardData,
-      files || [],
-    );
-    const response = await axios.post(apiEndpoints.board.create.url, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    return response.data;
+      const formData = apiEndpoints.board.create.getFormData(
+        boardData,
+        files || [],
+      );
+      const response = await axios.post(
+        apiEndpoints.board.create.url,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error creating notice:', error);
+      throw error;
+    }
   },
 
   update: async ({
@@ -79,36 +93,46 @@ const noticeApi = {
     data: NoticeRequest;
     files?: File[];
   }): Promise<NoticeUpdateResponse> => {
-    const boardData = {
-      ...data,
-      departmentId: 1 as const,
-    };
+    try {
+      const boardData = {
+        ...data,
+        departmentId: 1 as const,
+      };
 
-    const formData = new FormData();
-    formData.append(
-      'boardReqDto',
-      new Blob([JSON.stringify(boardData)], { type: 'application/json' }),
-    );
+      const formData = new FormData();
+      formData.append(
+        'boardReqDto',
+        new Blob([JSON.stringify(boardData)], { type: 'application/json' }),
+      );
 
-    if (files) {
-      files.forEach((file) => formData.append('boardFiles', file));
+      if (files) {
+        files.forEach((file) => formData.append('boardFiles', file));
+      }
+
+      const response = await axios.post(
+        apiEndpoints.board.update(id.toString()),
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error updating notice:', error);
+      throw error;
     }
-
-    const response = await axios.post(
-      apiEndpoints.board.update(id.toString()),
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    return response.data;
   },
 
   delete: async (id: number): Promise<NoticeDeleteResponse> => {
-    const response = await axios.delete(
-      apiEndpoints.board.delete(id.toString()),
-    );
-    return response.data;
+    try {
+      const response = await axios.delete(
+        apiEndpoints.board.delete(id.toString()),
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting notice:', error);
+      throw error;
+    }
   },
 };
 
@@ -117,6 +141,7 @@ export const useGetNoticeList = (params: NoticeQueryParams) => {
   return useQuery({
     queryKey: noticeKeys.list(params),
     queryFn: () => noticeApi.getList(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
@@ -125,6 +150,7 @@ export const useGetNotice = (id: number) => {
     queryKey: noticeKeys.detail(id),
     queryFn: () => noticeApi.getById(id),
     enabled: !!id,
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -135,6 +161,9 @@ export const useCreateNotice = () => {
     mutationFn: noticeApi.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: noticeKeys.lists() });
+    },
+    onError: (error) => {
+      console.error('Error creating notice:', error);
     },
   });
 };
@@ -148,6 +177,9 @@ export const useUpdateNotice = () => {
       queryClient.invalidateQueries({ queryKey: noticeKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: noticeKeys.lists() });
     },
+    onError: (error) => {
+      console.error('Error updating notice:', error);
+    },
   });
 };
 
@@ -158,6 +190,9 @@ export const useDeleteNotice = () => {
     mutationFn: noticeApi.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: noticeKeys.lists() });
+    },
+    onError: (error) => {
+      console.error('Error deleting notice:', error);
     },
   });
 };

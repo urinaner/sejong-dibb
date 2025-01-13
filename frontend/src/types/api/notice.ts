@@ -7,10 +7,17 @@ export interface NoticeItem {
   title: string;
   content: string;
   writer: string;
-  viewCount: number;
   createdDate: string;
+  viewCount: number;
   category: string;
-  fileList?: string[];
+  fileList: string[];
+}
+
+export interface NoticeListResponse {
+  message: string;
+  page: number;
+  totalPage: number;
+  data: NoticeItem[];
 }
 
 export interface NoticeResponse {
@@ -36,7 +43,6 @@ export interface PaginatedNoticeResponse {
   number: number;
 }
 
-export type NoticeListResponse = ApiResponse<NoticeResponse>;
 export type NoticeSingleResponse = ApiResponse<NoticeItem>;
 export type NoticeCreateResponse = ApiResponse<number>;
 export type NoticeUpdateResponse = ApiResponse<void>;
