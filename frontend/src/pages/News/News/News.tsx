@@ -5,7 +5,11 @@ import moment from 'moment';
 import { Modal, useModal } from '../../../components/Modal';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import { AuthContext } from '../../../context/AuthContext';
-import { useGetNewsList, useDeleteNews, newsKeys } from '../../../api/news';
+import {
+  useGetNewsList,
+  useDeleteNews,
+  newsKeys,
+} from '../../../hooks/queries/useNews';
 import { queryClient } from '../../../lib/react-query/queryClient';
 import {
   Container,
@@ -39,7 +43,7 @@ const News = () => {
   const { openModal } = useModal();
 
   const {
-    data: newsData,
+    data: newsItems,
     isLoading,
     isError,
     error,
@@ -109,18 +113,16 @@ const News = () => {
   };
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < (newsData?.totalPages ?? 0)) {
-      setCurrentPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderPagination = () => {
-    if (!newsData) return null;
+    if (!newsItems) return null;
 
     const pages = [];
     const currentPageNum = currentPage + 1;
-    const totalPages = newsData.totalPages;
+    const pageCount = Math.ceil(newsItems.length / pageSize);
 
     // 첫 페이지와 이전 버튼
     pages.push(
@@ -128,7 +130,7 @@ const News = () => {
         key="first"
         direction="prev"
         onClick={() => handlePageChange(0)}
-        disabled={currentPageNum === 1}
+        disabled={currentPage === 0}
       >
         ⟪ 처음
       </PaginationButton>,
@@ -136,7 +138,7 @@ const News = () => {
         key="prev"
         direction="prev"
         onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPageNum === 1}
+        disabled={currentPage === 0}
       >
         ⟨ 이전
       </PaginationButton>,
@@ -144,35 +146,35 @@ const News = () => {
 
     // 페이지 번호 렌더링
     const pageItems = [];
-    if (totalPages <= 10) {
-      for (let i = 1; i <= totalPages; i++) {
+    if (pageCount <= 10) {
+      for (let i = 0; i < pageCount; i++) {
         pageItems.push(
           <PageItem key={i}>
             <PageButton
-              onClick={() => handlePageChange(i - 1)}
-              isActive={i === currentPageNum}
+              onClick={() => handlePageChange(i)}
+              isActive={i === currentPage}
             >
-              {i}
+              {i + 1}
             </PageButton>
           </PageItem>,
         );
       }
     } else {
-      let startPage = Math.max(1, currentPageNum - 4);
-      const endPage = Math.min(totalPages, startPage + 9);
+      let startPage = Math.max(0, currentPage - 4);
+      const endPage = Math.min(pageCount - 1, startPage + 9);
 
       if (endPage - startPage < 9) {
-        startPage = Math.max(1, endPage - 9);
+        startPage = Math.max(0, endPage - 9);
       }
 
       for (let i = startPage; i <= endPage; i++) {
         pageItems.push(
           <PageItem key={i}>
             <PageButton
-              onClick={() => handlePageChange(i - 1)}
-              isActive={i === currentPageNum}
+              onClick={() => handlePageChange(i)}
+              isActive={i === currentPage}
             >
-              {i}
+              {i + 1}
             </PageButton>
           </PageItem>,
         );
@@ -187,15 +189,15 @@ const News = () => {
         key="next"
         direction="next"
         onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPageNum === totalPages}
+        disabled={currentPage === pageCount - 1}
       >
         다음 ⟩
       </PaginationButton>,
       <PaginationButton
         key="last"
         direction="next"
-        onClick={() => handlePageChange(totalPages - 1)}
-        disabled={currentPageNum === totalPages}
+        onClick={() => handlePageChange(pageCount - 1)}
+        disabled={currentPage === pageCount - 1}
       >
         마지막 ⟫
       </PaginationButton>,
@@ -224,7 +226,7 @@ const News = () => {
     );
   }
 
-  if (!newsData?.data || newsData.data.length === 0) {
+  if (!newsItems || newsItems.length === 0) {
     return (
       <Container>
         {auth?.isAdmin && (
@@ -251,7 +253,7 @@ const News = () => {
         </AdminButtonGroup>
       )}
       <NewsGrid>
-        {newsData.data.map((item) => (
+        {newsItems.map((item) => (
           <NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <NewsImage
               imageUrl={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${item.image}`}
@@ -285,7 +287,7 @@ const News = () => {
           </NewsCard>
         ))}
       </NewsGrid>
-      {newsData.totalPages > 1 && renderPagination()}
+      {newsItems.length > pageSize && renderPagination()}
     </Container>
   );
 };

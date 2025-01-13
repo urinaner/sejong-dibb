@@ -1,5 +1,3 @@
-// types/api/news.ts
-
 // API 공통 응답 타입
 export interface ApiResponse<T> {
   data: T;
@@ -54,9 +52,13 @@ export interface PaginatedNewsResponse {
   size: number;
   number: number;
 }
-
+export interface NewsListResponse {
+  message: string;
+  page: number;
+  totalPage: number;
+  data: NewsItem[];
+}
 // 뉴스 관련 모든 응답 타입
-export type NewsListResponse = ApiResponse<NewsResponse>;
 export type NewsSingleResponse = ApiResponse<NewsItem>;
 export type NewsCreateResponse = ApiResponse<number>;
 export type NewsUpdateResponse = ApiResponse<void>;
