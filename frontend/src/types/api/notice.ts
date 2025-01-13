@@ -28,8 +28,15 @@ export interface NoticeResponse {
 }
 
 export type NoticeRequest = Omit<BoardReqDto, 'departmentId'> & {
-  departmentId: 1; // 리터럴 타입으로 고정
+  departmentId: 1;
+  title: string;
+  content: string;
+  category: string;
+  writer: string;
+  createDate: string;
 };
+
+export type NoticeSingleResponse = NoticeItem;
 
 export interface NoticeFormData extends Omit<NoticeRequest, 'fileList'> {
   files?: File[];
@@ -43,7 +50,6 @@ export interface PaginatedNoticeResponse {
   number: number;
 }
 
-export type NoticeSingleResponse = ApiResponse<NoticeItem>;
 export type NoticeCreateResponse = ApiResponse<number>;
 export type NoticeUpdateResponse = ApiResponse<void>;
 export type NoticeDeleteResponse = ApiResponse<void>;
