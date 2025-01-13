@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-  useContext,
-} from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
@@ -27,16 +21,14 @@ import {
   FileList,
   FileItem,
 } from './NewsCreateStyle';
-import { apiEndpoints } from '../../../config/apiConfig';
-import { AuthContext } from '../../../context/AuthContext';
-import axios from 'axios';
+import { useCreateNews } from '../../../hooks/queries/useNews';
 
-interface NewsReqDto {
+interface NewsFormData {
   title: string;
   content: string;
-  createDate: string;
   link?: string;
-  image?: string;
+  createDate: string;
+  newsImage?: File;
 }
 
 const NewsCreate: React.FC = () => {
@@ -44,10 +36,11 @@ const NewsCreate: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [link, setLink] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const { openModal } = useModal();
+
+  const createNewsMutation = useCreateNews();
 
   const modules = useMemo(
     () => ({
@@ -128,57 +121,39 @@ const NewsCreate: React.FC = () => {
     }
 
     try {
-      setIsSubmitting(true);
-
-      const formData = new FormData();
       // HTML 태그 제거
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = content;
       const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
 
-      const newsReqDto: NewsReqDto = {
+      const newsFormData: NewsFormData = {
         title: title.trim(),
         content: cleanContent.trim(),
         createDate: new Date().toISOString().split('T')[0],
       };
 
       if (link.trim()) {
-        newsReqDto.link = link.trim();
+        newsFormData.link = link.trim();
       }
-
-      formData.append(
-        'newsReqDto',
-        new Blob([JSON.stringify(newsReqDto)], {
-          type: 'application/json',
-        }),
-      );
 
       if (imageFile) {
-        formData.append('newsImage', imageFile);
+        newsFormData.newsImage = imageFile;
       }
 
-      const response = await axios.post(
-        apiEndpoints.news.create.url,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+      const result = await createNewsMutation.mutateAsync(newsFormData, {
+        onSuccess: (newsId) => {
+          showSuccessModal(newsId);
         },
-      );
-
-      if (response.status === 200) {
-        showSuccessModal(response.data);
-      }
-    } catch (error: any) {
+        onError: (error: any) => {
+          if (error.response?.status === 400) {
+            showErrorModal('입력 오류', error.response.data.message);
+          } else {
+            showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
+          }
+        },
+      });
+    } catch (error) {
       console.error('Error creating news:', error);
-      if (error.response?.status === 400) {
-        showErrorModal('입력 오류', error.response.data.message);
-      } else {
-        showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
-      }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -273,8 +248,8 @@ const NewsCreate: React.FC = () => {
             <CancelButton type="button" onClick={() => navigate('/news')}>
               취소
             </CancelButton>
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '등록 중...' : '뉴스 등록'}
+            <SubmitButton type="submit" disabled={createNewsMutation.isPending}>
+              {createNewsMutation.isPending ? '등록 중...' : '뉴스 등록'}
             </SubmitButton>
           </ButtonGroup>
         </FormSection>
