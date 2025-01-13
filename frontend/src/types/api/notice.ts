@@ -1,4 +1,6 @@
+// types/api/notice.ts
 import { ApiResponse, PaginationParams } from './common';
+import { BoardReqDto } from '../../config/apiConfig';
 
 export interface NoticeItem {
   id: number;
@@ -18,15 +20,9 @@ export interface NoticeResponse {
   data: NoticeItem[];
 }
 
-export interface NoticeRequest {
-  title: string;
-  content: string;
-  writer: string;
-  category: string;
-  departmentId: number;
-  fileList?: string[];
-  createDate: string;
-}
+export type NoticeRequest = Omit<BoardReqDto, 'departmentId'> & {
+  departmentId: 1; // 리터럴 타입으로 고정
+};
 
 export interface NoticeFormData extends Omit<NoticeRequest, 'fileList'> {
   files?: File[];
@@ -52,7 +48,6 @@ export interface NoticeQueryParams extends PaginationParams {
   sortDirection?: 'ASC' | 'DESC';
 }
 
-// Query Keys
 export const noticeKeys = {
   all: ['notices'] as const,
   lists: () => [...noticeKeys.all, 'list'] as const,
