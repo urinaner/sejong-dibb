@@ -26,7 +26,7 @@ const SignInPage: React.FC = () => {
   const context = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
-  const [activeTab, setActiveTab] = useState<'student' | 'admin'>('student');
+  const [activeTab, setActiveTab] = useState<'student' | 'admin'>('admin');
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -111,8 +111,6 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  // ... 나머지 JSX 반환 부분은 동일 ...
-
   return (
     <Container>
       <ContentWrapper>
@@ -121,19 +119,10 @@ const SignInPage: React.FC = () => {
         </LogoContainer>
 
         <Title>세종대학교 바이오융합공학전공</Title>
-        <SubTitle>
-          세종대학교 포털과 동일한 학번 및 비밀번호를 사용하여 로그인
-        </SubTitle>
+        <SubTitle>세종대학교 관리자 전용 아이디 및 비밀번호를 사용</SubTitle>
 
         <Form as="form" onSubmit={handleSubmit}>
           <Tabs>
-            <Tab
-              type="button"
-              active={activeTab === 'student'}
-              onClick={() => setActiveTab('student')}
-            >
-              학생 로그인
-            </Tab>
             <Tab
               type="button"
               active={activeTab === 'admin'}
@@ -170,23 +159,6 @@ const SignInPage: React.FC = () => {
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? '로그인 중...' : '로그인'}
           </Button>
-
-          <HelpLinks>
-            {activeTab === 'student' ? (
-              <HelpLink
-                href="#"
-                onClick={() =>
-                  window.open('https://portal.sejong.ac.kr', '_blank')
-                }
-              >
-                포털 바로가기
-              </HelpLink>
-            ) : (
-              <HelpLink href="#" onClick={() => navigate('/find-account')}>
-                아이디/비밀번호 찾기
-              </HelpLink>
-            )}
-          </HelpLinks>
         </Form>
 
         <Footer>© Sejong University. All rights reserved.</Footer>
