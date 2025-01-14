@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -7,26 +7,18 @@ import {
   AlertTriangle,
   CheckCircle,
 } from 'lucide-react';
-import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
 import { Modal, useModal } from '../../../components/Modal';
 import Button from '../../../common/Button/Button';
 import * as S from './ProfessorDetailStyle';
 import ProfileSection from './ProfileSection';
 import Publications from './tabs/Publications';
-
-interface Professor {
-  id: number;
-  name: string;
-  major: string;
-  phoneN: string;
-  email: string;
-  position: string;
-  homepage: string;
-  lab: string;
-  profileImage: string;
-}
+import {
+  useProfessorDetail,
+  useDeleteProfessor,
+  getErrorMessage,
+} from '../../../hooks/queries/useProfessor';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 
 const ProfessorDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,31 +26,15 @@ const ProfessorDetail: React.FC = () => {
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
-  const [professor, setProfessor] = useState<Professor | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
-  const [isDeleting, setIsDeleting] = useState(false);
+  const professorId = id ? parseInt(id) : 0;
+  const {
+    data: professorResponse,
+    isLoading,
+    error,
+  } = useProfessorDetail(professorId);
+  const deleteMutation = useDeleteProfessor();
 
   const isAuthenticated = auth?.isAuthenticated ?? false;
-
-  const fetchProfessorData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        apiEndpoints.professor.detail(Number(id)),
-      );
-      setProfessor(response.data);
-    } catch (err) {
-      setError('교수 정보를 불러오는데 실패했습니다.');
-      console.error('Error fetching professor:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    fetchProfessorData();
-  }, [fetchProfessorData]);
 
   const handleEdit = () => {
     navigate(`/about/faculty/edit/${id}`);
@@ -79,8 +55,11 @@ const ProfessorDetail: React.FC = () => {
         </Modal.Content>
         <Modal.Footer>
           <Modal.CloseButton />
-          <Modal.DeleteButton onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? '삭제 중...' : '삭제'}
+          <Modal.DeleteButton
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? '삭제 중...' : '삭제'}
           </Modal.DeleteButton>
         </Modal.Footer>
       </>,
@@ -89,9 +68,7 @@ const ProfessorDetail: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
-      await axios.delete(apiEndpoints.professor.delete(Number(id)));
-
+      await deleteMutation.mutateAsync(professorId);
       openModal(
         <>
           <Modal.Header>
@@ -108,8 +85,7 @@ const ProfessorDetail: React.FC = () => {
           </Modal.Footer>
         </>,
       );
-    } catch (err) {
-      console.error('Error deleting professor:', err);
+    } catch (error) {
       openModal(
         <>
           <Modal.Header>
@@ -117,21 +93,19 @@ const ProfessorDetail: React.FC = () => {
             삭제 실패
           </Modal.Header>
           <Modal.Content>
-            <p>교수 정보 삭제에 실패했습니다.</p>
+            <p>{getErrorMessage(error)}</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
           </Modal.Footer>
         </>,
       );
-    } finally {
-      setIsDeleting(false);
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
+      <LoadingSpinner text={'데이터를 불러오는 중입니다...'}></LoadingSpinner>
     );
   }
 
@@ -139,12 +113,12 @@ const ProfessorDetail: React.FC = () => {
     return (
       <S.ErrorContainer>
         <AlertTriangle size={24} />
-        {error}
+        {getErrorMessage(error)}
       </S.ErrorContainer>
     );
   }
 
-  if (!professor) {
+  if (!professorResponse) {
     return (
       <S.ErrorContainer>
         <AlertTriangle size={24} />
@@ -152,6 +126,8 @@ const ProfessorDetail: React.FC = () => {
       </S.ErrorContainer>
     );
   }
+
+  const professor = professorResponse;
 
   return (
     <S.Container>
@@ -181,10 +157,10 @@ const ProfessorDetail: React.FC = () => {
             <Button
               variant="danger"
               onClick={showConfirmModal}
-              disabled={isDeleting}
+              disabled={deleteMutation.isPending}
             >
               <Trash2 size={18} />
-              {isDeleting ? '삭제 중...' : '삭제'}
+              {deleteMutation.isPending ? '삭제 중...' : '삭제'}
             </Button>
           </S.ActionSection>
         )}

@@ -45,9 +45,15 @@ export interface ProfessorResponse {
   status: number;
 }
 export interface ProfessorDetailResponse {
-  data: ProfessorDetail;
-  message: string;
-  status: number;
+  id: number;
+  name: string;
+  major: string;
+  phoneN: string;
+  email: string;
+  position: string;
+  homepage: string;
+  lab: string;
+  profileImage: string;
 }
 export interface ProfessorCreateResponse {
   data: number;
