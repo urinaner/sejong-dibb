@@ -26,12 +26,15 @@ const Professor = () => {
 
   const handlePageChange = useCallback(
     (newPage: number) => {
-      if (newPage >= 0 && newPage < (data?.totalPage ?? 0)) {
-        setCurrentPage(newPage);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (data && typeof data.totalPage === 'number') {
+        const adjustedPage = newPage - 1; // 1-based to 0-based
+        if (adjustedPage >= 0 && adjustedPage < data.totalPage) {
+          setCurrentPage(adjustedPage);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
     },
-    [data?.totalPage],
+    [data],
   );
 
   const handleImageError = useCallback(
@@ -103,9 +106,9 @@ const Professor = () => {
       <>
         <S.ProfessorList>{renderProfessorList()}</S.ProfessorList>
         <Pagination
-          totalPages={data.totalPage}
-          currentPage={currentPage + 1} // 0-based를 1-based로 변환
-          onPageChange={(page) => handlePageChange(page - 1)} // 1-based를 0-based로 변환
+          totalPages={data?.totalPage ?? 0}
+          currentPage={currentPage + 1}
+          onPageChange={handlePageChange}
         />
       </>
     );
