@@ -3,10 +3,10 @@ import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const Container = styled.div`
-  max-width: 90%;
-  width: 90%;
+  max-width: 100%;
+  width: 80vw;
   margin: 0 auto;
-  padding: 2.5rem 1rem;
+  padding: 2.5rem 0.5rem;
 
   ${media.mobile} {
     width: 95%;
