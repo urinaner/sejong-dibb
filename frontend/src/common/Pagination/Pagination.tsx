@@ -19,7 +19,7 @@ const Pagination: React.FC<PaginationProps> = ({
   pages.push(
     <S.PageButton
       key="first"
-      onClick={() => onPageChange(0)}
+      onClick={() => onPageChange(1)}
       disabled={currentPage === 1}
     >
       ⟪
@@ -37,7 +37,7 @@ const Pagination: React.FC<PaginationProps> = ({
     pages.push(
       <S.PageButton
         key={i}
-        onClick={() => onPageChange(i - 1)}
+        onClick={() => onPageChange(i)} // i - 1 제거
         isActive={i === currentPage}
       >
         {i}
@@ -55,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({
     </S.PageButton>,
     <S.PageButton
       key="last"
-      onClick={() => onPageChange(totalPages - 1)}
+      onClick={() => onPageChange(totalPages)} // totalPages - 1 제거
       disabled={currentPage === totalPages}
     >
       ⟫
