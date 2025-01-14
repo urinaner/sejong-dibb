@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { ChevronLeft, ChevronRight, Edit, Plus } from 'lucide-react';
+import { Edit, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './FacultyStyle';
 import { useProfessors } from '../../../hooks/queries/useProfessor';
@@ -7,6 +7,7 @@ import ProfessorCard from './ProfessorCard';
 import { AuthContext } from '../../../context/AuthContext';
 import Button from '../../../common/Button/Button';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import Pagination from '../../../common/Pagination/Pagination';
 
 const ITEMS_PER_PAGE = 10;
 const DEFAULT_PROFILE_IMAGE = '/professor_example.jpg';
@@ -18,7 +19,6 @@ const Professor = () => {
 
   const isAuthenticated = auth?.isAuthenticated ?? false;
 
-  // React Query로 데이터 페칭
   const { data, isLoading, isError, error } = useProfessors({
     page: currentPage,
     size: ITEMS_PER_PAGE,
@@ -27,12 +27,11 @@ const Professor = () => {
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (newPage >= 0 && newPage < (data?.totalPage ?? 0)) {
-        // totalPages -> totalPage
         setCurrentPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     },
-    [data?.totalPage], // totalPages -> totalPage
+    [data?.totalPage],
   );
 
   const handleImageError = useCallback(
@@ -76,33 +75,6 @@ const Professor = () => {
       </S.ProfessorCardWrapper>
     ));
   };
-  const renderPagination = () => {
-    if (!data || data.totalPage <= 1) return null; // totalPages -> totalPage
-
-    return (
-      <S.PaginationWrapper>
-        <S.PaginationButton
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
-          aria-label="이전 페이지"
-        >
-          <ChevronLeft />
-        </S.PaginationButton>
-
-        <S.PageNumber>
-          {currentPage + 1} / {data.totalPage} {/* totalPages -> totalPage */}
-        </S.PageNumber>
-
-        <S.PaginationButton
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === data.totalPage - 1}
-          aria-label="다음 페이지"
-        >
-          <ChevronRight />
-        </S.PaginationButton>
-      </S.PaginationWrapper>
-    );
-  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -120,7 +92,6 @@ const Professor = () => {
     }
 
     if (!data?.data || data.data.length === 0) {
-      // data.content -> data.data
       return (
         <S.EmptyStateContainer>
           등록된 교수진 정보가 없습니다.
@@ -131,7 +102,11 @@ const Professor = () => {
     return (
       <>
         <S.ProfessorList>{renderProfessorList()}</S.ProfessorList>
-        {renderPagination()}
+        <Pagination
+          totalPages={data.totalPage}
+          currentPage={currentPage + 1} // 0-based를 1-based로 변환
+          onPageChange={(page) => handlePageChange(page - 1)} // 1-based를 0-based로 변환
+        />
       </>
     );
   };
