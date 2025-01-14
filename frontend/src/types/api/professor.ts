@@ -33,7 +33,12 @@ export interface ProfessorRequest {
 }
 
 // 교수 API 응답 타입
-export type ProfessorListResponse = PaginatedResponse<Professor>;
+export interface ProfessorListResponse {
+  message: string;
+  page: number;
+  totalPage: number; // totalPages가 아닌 totalPage
+  data: Professor[]; // content가 아닌 data
+}
 export interface ProfessorResponse {
   data: Professor;
   message: string;
