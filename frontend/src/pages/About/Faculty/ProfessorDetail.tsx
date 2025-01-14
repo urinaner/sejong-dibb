@@ -14,7 +14,7 @@ import { Modal, useModal } from '../../../components/Modal';
 import Button from '../../../common/Button/Button';
 import * as S from './ProfessorDetailStyle';
 import ProfileSection from './ProfileSection';
-import TabSection from './TabSection';
+import Publications from './tabs/Publications';
 
 interface Professor {
   id: number;
@@ -198,7 +198,10 @@ const ProfessorDetail: React.FC = () => {
         defaultImage="/professor_example.jpg"
       />
 
-      <TabSection professorId={professor.id} />
+      <S.PublicationsContainer>
+        <S.PublicationsTitle>논문 목록</S.PublicationsTitle>
+        <Publications professorId={professor.id} />
+      </S.PublicationsContainer>
     </S.Container>
   );
 };
