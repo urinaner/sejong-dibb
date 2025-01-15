@@ -25,22 +25,20 @@ public class NewsReqDto {
 
     @Builder
     private NewsReqDto(String title, String content, String createDate,
-                       String link, String image) {
+                       String link) {
         this.title = title;
         this.content = content;
         this.createDate = createDate;
         this.link = link;
-        this.image = image;
     }
 
     public static NewsReqDto of(String title, String content, String createDate,
-                                String link, String image) {
+                                String link) {
         return NewsReqDto.builder()
                 .title(title)
                 .content(content)
                 .createDate(createDate)
                 .link(link)
-                .image(image)
                 .build();
     }
 
