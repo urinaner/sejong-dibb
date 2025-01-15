@@ -99,7 +99,7 @@ function Main(): JSX.Element {
         const seminarResponse = await axios.get(
           apiEndpoints.seminar.listWithPage(0, 1, 'DESC'),
         );
-        console.log(seminarResponse.data.data);
+
         setSeminar(seminarResponse.data.data);
         setSeminarId(seminarResponse.data.data[0].id);
       } catch (err) {
