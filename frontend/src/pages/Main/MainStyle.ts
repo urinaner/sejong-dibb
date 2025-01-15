@@ -276,12 +276,12 @@ export const AnnouncementItem = styled.div`
 export const SeminarContainer = styled.div`
   flex: 1;
   display: flex;
-  align-items: flex-end;
 
   button:first-of-type {
     height: 200px;
     flex: 1;
     display: flex;
+    overflow: hidden;
     flex-direction: column;
     justify-content: center;
     margin-right: 24px;
@@ -294,8 +294,6 @@ export const SeminarContainer = styled.div`
     cursor: pointer;
 
     p {
-      margin: 16px 0 16px 0;
-
       ${media.mobile} {
         margin: 0 0 0 8px;
       }
@@ -313,8 +311,19 @@ export const SeminarContainer = styled.div`
     }
 
     p:last-of-type {
+      /* max-width: 100%; */
       font-size: 16px;
       font-weight: 700;
+      text-align: left;
+
+      white-space: nowrap; // 텍스트가 한 줄로 표시되도록
+      overflow: hidden; /* 넘치는 텍스트는 보이지 않게 */
+      text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
+
+      /* 부모 너비를 넘지 않도록 */
+      flex-shrink: 1; /* 자식 요소 축소 허용 */
+      min-width: 0; /* flex 컨텍스트에서 자식 요소 기본 크기 제한 */
+      max-width: 100%; /* 부모의 너비를 넘지 않도록 제한 */
 
       ${media.mobile} {
         font-size: 14px;

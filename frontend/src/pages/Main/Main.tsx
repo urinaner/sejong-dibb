@@ -62,10 +62,23 @@ interface Announcement {
   writer: string;
 }
 
+interface Seminar {
+  id: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+  company: string;
+  place: string;
+  speaker: string;
+  writer: string;
+}
+
 function Main(): JSX.Element {
   const navigate = useNavigate();
   const [papers, setPapers] = useState<Paper[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [seminar, setSeminar] = useState<Seminar[]>([]);
+  const [seminarId, setSeminarId] = useState<number>();
   const [activeTab, setActiveTab] = useState('학부');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +94,14 @@ function Main(): JSX.Element {
 
         // 초기 카테고리(학부)의 공지사항 로드
         await fetchAnnouncementsByCategory(CATEGORY_MAP.학부);
+
+        // 최신 세미나 로드
+        const seminarResponse = await axios.get(
+          apiEndpoints.seminar.listWithPage(0, 1, 'DESC'),
+        );
+        console.log(seminarResponse.data.data);
+        setSeminar(seminarResponse.data.data);
+        setSeminarId(seminarResponse.data.data[0].id);
       } catch (err) {
         console.error('초기 데이터 로드 실패:', err);
       }
@@ -175,20 +196,32 @@ function Main(): JSX.Element {
             </ContentContainer>
           </AnnouncementContainer>
           <SeminarContainer>
-            {/* TODO: 최신 세미나 링크 연결 필요 */}
-            <button>
-              <p>세미나</p>
-              <p>최신 세미나 제목</p>
-              <div>
-                최신 세미나 담당자
-                <br />
-                최신 세미나 일정
-                <br />
-                최신 세미나 진행 장소
-              </div>
-              <img src="info.svg" />
+            <button
+              style={{ flex: '1' }}
+              onClick={() => navigate(`/news/seminar/${seminarId}`)}
+            >
+              <p style={{ justifyContent: 'center', marginBottom: '1rem' }}>
+                세미나
+              </p>
+              {seminar.length === 0 ? (
+                <p>세미나가 없습니다.</p>
+              ) : (
+                <>
+                  <p>{seminar[seminar.length - 1].name}</p>
+                  <div>
+                    {seminar[seminar.length - 1].speaker}
+                    <br />
+                    {seminar[seminar.length - 1].startTime}
+                    <br />
+                    {seminar[seminar.length - 1].place}
+                  </div>
+                </>
+              )}
             </button>
-            <SeminarRoomReservation to="/seminar-rooms/reservation">
+            <SeminarRoomReservation
+              style={{ flex: '1' }}
+              to="/seminar-rooms/reservation"
+            >
               <span>
                 세미나실 <br />
                 예약
@@ -198,6 +231,7 @@ function Main(): JSX.Element {
           </SeminarContainer>
         </AnnouncementAndSeminar>
       </ContentWrapper>
+
       {/* 연구논문 */}
       <PaperContainer>
         <Title>연구 논문</Title>
