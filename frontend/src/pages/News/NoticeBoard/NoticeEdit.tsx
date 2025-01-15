@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
 import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import useNotice from '../../../hooks/queries/useNotice';
 import {
   Container,
   ContentWrapper,
@@ -25,76 +25,55 @@ import {
   FileItem,
 } from './NoticeCreateStyle';
 
-interface BoardDetail {
-  id: number;
-  title: string;
-  content: string;
-  writer: string;
-  createDate: string;
-  viewCount: number;
-  file?: string;
-  category: string;
-}
+const CATEGORIES = [
+  { value: 'undergraduate', label: '학부' },
+  { value: 'graduate', label: '대학원' },
+  { value: 'employment', label: '취업' },
+  { value: 'scholarship', label: '장학' },
+] as const;
 
 const NoticeEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { openModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('undergraduate');
+  const [category, setCategory] = useState<string>('undergraduate');
   const [file, setFile] = useState<File | null>(null);
   const [currentFile, setCurrentFile] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const categories = [
-    { value: 'undergraduate', label: '학부' },
-    { value: 'graduate', label: '대학원' },
-    { value: 'employment', label: '취업' },
-    { value: 'scholarship', label: '장학' },
-  ];
+  const { useGetNotice, useUpdateNotice } = useNotice;
+  const { data: post, isLoading, error, refetch } = useGetNotice(Number(id));
+  const updateNoticeMutation = useUpdateNotice();
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      if (!id) return;
-      try {
-        const response = await axios.get<BoardDetail>(
-          apiEndpoints.board.get(id),
-        );
-        const post = response.data;
-
-        setTitle(post.title);
-        setContent(post.content);
-        setCategory(post.category);
-        if (post.file) {
-          setCurrentFile(post.file);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch post:', error);
-        openModal(
-          <>
-            <Modal.Header>
-              <AlertTriangle size={48} color="#E53E3E" />
-              데이터 로드 실패
-            </Modal.Header>
-            <Modal.Content>
-              <p>게시글을 불러오는데 실패했습니다.</p>
-            </Modal.Content>
-            <Modal.Footer>
-              <Modal.CloseButton
-                onClick={() => navigate('/news/noticeboard')}
-              />
-            </Modal.Footer>
-          </>,
-        );
+  React.useEffect(() => {
+    if (post) {
+      // post가 직접 NoticeItem
+      console.log('Loading post data:', post);
+      setTitle(post.title);
+      setContent(post.content);
+      setCategory(post.category);
+      if (post.fileList && post.fileList.length > 0) {
+        setCurrentFile(post.fileList[0]);
       }
-    };
+    }
+  }, [post]);
 
-    fetchPost();
-  }, [id, navigate, openModal]);
+  // Add refetch effect
+  React.useEffect(() => {
+    if (id) {
+      refetch();
+    }
+  }, [id, refetch]);
+
+  // Add refetch effect
+  React.useEffect(() => {
+    if (id) {
+      refetch();
+    }
+  }, [id, refetch]);
 
   const modules = useMemo(
     () => ({
@@ -129,6 +108,33 @@ const NoticeEdit: React.FC = () => {
     );
   };
 
+  const showResultModal = (success: boolean, message: string) => {
+    openModal(
+      <>
+        <Modal.Header>
+          {success ? (
+            <CheckCircle size={48} color="#38A169" />
+          ) : (
+            <AlertTriangle size={48} color="#E53E3E" />
+          )}
+          {success ? '수정 완료' : '수정 실패'}
+        </Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton
+            onClick={() => {
+              if (success) {
+                navigate(`/news/noticeboard/${id}`);
+              }
+            }}
+          />
+        </Modal.Footer>
+      </>,
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -140,47 +146,23 @@ const NoticeEdit: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const updateData = {
-        title: title.trim(),
-        content: content.trim(),
-        category: category,
-        file: file ? file.name : currentFile,
-      };
+      await updateNoticeMutation.mutateAsync({
+        id: Number(id),
+        data: {
+          title: title.trim(),
+          content: content.trim(),
+          category: category,
+          departmentId: 1,
+          writer: post?.writer || '',
+          createDate: post?.createdDate || new Date().toISOString(),
+        },
+        files: file ? [file] : undefined,
+      });
 
-      await axios.post(apiEndpoints.board.update(id!), updateData);
-
-      openModal(
-        <>
-          <Modal.Header>
-            <CheckCircle size={48} color="#38A169" />
-            수정 완료
-          </Modal.Header>
-          <Modal.Content>
-            <p>게시글이 성공적으로 수정되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton
-              onClick={() => navigate(`/news/noticeboard/${id}`)}
-            />
-          </Modal.Footer>
-        </>,
-      );
+      showResultModal(true, '게시글이 성공적으로 수정되었습니다.');
     } catch (error) {
       console.error('Error updating post:', error);
-      openModal(
-        <>
-          <Modal.Header>
-            <AlertTriangle size={48} color="#E53E3E" />
-            수정 실패
-          </Modal.Header>
-          <Modal.Content>
-            <p>게시글 수정 중 오류가 발생했습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
+      showResultModal(false, '게시글 수정 중 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -198,8 +180,26 @@ const NoticeEdit: React.FC = () => {
     setCurrentFile('');
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return <LoadingSpinner text="게시글 정보를 불러오는 중입니다..." />;
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <ContentWrapper>
+          <Header>
+            <h1>오류 발생</h1>
+            <p>게시글을 불러오는데 실패했습니다.</p>
+          </Header>
+          <ButtonGroup>
+            <CancelButton onClick={() => navigate('/news/noticeboard')}>
+              목록으로 돌아가기
+            </CancelButton>
+          </ButtonGroup>
+        </ContentWrapper>
+      </Container>
+    );
   }
 
   return (
@@ -216,7 +216,7 @@ const NoticeEdit: React.FC = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              {categories.map((cat) => (
+              {CATEGORIES.map((cat) => (
                 <option key={cat.value} value={cat.value}>
                   {cat.label}
                 </option>

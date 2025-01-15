@@ -7,67 +7,57 @@ const media = {
 
 export const Container = styled.div`
   max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
+  width: 80vw;
+  margin: 0;
   padding: 40px 20px;
+
+  ${media.tablet} {
+    width: 90%;
+    padding: 30px 15px;
+  }
+
+  ${media.mobile} {
+    width: 95%;
+    padding: 20px 10px;
+  }
+`;
+
+export const ContentContainer = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+
+  ${media.tablet} {
+    padding: 1.5rem;
+  }
+
+  ${media.mobile} {
+    padding: 1rem;
+  }
 `;
 
 export const Header = styled.div`
   margin-bottom: 2rem;
   border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
+  width: 100%;
 `;
 
 export const Title = styled.h1`
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 600;
   margin-bottom: 1.5rem;
   color: #1a202c;
+  line-height: 1.4;
+  word-break: keep-all;
 
   ${media.mobile} {
     font-size: 1.5rem;
-  }
-`;
-
-export const MetaInfo = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  color: #4a5568;
-  font-size: 1.1rem;
-  position: relative;
-
-  ${media.mobile} {
-    gap: 1.5rem;
-    font-size: 0.9rem;
-  }
-`;
-
-export const MetaItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-export const Label = styled.span`
-  font-weight: 600;
-  color: #2d3748;
-`;
-
-export const ActionButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-
-  ${media.mobile} {
-    position: static;
-    transform: none;
-    margin-top: 1rem;
-    justify-content: flex-end;
-    width: 100%;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -77,10 +67,24 @@ export const QuillContent = styled.div`
   font-size: 1.1rem;
   line-height: 1.7;
   color: #2d3748;
+  width: 100%;
 
-  /* Quill 스타일 커스터마이징 */
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem auto;
+    display: block;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  // 기존 Quill 스타일 유지
   &.ql-editor {
     padding: 0;
+    width: 100%;
 
     h1,
     h2,
@@ -91,66 +95,7 @@ export const QuillContent = styled.div`
       margin: 1.5rem 0 1rem;
       font-weight: 600;
       color: #1a202c;
-    }
-
-    h1 {
-      font-size: 2em;
-    }
-    h2 {
-      font-size: 1.5em;
-    }
-    h3 {
-      font-size: 1.17em;
-    }
-
-    p {
-      margin-bottom: 1rem;
-    }
-
-    ul,
-    ol {
-      padding-left: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    li {
-      margin-bottom: 0.5rem;
-    }
-
-    blockquote {
-      border-left: 4px solid #e2e8f0;
-      padding-left: 1rem;
-      margin: 1rem 0;
-      color: #4a5568;
-    }
-
-    pre {
-      background-color: #f8fafc;
-      padding: 1rem;
-      border-radius: 6px;
-      margin: 1rem 0;
-    }
-
-    code {
-      background-color: #f8fafc;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      margin: 1rem 0;
-      border-radius: 6px;
-    }
-
-    a {
-      color: #3182ce;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
+      width: 100%;
     }
   }
 
@@ -162,43 +107,22 @@ export const QuillContent = styled.div`
 
 export const FileSection = styled.div`
   margin-top: 2rem;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
-`;
-
-export const FileLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  color: #3182ce;
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #f7fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #edf2f7;
-    border-color: #cbd5e0;
-    text-decoration: none;
-  }
-
-  ${media.mobile} {
-    font-size: 0.9rem;
-  }
+  width: 100%;
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid #e2e8f0;
+  width: 100%;
 
   ${media.mobile} {
-    gap: 0.375rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -379,5 +303,47 @@ export const FileDownloadButton = styled.button`
   ${media.mobile} {
     padding: 0.375rem 0.75rem;
     font-size: 0.85rem;
+  }
+`;
+
+export const MetaInfo = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+  position: relative;
+
+  ${media.mobile} {
+    gap: 1.5rem;
+    font-size: 0.9rem;
+  }
+`;
+
+export const MetaItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const Label = styled.span`
+  font-weight: 600;
+  color: #2d3748;
+`;
+
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  ${media.mobile} {
+    position: static;
+    transform: none;
+    margin-top: 1rem;
+    justify-content: flex-end;
+    width: 100%;
   }
 `;

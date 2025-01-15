@@ -68,9 +68,12 @@ function renderSightMapSections() {
       ],
     },
     {
-      title: '세미나실 예약',
+      title: '서비스',
       titleLink: '/seminar-rooms/reservation',
-      contents: [{ name: '예약 페이지', link: '/seminar-rooms/reservation' }],
+      contents: [
+        { name: '예약센터', link: '/seminar-rooms/reservation' },
+        { name: '관리자', link: '/signin' },
+      ],
     },
   ];
 

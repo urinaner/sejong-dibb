@@ -1,79 +1,40 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { ChevronLeft, ChevronRight, Edit, Plus } from 'lucide-react';
+import React, { useState, useCallback, useContext } from 'react';
+import { Edit, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import * as S from './FacultyStyle';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { useProfessors } from '../../../hooks/queries/useProfessor';
 import ProfessorCard from './ProfessorCard';
 import { AuthContext } from '../../../context/AuthContext';
 import Button from '../../../common/Button/Button';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import Pagination from '../../../common/Pagination/Pagination';
 
 const ITEMS_PER_PAGE = 10;
 const DEFAULT_PROFILE_IMAGE = '/professor_example.jpg';
 
-interface Professor {
-  id: number;
-  name: string;
-  major: string;
-  phoneN: string;
-  email: string;
-  position: string;
-  homepage: string;
-  lab: string;
-  profileImage: string;
-}
-
-interface ApiResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: Professor[];
-}
-
 const Professor = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
-  const [professors, setProfessors] = useState<Professor[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const isAuthenticated = auth?.isAuthenticated ?? false;
 
-  const fetchProfessors = useCallback(async (page: number) => {
-    try {
-      setLoading(true);
-      const response = await axios.get<ApiResponse>(
-        apiEndpoints.professor.listWithPage(page, ITEMS_PER_PAGE),
-      );
-
-      if (response.data?.data) {
-        setProfessors(response.data.data);
-        setTotalPages(response.data.totalPage);
-      } else {
-        throw new Error('Invalid data format received');
-      }
-    } catch (err) {
-      let errorMessage = '교수진 데이터를 불러오는데 실패했습니다.';
-      if (axios.isAxiosError(err) && err.response?.status === 404) {
-        errorMessage = '데이터가 존재하지 않습니다.';
-      }
-      setError(errorMessage);
-      console.error('Error fetching professors:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data, isLoading, isError, error } = useProfessors({
+    page: currentPage,
+    size: ITEMS_PER_PAGE,
+  });
 
   const handlePageChange = useCallback(
     (newPage: number) => {
-      if (newPage >= 0 && newPage < totalPages) {
-        setCurrentPage(newPage);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (data && typeof data.totalPage === 'number') {
+        const adjustedPage = newPage - 1; // 1-based to 0-based
+        if (adjustedPage >= 0 && adjustedPage < data.totalPage) {
+          setCurrentPage(adjustedPage);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
     },
-    [totalPages],
+    [data],
   );
 
   const handleImageError = useCallback(
@@ -94,12 +55,8 @@ const Professor = () => {
     [navigate],
   );
 
-  useEffect(() => {
-    fetchProfessors(currentPage);
-  }, [currentPage, fetchProfessors]);
-
   const renderProfessorList = () => {
-    return professors.map((professor) => (
+    return data?.data.map((professor) => (
       <S.ProfessorCardWrapper key={professor.id}>
         <ProfessorCard
           professor={professor}
@@ -122,46 +79,22 @@ const Professor = () => {
     ));
   };
 
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-
-    return (
-      <S.PaginationWrapper>
-        <S.PaginationButton
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
-          aria-label="이전 페이지"
-        >
-          <ChevronLeft />
-        </S.PaginationButton>
-
-        <S.PageNumber>
-          {currentPage + 1} / {totalPages}
-        </S.PageNumber>
-
-        <S.PaginationButton
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages - 1}
-          aria-label="다음 페이지"
-        >
-          <ChevronRight />
-        </S.PaginationButton>
-      </S.PaginationWrapper>
-    );
-  };
-
   const renderContent = () => {
-    if (loading) {
+    if (isLoading) {
+      return <LoadingSpinner text="정보를 불러오는 중" />;
+    }
+
+    if (isError) {
       return (
-        <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
+        <S.ErrorContainer>
+          {error instanceof Error
+            ? error.message
+            : '교수진 데이터를 불러오는데 실패했습니다.'}
+        </S.ErrorContainer>
       );
     }
 
-    if (error) {
-      return <S.ErrorContainer>{error}</S.ErrorContainer>;
-    }
-
-    if (professors.length === 0) {
+    if (!data?.data || data.data.length === 0) {
       return (
         <S.EmptyStateContainer>
           등록된 교수진 정보가 없습니다.
@@ -172,7 +105,11 @@ const Professor = () => {
     return (
       <>
         <S.ProfessorList>{renderProfessorList()}</S.ProfessorList>
-        {renderPagination()}
+        <Pagination
+          totalPages={data?.totalPage ?? 0}
+          currentPage={currentPage + 1}
+          onPageChange={handlePageChange}
+        />
       </>
     );
   };

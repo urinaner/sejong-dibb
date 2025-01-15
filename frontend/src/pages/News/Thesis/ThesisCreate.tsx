@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { apiEndpoints, ThesisReqDto } from '../../../config/apiConfig';
+import { useCreateThesis } from '../../../hooks/queries/useThesis';
+import { ThesisReqDto } from '../../../config/apiConfig';
 import * as S from './ThesisCreateStyle';
 import { Image as ImageIcon } from 'lucide-react';
 import {
@@ -20,7 +20,8 @@ interface AlertState {
 
 const ThesisCreate: React.FC = () => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createThesisMutation = useCreateThesis();
+
   const [formData, setFormData] = useState<ThesisReqDto>({
     author: '',
     journal: '',
@@ -108,8 +109,6 @@ const ThesisCreate: React.FC = () => {
     }
 
     try {
-      setIsSubmitting(true);
-
       const thesisReqDto: ThesisReqDto = {
         ...formData,
         author: formData.author.trim(),
@@ -118,36 +117,27 @@ const ThesisCreate: React.FC = () => {
         thesisImage: '',
       };
 
-      const formDataToSend = apiEndpoints.thesis.create.getFormData(
-        thesisReqDto,
-        imageFile,
-      );
-
-      const response = await axios.post(
-        apiEndpoints.thesis.create.url,
-        formDataToSend,
+      await createThesisMutation.mutateAsync(
+        { thesisReqDto, imageFile },
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+          onSuccess: () => {
+            showAlert('등록 완료', '논문이 성공적으로 등록되었습니다.');
+            setTimeout(() => {
+              navigate('/news/thesis');
+            }, 1500);
+          },
+          onError: (error) => {
+            console.error('Error creating thesis:', error);
+            showAlert(
+              '논문 등록 실패',
+              '논문 등록 중 오류가 발생했습니다. 다시 시도해주세요.',
+              'error',
+            );
           },
         },
       );
-
-      if (response.status === 200) {
-        showAlert('등록 완료', '논문이 성공적으로 등록되었습니다.');
-        setTimeout(() => {
-          navigate('/news/thesis');
-        }, 1500);
-      }
     } catch (error) {
-      console.error('Error creating thesis:', error);
-      showAlert(
-        '논문 등록 실패',
-        '논문 등록 중 오류가 발생했습니다. 다시 시도해주세요.',
-        'error',
-      );
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error in handleSubmit:', error);
     }
   };
 
@@ -320,8 +310,11 @@ const ThesisCreate: React.FC = () => {
               >
                 취소
               </S.CancelButton>
-              <S.SubmitButton type="submit" disabled={isSubmitting}>
-                {isSubmitting ? '등록 중...' : '논문 등록'}
+              <S.SubmitButton
+                type="submit"
+                disabled={createThesisMutation.isPending}
+              >
+                {createThesisMutation.isPending ? '등록 중...' : '논문 등록'}
               </S.SubmitButton>
             </S.ButtonGroup>
           </S.FormSection>

@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, PlusCircle, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import { Modal, useModal } from '../../../components/Modal';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import { AuthContext } from '../../../context/AuthContext';
+import {
+  useGetNewsList,
+  useDeleteNews,
+  newsKeys,
+} from '../../../hooks/queries/useNews';
+import { queryClient } from '../../../lib/react-query/queryClient';
 import {
   Container,
   NewsGrid,
@@ -21,7 +27,6 @@ import {
   PageItem,
   PageButton,
   PaginationButton,
-  LoadingSpinner,
   ErrorMessage,
   NoResults,
   AdminButtonGroup,
@@ -30,58 +35,21 @@ import {
   AdminActions,
 } from './NewsStyle';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  content: string;
-  view: number;
-  createDate: string;
-  link: string;
-  image: string;
-}
-
-interface NewsResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: NewsItem[];
-}
-
 const News = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = React.useState(0);
   const pageSize = 10;
+  const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
 
-  useEffect(() => {
-    fetchNews();
-  }, [currentPage]);
+  const {
+    data: newsItems,
+    isLoading,
+    isError,
+    error,
+  } = useGetNewsList({ page: currentPage, size: pageSize });
 
-  const fetchNews = async () => {
-    try {
-      setIsLoading(true);
-      setError('');
-      const response = await fetch(
-        apiEndpoints.news.listWithPage(currentPage, pageSize),
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch news');
-      }
-      const data: NewsResponse = await response.json();
-      setNews(data.data);
-      setTotalPages(data.totalPage);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-      setError('뉴스를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const deleteMutation = useDeleteNews();
 
   const handleNewsClick = (newsId: number) => {
     navigate(`/news/${newsId}`);
@@ -94,7 +62,6 @@ const News = () => {
 
   const handleDelete = (e: React.MouseEvent, newsId: number) => {
     e.stopPropagation();
-
     openModal(
       <>
         <Modal.Header>뉴스 삭제</Modal.Header>
@@ -113,29 +80,24 @@ const News = () => {
 
   const confirmDelete = async (newsId: number) => {
     try {
-      const response = await fetch(apiEndpoints.news.delete(newsId), {
-        method: 'DELETE',
+      await deleteMutation.mutateAsync(newsId, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
+
+          openModal(
+            <>
+              <Modal.Header>삭제 완료</Modal.Header>
+              <Modal.Content>
+                <p>뉴스가 성공적으로 삭제되었습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton />
+              </Modal.Footer>
+            </>,
+          );
+        },
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete news');
-      }
-
-      fetchNews();
-
-      openModal(
-        <>
-          <Modal.Header>삭제 완료</Modal.Header>
-          <Modal.Content>
-            <p>뉴스가 성공적으로 삭제되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
     } catch (error) {
-      console.error('Error deleting news:', error);
       openModal(
         <>
           <Modal.Header>삭제 실패</Modal.Header>
@@ -151,15 +113,16 @@ const News = () => {
   };
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderPagination = () => {
+    if (!newsItems) return null;
+
     const pages = [];
     const currentPageNum = currentPage + 1;
+    const pageCount = Math.ceil(newsItems.length / pageSize);
 
     // 첫 페이지와 이전 버튼
     pages.push(
@@ -167,7 +130,7 @@ const News = () => {
         key="first"
         direction="prev"
         onClick={() => handlePageChange(0)}
-        disabled={currentPageNum === 1}
+        disabled={currentPage === 0}
       >
         ⟪ 처음
       </PaginationButton>,
@@ -175,7 +138,7 @@ const News = () => {
         key="prev"
         direction="prev"
         onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPageNum === 1}
+        disabled={currentPage === 0}
       >
         ⟨ 이전
       </PaginationButton>,
@@ -183,37 +146,35 @@ const News = () => {
 
     // 페이지 번호 렌더링
     const pageItems = [];
-    if (totalPages <= 10) {
-      // 10페이지 이하일 경우 모든 페이지 표시
-      for (let i = 1; i <= totalPages; i++) {
+    if (pageCount <= 10) {
+      for (let i = 0; i < pageCount; i++) {
         pageItems.push(
           <PageItem key={i}>
             <PageButton
-              onClick={() => handlePageChange(i - 1)}
-              isActive={i === currentPageNum}
+              onClick={() => handlePageChange(i)}
+              isActive={i === currentPage}
             >
-              {i}
+              {i + 1}
             </PageButton>
           </PageItem>,
         );
       }
     } else {
-      // 10페이지 초과시 페이지 범위 계산하여 표시
-      let startPage = Math.max(1, currentPageNum - 4);
-      const endPage = Math.min(totalPages, startPage + 9);
+      let startPage = Math.max(0, currentPage - 4);
+      const endPage = Math.min(pageCount - 1, startPage + 9);
 
       if (endPage - startPage < 9) {
-        startPage = Math.max(1, endPage - 9);
+        startPage = Math.max(0, endPage - 9);
       }
 
       for (let i = startPage; i <= endPage; i++) {
         pageItems.push(
           <PageItem key={i}>
             <PageButton
-              onClick={() => handlePageChange(i - 1)}
-              isActive={i === currentPageNum}
+              onClick={() => handlePageChange(i)}
+              isActive={i === currentPage}
             >
-              {i}
+              {i + 1}
             </PageButton>
           </PageItem>,
         );
@@ -228,15 +189,15 @@ const News = () => {
         key="next"
         direction="next"
         onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPageNum === totalPages}
+        disabled={currentPage === pageCount - 1}
       >
         다음 ⟩
       </PaginationButton>,
       <PaginationButton
         key="last"
         direction="next"
-        onClick={() => handlePageChange(totalPages - 1)}
-        disabled={currentPageNum === totalPages}
+        onClick={() => handlePageChange(pageCount - 1)}
+        disabled={currentPage === pageCount - 1}
       >
         마지막 ⟫
       </PaginationButton>,
@@ -248,20 +209,24 @@ const News = () => {
   if (isLoading) {
     return (
       <Container>
-        <LoadingSpinner>로딩 중...</LoadingSpinner>
+        <LoadingSpinner text="뉴스를 불러오는 중입니다..." />
       </Container>
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <Container>
-        <ErrorMessage>{error}</ErrorMessage>
+        <ErrorMessage>
+          {error instanceof Error
+            ? error.message
+            : '뉴스를 불러오는데 실패했습니다.'}
+        </ErrorMessage>
       </Container>
     );
   }
 
-  if (!news.length) {
+  if (!newsItems || newsItems.length === 0) {
     return (
       <Container>
         {auth?.isAdmin && (
@@ -288,7 +253,7 @@ const News = () => {
         </AdminButtonGroup>
       )}
       <NewsGrid>
-        {news.map((item) => (
+        {newsItems.map((item) => (
           <NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <NewsImage
               imageUrl={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${item.image}`}
@@ -322,7 +287,7 @@ const News = () => {
           </NewsCard>
         ))}
       </NewsGrid>
-      {totalPages > 1 && renderPagination()}
+      {newsItems.length > pageSize && renderPagination()}
     </Container>
   );
 };

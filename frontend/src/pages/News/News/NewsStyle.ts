@@ -3,10 +3,13 @@ import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const Container = styled.div`
-  max-width: 90%;
-  width: 90%;
+  max-width: 100%;
+  width: 80vw;
   margin: 0 auto;
-  padding: 2.5rem 1rem;
+  padding: 2.5rem 0.5rem;
+  flex-direction: column;
+  align-items: center; /* 추가 */
+  display: flex; /* 추가 */
 
   ${media.mobile} {
     width: 95%;
@@ -17,6 +20,8 @@ export const Container = styled.div`
 export const NewsGrid = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center; /* 추가 */
+  max-width: 1200px; /* 추가: 최대 너비 설정 */
   gap: 1.5rem;
   margin-top: 1.75rem;
 `;
@@ -28,6 +33,8 @@ export const NewsCard = styled.div`
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}15;
+  width: 100%; /* 추가 */
+  max-width: 1200px; /* 추가: 최대 너비 설정 */
 
   &:first-child {
     padding-top: 0;

@@ -4,6 +4,8 @@ import { Wrapper, Content, Title, InfoCard } from '../AboutStyle';
 export const OrgWrapper = styled(Wrapper)`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 40px 20px;
+  max-width: 1400px;
+  width: 80vw;
 `;
 
 export const OrgContent = styled(Content)`

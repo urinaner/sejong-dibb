@@ -1,5 +1,49 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import axios, { AxiosInstance } from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
+// axios 인스턴스 생성
+export const axiosInstance: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  withCredentials: true, // CORS 요청에서 쿠키 전송 허용
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
+
+// 요청 인터셉터
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // XSRF-TOKEN 쿠키가 있다면 헤더에 추가
+    const xsrfToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('XSRF-TOKEN='))
+      ?.split('=')[1];
+
+    if (xsrfToken) {
+      config.headers['X-XSRF-TOKEN'] = xsrfToken;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// 응답 인터셉터
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // 인증 에러 처리
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
 export interface NewsReqDto {
   title: string;
   content: string;
@@ -50,11 +94,12 @@ interface ThesisEndpoint {
 }
 
 export interface SeminarDto {
+  id?: number;
   name: string;
   writer: string;
   place: string;
-  startDate: string;
-  endDate: string;
+  startTime: string;
+  endTime: string;
   speaker: string;
   company: string;
 }
@@ -121,12 +166,7 @@ export const apiEndpoints = {
       url: `${API_URL}/api/thesis`,
       getFormData: (thesisReqDto: ThesisReqDto, imageFile?: File | null) => {
         const formData = new FormData();
-        formData.append(
-          'thesisReqDto',
-          new Blob([JSON.stringify(thesisReqDto)], {
-            type: 'application/json',
-          }),
-        );
+        formData.append('thesisReqDto', JSON.stringify(thesisReqDto));
         if (imageFile) {
           formData.append('thesis_image', imageFile);
         }
