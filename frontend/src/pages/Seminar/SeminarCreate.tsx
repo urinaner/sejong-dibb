@@ -1,29 +1,31 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
-import { apiEndpoints, SeminarDto } from '../../config/apiConfig';
+import { SeminarDto } from '../../config/apiConfig';
 import { Modal, useModal } from '../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
-
+import { useCreateSeminar, seminarKeys } from '../../hooks/queries/useSeminar';
+import { queryClient } from '../../lib/react-query/queryClient';
 const SeminarCreate = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createMutation = useCreateSeminar();
 
-  const [formData, setFormData] = useState<SeminarDto>({
+  const [formData, setFormData] = useState<Omit<SeminarDto, 'id'>>({
     name: '',
     writer: auth?.user || '',
     place: '',
-    startDate: '',
-    endDate: '',
+    startTime: '',
+    endTime: '',
     speaker: '',
     company: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -66,11 +68,11 @@ const SeminarCreate = () => {
   };
 
   const validateForm = () => {
-    const requiredFields: (keyof SeminarDto)[] = [
+    const requiredFields: (keyof typeof formData)[] = [
       'name',
       'place',
-      'startDate',
-      'endDate',
+      'startTime',
+      'endTime',
       'speaker',
       'company',
     ];
@@ -81,12 +83,21 @@ const SeminarCreate = () => {
       return false;
     }
 
-    if (new Date(formData.startDate) > new Date(formData.endDate)) {
-      showErrorModal('종료일은 시작일보다 빠를 수 없습니다.');
+    const startDateTime = new Date(formData.startTime.replace('T', ' '));
+    const endDateTime = new Date(formData.endTime.replace('T', ' '));
+
+    if (startDateTime > endDateTime) {
+      showErrorModal('종료 시간은 시작 시간보다 빠를 수 없습니다.');
       return false;
     }
 
     return true;
+  };
+
+  const formatDateTime = (dateTimeString: string) => {
+    if (!dateTimeString) return '';
+    // HTML datetime-local의 값을 원하는 형식으로 변환
+    return dateTimeString.replace('T', ' ');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -94,15 +105,27 @@ const SeminarCreate = () => {
 
     if (!validateForm()) return;
 
+    // 시간 형식 변환
+    const formattedData = {
+      ...formData,
+      startTime: formatDateTime(formData.startTime),
+      endTime: formatDateTime(formData.endTime),
+    };
+
     try {
-      setIsSubmitting(true);
-      await axios.post(apiEndpoints.seminar.create, formData);
-      showSuccessModal();
+      await createMutation.mutateAsync(formattedData, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: seminarKeys.all });
+          showSuccessModal();
+        },
+        onError: (error) => {
+          console.error('Error creating seminar:', error);
+          showErrorModal('세미나 등록 중 오류가 발생했습니다.');
+        },
+      });
     } catch (error) {
       console.error('Error creating seminar:', error);
       showErrorModal('세미나 등록 중 오류가 발생했습니다.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -160,21 +183,21 @@ const SeminarCreate = () => {
 
           <FormRow>
             <FormGroup>
-              <Label>시작일</Label>
+              <Label>시작 시간</Label>
               <Input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
+                type="datetime-local"
+                name="startTime"
+                value={formData.startTime}
                 onChange={handleChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <Label>종료일</Label>
+              <Label>종료 시간</Label>
               <Input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
+                type="datetime-local"
+                name="endTime"
+                value={formData.endTime}
                 onChange={handleChange}
               />
             </FormGroup>
@@ -187,8 +210,8 @@ const SeminarCreate = () => {
             >
               취소
             </CancelButton>
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '등록 중...' : '세미나 등록'}
+            <SubmitButton type="submit" disabled={createMutation.isPending}>
+              {createMutation.isPending ? '등록 중...' : '세미나 등록'}
             </SubmitButton>
           </ButtonGroup>
         </FormSection>
