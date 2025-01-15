@@ -64,7 +64,10 @@ export const useThesisList = (
 // GET - Single Thesis
 export const useThesis = (
   id: string,
-  options?: UseQueryOptions<ThesisItem, Error, ThesisItem>,
+  options?: Omit<
+    UseQueryOptions<ThesisItem, Error, ThesisItem, readonly unknown[]>,
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery<ThesisItem, Error>({
     queryKey: thesisKeys.detail(id),

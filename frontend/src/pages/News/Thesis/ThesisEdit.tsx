@@ -1,77 +1,55 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
-import axios from 'axios';
-import API_URL, { apiEndpoints, ThesisReqDto } from '../../../config/apiConfig';
 import { Modal, useModal } from '../../../components/Modal';
 import ThesisForm from './ThesisForm';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import {
+  useThesis,
+  useUpdateThesis,
+  useDeleteThesis,
+} from '../../../hooks/queries/useThesis';
+import type { ThesisItem } from '../../../hooks/queries/useThesis';
 
 const ThesisEdit: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { openModal } = useModal();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [thumbnailError, setThumbnailError] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<ThesisReqDto>({
-    author: '',
-    journal: '',
-    content: '',
-    link: '',
-    publicationDate: '',
-    thesisImage: '',
-    publicationCollection: '',
-    publicationIssue: '',
-    publicationPage: '',
-    issn: '',
-    professorId: 1,
+  // React Query hooks
+  const [formData, setFormData] = useState<ThesisItem | null>(null);
+  const { data: thesis, isLoading } = useThesis(id, {
+    enabled: !!id,
+    staleTime: 30000, // 30초
   });
 
+  // thesis 데이터가 로드되면 formData를 업데이트
   useEffect(() => {
-    const fetchThesis = async () => {
-      try {
-        const response = await axios.get(apiEndpoints.thesis.get(id));
-        setFormData(response.data);
-        if (response.data.thesisImage) {
-          setImagePreview(response.data.thesisImage);
-        }
-      } catch (error) {
-        console.error('Error fetching thesis:', error);
-        openModal(
-          <>
-            <Modal.Header>
-              <AlertTriangle size={48} color="#E53E3E" />
-              데이터 로드 실패
-            </Modal.Header>
-            <Modal.Content>
-              <p>논문 정보를 불러오는데 실패했습니다.</p>
-            </Modal.Content>
-            <Modal.Footer>
-              <Modal.CloseButton onClick={() => navigate('/news/thesis')} />
-            </Modal.Footer>
-          </>,
-        );
-      } finally {
-        setIsLoading(false);
+    if (thesis) {
+      setFormData(thesis);
+      if (thesis.thesisImage) {
+        setImagePreview(thesis.thesisImage);
       }
-    };
-
-    if (id) {
-      fetchThesis();
     }
-  }, [id, navigate, openModal]);
+  }, [thesis]);
+
+  const updateMutation = useUpdateThesis();
+  const deleteMutation = useDeleteThesis();
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          [name]: value,
+        };
+      });
     },
     [],
   );
@@ -132,6 +110,8 @@ const ThesisEdit: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData) return;
+
     if (
       !formData.author.trim() ||
       !formData.journal.trim() ||
@@ -154,61 +134,66 @@ const ThesisEdit: React.FC = () => {
       return;
     }
 
+    const thesisReqDto: Omit<ThesisItem, 'id'> = {
+      author: formData.author.trim(),
+      journal: formData.journal.trim(),
+      content: formData.content.trim(),
+      link: formData.link,
+      publicationDate: formData.publicationDate,
+      thesisImage: formData.thesisImage,
+      publicationCollection: formData.publicationCollection,
+      publicationIssue: formData.publicationIssue,
+      publicationPage: formData.publicationPage,
+      issn: formData.issn,
+      professorId: formData.professorId,
+    };
+
     try {
-      setIsSubmitting(true);
-
-      const thesisReqDto: ThesisReqDto = {
-        ...formData,
-        author: formData.author.trim(),
-        journal: formData.journal.trim(),
-        content: formData.content.trim(),
-        thesisImage: formData.thesisImage, // 기존 이미지 URL 유지
-      };
-
-      // FormData 생성을 apiEndpoints의 helper 함수를 사용하여 처리
-      const formDataToSend = apiEndpoints.thesis.update.getFormData(
-        thesisReqDto,
-        imageFile,
-      );
-
-      await axios.post(`${API_URL}/api/thesis/${id}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      await updateMutation.mutateAsync(
+        {
+          id,
+          thesisReqDto,
+          imageFile,
         },
-      });
-
-      openModal(
-        <>
-          <Modal.Header>
-            <CheckCircle size={48} color="#38A169" />
-            수정 완료
-          </Modal.Header>
-          <Modal.Content>
-            <p>논문이 성공적으로 수정되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton onClick={() => navigate(`/news/thesis/${id}`)} />
-          </Modal.Footer>
-        </>,
+        {
+          onSuccess: () => {
+            openModal(
+              <>
+                <Modal.Header>
+                  <CheckCircle size={48} color="#38A169" />
+                  수정 완료
+                </Modal.Header>
+                <Modal.Content>
+                  <p>논문이 성공적으로 수정되었습니다.</p>
+                </Modal.Content>
+                <Modal.Footer>
+                  <Modal.CloseButton
+                    onClick={() => navigate(`/news/thesis/${id}`)}
+                  />
+                </Modal.Footer>
+              </>,
+            );
+          },
+          onError: () => {
+            openModal(
+              <>
+                <Modal.Header>
+                  <AlertTriangle size={48} color="#E53E3E" />
+                  수정 실패
+                </Modal.Header>
+                <Modal.Content>
+                  <p>논문 수정 중 오류가 발생했습니다.</p>
+                </Modal.Content>
+                <Modal.Footer>
+                  <Modal.CloseButton />
+                </Modal.Footer>
+              </>,
+            );
+          },
+        },
       );
     } catch (error) {
       console.error('Error updating thesis:', error);
-      openModal(
-        <>
-          <Modal.Header>
-            <AlertTriangle size={48} color="#E53E3E" />
-            수정 실패
-          </Modal.Header>
-          <Modal.Content>
-            <p>논문 수정 중 오류가 발생했습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -224,8 +209,11 @@ const ThesisEdit: React.FC = () => {
         </Modal.Content>
         <Modal.Footer>
           <Modal.CloseButton />
-          <Modal.DeleteButton onClick={handleDelete} disabled={isSubmitting}>
-            {isSubmitting ? '삭제 중...' : '삭제'}
+          <Modal.DeleteButton
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? '삭제 중...' : '삭제'}
           </Modal.DeleteButton>
         </Modal.Footer>
       </>,
@@ -233,54 +221,62 @@ const ThesisEdit: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    setIsSubmitting(true);
     try {
-      await axios.delete(apiEndpoints.thesis.delete(id));
-      openModal(
-        <>
-          <Modal.Header>
-            <CheckCircle size={48} color="#38A169" />
-            삭제 완료
-          </Modal.Header>
-          <Modal.Content>
-            <p>논문이 성공적으로 삭제되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton onClick={() => navigate('/news/thesis')} />
-          </Modal.Footer>
-        </>,
-      );
+      await deleteMutation.mutateAsync(id, {
+        onSuccess: () => {
+          openModal(
+            <>
+              <Modal.Header>
+                <CheckCircle size={48} color="#38A169" />
+                삭제 완료
+              </Modal.Header>
+              <Modal.Content>
+                <p>논문이 성공적으로 삭제되었습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton onClick={() => navigate('/news/thesis')} />
+              </Modal.Footer>
+            </>,
+          );
+        },
+        onError: () => {
+          openModal(
+            <>
+              <Modal.Header>
+                <AlertTriangle size={48} color="#E53E3E" />
+                삭제 실패
+              </Modal.Header>
+              <Modal.Content>
+                <p>논문 삭제 중 오류가 발생했습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton />
+              </Modal.Footer>
+            </>,
+          );
+        },
+      });
     } catch (error) {
       console.error('Error deleting thesis:', error);
-      openModal(
-        <>
-          <Modal.Header>
-            <AlertTriangle size={48} color="#E53E3E" />
-            삭제 실패
-          </Modal.Header>
-          <Modal.Content>
-            <p>논문 삭제 중 오류가 발생했습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <LoadingSpinner text="논문 정보를 불러오는 중입니다..." />
+      </div>
+    );
   }
+
+  if (!thesis) return null;
 
   return (
     <ThesisForm
-      formData={formData}
+      formData={formData || thesis || null}
       onChange={handleInputChange}
       onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
+      isSubmitting={updateMutation.isPending}
       mode="edit"
       imagePreview={imagePreview}
       onImageChange={handleImageChange}
