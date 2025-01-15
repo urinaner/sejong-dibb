@@ -82,14 +82,14 @@ public class Professor {
     }
 
     public void update(ProfessorReqDto dto) {
-        this.name = dto.getName() == null ? this.name : dto.getName();
-        this.major = dto.getMajor() == null ? this.major : dto.getMajor();
-        this.phoneN = dto.getPhoneN() == null ? this.phoneN : dto.getPhoneN();
-        this.email = dto.getEmail() == null ? this.email : dto.getEmail();
-        this.position = dto.getPosition() == null ? this.position : dto.getPosition();
-        this.homepage = dto.getHomepage() == null ? this.homepage : dto.getHomepage();
-        this.lab = dto.getLab() == null ? this.lab : dto.getLab();
-        this.profileImage = dto.getProfileImage() == null ? this.profileImage : dto.getProfileImage();
+        this.name = dto.getName();
+        this.major = dto.getMajor();
+        this.phoneN = dto.getPhoneN();
+        this.email = dto.getEmail();
+        this.position = dto.getPosition();
+        this.homepage = dto.getHomepage();
+        this.lab = dto.getLab();
+        this.profileImage = dto.getProfileImage();
     }
 
     public void updateProfilePhoto(String uploadImageUrl) {
