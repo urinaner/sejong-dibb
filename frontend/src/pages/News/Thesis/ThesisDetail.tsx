@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ExternalLink,
@@ -11,26 +11,11 @@ import {
   Image as ImageIcon,
   CheckCircle,
 } from 'lucide-react';
-import axios from 'axios';
-import { apiEndpoints } from '../../../config/apiConfig';
 import { AuthContext } from '../../../context/AuthContext';
-import * as S from './ThesisDetailStyle';
 import { Modal, useModal } from '../../../components/Modal';
-
-interface ThesisDetail {
-  id: number;
-  author: string;
-  journal: string;
-  content: string;
-  link: string;
-  publicationDate: string;
-  thesisImage: string;
-  publicationCollection: string;
-  publicationIssue: string;
-  publicationPage: string;
-  issn: string;
-  professorId: number;
-}
+import { useThesis, useDeleteThesis } from '../../../hooks/queries/useThesis';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import * as S from './ThesisDetailStyle';
 
 const DEFAULT_THUMBNAIL = '/paperImage.png';
 
@@ -40,38 +25,21 @@ const ThesisDetail: React.FC = () => {
   const auth = useContext(AuthContext);
   const { openModal, closeModal } = useModal();
 
-  const [thesis, setThesis] = useState<ThesisDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [thumbnailError, setThumbnailError] = useState(false);
 
-  const fetchThesisDetail = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get<ThesisDetail>(
-        apiEndpoints.thesis.get(id),
-      );
-      setThesis(response.data);
-    } catch (error) {
-      console.error('Failed to fetch thesis details:', error);
-      setError('논문 정보를 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    fetchThesisDetail();
-  }, [fetchThesisDetail]);
+  // React Query hooks
+  const { data: thesis, isLoading, error } = useThesis(id);
+  const deleteMutation = useDeleteThesis();
 
   const handleImageError = () => {
     setThumbnailError(true);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
+      <S.Container>
+        <LoadingSpinner text="논문 정보를 불러오는 중입니다..." />
+      </S.Container>
     );
   }
 
@@ -79,7 +47,7 @@ const ThesisDetail: React.FC = () => {
     return (
       <S.ErrorContainer>
         <AlertTriangle size={20} />
-        {error}
+        {error.message || '논문 정보를 불러오는데 실패했습니다.'}
       </S.ErrorContainer>
     );
   }
@@ -92,6 +60,7 @@ const ThesisDetail: React.FC = () => {
       </S.ErrorContainer>
     );
   }
+
   // 삭제 확인 모달
   const showDeleteConfirmModal = () => {
     openModal(
@@ -106,51 +75,12 @@ const ThesisDetail: React.FC = () => {
         </Modal.Content>
         <Modal.Footer>
           <Modal.CloseButton onClick={closeModal} />
-          <S.DeleteButton onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? '삭제 중...' : '삭제'}
+          <S.DeleteButton
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? '삭제 중...' : '삭제'}
           </S.DeleteButton>
-        </Modal.Footer>
-      </>,
-    );
-  };
-
-  // 삭제 성공 모달
-  const showSuccessModal = () => {
-    openModal(
-      <>
-        <Modal.Header>
-          <CheckCircle size={48} color="#38A169" />
-          삭제 완료
-        </Modal.Header>
-        <Modal.Content>
-          <p>논문이 성공적으로 삭제되었습니다.</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Modal.CloseButton
-            onClick={() => {
-              closeModal();
-              navigate('/news/thesis');
-            }}
-          />
-        </Modal.Footer>
-      </>,
-    );
-  };
-
-  // 삭제 실패 모달
-  const showErrorModal = () => {
-    openModal(
-      <>
-        <Modal.Header>
-          <AlertTriangle size={48} color="#E53E3E" />
-          삭제 실패
-        </Modal.Header>
-        <Modal.Content>
-          <p>논문 삭제 중 오류가 발생했습니다.</p>
-          <p>다시 시도해 주세요.</p>
-        </Modal.Content>
-        <Modal.Footer>
-          <Modal.CloseButton onClick={closeModal} />
         </Modal.Footer>
       </>,
     );
@@ -158,14 +88,48 @@ const ThesisDetail: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
-      await axios.delete(apiEndpoints.thesis.delete(id));
-      showSuccessModal();
+      await deleteMutation.mutateAsync(id, {
+        onSuccess: () => {
+          openModal(
+            <>
+              <Modal.Header>
+                <CheckCircle size={48} color="#38A169" />
+                삭제 완료
+              </Modal.Header>
+              <Modal.Content>
+                <p>논문이 성공적으로 삭제되었습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton
+                  onClick={() => {
+                    closeModal();
+                    navigate('/news/thesis');
+                  }}
+                />
+              </Modal.Footer>
+            </>,
+          );
+        },
+        onError: () => {
+          openModal(
+            <>
+              <Modal.Header>
+                <AlertTriangle size={48} color="#E53E3E" />
+                삭제 실패
+              </Modal.Header>
+              <Modal.Content>
+                <p>논문 삭제 중 오류가 발생했습니다.</p>
+                <p>다시 시도해 주세요.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton onClick={closeModal} />
+              </Modal.Footer>
+            </>,
+          );
+        },
+      });
     } catch (error) {
       console.error('Failed to delete thesis:', error);
-      showErrorModal();
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -194,10 +158,10 @@ const ThesisDetail: React.FC = () => {
             </S.EditButton>
             <S.DeleteButton
               onClick={showDeleteConfirmModal}
-              disabled={isDeleting}
+              disabled={deleteMutation.isPending}
             >
               <Trash2 size={18} />
-              {isDeleting ? '삭제 중...' : '삭제'}
+              {deleteMutation.isPending ? '삭제 중...' : '삭제'}
             </S.DeleteButton>
           </S.ActionSection>
         )}
