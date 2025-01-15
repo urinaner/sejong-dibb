@@ -4,6 +4,7 @@ export const OverviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 15vh;
 `;
 
 export const Title = styled.h2`

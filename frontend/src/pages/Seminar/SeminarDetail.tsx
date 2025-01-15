@@ -1,55 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
-import { apiEndpoints } from '../../config/apiConfig';
 import { Modal, useModal } from '../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
-
-interface SeminarDetail {
-  id: number;
-  name: string;
-  writer: string;
-  place: string;
-  startDate: string;
-  endDate: string;
-  speaker: string;
-  company: string;
-}
+import {
+  useDeleteSeminar,
+  useSeminar,
+  seminarKeys,
+} from '../../hooks/queries/useSeminar';
+import { SeminarDto } from '../../config/apiConfig';
+import { queryClient } from '../../lib/react-query/queryClient';
 
 const SeminarDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
-  const [seminar, setSeminar] = useState<SeminarDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const deleteMutation = useDeleteSeminar();
 
-  useEffect(() => {
-    const fetchSeminarDetail = async () => {
-      if (!id) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get<SeminarDetail>(
-          apiEndpoints.seminar.get(id),
-        );
-        setSeminar(response.data);
-      } catch (error) {
-        console.error('Failed to fetch seminar details:', error);
-        setError('세미나 정보를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSeminarDetail();
-  }, [id]);
+  const {
+    data: seminar,
+    isLoading,
+    error,
+  } = useSeminar(Number(id), {
+    enabled: !!id,
+  });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -61,6 +37,15 @@ const SeminarDetail: React.FC = () => {
       })
       .replace(/\. /g, '-')
       .replace('.', '');
+  };
+
+  const formatTime = (timeString: string) => {
+    const date = new Date(timeString);
+    return date.toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
   };
 
   const showConfirmModal = () => {
@@ -76,8 +61,11 @@ const SeminarDetail: React.FC = () => {
         </Modal.Content>
         <Modal.Footer>
           <Modal.CloseButton />
-          <DeleteButton onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? '삭제 중...' : '삭제'}
+          <DeleteButton
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? '삭제 중...' : '삭제'}
           </DeleteButton>
         </Modal.Footer>
       </>,
@@ -119,19 +107,22 @@ const SeminarDetail: React.FC = () => {
     if (!id || !seminar) return;
 
     try {
-      setIsDeleting(true);
-      await axios.delete(apiEndpoints.seminar.delete(id));
-      showResultModal(true);
+      await deleteMutation.mutateAsync(Number(id), {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: seminarKeys.all });
+          showResultModal(true);
+        },
+        onError: () => {
+          showResultModal(false);
+        },
+      });
     } catch (error) {
       console.error('Failed to delete seminar:', error);
-      showResultModal(false);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
-  if (loading) return <LoadingSpinner>Loading...</LoadingSpinner>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
+  if (isLoading) return <LoadingSpinner>Loading...</LoadingSpinner>;
+  if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   if (!seminar) return <ErrorMessage>세미나를 찾을 수 없습니다.</ErrorMessage>;
 
   return (
@@ -147,9 +138,15 @@ const SeminarDetail: React.FC = () => {
                   <span>{seminar.writer}</span>
                 </WriterInfo>
                 <DateInfo>
-                  {formatDate(seminar.startDate)}
-                  {seminar.startDate !== seminar.endDate &&
-                    ` ~ ${formatDate(seminar.endDate)}`}
+                  {formatDate(seminar.startTime)}{' '}
+                  {formatTime(seminar.startTime)}
+                  {' ~ '}
+                  {seminar.startTime !== seminar.endTime && (
+                    <>
+                      {formatDate(seminar.endTime)}{' '}
+                      {formatTime(seminar.endTime)}
+                    </>
+                  )}
                 </DateInfo>
               </SubInfo>
             </TitleSection>
@@ -160,8 +157,11 @@ const SeminarDetail: React.FC = () => {
                 >
                   수정
                 </EditButton>
-                <DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
-                  {isDeleting ? '삭제 중...' : '삭제'}
+                <DeleteButton
+                  onClick={showConfirmModal}
+                  disabled={deleteMutation.isPending}
+                >
+                  {deleteMutation.isPending ? '삭제 중...' : '삭제'}
                 </DeleteButton>
               </ButtonGroup>
             )}

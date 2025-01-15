@@ -12,4 +12,9 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  html, body {
+      overflow-x: hidden;  // 추가
+      width: 100%;        // 추가
+      max-width: 100%;    // 추가
+  }
 `;

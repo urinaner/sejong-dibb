@@ -1,4 +1,56 @@
+import axios, { AxiosInstance } from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL;
+// axios 인스턴스 생성
+export const axiosInstance: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  withCredentials: true, // CORS 요청에서 쿠키 전송 허용
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
+
+// 요청 인터셉터
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // XSRF-TOKEN 쿠키가 있다면 헤더에 추가
+    const xsrfToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('XSRF-TOKEN='))
+      ?.split('=')[1];
+
+    if (xsrfToken) {
+      config.headers['X-XSRF-TOKEN'] = xsrfToken;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// 응답 인터셉터
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // 인증 에러 처리
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+export interface NewsReqDto {
+  title: string;
+  content: string;
+  link: string;
+  image: string;
+  createDate: string;
+}
 
 export interface BoardReqDto {
   title: string;
@@ -42,16 +94,62 @@ interface ThesisEndpoint {
 }
 
 export interface SeminarDto {
+  id?: number;
   name: string;
   writer: string;
   place: string;
-  startDate: string;
-  endDate: string;
+  startTime: string;
+  endTime: string;
   speaker: string;
   company: string;
 }
 
 export const apiEndpoints = {
+  news: {
+    list: `${API_URL}/api/news`,
+    listWithPage: (page: number, size: number) => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+      });
+      return `${API_URL}/api/news?${params.toString()}`;
+    },
+    create: {
+      url: `${API_URL}/api/news`,
+      getFormData: (newsReqDto: NewsReqDto, imageFile?: File | null) => {
+        const formData = new FormData();
+        formData.append(
+          'newsReqDto',
+          new Blob([JSON.stringify(newsReqDto)], {
+            type: 'application/json',
+          }),
+        );
+        if (imageFile) {
+          formData.append('news_image', imageFile);
+        }
+        return formData;
+      },
+    },
+    get: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+    update: {
+      url: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+      getFormData: (newsReqDto: NewsReqDto, imageFile?: File | null) => {
+        const formData = new FormData();
+        formData.append(
+          'newsReqDto',
+          new Blob([JSON.stringify(newsReqDto)], {
+            type: 'application/json',
+          }),
+        );
+        if (imageFile) {
+          formData.append('news_image', imageFile);
+        }
+        return formData;
+      },
+    },
+    delete: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+  },
+
   thesis: {
     list: `${API_URL}/api/thesis`,
     listWithPage: (page: number, size: number, sort?: string[]) => {
@@ -68,20 +166,10 @@ export const apiEndpoints = {
       url: `${API_URL}/api/thesis`,
       getFormData: (thesisReqDto: ThesisReqDto, imageFile?: File | null) => {
         const formData = new FormData();
-
-        // thesisReqDto를 JSON 문자열로 변환하여 추가
-        formData.append(
-          'thesisReqDto',
-          new Blob([JSON.stringify(thesisReqDto)], {
-            type: 'application/json',
-          }),
-        );
-
-        // thesis_image 추가
+        formData.append('thesisReqDto', JSON.stringify(thesisReqDto));
         if (imageFile) {
           formData.append('thesis_image', imageFile);
         }
-
         return formData;
       },
     },
@@ -124,18 +212,15 @@ export const apiEndpoints = {
         imageFile?: File | null,
       ) => {
         const formData = new FormData();
-
         formData.append(
           'professorReqDto',
           new Blob([JSON.stringify(professorReqDto)], {
             type: 'application/json',
           }),
         );
-
         if (imageFile) {
           formData.append('profileImage', imageFile);
         }
-
         return formData;
       },
     },
@@ -146,18 +231,15 @@ export const apiEndpoints = {
         imageFile?: File | null,
       ) => {
         const formData = new FormData();
-
         formData.append(
           'professorReqDto',
           new Blob([JSON.stringify(professorReqDto)], {
             type: 'application/json',
           }),
         );
-
         if (imageFile) {
           formData.append('profile_image', imageFile);
         }
-
         return formData;
       },
     },
@@ -189,25 +271,30 @@ export const apiEndpoints = {
 
     detail: (professorId: number) => `${API_URL}/api/professor/${professorId}`,
   },
+
   admin: {
     login: `${API_URL}/api/admin/login`,
     signOut: `${API_URL}/api/admin/signOut`,
     register: `${API_URL}/api/admin/join`,
   },
+
   user: {
     login: `${API_URL}/api/user/login`,
     signOut: `${API_URL}/logout`,
     register: `${API_URL}/register`,
   },
+
   department: {
     get: (id: string) => `${API_URL}/api/departments/${id}`,
     update: (id: string) => `${API_URL}/api/departments/${id}`,
     delete: (id: string) => `${API_URL}/api/departments/${id}`,
     create: `${API_URL}/api/departments`,
   },
+
   main: {
     get: `${API_URL}/api/`,
   },
+
   board: {
     base: `${API_URL}/api/board`,
     download: `${API_URL}/api/board/download`,
@@ -215,11 +302,8 @@ export const apiEndpoints = {
       `${API_URL}/api/board?page=${page}&size=${size}`,
     create: {
       url: `${API_URL}/api/board`,
-      // API 명세에 맞게 요청 형식 지정
       getFormData: (boardReqDto: BoardReqDto, files: File[]) => {
         const formData = new FormData();
-
-        // boardReqDto를 JSON 문자열로 변환하여 추가
         formData.append(
           'boardReqDto',
           JSON.stringify({
@@ -231,12 +315,9 @@ export const apiEndpoints = {
             departmentId: 1,
           }),
         );
-
-        // boardFiles 추가
         files.forEach((file) => {
           formData.append('boardFiles', file);
         });
-
         return formData;
       },
     },
