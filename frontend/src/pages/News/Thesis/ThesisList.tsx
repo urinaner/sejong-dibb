@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import * as S from './ThesisStyle';
 import { useThesisList } from '../../../hooks/queries/useThesis';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import Pagination from '../../../common/Pagination/Pagination';
 
 const ThesisList: React.FC = () => {
   const navigate = useNavigate();
@@ -30,8 +31,10 @@ const ThesisList: React.FC = () => {
   );
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < (thesesData?.totalPage ?? 0)) {
-      setCurrentPage(newPage);
+    // newPage는 1-based이므로 0-based로 변환
+    const zeroBasedPage = newPage - 1;
+    if (zeroBasedPage >= 0 && zeroBasedPage < (thesesData?.totalPage ?? 0)) {
+      setCurrentPage(zeroBasedPage);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -129,23 +132,11 @@ const ThesisList: React.FC = () => {
       </S.ThesisTable>
 
       {totalPages > 1 && (
-        <S.Pagination>
-          <S.PageButton
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            이전
-          </S.PageButton>
-          <span>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <S.PageButton
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages - 1}
-          >
-            다음
-          </S.PageButton>
-        </S.Pagination>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage + 1} // 0-based to 1-based
+          onPageChange={handlePageChange} // 직접 handlePageChange 전달
+        />
       )}
     </S.Container>
   );
