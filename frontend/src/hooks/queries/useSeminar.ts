@@ -73,11 +73,10 @@ export const useCreateSeminar = () => {
   });
 };
 
-// PUT - Update Seminar
 export const useUpdateSeminar = () => {
   return useMutation({
     mutationFn: async ({ id, ...seminarDto }: SeminarDto) => {
-      const response = await axios.put(
+      const response = await axios.post(
         apiEndpoints.seminar.update(id!),
         seminarDto,
       );
