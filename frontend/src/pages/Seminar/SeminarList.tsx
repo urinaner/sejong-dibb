@@ -1,143 +1,166 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import {
+  PlusCircle,
+  Edit2,
+  Trash2,
+  AlertTriangle,
+  CheckCircle,
+} from 'lucide-react';
+import moment from 'moment';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
-import { apiEndpoints } from '../../config/apiConfig';
+import {
+  useSeminarList,
+  useDeleteSeminar,
+  seminarKeys,
+} from '../../hooks/queries/useSeminar';
+import { queryClient } from '../../lib/react-query/queryClient';
+import { Modal, useModal } from '../../components/Modal';
 import { SEJONG_COLORS } from '../../constants/colors';
+import Pagination from '../../common/Pagination/Pagination';
 
-interface SeminarItem {
-  id: number;
-  name: string;
-  writer: string;
-  place: string;
-  startDate: string;
-  endDate: string;
-  speaker: string;
-  company: string;
-}
-
-interface PageResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: SeminarItem[];
-}
+const ITEMS_PER_PAGE = 10;
 
 const SeminarList = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-  const [seminars, setSeminars] = useState<SeminarItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pageInfo, setPageInfo] = useState({
-    currentPage: 0,
-    totalPages: 0,
-  });
+  const { openModal } = useModal();
+  const [currentPage, setCurrentPage] = useState(1); // 1부터 시작하도록 수정
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
 
-  useEffect(() => {
-    fetchSeminars();
-  }, [pageInfo.currentPage, sortDirection]);
+  const {
+    data: seminarData,
+    isLoading,
+    isError,
+    error,
+  } = useSeminarList({
+    page: currentPage - 1, // API 요청시 0부터 시작하는 페이지로 변환
+    size: ITEMS_PER_PAGE,
+    sortDirection,
+  });
 
-  const fetchSeminars = async () => {
+  const deleteMutation = useDeleteSeminar();
+
+  const handleEdit = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    navigate(`/news/seminar/edit/${id}`);
+  };
+
+  const handleDelete = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    openModal(
+      <>
+        <Modal.Header>
+          <AlertTriangle size={48} color="#E53E3E" />
+          세미나 삭제
+        </Modal.Header>
+        <Modal.Content>
+          <p>정말로 이 세미나를 삭제하시겠습니까?</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton />
+          <Modal.DeleteButton onClick={() => confirmDelete(id)}>
+            삭제
+          </Modal.DeleteButton>
+        </Modal.Footer>
+      </>,
+    );
+  };
+
+  const confirmDelete = async (id: number) => {
     try {
-      setLoading(true);
-      const response = await axios.get<PageResponse>(
-        apiEndpoints.seminar.listWithPage(
-          pageInfo.currentPage,
-          10,
-          sortDirection,
-        ),
-      );
-
-      setSeminars(response.data.data);
-      setPageInfo({
-        currentPage: response.data.page,
-        totalPages: response.data.totalPage,
+      await deleteMutation.mutateAsync(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: seminarKeys.lists() });
+          openModal(
+            <>
+              <Modal.Header>
+                <CheckCircle size={48} color="#38A169" />
+                삭제 완료
+              </Modal.Header>
+              <Modal.Content>
+                <p>세미나가 성공적으로 삭제되었습니다.</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton />
+              </Modal.Footer>
+            </>,
+          );
+        },
       });
-    } catch (err) {
-      setError('세미나 목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      openModal(
+        <>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            삭제 실패
+          </Modal.Header>
+          <Modal.Content>
+            <p>세미나를 삭제하는 중 오류가 발생했습니다.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Modal.CloseButton />
+          </Modal.Footer>
+        </>,
+      );
     }
   };
 
-  const handleEdit = (e: React.MouseEvent, seminarId: number) => {
-    e.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
-    navigate(`/news/seminar/edit/${seminarId}`);
+  const formatDateTime = (dateTime: string) => {
+    return moment(dateTime).format('YYYY-MM-DD HH:mm');
   };
 
-  const handleDelete = async (e: React.MouseEvent, seminarId: number) => {
-    e.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
-    if (window.confirm('정말로 이 세미나를 삭제하시겠습니까?')) {
-      try {
-        await axios.delete(apiEndpoints.seminar.delete(seminarId));
-        alert('세미나가 성공적으로 삭제되었습니다.');
-        fetchSeminars(); // 목록 새로고침
-      } catch (error) {
-        alert('세미나 삭제에 실패했습니다.');
-      }
-    }
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPageInfo((prev) => ({
-      ...prev,
-      currentPage: newPage,
-    }));
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date
-      .toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-      .replace(/\. /g, '-')
-      .replace('.', '');
-  };
-
-  const handleCreateClick = () => {
-    navigate('/news/seminar/create');
-  };
-
-  if (loading) return <LoadingSpinner>Loading...</LoadingSpinner>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
+  if (isLoading) return <LoadingSpinner>로딩 중...</LoadingSpinner>;
+  if (isError)
+    return (
+      <ErrorMessage>
+        {error instanceof Error
+          ? error.message
+          : '데이터를 불러오는데 실패했습니다.'}
+      </ErrorMessage>
+    );
 
   return (
     <Container>
       <Header>
         <Title>세미나 목록</Title>
         {auth?.isAuthenticated && (
-          <CreateButton onClick={handleCreateClick}>세미나 등록</CreateButton>
+          <CreateButton onClick={() => navigate('/news/seminar/create')}>
+            <PlusCircle size={20} />
+            세미나 등록
+          </CreateButton>
         )}
       </Header>
 
       <Table>
         <thead>
           <tr>
-            <Th>번호</Th>
-            <Th>세미나명</Th>
-            <Th>발표자</Th>
-            <Th>소속</Th>
-            <Th>장소</Th>
+            <Th width="5%">번호</Th>
+            <Th width="25%">세미나명</Th>
+            <Th width="10%">발표자</Th>
+            <Th width="15%">소속</Th>
+            <Th width="10%">장소</Th>
             <SortableTh
+              width="25%"
               onClick={() =>
                 setSortDirection((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'))
               }
               isActive={true}
               sortDirection={sortDirection.toLowerCase() as 'asc' | 'desc'}
             >
-              날짜
+              일시
             </SortableTh>
-            {auth?.isAuthenticated && <Th>관리</Th>}
+            {auth?.isAuthenticated && <Th width="10%">관리</Th>}
           </tr>
         </thead>
         <tbody>
-          {seminars.map((seminar) => (
+          {seminarData?.data.map((seminar) => (
             <Tr
               key={seminar.id}
               onClick={() => navigate(`/news/seminar/${seminar.id}`)}
@@ -147,20 +170,25 @@ const SeminarList = () => {
               <Td>{seminar.speaker}</Td>
               <Td>{seminar.company}</Td>
               <Td>{seminar.place}</Td>
-              <Td>{formatDate(seminar.startDate)}</Td>
+              <DateTimeTd>
+                <DateTimeText>
+                  <div>{formatDateTime(seminar.startTime)}</div>
+                  <div>~ {formatDateTime(seminar.endTime)}</div>
+                </DateTimeText>
+              </DateTimeTd>
               {auth?.isAuthenticated && (
                 <ActionTd>
                   <ActionButton
                     onClick={(e) => handleEdit(e, seminar.id)}
                     color="blue"
                   >
-                    수정
+                    <Edit2 size={16} />
                   </ActionButton>
                   <ActionButton
                     onClick={(e) => handleDelete(e, seminar.id)}
                     color="red"
                   >
-                    삭제
+                    <Trash2 size={16} />
                   </ActionButton>
                 </ActionTd>
               )}
@@ -169,48 +197,20 @@ const SeminarList = () => {
         </tbody>
       </Table>
 
-      {seminars.length === 0 && (
+      {seminarData?.data.length === 0 && (
         <EmptyMessage>등록된 세미나가 없습니다.</EmptyMessage>
       )}
 
-      <PaginationContainer>
-        <PageButton
-          onClick={() => handlePageChange(0)}
-          disabled={pageInfo.currentPage === 0}
-        >
-          ⟪
-        </PageButton>
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
-          disabled={pageInfo.currentPage === 0}
-        >
-          ⟨
-        </PageButton>
-        {Array.from({ length: pageInfo.totalPages }, (_, i) => (
-          <PageButton
-            key={i}
-            onClick={() => handlePageChange(i)}
-            isActive={i === pageInfo.currentPage}
-          >
-            {i + 1}
-          </PageButton>
-        ))}
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
-          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-        >
-          ⟩
-        </PageButton>
-        <PageButton
-          onClick={() => handlePageChange(pageInfo.totalPages - 1)}
-          disabled={pageInfo.currentPage === pageInfo.totalPages - 1}
-        >
-          ⟫
-        </PageButton>
-      </PaginationContainer>
+      <Pagination
+        totalPages={seminarData?.totalPage ?? 0}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </Container>
   );
 };
+
+export default SeminarList;
 
 const Container = styled.div`
   max-width: 1400px;
@@ -239,6 +239,9 @@ const Title = styled.h1`
 `;
 
 const CreateButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background-color: ${SEJONG_COLORS.CRIMSON_RED};
   color: white;
@@ -271,7 +274,8 @@ const Table = styled.table`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 `;
 
-const Th = styled.th`
+const Th = styled.th<{ width?: string }>`
+  width: ${(props) => props.width || 'auto'};
   padding: 1.25rem 1rem;
   background-color: ${SEJONG_COLORS.COOL_GRAY}20;
   color: ${SEJONG_COLORS.GRAY};
@@ -334,6 +338,56 @@ const TitleTd = styled(Td)`
   &:hover {
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+`;
+
+const DateTimeTd = styled(Td)`
+  padding: 0.75rem 1rem;
+`;
+
+const DateTimeText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+
+  div {
+    padding: 0.25rem 0;
+  }
+`;
+
+const ActionTd = styled(Td)`
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
+`;
+
+const ActionButton = styled.button<{ color: 'blue' | 'red' }>`
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid
+    ${(props) =>
+      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+  background-color: white;
+  color: ${(props) =>
+    props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
@@ -405,38 +459,3 @@ const EmptyMessage = styled.div`
   margin-top: 1.5rem;
   font-size: 1.1rem;
 `;
-
-const ActionTd = styled(Td)`
-  padding: 0.5rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
-`;
-
-const ActionButton = styled.button<{ color: 'blue' | 'red' }>`
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  border: 1px solid
-    ${(props) =>
-      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
-  background-color: white;
-  color: ${(props) =>
-    props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background-color: ${(props) =>
-      props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
-    color: white;
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-`;
-
-export default SeminarList;

@@ -50,11 +50,12 @@ interface ThesisEndpoint {
 }
 
 export interface SeminarDto {
+  id?: number;
   name: string;
   writer: string;
   place: string;
-  startDate: string;
-  endDate: string;
+  startTime: string;
+  endTime: string;
   speaker: string;
   company: string;
 }
@@ -121,12 +122,7 @@ export const apiEndpoints = {
       url: `${API_URL}/api/thesis`,
       getFormData: (thesisReqDto: ThesisReqDto, imageFile?: File | null) => {
         const formData = new FormData();
-        formData.append(
-          'thesisReqDto',
-          new Blob([JSON.stringify(thesisReqDto)], {
-            type: 'application/json',
-          }),
-        );
+        formData.append('thesisReqDto', JSON.stringify(thesisReqDto));
         if (imageFile) {
           formData.append('thesis_image', imageFile);
         }
