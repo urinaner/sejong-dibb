@@ -91,8 +91,4 @@ public class Professor {
         this.lab = dto.getLab();
         this.profileImage = dto.getProfileImage();
     }
-
-    public void updateProfilePhoto(String uploadImageUrl) {
-        this.profileImage = uploadImageUrl;
-    }
 }
