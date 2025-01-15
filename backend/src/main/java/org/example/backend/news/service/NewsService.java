@@ -53,6 +53,7 @@ public class NewsService {
         return NewsResDto.of(news);
     }
 
+    @Transactional
     public void deleteNews(Long newsId) {
         News news = findNewsById(newsId);
         newsRepository.delete(news);
