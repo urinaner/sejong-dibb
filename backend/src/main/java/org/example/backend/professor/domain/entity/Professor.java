@@ -14,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
+import org.example.backend.professor.domain.dto.ProfessorReqDto;
 import org.example.backend.thesis.domain.entity.Thesis;
 
 @Entity

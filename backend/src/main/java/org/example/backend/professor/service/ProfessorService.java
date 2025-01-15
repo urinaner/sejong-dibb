@@ -4,8 +4,8 @@ import static org.example.backend.professor.exception.ProfessorExceptionType.NOT
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.aws.S3Uploader;
-import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
-import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
+import org.example.backend.professor.domain.dto.ProfessorReqDto;
+import org.example.backend.professor.domain.dto.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;

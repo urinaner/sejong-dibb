@@ -1,8 +1,8 @@
 package org.example.backend.professor.controller;
 
 import org.example.backend.ControllerTestSupport;
-import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
-import org.example.backend.professor.domain.dto.professor.ProfessorResDto;
+import org.example.backend.professor.domain.dto.ProfessorReqDto;
+import org.example.backend.professor.domain.dto.ProfessorResDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
