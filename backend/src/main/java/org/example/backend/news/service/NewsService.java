@@ -8,7 +8,6 @@ import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
 import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.exception.NewsException;
-import org.example.backend.news.exception.NewsExceptionType;
 import org.example.backend.news.repository.NewsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +52,7 @@ public class NewsService {
         return NewsResDto.of(news);
     }
 
+    @Transactional
     public void deleteNews(Long newsId) {
         News news = findNewsById(newsId);
         newsRepository.delete(news);
@@ -63,7 +63,7 @@ public class NewsService {
                 .orElseThrow(() -> new NewsException(NOT_FOUND_NEWS));
     }
 
-    public Page<NewsResDto> getAllNewss(Pageable pageable) {
+    public Page<NewsResDto> getAllNews(Pageable pageable) {
         return newsRepository.findAll(pageable)
                 .map(NewsResDto::of);
     }

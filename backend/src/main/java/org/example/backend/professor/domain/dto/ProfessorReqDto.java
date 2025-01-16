@@ -1,4 +1,4 @@
-package org.example.backend.professor.domain.dto.professor;
+package org.example.backend.professor.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

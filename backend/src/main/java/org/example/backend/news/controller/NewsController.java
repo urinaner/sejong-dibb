@@ -42,9 +42,9 @@ public class NewsController {
 
     @Operation(summary = "모든 뉴스 조회 API", description = "모든 뉴스의 리스트 반환")
     @GetMapping
-    public ResponseDto<List<NewsResDto>> getAllBoards(@Valid @ModelAttribute PageRequestDto pageRequest) {
+    public ResponseDto<List<NewsResDto>> getAllNews(@ModelAttribute @Valid PageRequestDto pageRequest) {
 
-        Page<NewsResDto> newsList = newsService.getAllNewss(pageRequest.toPageable());
+        Page<NewsResDto> newsList = newsService.getAllNews(pageRequest.toPageable());
         return ResponseDto.ok(newsList.getNumber(), newsList.getTotalPages(), newsList.getContent());
     }
 
