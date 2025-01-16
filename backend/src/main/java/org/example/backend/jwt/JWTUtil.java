@@ -70,7 +70,8 @@ public class JWTUtil {
         }
     }
 
-    public Claims extractClaims(String token) {
+    public Claims extractClaims(String token) { // JWT 토큰에서 클레임(Claims)을 추출
+        // 반환된 Claims 객체는 JWT 토큰에 포함된 데이터를 키-값 쌍으로 제공
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
