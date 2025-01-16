@@ -80,19 +80,19 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100vw; // 추가
+  width: 100vw;
   position: relative;
-  overflow-x: hidden;
+  // overflow-x: hidden 제거
   scroll-behavior: smooth;
 `;
 
 const InnerContainer = styled.div`
-  width: 100%; // max-width 제거
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-x: hidden; // 추가
+  // overflow-x: hidden 제거
 `;
 const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
@@ -102,7 +102,6 @@ const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   max-width: 100%; // 추가
   height: 100%;
   align-items: center;
-  overflow-x: hidden; // 추가
   padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
 `;
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`

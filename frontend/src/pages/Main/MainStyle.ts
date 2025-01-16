@@ -12,6 +12,7 @@ export const MainContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 16px;
+  margin-top: 5vh;
 
   ${media.tablet} {
     max-width: 90%;
@@ -45,12 +46,13 @@ export const PaperContainer = styled.section`
 `;
 export const NewsSection = styled.section`
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 0; // 좌우 패딩 제거
+  position: relative; // 추가
+  z-index: 2; // 추가
 
   ${media.mobile} {
-    padding: 20px;
+    padding: 20px 0;
   }
 `;
 
@@ -74,9 +76,9 @@ export const TMP = styled.div`
   padding: 0; // 패딩 조정
 `;
 
-export const Title = styled.h2`
-  margin: 40px 0 32px 0;
-  font-size: 28px;
+export const Title = styled.div`
+  margin: 2rem 0 2rem 0;
+  font-size: 30px;
   font-weight: 700;
   color: #5d5a88;
 
@@ -350,17 +352,21 @@ export const AnnouncementItem = styled.div`
 
 export const SeminarContainer = styled.div`
   display: flex;
-  gap: 16px;
-  height: auto;
+  gap: 24px; // 추가
+
+  ${media.tablet} {
+    gap: 20px; // 추가
+  }
 
   ${media.mobile} {
-    gap: 12px;
+    gap: 16px; // 추가
   }
 
   button:first-of-type {
     flex: 2;
     min-height: 180px;
     display: flex;
+    overflow: hidden;
     flex-direction: column;
     justify-content: center;
     padding: 20px;
@@ -386,7 +392,22 @@ export const SeminarContainer = styled.div`
 
     p:last-of-type {
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 700;
+      text-align: left;
+
+      white-space: nowrap; // 텍스트가 한 줄로 표시되도록
+      overflow: hidden; /* 넘치는 텍스트는 보이지 않게 */
+      text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
+
+      /* 부모 너비를 넘지 않도록 */
+      flex-shrink: 1; /* 자식 요소 축소 허용 */
+      min-width: 0; /* flex 컨텍스트에서 자식 요소 기본 크기 제한 */
+      max-width: 100%; /* 부모의 너비를 넘지 않도록 제한 */
+
+      ${media.mobile} {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
     }
 
     div {
