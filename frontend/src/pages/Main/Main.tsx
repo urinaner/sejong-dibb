@@ -25,6 +25,23 @@ import axios from 'axios';
 import { apiEndpoints } from '../../config/apiConfig';
 import NewsSlider from '../../components/NewsSlider/NewsSlider';
 
+interface Seminar {
+  id: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+  company: string;
+  place: string;
+  speaker: string;
+  writer: string;
+}
+
+interface Link {
+  title: string;
+  link: string;
+  icon: string;
+}
+
 interface ApiResponse<T> {
   message: string;
   page: number;
@@ -89,6 +106,39 @@ interface Seminar {
   speaker: string;
   writer: string;
 }
+
+const links = [
+  {
+    icon: '/homeIcon.svg',
+    title: '세종대학교 홈',
+    link: 'http://sejong.ac.kr/',
+  },
+  {
+    icon: '/desktopIcon.svg',
+    title: '교내 공지사항',
+    link: 'http://sejong.ac.kr/community/index.html',
+  },
+  {
+    icon: '/calendarIcon.svg',
+    title: '학사일정',
+    link: 'http://www.sejong.ac.kr/unilife/program_01.html?menu_id=1.1',
+  },
+  {
+    icon: '/faxIcon.svg',
+    title: '입시홈페이지',
+    link: 'https://ipsi.sejong.ac.kr/',
+  },
+  {
+    icon: '/webIcon.svg',
+    title: '일반대학원',
+    link: 'https://graduate.sejong.ac.kr/graduate/index.do',
+  },
+  {
+    icon: '/walletIcon.svg',
+    title: '교내 양식',
+    link: 'https://board.sejong.ac.kr/boardlist.do?bbsConfigFK=692',
+  },
+];
 
 function Main(): JSX.Element {
   const navigate = useNavigate();

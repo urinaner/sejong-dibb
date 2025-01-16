@@ -14,8 +14,6 @@ const media = {
   mobile: '@media(max-width: 768px)',
   small: '@media(max-width: 480px)',
 };
-
-// 최상위 컨테이너 - 버튼을 포함한 전체 영역
 export const OuterContainer = styled.div`
   width: 100vw;
   position: relative;
@@ -23,34 +21,28 @@ export const OuterContainer = styled.div`
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  padding: 0 20px;
-
-  ${media.mobile} {
-    padding: 0 16px;
-  }
+  padding: 0;
+  overflow: visible;
+  isolation: isolate; // 새로 추가
 `;
-
 // 실제 슬라이더를 감싸는 컨테이너
 export const SliderContainer = styled.div`
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
-  padding: 0 40px; // 네비게이션 버튼을 위한 여백
+  padding: 0 60px;
+  z-index: 1; // 수정
 
   ${media.mobile} {
-    padding: 0 32px;
-  }
-
-  ${media.small} {
-    padding: 0 28px;
+    padding: 0 40px;
   }
 `;
-
 // 슬라이더 내용물을 감싸는 래퍼
 export const SliderWrapper = styled.div`
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible; // hidden에서 visible로 변경
 `;
 
 // 실제 슬라이딩되는 트랙
@@ -163,7 +155,6 @@ export const ViewCount = styled.div`
     font-size: 12px;
   }
 `;
-
 const BaseButton = styled.button`
   position: absolute;
   top: 50%;
@@ -177,35 +168,16 @@ const BaseButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 2; // 수정
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  &:hover:not(:disabled) {
-    background: #f5f5f5;
-    border-color: #999;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  ${media.mobile} {
-    width: 32px;
-    height: 32px;
-  }
-
-  ${media.small} {
-    width: 28px;
-    height: 28px;
-  }
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
 `;
 
 export const PrevButton = styled(BaseButton)`
-  left: 0;
+  left: 10px;
 `;
 
 export const NextButton = styled(BaseButton)`
-  right: 0;
+  right: 10px;
 `;

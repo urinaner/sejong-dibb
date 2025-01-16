@@ -12,6 +12,7 @@ export const MainContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 16px;
+  margin-top: 5vh;
 
   ${media.tablet} {
     max-width: 90%;
@@ -45,12 +46,13 @@ export const PaperContainer = styled.section`
 `;
 export const NewsSection = styled.section`
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 0; // 좌우 패딩 제거
+  position: relative; // 추가
+  z-index: 2; // 추가
 
   ${media.mobile} {
-    padding: 20px;
+    padding: 20px 0;
   }
 `;
 
@@ -350,6 +352,15 @@ export const AnnouncementItem = styled.div`
 
 export const SeminarContainer = styled.div`
   display: flex;
+  gap: 24px; // 추가
+
+  ${media.tablet} {
+    gap: 20px; // 추가
+  }
+
+  ${media.mobile} {
+    gap: 16px; // 추가
+  }
 
   button:first-of-type {
     flex: 2;
