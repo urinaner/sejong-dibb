@@ -43,7 +43,7 @@ export const useGetNewsList = (params: {
     queryKey: newsKeys.list(params),
     queryFn: async () => {
       const response = await newsApi.getNewsList(params);
-      return response; // API가 이미 NewsItem[] 형태로 반환
+      return response;
     },
   });
 };

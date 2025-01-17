@@ -256,7 +256,7 @@ const News = () => {
         {newsItems.map((item) => (
           <NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <NewsImage
-              imageUrl={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${item.image}`}
+              imageUrl={`${item.image}`}
               onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
                 e.currentTarget.classList.add('error');
               }}
