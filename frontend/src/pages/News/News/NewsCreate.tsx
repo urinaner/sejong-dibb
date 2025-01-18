@@ -22,6 +22,7 @@ import {
   FileItem,
 } from './NewsCreateStyle';
 import { useCreateNews } from '../../../hooks/queries/useNews';
+import { NewsReqDto } from '../../../config/apiConfig';
 
 interface NewsFormData {
   title: string;
@@ -126,32 +127,34 @@ const NewsCreate: React.FC = () => {
       tempDiv.innerHTML = content;
       const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
 
-      const newsFormData: NewsFormData = {
+      // newsReqDto 객체 생성
+      const newsReqDto: NewsReqDto = {
         title: title.trim(),
         content: cleanContent.trim(),
+        link: link.trim() || '', // 빈 문자열을 기본값으로 사용
+        image: '', // 이미지 URL은 서버에서 생성되므로 빈 문자열로 초기화
         createDate: new Date().toISOString().split('T')[0],
       };
 
-      if (link.trim()) {
-        newsFormData.link = link.trim();
-      }
-
-      if (imageFile) {
-        newsFormData.newsImage = imageFile;
-      }
-
-      const result = await createNewsMutation.mutateAsync(newsFormData, {
-        onSuccess: (newsId) => {
-          showSuccessModal(newsId);
+      // mutateAsync에 올바른 형식으로 데이터 전달
+      const result = await createNewsMutation.mutateAsync(
+        {
+          newsReqDto,
+          imageFile: imageFile || undefined,
         },
-        onError: (error: any) => {
-          if (error.response?.status === 400) {
-            showErrorModal('입력 오류', error.response.data.message);
-          } else {
-            showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
-          }
+        {
+          onSuccess: (newsId) => {
+            showSuccessModal(newsId);
+          },
+          onError: (error: any) => {
+            if (error.response?.status === 400) {
+              showErrorModal('입력 오류', error.response.data.message);
+            } else {
+              showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
+            }
+          },
         },
-      });
+      );
     } catch (error) {
       console.error('Error creating news:', error);
     }
