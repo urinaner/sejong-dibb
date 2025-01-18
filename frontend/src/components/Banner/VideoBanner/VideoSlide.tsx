@@ -23,7 +23,7 @@ const TitleContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 4.8rem;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   line-height: 1.1;

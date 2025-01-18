@@ -79,7 +79,7 @@ export const TMP = styled.div`
 export const Title = styled.div`
   margin: 2rem 0 2rem 0;
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 800;
   color: #5d5a88;
 
   ${media.tablet} {
@@ -96,7 +96,7 @@ export const Title = styled.div`
 export const NewsTitle = styled.h2`
   margin: 0 0 16px 0;
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 800;
   color: ${token.SEJONG_COLORS.CRIMSON_RED};
   text-align: center;
 
@@ -156,7 +156,7 @@ export const Paper = styled.article`
 
   p:nth-of-type(1) {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -363,6 +363,7 @@ export const SeminarContainer = styled.div`
   }
 
   button:first-of-type {
+    font-family: 'NanumSquare';
     flex: 2;
     min-height: 180px;
     display: flex;
@@ -392,7 +393,7 @@ export const SeminarContainer = styled.div`
 
     p:last-of-type {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       text-align: left;
 
       white-space: nowrap; // 텍스트가 한 줄로 표시되도록

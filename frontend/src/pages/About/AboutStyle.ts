@@ -19,7 +19,7 @@ export const Content = styled.div`
 
 export const Title = styled.h2`
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 30px;
 
   @media (max-width: 768px) {
@@ -128,7 +128,6 @@ export const MarkdownContainer = styled.div`
     background-color: #f5f5f5;
     padding: 0.2em 0.4em;
     border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
   }
 
   pre {
