@@ -6,7 +6,7 @@ const StyledHeader = styled.div`
   padding: 1.5rem; // p-6과 동일
   border-bottom: 1px solid #e5e7eb; // border-gray-200과 동일
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #1a1a1a;
   text-align: center;
   margin-top: 0.5rem;

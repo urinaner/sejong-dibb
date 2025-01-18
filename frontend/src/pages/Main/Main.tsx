@@ -88,8 +88,7 @@ const announcementTab: string[] = ['학부', '대학원', '취업', '장학'];
 
 interface Announcement {
   category: string;
-  createDate: string;
-  // file: string;
+  createdDate: string;
   id: number;
   title: string;
   viewCount: number;
@@ -254,7 +253,7 @@ function Main(): JSX.Element {
                       <img src="/bullet.svg" alt="bullet" />
                       {announcement.title}
                     </span>
-                    <span>{announcement.createDate}</span>
+                    <span>{announcement.createdDate}</span>
                   </AnnouncementItem>
                 ))
               )}
@@ -288,10 +287,7 @@ function Main(): JSX.Element {
               style={{ flex: '1' }}
               to="/seminar-rooms/reservation"
             >
-              <span>
-                세미나실 <br />
-                예약
-              </span>
+              <span>세미나실 예약</span>
               <img src="/whiteCalendarIcon.svg" alt="calendar" />
             </SeminarRoomReservation>
           </SeminarContainer>

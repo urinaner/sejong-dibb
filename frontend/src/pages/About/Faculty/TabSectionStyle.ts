@@ -33,7 +33,7 @@ export const TabList = styled.div`
 
 export const TabButton = styled.button<{ $isActive: boolean }>`
   padding: 1rem 2rem;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-size: 1rem;
   font-weight: ${(props) => (props.$isActive ? '600' : '400')};
   color: ${(props) =>
@@ -86,7 +86,6 @@ export const Section = styled.section`
 `;
 
 export const SectionTitle = styled.h3`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
