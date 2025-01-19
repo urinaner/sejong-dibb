@@ -1,4 +1,3 @@
-// components/NewsSection/index.tsx
 import { useNavigate } from 'react-router-dom';
 import {
   NewsSection as NewsSectionContainer,
@@ -27,7 +26,7 @@ export const NewsSection = () => {
 
   return (
     <NewsSectionContainer>
-      <NewsTitle>DIBB NEWS</NewsTitle>
+      <NewsTitle>바융 뉴스</NewsTitle>
       <p style={{ textAlign: 'center', color: '#666', marginBottom: '40px' }}>
         바이오융학공학전공의 주요 새소식을 전해드립니다.
       </p>
