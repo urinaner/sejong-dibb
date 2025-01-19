@@ -1,22 +1,26 @@
 package org.example.backend;
 
+import org.example.backend.users.dto.SjLoginReq;
+import org.example.backend.users.dto.SjUserProfile;
+import org.example.backend.users.service.SjAuthService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.yj.sejongauth.controller.Sj;
-import org.yj.sejongauth.domain.SjProfile;
+
 
 @SpringBootTest
 public class SjTest {
 
     @Autowired
-    protected Sj sj;
+    SjAuthService sjAuthService;
 
     @Test
     @Disabled
     void SjTest(){
-        SjProfile sjProfile = sj.login("학번", "비번");
-        System.out.println(sjProfile);
+        SjLoginReq test = new SjLoginReq("test", "test");
+        SjUserProfile sjProfile = sjAuthService.authenticate(test);
+        System.out.println(sjProfile.getMajor());
+        System.out.println(sjProfile.getName());
     }
 }
