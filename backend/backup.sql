@@ -112,12 +112,11 @@ CREATE TABLE `reservation` (
                                `end_time` DATETIME NOT NULL,
                                `purpose` VARCHAR(50) NOT NULL,
                                `etc` VARCHAR(255),
-                               `repetition_type` VARCHAR(50) DEFAULT NULL,
-                               `status` VARCHAR(50) NOT NULL,
-                               `seminar_room_id` BIGINT,
-                               `user_id` BIGINT,
+                               `room_id` BIGINT,
+                               `user_name` VARCHAR(255) NOT NULL,
+                               `password` VARCHAR(255) NOT NULL,
                                PRIMARY KEY (`reservation_id`),
-                               CONSTRAINT `FK_reservation_seminar_room` FOREIGN KEY (`seminar_room_id`) REFERENCES `seminar_room` (`seminar_room_id`)
+                               CONSTRAINT `FK_reservation_room` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Continue for other tables like `thesis`, `board`, and `users`

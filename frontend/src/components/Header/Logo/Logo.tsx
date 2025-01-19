@@ -24,7 +24,7 @@ const Logo: React.FC<LogoProps> = ({ compact = false }) => {
           </LogoImage>
           {!compact && (
             <LogoTitle>
-              SEJONG UNIVERSITY
+              세종대학교
               <Department>바이오융합공학전공</Department>
             </LogoTitle>
           )}

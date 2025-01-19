@@ -5,12 +5,12 @@ import { motion } from 'framer-motion';
 export const LogoContainer = styled(motion.div)`
   display: flex;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0;
   min-width: 360px;
 
   @media (max-width: 768px) {
     min-width: auto;
-    padding: 0.8rem 1rem;
+    padding: 0;
   }
 `;
 
@@ -54,16 +54,15 @@ export const LogoTitle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   opacity: 0.95;
 `;
 
 export const Department = styled.span`
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
   text-transform: none;
 

@@ -1,57 +1,54 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
-import { apiEndpoints, SeminarDto } from '../../config/apiConfig';
+import { SeminarDto } from '../../config/apiConfig';
 import { Modal, useModal } from '../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { SEJONG_COLORS } from '../../constants/colors';
+import { useSeminar, useUpdateSeminar } from '../../hooks/queries/useSeminar';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { queryClient } from '../../lib/react-query/queryClient';
+import { seminarKeys } from '../../hooks/queries/useSeminar';
 
 const SeminarEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const updateMutation = useUpdateSeminar();
 
-  const [formData, setFormData] = useState<SeminarDto>({
-    name: '',
-    writer: '',
-    place: '',
-    startDate: '',
-    endDate: '',
-    speaker: '',
-    company: '',
+  const { data: seminar, isLoading } = useSeminar(Number(id), {
+    enabled: !!id,
   });
 
-  useEffect(() => {
-    const fetchSeminar = async () => {
-      try {
-        const response = await axios.get(apiEndpoints.seminar.get(id!));
-        const seminarData = response.data;
-        setFormData({
-          name: seminarData.name,
-          writer: seminarData.writer,
-          place: seminarData.place,
-          startDate: seminarData.startDate,
-          endDate: seminarData.endDate,
-          speaker: seminarData.speaker,
-          company: seminarData.company,
-        });
-      } catch (error) {
-        showErrorModal('세미나 정보를 불러오는데 실패했습니다.');
-        navigate('/news/seminar');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 초기 데이터 설정
+  const [formData, setFormData] = useState<SeminarDto>({
+    id: Number(id),
+    name: seminar?.name || '',
+    writer: seminar?.writer || '',
+    place: seminar?.place || '',
+    startTime: seminar?.startTime || '',
+    endTime: seminar?.endTime || '',
+    speaker: seminar?.speaker || '',
+    company: seminar?.company || '',
+  });
 
-    if (id) {
-      fetchSeminar();
+  // 세미나 데이터가 로드되면 폼 데이터 업데이트
+  React.useEffect(() => {
+    if (seminar) {
+      setFormData({
+        id: seminar.id,
+        name: seminar.name,
+        writer: seminar.writer,
+        place: seminar.place,
+        startTime: seminar.startTime ? seminar.startTime.replace(' ', 'T') : '',
+        endTime: seminar.endTime ? seminar.endTime.replace(' ', 'T') : '',
+        speaker: seminar.speaker,
+        company: seminar.company,
+      });
     }
-  }, [id, navigate]);
+  }, [seminar]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,6 +56,11 @@ const SeminarEdit = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const formatDateTime = (dateTimeString: string) => {
+    if (!dateTimeString) return '';
+    return dateTimeString.replace('T', ' ');
   };
 
   const showErrorModal = (message: string) => {
@@ -96,11 +98,11 @@ const SeminarEdit = () => {
   };
 
   const validateForm = () => {
-    const requiredFields: (keyof SeminarDto)[] = [
+    const requiredFields: (keyof Omit<SeminarDto, 'id'>)[] = [
       'name',
       'place',
-      'startDate',
-      'endDate',
+      'startTime',
+      'endTime',
       'speaker',
       'company',
     ];
@@ -111,8 +113,11 @@ const SeminarEdit = () => {
       return false;
     }
 
-    if (new Date(formData.startDate) > new Date(formData.endDate)) {
-      showErrorModal('종료일은 시작일보다 빠를 수 없습니다.');
+    const startDateTime = new Date(formData.startTime.replace('T', ' '));
+    const endDateTime = new Date(formData.endTime.replace('T', ' '));
+
+    if (startDateTime > endDateTime) {
+      showErrorModal('종료 시간은 시작 시간보다 빠를 수 없습니다.');
       return false;
     }
 
@@ -124,19 +129,32 @@ const SeminarEdit = () => {
 
     if (!validateForm()) return;
 
+    // 시간 형식 변환
+    const formattedData = {
+      ...formData,
+      startTime: formatDateTime(formData.startTime),
+      endTime: formatDateTime(formData.endTime),
+    };
+
     try {
-      setIsSubmitting(true);
-      await axios.post(apiEndpoints.seminar.update(id!), formData);
-      showSuccessModal();
+      await updateMutation.mutateAsync(formattedData, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: seminarKeys.all });
+          showSuccessModal();
+        },
+        onError: (error) => {
+          console.error('Error updating seminar:', error);
+          showErrorModal('세미나 수정 중 오류가 발생했습니다.');
+        },
+      });
     } catch (error) {
       console.error('Error updating seminar:', error);
       showErrorModal('세미나 수정 중 오류가 발생했습니다.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
-  if (loading) return <>Loading...</>;
+  if (isLoading)
+    return <LoadingSpinner text={'세미나 데이터 불러오는 중'}></LoadingSpinner>;
 
   return (
     <Container>
@@ -192,21 +210,21 @@ const SeminarEdit = () => {
 
           <FormRow>
             <FormGroup>
-              <Label>시작일</Label>
+              <Label>시작 시간</Label>
               <Input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
+                type="datetime-local"
+                name="startTime"
+                value={formData.startTime}
                 onChange={handleChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <Label>종료일</Label>
+              <Label>종료 시간</Label>
               <Input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
+                type="datetime-local"
+                name="endTime"
+                value={formData.endTime}
                 onChange={handleChange}
               />
             </FormGroup>
@@ -219,8 +237,8 @@ const SeminarEdit = () => {
             >
               취소
             </CancelButton>
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '수정 중...' : '수정하기'}
+            <SubmitButton type="submit" disabled={updateMutation.isPending}>
+              {updateMutation.isPending ? '수정 중...' : '수정하기'}
             </SubmitButton>
           </ButtonGroup>
         </FormSection>

@@ -33,7 +33,6 @@ export const HeaderContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.8rem;
   font-weight: bold;
   color: #1a202c;
@@ -66,7 +65,6 @@ export const FormSection = styled.div`
 `;
 
 export const FormTitle = styled.h2`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.2rem;
   font-weight: 500;
   color: #333333;
@@ -91,7 +89,7 @@ export const InputGroup = styled.div`
 export const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-weight: 500;
   font-size: 0.875rem;
   color: #4a5568;
@@ -102,7 +100,7 @@ export const Input = styled.input`
   padding: 0.75rem;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-size: 0.875rem;
   transition: all 0.2s ease-in-out;
   background-color: white;
@@ -155,7 +153,7 @@ export const ErrorMessage = styled.div`
   background-color: #fff5f5;
   color: #c53030;
   border-radius: 12px;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-size: 0.875rem;
   border: 1px solid #feb2b2;
 
@@ -172,7 +170,6 @@ export const LoadingContainer = styled.div`
   min-height: 300px;
   color: #4a5568;
   font-size: 1.1rem;
-  font-family: 'Noto Sans KR', sans-serif;
 
   ${media.mobile} {
     min-height: 200px;
@@ -204,7 +201,7 @@ export const InputWithIcon = styled.div`
 
 export const HelperText = styled.p`
   margin-top: 0.25rem;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-size: 0.75rem;
   color: #718096;
 
@@ -261,7 +258,6 @@ export const FallbackThumbnail = styled.div`
 
   span {
     font-size: 0.875rem;
-    font-family: 'Noto Sans KR', sans-serif;
   }
 `;
 
@@ -279,7 +275,6 @@ export const ImageUploadButton = styled.label`
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   width: fit-content;
-  font-family: 'Noto Sans KR', sans-serif;
 
   &:hover {
     background-color: #f8fafc;
@@ -325,5 +320,4 @@ export const ImageError = styled.div`
   padding: 1rem;
   text-align: center;
   font-size: 0.875rem;
-  font-family: 'Noto Sans KR', sans-serif;
 `;

@@ -4,13 +4,10 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.reservation.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationCreateDto;
+import org.example.backend.reservation.domain.dto.ReservationDeleteRequest;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.service.ReservationService;
-import org.example.backend.user.domain.entity.User;
-import org.example.backend.user.exception.UserException;
-import org.example.backend.user.exception.UserExceptionType;
-import org.example.backend.user.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,15 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/room")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final UserRepository userRepository;
 
     @PostMapping("/{roomId}/reservation")
     public ResponseEntity<List<ReservationResDto>> createReservation(
             @PathVariable(value = "roomId") Long roomId,
-            @RequestBody @Valid ReservationReqDto reqDto) {
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER));
-        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, user);
+            @RequestBody @Valid ReservationCreateDto reqDto) {
+        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto);
         log.debug("Reservation created successfully: {}", resDtos);
         return ResponseEntity.ok(resDtos);
     }
@@ -44,7 +38,7 @@ public class ReservationController {
     @GetMapping("/{roomId}/reservation")
     public ResponseEntity<List<ReservationResDto>> getReservationsByRoomAndDate(
             @PathVariable(name = "roomId") Long roomId,
-            @RequestParam(value = "date") String date
+            @RequestParam(value = "date", required = false) String date
     ) {
         List<ReservationResDto> reservations = reservationService.getReservationsByRoomAndDate(roomId, date);
         return ResponseEntity.ok(reservations);
@@ -75,8 +69,10 @@ public class ReservationController {
     @DeleteMapping("/{roomId}/reservation/{reservationId}")
     public ResponseEntity<Void> deleteReservation(
             @PathVariable(value = "roomId") Long roomId,
-            @PathVariable(value = "reservationId") Long reservationId) {
-        reservationService.deleteReservation(reservationId);
+            @PathVariable(value = "reservationId") Long reservationId,
+            @RequestBody ReservationDeleteRequest request) {
+        reservationService.deleteReservation(reservationId, request.getPassword());
         return ResponseEntity.ok().build();
     }
+
 }

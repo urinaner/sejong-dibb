@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAdmin(userRole === 'ADMIN');
 
         // axios 기본 헤더 설정
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } catch (error) {
         console.error('Auth state setting error:', error);
         setAuthState(null);
@@ -133,8 +133,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     // 주기적으로 토큰 만료 체크
-    const interval = setInterval(checkTokenExpiration, 60000); // 1분마다 체크
-    return () => clearInterval(interval);
+    // const interval = setInterval(checkTokenExpiration, 6000000); // 1분마다 체크
+    // return () => clearInterval(interval);
   }, [checkTokenExpiration]);
 
   const signin = async (
@@ -202,7 +202,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       setAuthState(null);
-      window.location.href = '/admin/signin';
+      window.location.href = '/signin';
     }
   }, []);
 

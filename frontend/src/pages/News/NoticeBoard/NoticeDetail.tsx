@@ -8,6 +8,7 @@ import DOMPurify from 'dompurify';
 import { AuthContext } from '../../../context/AuthContext';
 import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import 'react-quill/dist/quill.snow.css';
 
 interface BoardDetail {
@@ -97,14 +98,12 @@ const NoticeDetail: React.FC = () => {
 
     try {
       setDownloadingFiles((prev) => new Set(prev).add(fileUrl));
-
       const fileName = getFileName(fileUrl);
 
-      // 브라우저에서 직접 다운로드 처리
       const link = document.createElement('a');
-      link.href = fileUrl; // S3 URL 직접 사용
+      link.href = fileUrl;
       link.setAttribute('download', fileName);
-      link.setAttribute('target', '_blank'); // 새 탭에서 열기 (필요한 경우)
+      link.setAttribute('target', '_blank');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -198,90 +197,105 @@ const NoticeDetail: React.FC = () => {
     };
   };
 
-  if (loading) return <S.Loading>Loading...</S.Loading>;
-  if (error) return <S.Error>{error}</S.Error>;
-  if (!post) return <S.Error>게시글을 찾을 수 없습니다.</S.Error>;
+  if (loading) {
+    return <LoadingSpinner text="게시글을 불러오는 중입니다..." />;
+  }
+
+  if (error) {
+    return <S.Error>{error}</S.Error>;
+  }
+
+  if (!post) {
+    return <S.Error>게시글을 찾을 수 없습니다.</S.Error>;
+  }
 
   return (
     <S.Container>
-      <S.Header>
-        <S.Title>{post.title}</S.Title>
-        <S.MetaInfo>
-          <S.MetaItem>
-            <S.Label>작성자:</S.Label>
-            <span>{post.writer}</span>
-          </S.MetaItem>
-          <S.MetaItem>
-            <S.Label>작성일:</S.Label>
-            <span>{post.createdDate}</span>
-          </S.MetaItem>
-          <S.MetaItem>
-            <S.Label>조회수:</S.Label>
-            <span>{post.viewCount}</span>
-          </S.MetaItem>
-          <S.MetaItem>
-            <S.Label>카테고리:</S.Label>
-            <span>{CATEGORY_MAP[post.category] || post.category}</span>
-          </S.MetaItem>
+      <S.ContentContainer>
+        <S.Header>
+          <S.Title>{post.title}</S.Title>
+          <S.MetaInfo>
+            <S.MetaItem>
+              <S.Label>작성자:</S.Label>
+              <span>{post.writer}</span>
+            </S.MetaItem>
+            <S.MetaItem>
+              <S.Label>작성일:</S.Label>
+              <span>{post.createdDate}</span>
+            </S.MetaItem>
+            <S.MetaItem>
+              <S.Label>조회수:</S.Label>
+              <span>{post.viewCount}</span>
+            </S.MetaItem>
+            <S.MetaItem>
+              <S.Label>카테고리:</S.Label>
+              <span>{CATEGORY_MAP[post.category] || post.category}</span>
+            </S.MetaItem>
+            {auth?.isAuthenticated && (
+              <S.ActionButtons>
+                <S.EditButton
+                  onClick={() => navigate(`/news/noticeboard/edit/${post.id}`)}
+                >
+                  수정
+                </S.EditButton>
+                <S.DeleteButton
+                  onClick={showConfirmModal}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? '삭제중' : '삭제'}
+                </S.DeleteButton>
+              </S.ActionButtons>
+            )}
+          </S.MetaInfo>
+        </S.Header>
+
+        <S.QuillContent
+          className="ql-editor"
+          dangerouslySetInnerHTML={createMarkup(post.content)}
+        />
+
+        {post.fileList && post.fileList.length > 0 && (
+          <S.FileSection>
+            <S.FileListHeader>
+              첨부파일 ({post.fileList.length})
+            </S.FileListHeader>
+            <S.FileList>
+              {post.fileList.map((fileUrl, index) => (
+                <S.FileItem key={index}>
+                  <S.FileIcon>📎</S.FileIcon>
+                  <S.FileName>{getFileName(fileUrl)}</S.FileName>
+                  <S.FileDownloadButton
+                    onClick={() => handleFileDownload(fileUrl)}
+                    disabled={downloadingFiles.has(fileUrl)}
+                  >
+                    {downloadingFiles.has(fileUrl)
+                      ? '다운로드 중...'
+                      : '다운로드'}
+                  </S.FileDownloadButton>
+                </S.FileItem>
+              ))}
+            </S.FileList>
+          </S.FileSection>
+        )}
+
+        <S.ButtonGroup>
+          <S.Button onClick={() => navigate('/news/noticeboard')}>
+            목록으로
+          </S.Button>
           {auth?.isAuthenticated && (
-            <S.ActionButtons>
+            <>
               <S.EditButton
                 onClick={() => navigate(`/news/noticeboard/edit/${post.id}`)}
               >
-                수정
+                수정하기
               </S.EditButton>
               <S.DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
-                {isDeleting ? '삭제중' : '삭제'}
+                {isDeleting ? '삭제 중...' : '삭제하기'}
               </S.DeleteButton>
-            </S.ActionButtons>
+            </>
           )}
-        </S.MetaInfo>
-      </S.Header>
-
-      <S.QuillContent
-        className="ql-editor"
-        dangerouslySetInnerHTML={createMarkup(post.content)}
-      />
-
-      {post.fileList && post.fileList.length > 0 && (
-        <S.FileSection>
-          <S.FileListHeader>첨부파일 ({post.fileList.length})</S.FileListHeader>
-          <S.FileList>
-            {post.fileList.map((fileUrl, index) => (
-              <S.FileItem key={index}>
-                <S.FileIcon>📎</S.FileIcon>
-                <S.FileName>{getFileName(fileUrl)}</S.FileName>
-                <S.FileDownloadButton
-                  onClick={() => handleFileDownload(fileUrl)}
-                  disabled={downloadingFiles.has(fileUrl)}
-                >
-                  {downloadingFiles.has(fileUrl)
-                    ? '다운로드 중...'
-                    : '다운로드'}
-                </S.FileDownloadButton>
-              </S.FileItem>
-            ))}
-          </S.FileList>
-        </S.FileSection>
-      )}
-
-      <S.ButtonGroup>
-        <S.Button onClick={() => navigate('/news/noticeboard')}>
-          목록으로
-        </S.Button>
-        {auth?.isAuthenticated && (
-          <>
-            <S.EditButton
-              onClick={() => navigate(`/news/noticeboard/edit/${post.id}`)}
-            >
-              수정하기
-            </S.EditButton>
-            <S.DeleteButton onClick={showConfirmModal} disabled={isDeleting}>
-              {isDeleting ? '삭제 중...' : '삭제하기'}
-            </S.DeleteButton>
-          </>
-        )}
-      </S.ButtonGroup>
+        </S.ButtonGroup>
+      </S.ContentContainer>
     </S.Container>
   );
 };

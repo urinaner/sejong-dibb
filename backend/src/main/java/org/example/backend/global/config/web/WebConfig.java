@@ -1,25 +1,27 @@
 package org.example.backend.global.config.web;
 
-import org.example.backend.global.aop.AuthUserResolver;
+import org.example.backend.global.util.OctetStreamReadMsgConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    private OctetStreamReadMsgConverter octetStreamReadMsgConverter;
 
-    private final AuthUserResolver authUserResolver;
-
-    public WebConfig(AuthUserResolver authUserResolver) {
-        this.authUserResolver = authUserResolver;
+    @Autowired
+    public WebConfig(OctetStreamReadMsgConverter octetStreamReadMsgConverter) {
+        this.octetStreamReadMsgConverter = octetStreamReadMsgConverter;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(authUserResolver);
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(octetStreamReadMsgConverter);
     }
 
     @Override
@@ -27,6 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         corsRegistry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000",
-                                "http://sejong-bioconvergence-temp.s3-website.ap-northeast-2.amazonaws.com");
+                        "http://sejong-bioconvergence-temp.s3-website.ap-northeast-2.amazonaws.com");
     }
 }

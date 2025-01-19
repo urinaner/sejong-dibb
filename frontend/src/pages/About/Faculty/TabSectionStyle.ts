@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const media = {
   mobile: '@media(max-width: 768px)',
@@ -8,14 +9,14 @@ export const media = {
 export const TabContainer = styled.div`
   background: white;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
   overflow: hidden;
   margin-top: 2rem;
 `;
 
 export const TabList = styled.div`
   display: flex;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -32,27 +33,29 @@ export const TabList = styled.div`
 
 export const TabButton = styled.button<{ $isActive: boolean }>`
   padding: 1rem 2rem;
-  font-family: 'Noto Sans KR', sans-serif;
+
   font-size: 1rem;
   font-weight: ${(props) => (props.$isActive ? '600' : '400')};
-  color: ${(props) => (props.$isActive ? '#1a73e8' : '#4a5568')};
+  color: ${(props) =>
+    props.$isActive ? SEJONG_COLORS.CRIMSON_RED : props.theme.colors.grey[500]};
   background: none;
   border: none;
   border-bottom: 2px solid
-    ${(props) => (props.$isActive ? '#1a73e8' : 'transparent')};
+    ${(props) => (props.$isActive ? SEJONG_COLORS.CRIMSON_RED : 'transparent')};
   margin-bottom: -2px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   white-space: nowrap;
 
   &:hover {
-    color: #1a73e8;
-    background: ${(props) => (props.$isActive ? 'transparent' : '#f8fafc')};
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    background: ${(props) =>
+      props.$isActive ? 'transparent' : props.theme.colors.grey[50]};
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #1a73e8;
+    box-shadow: 0 0 0 2px ${SEJONG_COLORS.CRIMSON_RED};
     border-radius: 4px;
   }
 
@@ -83,17 +86,16 @@ export const Section = styled.section`
 `;
 
 export const SectionTitle = styled.h3`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a202c;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0 0 1rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
 `;
 
 export const SectionContent = styled.div`
-  color: #4a5568;
+  color: ${(props) => props.theme.colors.grey[500]};
   line-height: 1.6;
   font-size: 1rem;
 `;
@@ -103,7 +105,7 @@ export const LoadingWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 200px;
-  color: #4a5568;
+  color: ${(props) => props.theme.colors.grey[500]};
 `;
 
 export const ErrorMessage = styled.div`
@@ -112,12 +114,14 @@ export const ErrorMessage = styled.div`
   gap: 0.5rem;
   padding: 1rem;
   background-color: #fff5f5;
-  color: #c53030;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   border-radius: 8px;
   font-size: 0.9rem;
   margin: 1rem 0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
 
   svg {
     flex-shrink: 0;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
   }
 `;

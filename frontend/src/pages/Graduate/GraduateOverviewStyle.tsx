@@ -4,11 +4,12 @@ export const OverviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 15vh;
 `;
 
 export const Title = styled.h2`
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 30px;
 
   @media (max-width: 768px) {

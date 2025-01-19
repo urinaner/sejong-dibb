@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const media = {
   mobile: '@media(max-width: 768px)',
@@ -11,7 +12,7 @@ export const ProfileContainer = styled.section`
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
   margin-bottom: 2rem;
 
   ${media.mobile} {
@@ -24,7 +25,7 @@ export const ImageSection = styled.div`
   flex-shrink: 0;
   width: 300px;
   height: 360px;
-  background: #f8f9fa;
+  background: ${(props) => props.theme.colors.grey[100]};
   position: relative;
 
   ${media.mobile} {
@@ -61,13 +62,12 @@ export const InfoGroup = styled.div`
 `;
 
 export const InfoTitle = styled.h3`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1a202c;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
 `;
 
 export const MajorTags = styled.div`
@@ -77,16 +77,17 @@ export const MajorTags = styled.div`
 `;
 
 export const MajorTag = styled.span`
-  background: #ebf4ff;
-  color: #1a73e8;
+  background: ${(props) => props.theme.colors.grey[50]};
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
+  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED};
   transition: all 0.2s;
 
   &:hover {
-    background: #1a73e8;
+    background: ${SEJONG_COLORS.CRIMSON_RED};
     color: white;
   }
 `;
@@ -101,11 +102,11 @@ export const ContactItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #4a5568;
+  color: ${(props) => props.theme.colors.grey[500]};
   font-size: 0.95rem;
 
   svg {
-    color: #1a73e8;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
     flex-shrink: 0;
   }
 `;
@@ -123,7 +124,7 @@ export const ContactLink = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #1a73e8;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   background: none;
   border: none;
   padding: 0;
@@ -137,6 +138,7 @@ export const ContactLink = styled.button`
 
   &:hover {
     text-decoration: underline;
+    color: ${(props) => props.theme.colors.primary.crimsonDark};
   }
 
   svg {
@@ -153,28 +155,28 @@ export const IconButton = styled.button`
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #4a5568;
+  color: ${(props) => props.theme.colors.grey[400]};
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
 
   &:hover {
-    background: #f1f5f9;
-    color: #1a73e8;
+    background: ${(props) => props.theme.colors.grey[100]};
+    color: ${SEJONG_COLORS.CRIMSON_RED};
   }
 
   &:active {
-    background: #e2e8f0;
+    background: ${(props) => props.theme.colors.grey[200]};
   }
 `;
 
 export const CopySuccessMessage = styled.div`
-  background: #2c3e50;
+  background: ${SEJONG_COLORS.CRIMSON_RED};
   color: white;
   padding: 1rem 2rem;
   border-radius: 8px;
   font-size: 0.9rem;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    0 4px 6px -1px rgba(163, 20, 50, 0.1),
+    0 2px 4px -1px rgba(163, 20, 50, 0.06);
 `;

@@ -4,22 +4,21 @@ import { Link } from 'react-router-dom';
 export const NavItemWrapper = styled.div`
   position: relative;
   height: 100%;
-  display: flex;
-  align-items: center;
 `;
+
 export const NavItemLink = styled(Link)<{ isActive?: boolean }>`
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  padding: 0.8rem 1.5rem;
+  height: 100%;
+  padding: 0 1.125rem; // TopNavItem과 동일한 간격을 위해 조정
   color: white;
   font-size: 1.1rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: all 0.3s;
   text-decoration: none;
-  height: 100%;
-  display: flex;
-  align-items: center;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -41,8 +40,12 @@ export const SubMenu = styled.div<{ isOpen: boolean }>`
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   transform: translateY(${({ isOpen }) => (isOpen ? '0' : '-10px')});
-  transition: all 0.3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s,
+    transform 0.3s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 `;
 
 export const SubMenuItem = styled(Link)`
@@ -51,8 +54,8 @@ export const SubMenuItem = styled(Link)`
   color: white;
   font-size: 1rem;
   font-weight: 500;
-  transition: all 0.3s;
   text-decoration: none;
+  transition: background-color 0.2s;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);

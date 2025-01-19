@@ -7,7 +7,7 @@ export const media = {
 
 export const Container = styled.div`
   max-width: 1400px;
-  width: 95%;
+  width: 85vw;
   margin: 0 auto;
   padding: 40px 20px;
 
@@ -72,7 +72,6 @@ export const TitleSection = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 2rem;
   font-weight: 600;
   color: #1a202c;
@@ -89,7 +88,6 @@ export const Title = styled.h1`
 `;
 
 export const Subtitle = styled.h2`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
   color: #4a5568;
@@ -229,7 +227,6 @@ export const DeleteConfirmationModal = styled.div`
 `;
 
 export const ModalTitle = styled.h3`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: #1a202c;
@@ -241,7 +238,6 @@ export const ModalTitle = styled.h3`
 `;
 
 export const ModalMessage = styled.p`
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1rem;
   color: #4a5568;
   margin: 0;

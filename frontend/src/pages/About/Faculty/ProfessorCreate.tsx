@@ -100,7 +100,8 @@ const ProfessorCreate: React.FC = () => {
     if (
       !formData.name.trim() ||
       !formData.email.trim() ||
-      !formData.position.trim()
+      !formData.position.trim() ||
+      !formData.phoneN.trim()
     ) {
       openModal(
         <>
@@ -109,7 +110,7 @@ const ProfessorCreate: React.FC = () => {
             입력 오류
           </Modal.Header>
           <Modal.Content>
-            <p>이름, 이메일, 직위는 필수 입력 항목입니다.</p>
+            <p>이름, 이메일, 직위, 전화번호는 필수 입력 항목입니다.</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
@@ -280,7 +281,9 @@ const ProfessorCreate: React.FC = () => {
             </S.InputGroup>
 
             <S.InputGroup>
-              <S.Label htmlFor="phoneN">전화번호</S.Label>
+              <S.Label htmlFor="phoneN">
+                전화번호<S.RequiredMark>*</S.RequiredMark>
+              </S.Label>
               <S.InputWithIcon>
                 <S.Input
                   id="phoneN"
@@ -288,6 +291,7 @@ const ProfessorCreate: React.FC = () => {
                   value={formData.phoneN}
                   onChange={handleInputChange}
                   placeholder="02-1234-5678"
+                  required
                 />
                 <Phone size={18} />
               </S.InputWithIcon>

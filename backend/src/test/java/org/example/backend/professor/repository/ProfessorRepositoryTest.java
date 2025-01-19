@@ -1,15 +1,10 @@
 package org.example.backend.professor.repository;
 
 import org.example.backend.IntegrationTestSupport;
-import org.example.backend.department.domain.entity.Department;
-import org.example.backend.department.repository.DepartmentRepository;
-import org.example.backend.professor.domain.dto.professor.ProfessorReqDto;
 import org.example.backend.professor.domain.entity.Professor;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

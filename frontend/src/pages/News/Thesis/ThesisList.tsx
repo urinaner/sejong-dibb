@@ -1,70 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
-import { apiEndpoints } from '../../../config/apiConfig';
-import { Edit, Plus, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import * as S from './ThesisStyle';
-
-interface ThesisItem {
-  id: number;
-  author: string;
-  journal: string;
-  content: string;
-  link: string;
-  publicationDate: string;
-  thesisImage: string;
-  publicationCollection: string;
-  publicationIssue: string;
-  publicationPage: string;
-  issn: string;
-}
-
-interface ThesisResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: ThesisItem[];
-}
+import { useThesisList } from '../../../hooks/queries/useThesis';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import Pagination from '../../../common/Pagination/Pagination';
 
 const ThesisList: React.FC = () => {
   const navigate = useNavigate();
   const auth = useAuth();
-  const [theses, setTheses] = useState<ThesisItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 10;
 
-  useEffect(() => {
-    const fetchTheses = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get<ThesisResponse>(
-          apiEndpoints.thesis.listWithPage(currentPage, 10),
-        );
-
-        if (response.data?.data) {
-          setTheses(response.data.data);
-          setTotalPages(response.data.totalPage);
-        } else {
-          throw new Error('Invalid data format');
-        }
-      } catch (err) {
-        setError('논문 목록을 불러오는데 실패했습니다.');
-        console.error('Error fetching theses:', err);
-        setTheses([]); // 에러 시 빈 배열로 초기화
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTheses();
-  }, [currentPage]);
+  const {
+    data: thesesData,
+    isLoading,
+    error,
+  } = useThesisList(
+    {
+      page: currentPage,
+      size: pageSize,
+    },
+    {
+      // 데이터를 가져오는 동안 이전 데이터 유지
+      placeholderData: (keepPreviousData) => keepPreviousData,
+      // 페이지가 백그라운드에 있을 때도 5분마다 갱신
+      refetchInterval: 5 * 60 * 1000,
+    },
+  );
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+    // newPage는 1-based이므로 0-based로 변환
+    const zeroBasedPage = newPage - 1;
+    if (zeroBasedPage >= 0 && zeroBasedPage < (thesesData?.totalPage ?? 0)) {
+      setCurrentPage(zeroBasedPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -78,13 +49,20 @@ const ThesisList: React.FC = () => {
     });
   };
 
-  if (loading) {
-    return <S.LoadingSpinner>Loading...</S.LoadingSpinner>;
+  if (isLoading) {
+    return (
+      <S.Container>
+        <LoadingSpinner text="논문 목록을 불러오는 중입니다..." />
+      </S.Container>
+    );
   }
 
   if (error) {
-    return <S.ErrorMessage>{error}</S.ErrorMessage>;
+    return <S.ErrorMessage>{error.message}</S.ErrorMessage>;
   }
+
+  const theses = thesesData?.data ?? [];
+  const totalPages = thesesData?.totalPage ?? 0;
 
   return (
     <S.Container>
@@ -137,7 +115,11 @@ const ThesisList: React.FC = () => {
                 <S.Td>{formatDate(thesis.publicationDate)}</S.Td>
                 <S.Td>
                   {thesis.publicationCollection &&
-                    `${thesis.publicationCollection}, ${thesis.publicationIssue ? `No. ${thesis.publicationIssue}` : ''} ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
+                    `${thesis.publicationCollection}, ${
+                      thesis.publicationIssue
+                        ? `No. ${thesis.publicationIssue}`
+                        : ''
+                    } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
                 </S.Td>
               </tr>
             ))
@@ -150,23 +132,11 @@ const ThesisList: React.FC = () => {
       </S.ThesisTable>
 
       {totalPages > 1 && (
-        <S.Pagination>
-          <S.PageButton
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            이전
-          </S.PageButton>
-          <span>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <S.PageButton
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages - 1}
-          >
-            다음
-          </S.PageButton>
-        </S.Pagination>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage + 1} // 0-based to 1-based
+          onPageChange={handlePageChange} // 직접 handlePageChange 전달
+        />
       )}
     </S.Container>
   );

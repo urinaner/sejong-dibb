@@ -39,6 +39,10 @@ import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
 import SeminarCreate from './pages/Seminar/SeminarCreate';
 import SeminarEdit from './pages/Seminar/SeminarEdit';
+import News from './pages/News/News/News';
+import NewsDetail from './pages/News/News/NewsDetail';
+import NewsCreate from './pages/News/News/NewsCreate';
+import NewsEdit from './pages/News/News/NewsEdit';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -76,39 +80,36 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100vw;
   position: relative;
-  overflow-x: hidden;
+  // overflow-x: hidden 제거
   scroll-behavior: smooth;
 `;
 
 const InnerContainer = styled.div`
-  max-width: 1920px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex: 1;
+  // overflow-x: hidden 제거
 `;
 const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 100%; // 추가
   height: 100%;
   align-items: center;
-  justify-content: ${(props) => (props.isAuthPage ? 'center' : 'flex-start')};
   padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
-  position: relative;
-  z-index: 1;
-  background-color: white;
-  margin-top: ${(props) => (props.isAuthPage ? '0' : '0')};
-  border-radius: ${(props) => (props.isAuthPage ? '0' : '20px 20px 0 0')};
 `;
-
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
   position: relative;
   width: 100vw;
   z-index: 0;
+  margin-top: ${(props) =>
+    props.isAuthPage ? '0' : '125px'}; // TopHeader + Header 높이
   margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
 `;
 
@@ -174,8 +175,8 @@ function AppContent() {
         <AnimatePresence mode="wait">
           {isHomePage ? (
             <MainBanner
-              videoSrc={MAIN_CONTENT.videoSrc}
-              title={MAIN_CONTENT.title}
+              videos={MAIN_CONTENT.videos}
+              autoPlayInterval={5000}
               logo={MAIN_CONTENT.logoSrc}
             />
           ) : (
@@ -223,6 +224,9 @@ function AppContent() {
               <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />
               <Route path="/news/thesis/:id" element={<ThesisDetail />} />
+              {/*학부 뉴스*/}
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:newsId" element={<NewsDetail />} />
 
               {/* 어드민 권한 보호 Routes */}
               <Route
@@ -286,6 +290,22 @@ function AppContent() {
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
                     <SeminarEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/create"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <NewsCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/news/edit/:newsId"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <NewsEdit />
                   </ProtectedRoute>
                 }
               />

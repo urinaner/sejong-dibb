@@ -1,9 +1,9 @@
-// Navigation.tsx
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { AuthContext } from '../../../context/AuthContext';
 import NavItem from './NavItem';
+
 import Profile from '../Profile/Profile';
 import {
   NavigationWrapper,
@@ -11,8 +11,6 @@ import {
   MobileNavItem,
   MobileNavButton,
   MobileSubMenu,
-  LoginButton,
-  NavigationRightSection,
 } from './NavigationStyle';
 
 interface NavigationProps {
@@ -44,7 +42,6 @@ const navigationItems: NavigationItem[] = [
     title: '대학',
     path: '/undergraduate/curriculum',
     menuItems: [
-      { name: '학사안내', path: '/college/guide' },
       { name: '학부교과과정', path: '/undergraduate/curriculum' },
       { name: '입학/장학', path: '/undergraduate/admission-scholarship' },
     ],
@@ -55,13 +52,13 @@ const navigationItems: NavigationItem[] = [
     menuItems: [
       { name: '소개', path: '/graduate/overview' },
       { name: '교과과정', path: '/graduate/curriculum' },
-      { name: '학칙/규정', path: '/graduate/rules' },
     ],
   },
   {
     title: '바융소식',
-    path: '/news/noticeboard',
+    path: '/news',
     menuItems: [
+      { name: '학부뉴스', path: '/news' },
       { name: '공지사항', path: '/news/noticeboard' },
       { name: '세미나', path: '/news/seminar' },
       { name: '연구논문', path: '/news/thesis' },
@@ -70,7 +67,7 @@ const navigationItems: NavigationItem[] = [
   {
     title: '⏱ 서비스',
     path: '/seminar-rooms/reservation',
-    menuItems: [{ name: '세미나실 예약', path: '/seminar-rooms/reservation' }],
+    menuItems: [{ name: '예약센터', path: '/seminar-rooms/reservation' }],
   },
 ];
 
@@ -108,19 +105,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
     setMobileMenuOpen(false);
     setOpenSubMenus({});
   };
-
-  const handleSignIn = () => {
-    navigate('/signin');
-    closeMobileMenu();
-  };
-
-  const renderAuthSection = () => {
-    if (auth?.isAuthenticated) {
-      return <Profile />;
-    }
-    return <LoginButton onClick={handleSignIn}>로그인</LoginButton>;
-  };
-
   if (isMobile) {
     return (
       <MobileNavigationWrapper isOpen={mobileMenuOpen}>
@@ -143,7 +127,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
             </MobileSubMenu>
           </MobileNavItem>
         ))}
-        <MobileNavItem>{renderAuthSection()}</MobileNavItem>
       </MobileNavigationWrapper>
     );
   }
@@ -161,7 +144,6 @@ const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
           menuItems={item.menuItems}
         />
       ))}
-      <NavigationRightSection>{renderAuthSection()}</NavigationRightSection>
     </NavigationWrapper>
   );
 };

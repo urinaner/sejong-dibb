@@ -1,10 +1,12 @@
 package org.example.backend.seminar.domain.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.common.utils.TimeParsingUtils;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 
 @Entity
@@ -26,11 +28,11 @@ public class Seminar {
     @Column(name = "place")
     private String place;
 
-    @Column(name = "start_date")
-    private String startDate;
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
-    @Column(name = "end_date")
-    private String endDate;
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
     @Column(name = "speaker")
     private String speaker;
@@ -39,13 +41,12 @@ public class Seminar {
     private String company;
 
     @Builder
-    private Seminar(String name, String writer, String place, String startDate,
-                    String endDate, String speaker, String company) {
+    private Seminar(String name, String writer, String place, LocalDateTime startTime, LocalDateTime endTime, String speaker, String company) {
         this.name = name;
         this.writer = writer;
         this.place = place;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.speaker = speaker;
         this.company = company;
     }
@@ -55,8 +56,8 @@ public class Seminar {
                 .name(dto.getName())
                 .writer(dto.getWriter())
                 .place(dto.getPlace())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
+                .startTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getStartTime())))
+                .endTime(TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getEndTime())))
                 .speaker(dto.getSpeaker())
                 .company(dto.getCompany())
                 .build();
@@ -66,8 +67,8 @@ public class Seminar {
         this.name = dto.getName();
         this.writer = dto.getWriter();
         this.place = dto.getPlace();
-        this.startDate = dto.getStartDate();
-        this.endDate = dto.getEndDate();
+        this.startTime = TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getStartTime()));
+        this.endTime = TimeParsingUtils.formatterLocalDateTime(String.valueOf(dto.getEndTime()));
         this.speaker = dto.getSpeaker();
         this.company = dto.getCompany();
     }

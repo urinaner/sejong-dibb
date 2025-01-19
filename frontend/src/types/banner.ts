@@ -1,3 +1,5 @@
+import { Video } from '../components/Banner/VideoBanner/types';
+
 export interface PageContent {
   title: string;
   description: string;
@@ -11,19 +13,13 @@ export interface BannerBaseProps {
 }
 
 export interface MainBannerProps extends BannerBaseProps {
-  videoSrc: string;
+  videoSrc?: string;
+  title?: string;
   logo?: string;
-  title: string;
+  videos?: Video[];
+  autoPlayInterval?: number;
 }
 
 export interface PageBannerProps extends BannerBaseProps {
-  content: PageContent;
-}
-export interface MainBannerProps {
-  videoSrc: string;
-  title: string;
-  logo?: string;
-}
-export interface PageBannerProps {
   content: PageContent;
 }
