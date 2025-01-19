@@ -153,3 +153,75 @@ export const ErrorMessage = styled.div`
     border-right: 0;
   }
 `;
+
+// 기본 정보 섹션 스타일
+export const Section = styled.section`
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  ${media.mobile} {
+    margin-bottom: 1.5rem;
+  }
+`;
+
+export const SectionTitle = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+  }
+
+  ${media.mobile} {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+`;
+
+export const SectionContent = styled.div`
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  li {
+    color: ${(props) => props.theme.colors.grey[500]};
+    line-height: 1.6;
+    padding-left: 1.25rem;
+    position: relative;
+    font-size: 0.95rem;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: ${SEJONG_COLORS.CRIMSON_RED};
+    }
+  }
+
+  ${media.mobile} {
+    li {
+      font-size: 0.9rem;
+      padding-left: 1rem;
+    }
+  }
+`;
