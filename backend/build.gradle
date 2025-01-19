@@ -31,6 +31,8 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'	//Swagger
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //jsoup
+    implementation 'org.jsoup:jsoup:1.14.3'
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
