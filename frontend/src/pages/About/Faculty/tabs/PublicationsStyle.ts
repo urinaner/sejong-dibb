@@ -18,11 +18,15 @@ export const PublicationsContainer = styled.div`
 export const FilterSection = styled.div`
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
 
   ${media.mobile} {
     flex-direction: column;
     gap: 0.75rem;
+    padding: 0.75rem;
   }
 `;
 
@@ -36,6 +40,7 @@ export const SearchWrapper = styled.div`
     top: 50%;
     transform: translateY(-50%);
     color: ${(props) => props.theme.colors.grey[500]};
+    pointer-events: none;
   }
 `;
 
@@ -50,7 +55,7 @@ export const SearchInput = styled.input`
   &:focus {
     outline: none;
     border-color: ${SEJONG_COLORS.CRIMSON_RED};
-    box-shadow: 0 0 0 3px rgba(163, 20, 50, 0.1);
+    box-shadow: 0 0 0 3px ${SEJONG_COLORS.CRIMSON_RED}15;
   }
 
   &::placeholder {
@@ -59,7 +64,7 @@ export const SearchInput = styled.input`
 `;
 
 export const FilterSelect = styled.select`
-  min-width: 120px;
+  min-width: 140px;
   padding: 0.75rem 2rem 0.75rem 1rem;
   border: 1px solid ${(props) => props.theme.colors.grey[200]};
   border-radius: 8px;
@@ -76,7 +81,7 @@ export const FilterSelect = styled.select`
   &:focus {
     outline: none;
     border-color: ${SEJONG_COLORS.CRIMSON_RED};
-    box-shadow: 0 0 0 3px rgba(163, 20, 50, 0.1);
+    box-shadow: 0 0 0 3px ${SEJONG_COLORS.CRIMSON_RED}15;
   }
 
   ${media.mobile} {
@@ -100,111 +105,116 @@ export const ThesisCard = styled.article`
   &:hover {
     border-color: ${SEJONG_COLORS.CRIMSON_RED};
     box-shadow: 0 2px 8px rgba(163, 20, 50, 0.1);
+    transform: translateY(-1px);
+  }
+
+  ${media.mobile} {
+    padding: 1rem;
   }
 `;
 
-export const ThesisHeader = styled.div`
+export const ThesisTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1rem;
+
+  ${media.mobile} {
+    font-size: 1rem;
+  }
 `;
 
-export const Content = styled.h3`
-  font-size: 1.1rem;
+export const MetaGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: ${(props) => props.theme.colors.grey[50]};
+  border-radius: 6px;
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+`;
+
+export const MetaItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: ${(props) => props.theme.colors.grey[500]};
+
+  svg {
+    margin-top: 0.25rem;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  ${media.mobile} {
+    font-size: 0.9rem;
+    gap: 0.5rem;
+  }
+`;
+
+export const MetaLabel = styled.span`
   font-weight: 500;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  margin: 0;
-  line-height: 1.4;
+  color: ${(props) => props.theme.colors.grey[500]};
+`;
+
+export const MetaValue = styled.span`
+  color: ${(props) => props.theme.colors.grey[300]};
 `;
 
 export const LinkButton = styled.button`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  border: none;
-  background: none;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED};
+  border-radius: 6px;
+  background: white;
   color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-size: 0.9rem;
   cursor: pointer;
-  border-radius: 50%;
   transition: all 0.2s;
   flex-shrink: 0;
 
   &:hover {
-    background: ${(props) => props.theme.colors.grey[100]};
+    background: ${SEJONG_COLORS.CRIMSON_RED};
+    color: white;
   }
-
-  &:active {
-    background: ${(props) => props.theme.colors.grey[200]};
-  }
-`;
-
-export const ThesisInfo = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.95rem;
-  color: ${(props) => props.theme.colors.grey[500]};
-`;
-
-export const InfoItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 
   svg {
-    color: ${SEJONG_COLORS.CRIMSON_RED};
     flex-shrink: 0;
   }
-`;
 
-export const ThesisDetails = styled.div`
-  font-size: 0.9rem;
-  color: ${(props) => props.theme.colors.grey[500]};
+  ${media.mobile} {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
 `;
 
 export const EmptyMessage = styled.div`
-  padding: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
   color: ${(props) => props.theme.colors.grey[500]};
   background: ${(props) => props.theme.colors.grey[50]};
   border-radius: 8px;
-  border: 1px dashed ${(props) => props.theme.colors.grey[200]};
-`;
+  border: 1px dashed ${(props) => props.theme.colors.grey[300]};
+  font-size: 1rem;
 
-export const THead = styled.thead``;
-
-export const Th = styled.th`
-  white-space: nowrap;
-  padding: 1rem 0 2rem 0;
-  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-
-  &:nth-child(1) {
-    width: 2rem;
-  }
-  &:nth-child(2) {
-    width: 23.25rem;
-  }
-  &:nth-child(3) {
-    width: 5rem;
-  }
-`;
-
-export const Td = styled.td`
-  word-wrap: break-word;
-  text-align: center;
-  padding: 1.5rem 0.75rem;
-`;
-
-export const Table = styled.table`
-  border-collapse: collapse;
-
-  tr:nth-child(2) {
-    padding-top: 2rem !important;
+  ${media.mobile} {
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -216,6 +226,11 @@ export const Pagination = styled.div`
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid ${(props) => props.theme.colors.grey[200]};
+
+  ${media.mobile} {
+    margin-top: 1.5rem;
+    gap: 0.75rem;
+  }
 `;
 
 export const PageButton = styled.button<{ disabled: boolean }>`
@@ -237,6 +252,11 @@ export const PageButton = styled.button<{ disabled: boolean }>`
     background: ${SEJONG_COLORS.CRIMSON_RED};
     color: white;
   }
+
+  ${media.mobile} {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
 `;
 
 export const PageInfo = styled.span`
@@ -244,4 +264,9 @@ export const PageInfo = styled.span`
   color: ${(props) => props.theme.colors.grey[500]};
   min-width: 80px;
   text-align: center;
+
+  ${media.mobile} {
+    font-size: 0.9rem;
+    min-width: 60px;
+  }
 `;
