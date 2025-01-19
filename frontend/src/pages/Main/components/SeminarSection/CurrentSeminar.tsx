@@ -10,7 +10,8 @@ interface CurrentSeminarProps {
 export const CurrentSeminar = ({ seminar, loading }: CurrentSeminarProps) => {
   const navigate = useNavigate();
 
-  if (loading) return <LoadingSpinner />;
+  if (loading)
+    return <LoadingSpinner text={'최신 세미나정보를 불러오는중 입니다.'} />;
   if (!seminar) return <p>세미나가 없습니다.</p>;
 
   return (
