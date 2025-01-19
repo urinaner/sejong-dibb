@@ -52,7 +52,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication)
+            throws IOException {
         log.info("LoginFilter.successfulAuthentication");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -70,8 +71,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String accessToken = jwtUtil.createJwt(loginId, role, 1800 * 1000L);
+        String refreshToken = jwtUtil.createJwt(loginId, role, 60 * 60 * 24 * 30 * 1000L);
 
-        response.addHeader("Authorization", "Bearer " + accessToken);
+        // 응답 바디에 JSON 데이터 작성
+        response.setContentType("application/json"); // JSON 형식으로 설정
+        response.setCharacterEncoding("UTF-8");
+
+        // JSON 데이터 생성
+        String jsonResponse = String.format(
+                "{\"accessToken\": \"%s\", \"refreshToken\": \"%s\"}",
+                accessToken,
+                refreshToken
+        );
+
+        // 응답에 JSON 데이터 작성
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
