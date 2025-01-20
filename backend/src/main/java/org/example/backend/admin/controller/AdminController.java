@@ -36,4 +36,9 @@ public class AdminController {
         userService.signOut(accessTokenReq);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PostMapping("/test")
+    public String test() {
+        return "test";
+    }
 }
