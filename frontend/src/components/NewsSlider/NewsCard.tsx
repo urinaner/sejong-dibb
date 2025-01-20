@@ -38,13 +38,14 @@ const NewsCard: React.FC<NewsCardProps> = ({
   createDate,
   image,
   view,
+  imageBaseUrl,
   onClick,
   itemsPerView,
 }) => {
   return (
     <NewsCardWrapper itemsPerView={itemsPerView} onClick={() => onClick?.(id)}>
       <NewsImage
-        imageUrl={`${image}`}
+        imageUrl={`${imageBaseUrl}/${image}`}
         onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
           e.currentTarget.style.backgroundColor = '#f1f1f1';
           e.currentTarget.innerHTML = '이미지를 불러올 수 없습니다';

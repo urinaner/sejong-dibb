@@ -94,7 +94,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }) => {
   if (!loading) return null;
 
-  const mainText = text || '뉴스를 불러오는 중입니다';
+  const mainText = text || '로딩 중입니다';
   const subText = '잠시만 기다려주세요';
 
   return (

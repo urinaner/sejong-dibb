@@ -1,9 +1,15 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosInstance } from '../../config/apiConfig';
+import {
+  useQuery,
+  useMutation,
+  UseQueryResult,
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { newsApi, NewsFormRequest } from '../../api/news';
+import type { NewsResponse, PaginationParams } from '../../types/api';
 import { apiEndpoints } from '../../config/apiConfig';
-import type { NewsReqDto } from '../../config/apiConfig';
 
-// Types
 export interface NewsItem {
   id: number;
   title: string;
@@ -13,15 +19,13 @@ export interface NewsItem {
   link: string;
   image: string;
 }
-
 export interface NewsListResponse {
   message: string;
   page: number;
   totalPage: number;
-  data: NewsItem[];
+  data: NewsItem[]; // 이미 배열 타입임
 }
 
-// Query Keys
 export const newsKeys = {
   all: ['news'] as const,
   lists: () => [...newsKeys.all, 'list'] as const,
@@ -31,163 +35,72 @@ export const newsKeys = {
   detail: (id: number) => [...newsKeys.details(), id] as const,
 };
 
-// API Functions
-const newsApi = {
-  getList: async ({ page, size }: { page: number; size: number }) => {
-    try {
-      const { data } = await axiosInstance.get(
-        apiEndpoints.news.listWithPage(page, size),
-      );
-      return data;
-    } catch (error) {
-      console.error('Error fetching news list:', error);
-      throw error;
-    }
-  },
-
-  getById: async (id: number) => {
-    try {
-      const { data } = await axiosInstance.get(apiEndpoints.news.get(id));
-      return data;
-    } catch (error) {
-      console.error('Error fetching news by ID:', error);
-      throw error;
-    }
-  },
-
-  create: async ({
-    newsReqDto,
-    imageFile,
-  }: {
-    newsReqDto: NewsReqDto;
-    imageFile?: File;
-  }) => {
-    try {
-      const formData = apiEndpoints.news.create.getFormData(
-        newsReqDto,
-        imageFile,
-      );
-      const { data } = await axiosInstance.post(
-        apiEndpoints.news.create.url,
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      );
-      return data.data;
-    } catch (error) {
-      console.error('Error creating news:', error);
-      throw error;
-    }
-  },
-
-  update: async ({
-    id,
-    newsReqDto,
-    imageFile,
-  }: {
-    id: number;
-    newsReqDto: NewsReqDto;
-    imageFile?: File;
-  }) => {
-    try {
-      const formData = apiEndpoints.news.update.getFormData(
-        newsReqDto,
-        imageFile,
-      );
-      const { data } = await axiosInstance.put(
-        apiEndpoints.news.update.url(id),
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      );
-      return data;
-    } catch (error) {
-      console.error('Error updating news:', error);
-      throw error;
-    }
-  },
-
-  delete: async (id: number) => {
-    try {
-      const { data } = await axiosInstance.delete(apiEndpoints.news.delete(id));
-      return data;
-    } catch (error) {
-      console.error('Error deleting news:', error);
-      throw error;
-    }
-  },
-};
-
-// Custom Hooks
-export const useGetNewsList = (params: { page: number; size: number }) => {
+export const useGetNewsList = (params: {
+  page: number;
+  size: number;
+}): UseQueryResult<NewsItem[], AxiosError> => {
   return useQuery({
     queryKey: newsKeys.list(params),
-    queryFn: () => newsApi.getList(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryFn: async () => {
+      const response = await newsApi.getNewsList(params);
+      return response; // API가 이미 NewsItem[] 형태로 반환
+    },
   });
 };
-
-export const useGetNews = (id: number) => {
+export const useGetNews = (
+  id: number,
+): UseQueryResult<NewsItem, AxiosError> => {
   return useQuery({
     queryKey: newsKeys.detail(id),
-    queryFn: () => newsApi.getById(id),
+    queryFn: async () => {
+      const response = await axios.get<NewsItem>(apiEndpoints.news.get(id));
+      return response.data; // response.data에서 실제 뉴스 데이터 추출
+    },
     enabled: !!id,
-    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
-export const useCreateNews = () => {
+export const useCreateNews = (): UseMutationResult<
+  number,
+  AxiosError,
+  NewsFormRequest
+> => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: newsApi.create,
+    mutationFn: newsApi.createNews,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
-    onError: (error) => {
-      console.error('Error creating news:', error);
-    },
   });
 };
 
-export const useUpdateNews = () => {
+export const useUpdateNews = (): UseMutationResult<
+  void,
+  AxiosError,
+  NewsFormRequest & { id: number }
+> => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: newsApi.update,
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: newsKeys.detail(id) });
+    mutationFn: newsApi.updateNews,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: newsKeys.detail(variables.id),
+      });
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
-    onError: (error) => {
-      console.error('Error updating news:', error);
-    },
   });
 };
 
-export const useDeleteNews = () => {
+export const useDeleteNews = (): UseMutationResult<
+  void,
+  AxiosError,
+  number
+> => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: newsApi.delete,
+    mutationFn: newsApi.deleteNews,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
-    onError: (error) => {
-      console.error('Error deleting news:', error);
-    },
   });
 };
-
-// Hook exports
-const useNews = {
-  useGetNewsList,
-  useGetNews,
-  useCreateNews,
-  useUpdateNews,
-  useDeleteNews,
-};
-
-export default useNews;

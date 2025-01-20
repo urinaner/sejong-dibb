@@ -55,14 +55,14 @@ export const LogoTitle = styled.div`
   flex-direction: column;
   gap: 4px;
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   opacity: 0.95;
 `;
 
 export const Department = styled.span`
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   text-transform: none;
 

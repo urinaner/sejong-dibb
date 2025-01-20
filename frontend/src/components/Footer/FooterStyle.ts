@@ -44,6 +44,7 @@ export const Address = styled.div`
   flex: 1;
   font-size: 16px;
   font-weight: 500;
+  font-family: 'Plus Jakarta Sans';
 
   ${media.tablet} {
     text-align: center;
@@ -87,6 +88,7 @@ export const SightMapHeader = styled.div`
   flex-grow: 1;
   margin-right: 20px;
   font-size: 18px;
+  font-family: 'Noto Serif KR', serif;
   font-weight: 600;
 
   ${media.tablet} {
@@ -106,6 +108,7 @@ export const SightMapContent = styled.div`
   font-size: 16px;
   font-weight: 300;
   margin-top: 18px;
+  font-family: 'Noto Sans';
 
   ${media.tablet} {
     display: none;
