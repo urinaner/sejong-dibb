@@ -54,8 +54,8 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           cd backend
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest .
-          docker save ${{ secrets.DOCKER_USERNAME }}/backend:latest | bzip2 | ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "bunzip2 | docker load"
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev .
+          docker save ${{ secrets.DOCKER_USERNAME }}/backend:latest | bzip2 | ssh ${{ secrets.SERVER_USER }}@${{ secrets.SJ_HOST }} "bunzip2 | docker load"
 
       # On-premise 배포
       - name: Deploy to Server
@@ -65,7 +65,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SJ_PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:dev
             docker stop backend || true
             docker rm backend || true
             docker run -d --name backend --restart always -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/backend:latest
@@ -95,8 +95,8 @@ jobs:
           run: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             cd front
-            docker build -t ${{ secrets.DOCKER_USERNAME }}/front:latest .
-            docker save ${{ secrets.DOCKER_USERNAME }}/front:latest | bzip2 | ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "bunzip2 | docker load"
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/front:dev .
+            docker save ${{ secrets.DOCKER_USERNAME }}/front:latest | bzip2 | ssh ${{ secrets.SERVER_USER }}@${{ secrets.SJ_HOST }} "bunzip2 | docker load"
 
         - name: Deploy Frontend
           uses: appleboy/ssh-action@v0.1.4
@@ -107,5 +107,5 @@ jobs:
             script: |
               docker stop front || true
               docker rm front || true
-              docker run -d --name front --restart always -p 80:80 ${{ secrets.DOCKER_USERNAME }}/front:latest
+              docker run -d --name front --restart always -p 80:80 ${{ secrets.DOCKER_USERNAME }}/front:dev
               docker image prune -a -f
