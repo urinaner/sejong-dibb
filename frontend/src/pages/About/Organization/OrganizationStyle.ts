@@ -140,6 +140,7 @@ export const OrgCard = styled(InfoCard)`
 
       ${media.mobile} {
         padding: 0 0 16px 0 !important;
+        width: 100%;
       }
     }
 
