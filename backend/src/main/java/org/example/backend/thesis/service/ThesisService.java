@@ -3,7 +3,7 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.aws.S3Uploader;
+import org.example.backend.global.config.aws.LocalFileUploader;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
@@ -11,6 +11,7 @@ import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.domain.entity.Thesis;
 import org.example.backend.thesis.exception.ThesisException;
 import org.example.backend.thesis.repository.ThesisRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,16 +24,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class ThesisService {
     private final ThesisRepository thesisRepository;
     private final ProfessorRepository professorRepository;
-    private final S3Uploader s3Uploader;
+    private final LocalFileUploader localFileUploader;
     private static final String dirName = "image";
 
+    @Value("${server.url}")
+    private String serverUrl;
     @Transactional
     public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
-            thesisReqDto.setThesisImage(uploadImageUrl);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
+            thesisReqDto.setThesisImage(serverUrl + uploadImageUrl);
         }
 
         Thesis thesis = Thesis.of(thesisReqDto, professor);
@@ -60,7 +63,7 @@ public class ThesisService {
     @Transactional
     public ThesisResDto updateThesis(Long thesisId, ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
             thesisReqDto.setThesisImage(uploadImageUrl);
         }
 

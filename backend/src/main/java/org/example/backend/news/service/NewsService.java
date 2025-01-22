@@ -3,12 +3,13 @@ package org.example.backend.news.service;
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.aws.S3Uploader;
+import org.example.backend.global.config.aws.LocalFileUploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
 import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.exception.NewsException;
 import org.example.backend.news.repository.NewsRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class NewsService {
     private final NewsRepository newsRepository;
-    private final S3Uploader s3Uploader;
+    private final LocalFileUploader localFileUploader;
     private static final String dirName = "news";
 
+    @Value("${server.url}")
+    private String serverUrl;
     @Transactional
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
-            newsReqDto.setImage(uploadImageUrl);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
+            newsReqDto.setImage(serverUrl + uploadImageUrl);
         }
         News news = News.of(newsReqDto);
         News savedNews = newsRepository.save(news);
@@ -43,7 +46,7 @@ public class NewsService {
     @Transactional
     public NewsResDto updateNews(Long newsId, NewsReqDto newsReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
             newsReqDto.setImage(uploadImageUrl);
         }
 
