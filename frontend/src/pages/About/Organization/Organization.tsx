@@ -3,7 +3,6 @@ import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import {
   OrgWrapper,
   OrgContent,
-  OrgTitle,
   OrgCard,
   MapContainer,
 } from './OrganizationStyle';
