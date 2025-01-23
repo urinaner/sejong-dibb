@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { Wrapper, Content, Title, InfoCard } from '../AboutStyle';
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-};
+import { media } from '../../../styles/media';
 
 export const OrgWrapper = styled(Wrapper)`
   background-color: ${({ theme }) => theme.colors.white};
