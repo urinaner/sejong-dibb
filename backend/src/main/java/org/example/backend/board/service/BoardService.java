@@ -15,7 +15,8 @@ import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
-import org.example.backend.global.config.aws.S3Uploader;
+import org.example.backend.global.config.aws.LocalFileUploader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final S3Uploader s3Uploader;
+    private final LocalFileUploader localFileUploader;
     private static final String dirName = "image";
+
+    @Value("${server.url}")
+    private String serverUrl;
 
     @Transactional
     public Long saveBoard(BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
@@ -80,8 +84,8 @@ public class BoardService {
                 if (multipartFile == null || multipartFile.isEmpty()) {
                     throw new BoardException(BoardExceptionType.REQUIRED_FILE);
                 }
-                String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
-                updateImageUrlList.add(uploadImageUrl);
+                String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
+                updateImageUrlList.add(serverUrl + uploadImageUrl);
             }
             boardReqDto.setFileList(updateImageUrlList);
         }
