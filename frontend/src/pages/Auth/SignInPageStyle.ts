@@ -30,7 +30,7 @@ export const LogoContainer = styled.div`
 
 export const Title = styled.h1`
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 1rem;
 `;

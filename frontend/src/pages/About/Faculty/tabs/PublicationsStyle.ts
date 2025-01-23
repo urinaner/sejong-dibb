@@ -112,6 +112,7 @@ export const ThesisHeader = styled.div`
 `;
 
 export const Content = styled.h3`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   color: ${SEJONG_COLORS.CRIMSON_RED};

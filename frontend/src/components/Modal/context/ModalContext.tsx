@@ -31,7 +31,7 @@ const ModalContainer = styled.div`
 
 const ModalHeader = styled.div`
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #1a1a1a;
   text-align: center;
   margin-top: 0.5rem;

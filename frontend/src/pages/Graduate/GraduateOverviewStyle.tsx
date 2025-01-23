@@ -9,7 +9,7 @@ export const OverviewContainer = styled.div`
 
 export const Title = styled.h2`
   font-size: 2.8rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 30px;
 
   @media (max-width: 768px) {

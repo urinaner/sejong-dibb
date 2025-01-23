@@ -42,6 +42,7 @@ export const HeaderContainer = styled.div`
 `;
 
 export const Title = styled.h1`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 2rem;
   font-weight: bold;
   color: ${SEJONG_COLORS.CRIMSON_RED};
@@ -100,6 +101,7 @@ export const MainInfo = styled.div`
 `;
 
 export const ProfessorName = styled.h2`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 26px;
   font-weight: 600;
   color: ${(props) => props.theme.colors.grey[500]};
@@ -112,6 +114,7 @@ export const ProfessorName = styled.h2`
 `;
 
 export const Position = styled.p`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0 0 6px 0;
@@ -123,6 +126,7 @@ export const Position = styled.p`
 `;
 
 export const Major = styled.p`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
   color: ${(props) => props.theme.colors.grey[400]};
   margin: 0 0 20px 0;
@@ -147,6 +151,7 @@ export const ContactInfo = styled.div`
 `;
 
 export const InfoTitle = styled.h3`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 18px;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
@@ -175,6 +180,7 @@ export const InfoItem = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 15px;
   color: ${(props) => props.theme.colors.grey[500]};
   padding: 4px 0;

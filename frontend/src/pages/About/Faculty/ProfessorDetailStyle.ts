@@ -79,6 +79,7 @@ export const TitleSection = styled.div`
 `;
 
 export const Title = styled.h1`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 2rem;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
@@ -95,6 +96,7 @@ export const Title = styled.h1`
 `;
 
 export const Subtitle = styled.h2`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
   color: ${(props) => props.theme.colors.grey[500]};
@@ -158,6 +160,7 @@ export const LoadingContainer = styled.div`
   min-height: 300px;
   color: ${(props) => props.theme.colors.grey[500]};
   font-size: 1.1rem;
+  font-family: 'Noto Sans KR', sans-serif;
 
   ${media.mobile} {
     min-height: 200px;
@@ -175,7 +178,7 @@ export const ErrorContainer = styled.div`
   background-color: #fff5f5;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   border-radius: 8px;
-
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1rem;
   border: 1px solid ${(props) => props.theme.colors.grey[300]};
   text-align: center;
@@ -206,6 +209,7 @@ export const PublicationsContainer = styled.div`
 `;
 
 export const PublicationsTitle = styled.h2`
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
