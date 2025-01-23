@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import * as token from '../../../constants/colors';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const media = {
@@ -16,23 +15,18 @@ export const Container = styled.div`
 
   max-width: 1400px;
   width: 95%;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   ${media.mobile} {
-    width: 100%;
-    padding: 20px 16px;
-  }
-`;
-
-export const HeaderSection = styled.div`
-  margin-bottom: 40px;
-
-  ${media.mobile} {
-    margin-bottom: 24px;
+    width: 100vw;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -51,19 +45,14 @@ export const TopSection = styled.div`
 `;
 
 export const Title = styled.h1`
-  /* font-size: 28px;
-  font-weight: 600;
-  color: #1a202c;
-  margin-bottom: 8px;
-
-  ${media.mobile} {
-    font-size: 24px;
-  } */
-
   font-size: 2rem;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   font-weight: 600;
+
+  ${media.mobile} {
+    font-size: 1.75rem;
+  }
 `;
 
 export const Description = styled.p`
@@ -203,6 +192,38 @@ export const Select = styled.select`
   ${media.mobile} {
     width: 100%;
     min-width: unset;
+  }
+`;
+
+export const ListContainer = styled.div``;
+
+export const Thesis = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 20px;
+  color: #333;
+
+  div {
+    margin-bottom: 0.2rem;
+  }
+  div:nth-of-type(1) {
+    margin-bottom: 0.75rem;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    font-weight: 600;
+  }
+  div:nth-of-type(2) {
+    /* color: ${SEJONG_COLORS.GRAY}; */
+  }
+  span {
+    font-weight: 600;
+    color: ${SEJONG_COLORS.GRAY};
+  }
+  &:active {
+    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
   }
 `;
 
