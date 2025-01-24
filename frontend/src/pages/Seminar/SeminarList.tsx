@@ -308,6 +308,15 @@ const CreateButton = styled.button`
     transform: translateY(1px);
     box-shadow: none;
   }
+
+  ${media.mobile} {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    width: 8.25rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const ListContainer = styled.div``;

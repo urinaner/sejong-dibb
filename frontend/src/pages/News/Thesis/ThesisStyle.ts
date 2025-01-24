@@ -8,11 +8,6 @@ export const media = {
 
 // Container & Layout
 export const Container = styled.div`
-  /* max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
-  padding: 40px 20px; */
-
   max-width: 1400px;
   width: 95%;
   margin: 3rem auto;
@@ -460,10 +455,6 @@ export const ActionButtons = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-
-  ${media.mobile} {
-    width: 100%;
-  }
 `;
 
 export const BaseButton = styled.button`
@@ -504,12 +495,36 @@ export const ActionButton = styled(BaseButton)`
 `;
 
 export const CreateButton = styled(BaseButton)`
-  background-color: #3182ce;
-  border-color: #2c5282;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED};
   color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 
-  &:hover:not(:disabled) {
-    background-color: #2c5282;
+  &:hover {
+    background-color: #8b0000;
+    box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+
+  ${media.mobile} {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    width: 8.25rem;
+    height: 2rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -680,12 +695,6 @@ export const Header = styled.div`
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid #e2e8f0;
-
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
 `;
 
 // Button Components
