@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import { Plus } from 'lucide-react';
@@ -12,6 +12,7 @@ const ThesisList: React.FC = () => {
   const auth = useAuth();
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
+  const [isMobile, setIsMobile] = useState(false); // 접속 기기가 모바일인지
 
   const {
     data: thesesData,
@@ -49,6 +50,17 @@ const ThesisList: React.FC = () => {
     });
   };
 
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768); // 768px 이하를 모바일로 간주
+  };
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize); // 창 크기 변경 감지
+    return () => {
+      window.removeEventListener('resize', handleResize); // 이벤트 리스너 정리
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <S.Container>
@@ -78,58 +90,115 @@ const ThesisList: React.FC = () => {
         )}
       </S.Header>
 
-      <S.ThesisTable>
-        <thead>
-          <S.Tr>
-            <S.Th>번호</S.Th>
-            <S.Th></S.Th>
-            <S.Th>논문 제목</S.Th>
-            <S.Th>저자</S.Th>
-            <S.Th>저널</S.Th>
-            <S.Th>발행일</S.Th>
-            <S.Th>출판 정보</S.Th>
-          </S.Tr>
-        </thead>
-        <tbody>
+      {isMobile ? (
+        <S.ListContainer>
           {theses.length > 0 ? (
             theses.map((thesis, index) => (
-              <tr key={thesis.id}>
-                <S.Td>{index + 1}</S.Td>
-                <S.Td>
-                  <S.ThesisThumbnail
+              <S.Thesis
+                key={thesis.id}
+                onClick={() => navigate(`/news/thesis/${thesis.id}`)}
+              >
+                <div className="thesis-content">{thesis.content}</div>
+                <S.ThesisContainer>
+                  <img
                     src={thesis.thesisImage || '/paperImage.png'}
                     alt="논문 썸네일"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/paperImage.png';
                     }}
-                  />
-                </S.Td>
-                <S.TitleTd
-                  onClick={() => navigate(`/news/thesis/${thesis.id}`)}
-                >
-                  {thesis.content}
-                </S.TitleTd>
-                <S.Td style={{ wordWrap: 'break-word' }}>{thesis.author}</S.Td>
-                <S.Td>{thesis.journal}</S.Td>
-                <S.Td>{formatDate(thesis.publicationDate)}</S.Td>
-                <S.Td>
-                  {thesis.publicationCollection &&
-                    `${thesis.publicationCollection}, ${
-                      thesis.publicationIssue
-                        ? `No. ${thesis.publicationIssue}`
-                        : ''
-                    } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
-                </S.Td>
-              </tr>
+                    style={{
+                      width: '4rem',
+                      height: 'auto',
+                      marginRight: '0.5rem',
+                    }}
+                  ></img>
+                  <S.ThesisDetail>
+                    <div style={{ wordWrap: 'break-word' }}>
+                      <span>저자 </span>
+                      {thesis.author}
+                    </div>
+                    <div>
+                      <span>저널 </span>
+                      {thesis.journal}
+                    </div>
+                    <div>
+                      <span>발행일 </span>
+                      {formatDate(thesis.publicationDate)}
+                    </div>
+                    <div>
+                      <span>출판 정보 </span>
+                      {thesis.publicationCollection &&
+                        `${thesis.publicationCollection}, ${
+                          thesis.publicationIssue
+                            ? `No. ${thesis.publicationIssue}`
+                            : ''
+                        } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
+                    </div>
+                  </S.ThesisDetail>
+                </S.ThesisContainer>
+              </S.Thesis>
             ))
           ) : (
-            <tr>
-              <td colSpan={7}>등록된 논문이 없습니다.</td>
-            </tr>
+            <div>등록된 논문이 없습니다.</div>
           )}
-        </tbody>
-      </S.ThesisTable>
+        </S.ListContainer>
+      ) : (
+        <S.ThesisTable>
+          <thead>
+            <S.Tr>
+              <S.Th>번호</S.Th>
+              <S.Th></S.Th>
+              <S.Th>논문 제목</S.Th>
+              <S.Th>저자</S.Th>
+              <S.Th>저널</S.Th>
+              <S.Th>발행일</S.Th>
+              <S.Th>출판 정보</S.Th>
+            </S.Tr>
+          </thead>
+          <tbody>
+            {theses.length > 0 ? (
+              theses.map((thesis, index) => (
+                <tr key={thesis.id}>
+                  <S.Td>{index + 1}</S.Td>
+                  <S.Td>
+                    <S.ThesisThumbnail
+                      src={thesis.thesisImage || '/paperImage.png'}
+                      alt="논문 썸네일"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/paperImage.png';
+                      }}
+                    />
+                  </S.Td>
+                  <S.TitleTd
+                    onClick={() => navigate(`/news/thesis/${thesis.id}`)}
+                  >
+                    {thesis.content}
+                  </S.TitleTd>
+                  <S.Td style={{ wordWrap: 'break-word' }}>
+                    {thesis.author}
+                  </S.Td>
+                  <S.Td>{thesis.journal}</S.Td>
+                  <S.Td>{formatDate(thesis.publicationDate)}</S.Td>
+                  <S.Td>
+                    {thesis.publicationCollection &&
+                      `${thesis.publicationCollection}, ${
+                        thesis.publicationIssue
+                          ? `No. ${thesis.publicationIssue}`
+                          : ''
+                      } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
+                  </S.Td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7}>등록된 논문이 없습니다.</td>
+              </tr>
+            )}
+          </tbody>
+        </S.ThesisTable>
+      )}
 
       {totalPages > 1 && (
         <Pagination

@@ -308,6 +308,15 @@ const CreateButton = styled.button`
     transform: translateY(1px);
     box-shadow: none;
   }
+
+  ${media.mobile} {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    width: 8.25rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const ListContainer = styled.div``;
@@ -317,7 +326,7 @@ const Seminar = styled.div`
   flex-direction: column;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background-color: ${SEJONG_COLORS.COOL_GRAY}15;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
   border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
   border-radius: 20px;
   color: #333;
@@ -336,7 +345,7 @@ const Seminar = styled.div`
   }
 
   &:active {
-    background-color: ${SEJONG_COLORS.COOL_GRAY}40;
+    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
   }
 `;
 

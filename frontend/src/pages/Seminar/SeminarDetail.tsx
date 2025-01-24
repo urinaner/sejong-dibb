@@ -244,13 +244,13 @@ const TitleSection = styled.div`
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1a202c;
   margin: 0 0 1rem 0;
   line-height: 1.2;
 
   ${media.mobile} {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 `;
 

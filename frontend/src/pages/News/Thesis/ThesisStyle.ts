@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import * as token from '../../../constants/colors';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const media = {
@@ -9,30 +8,20 @@ export const media = {
 
 // Container & Layout
 export const Container = styled.div`
-  /* max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
-  padding: 40px 20px; */
-
   max-width: 1400px;
   width: 95%;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   ${media.mobile} {
-    width: 100%;
-    padding: 20px 16px;
-  }
-`;
-
-export const HeaderSection = styled.div`
-  margin-bottom: 40px;
-
-  ${media.mobile} {
-    margin-bottom: 24px;
+    width: 100vw;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -51,19 +40,14 @@ export const TopSection = styled.div`
 `;
 
 export const Title = styled.h1`
-  /* font-size: 28px;
-  font-weight: 600;
-  color: #1a202c;
-  margin-bottom: 8px;
-
-  ${media.mobile} {
-    font-size: 24px;
-  } */
-
   font-size: 2rem;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   font-weight: 600;
+
+  ${media.mobile} {
+    font-size: 1.75rem;
+  }
 `;
 
 export const Description = styled.p`
@@ -205,6 +189,48 @@ export const Select = styled.select`
     min-width: unset;
   }
 `;
+
+export const ListContainer = styled.div``;
+
+export const Thesis = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 20px;
+  color: #333;
+
+  div {
+    margin-bottom: 0.2rem;
+  }
+  .thesis-content {
+    margin-bottom: 0.75rem;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    font-weight: 600;
+  }
+  span {
+    font-weight: 500;
+    color: ${SEJONG_COLORS.GRAY};
+  }
+
+  &:active {
+    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
+  }
+
+  @media (max-width: 374px) {
+    img {
+      display: none;
+    }
+  }
+`;
+
+export const ThesisContainer = styled.div`
+  display: flex;
+`;
+
+export const ThesisDetail = styled.div``;
 
 // Thesis List
 export const ThesisList = styled.div`
@@ -429,10 +455,6 @@ export const ActionButtons = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-
-  ${media.mobile} {
-    width: 100%;
-  }
 `;
 
 export const BaseButton = styled.button`
@@ -473,12 +495,36 @@ export const ActionButton = styled(BaseButton)`
 `;
 
 export const CreateButton = styled(BaseButton)`
-  background-color: #3182ce;
-  border-color: #2c5282;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED};
   color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 
-  &:hover:not(:disabled) {
-    background-color: #2c5282;
+  &:hover {
+    background-color: #8b0000;
+    box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+
+  ${media.mobile} {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    width: 8.25rem;
+    height: 2rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -649,12 +695,6 @@ export const Header = styled.div`
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid #e2e8f0;
-
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
 `;
 
 // Button Components
