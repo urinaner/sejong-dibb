@@ -98,28 +98,45 @@ const ThesisList: React.FC = () => {
                 key={thesis.id}
                 onClick={() => navigate(`/news/thesis/${thesis.id}`)}
               >
-                <div>{thesis.content}</div>
-                <div style={{ wordWrap: 'break-word' }}>
-                  <span>저자 </span>
-                  {thesis.author}
-                </div>
-                <div>
-                  <span>저널 </span>
-                  {thesis.journal}
-                </div>
-                <div>
-                  <span>발행일 </span>
-                  {formatDate(thesis.publicationDate)}
-                </div>
-                <div>
-                  <span>출판 정보 </span>
-                  {thesis.publicationCollection &&
-                    `${thesis.publicationCollection}, ${
-                      thesis.publicationIssue
-                        ? `No. ${thesis.publicationIssue}`
-                        : ''
-                    } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
-                </div>
+                <div className="thesis-content">{thesis.content}</div>
+                <S.ThesisContainer>
+                  <img
+                    src={thesis.thesisImage || '/paperImage.png'}
+                    alt="논문 썸네일"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/paperImage.png';
+                    }}
+                    style={{
+                      width: '4rem',
+                      height: 'auto',
+                      marginRight: '0.5rem',
+                    }}
+                  ></img>
+                  <S.ThesisDetail>
+                    <div style={{ wordWrap: 'break-word' }}>
+                      <span>저자 </span>
+                      {thesis.author}
+                    </div>
+                    <div>
+                      <span>저널 </span>
+                      {thesis.journal}
+                    </div>
+                    <div>
+                      <span>발행일 </span>
+                      {formatDate(thesis.publicationDate)}
+                    </div>
+                    <div>
+                      <span>출판 정보 </span>
+                      {thesis.publicationCollection &&
+                        `${thesis.publicationCollection}, ${
+                          thesis.publicationIssue
+                            ? `No. ${thesis.publicationIssue}`
+                            : ''
+                        } ${thesis.publicationPage ? `pp. ${thesis.publicationPage}` : ''}`}
+                    </div>
+                  </S.ThesisDetail>
+                </S.ThesisContainer>
               </S.Thesis>
             ))
           ) : (

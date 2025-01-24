@@ -250,7 +250,7 @@ const Title = styled.h1`
   line-height: 1.2;
 
   ${media.mobile} {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 `;
 

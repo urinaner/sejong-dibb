@@ -16,10 +16,10 @@ export const Container = styled.div`
     padding: 20px 16px;
   }
 
-  ${media.tablet} {
+  /* ${media.tablet} {
     width: 90%;
     padding: 30px 20px;
-  }
+  } */
 `;
 
 export const HeaderContainer = styled.div`
@@ -83,9 +83,9 @@ export const Title = styled.h1`
     font-size: 1.5rem;
   }
 
-  ${media.tablet} {
+  /* ${media.tablet} {
     font-size: 1.75rem;
-  }
+  } */
 `;
 
 export const Subtitle = styled.h2`

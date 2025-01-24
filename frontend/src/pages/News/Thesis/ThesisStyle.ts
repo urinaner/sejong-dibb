@@ -210,22 +210,32 @@ export const Thesis = styled.div`
   div {
     margin-bottom: 0.2rem;
   }
-  div:nth-of-type(1) {
+  .thesis-content {
     margin-bottom: 0.75rem;
     color: ${SEJONG_COLORS.CRIMSON_RED};
     font-weight: 600;
   }
-  div:nth-of-type(2) {
-    /* color: ${SEJONG_COLORS.GRAY}; */
-  }
   span {
-    font-weight: 600;
+    font-weight: 500;
     color: ${SEJONG_COLORS.GRAY};
   }
+
   &:active {
     background-color: ${SEJONG_COLORS.COOL_GRAY}60;
   }
+
+  @media (max-width: 374px) {
+    img {
+      display: none;
+    }
+  }
 `;
+
+export const ThesisContainer = styled.div`
+  display: flex;
+`;
+
+export const ThesisDetail = styled.div``;
 
 // Thesis List
 export const ThesisList = styled.div`
