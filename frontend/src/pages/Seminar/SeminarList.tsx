@@ -317,7 +317,7 @@ const Seminar = styled.div`
   flex-direction: column;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background-color: ${SEJONG_COLORS.COOL_GRAY}15;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
   border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
   border-radius: 20px;
   color: #333;
@@ -336,7 +336,7 @@ const Seminar = styled.div`
   }
 
   &:active {
-    background-color: ${SEJONG_COLORS.COOL_GRAY}40;
+    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
   }
 `;
 
