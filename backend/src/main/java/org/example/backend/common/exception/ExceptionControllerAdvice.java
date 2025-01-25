@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @RestControllerAdvice
@@ -42,5 +43,11 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ExceptionResponse> bindException(BindException e) {
         return ResponseEntity.status(BAD_REQUEST)
                 .body(new ExceptionResponse(e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ExceptionResponse> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ExceptionResponse("파일 크기가 5MB를 초과했습니다."));
     }
 }
