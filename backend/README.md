@@ -1,3 +1,5 @@
+## 세종대학교 바이오융합공학과 홈페이지 
+
 ## ERD
 <img width="1032" alt="image" src="https://github.com/user-attachments/assets/926ab283-0ae6-4071-b77a-2b6566f90a29" />
 
