@@ -84,7 +84,7 @@ jobs:
         with:
           host: ${{ secrets.SJ_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SJ_PRIVATE_KEY }}
+          password: ${{ secrets.SJ_PRIVATE_KEY }}
           script: |
             # 서버 디렉토리로 이동
             mkdir -p ~/sejong-dibb
