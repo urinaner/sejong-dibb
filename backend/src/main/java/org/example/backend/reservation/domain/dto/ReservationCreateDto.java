@@ -28,10 +28,6 @@ public class ReservationCreateDto {
     @Size(max = 200, message = "기타 내용은 최대 200자까지 입력 가능합니다.")
     private String etc;
 
-    private String userName;
-
-    private String password;
-
     @Builder
     private ReservationCreateDto(LocalDateTime startTime, LocalDateTime endTime,
                                  String purpose, String etc) {

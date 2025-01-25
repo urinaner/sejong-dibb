@@ -5,12 +5,12 @@ on:
     branches: [ "main" ]
     paths:
      - 'backend/**'
-     - 'front/**'
+     - 'frontend/**'
   pull_request:
     branches: [ "main" ]
     paths:
      - 'backend/**'
-     - 'front/**'
+     - 'frontend/**'
 
 jobs:
   deploy:
@@ -61,7 +61,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build
+          CI=false npm run build
 
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
@@ -84,7 +84,7 @@ jobs:
         with:
           host: ${{ secrets.SJ_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SJ_PRIVATE_KEY }}
+          password: ${{ secrets.SJ_PRIVATE_KEY }}
           script: |
             # 서버 디렉토리로 이동
             mkdir -p ~/sejong-dibb

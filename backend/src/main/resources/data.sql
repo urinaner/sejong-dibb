@@ -87,7 +87,6 @@ VALUES
      '신경 전달 물질의 새로운 분류를 제안한 논문입니다.', 'https://example.com/thesis1', '2024-01-15',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-20+026.png', '12',
      '1', '15-22',
-
      '1223-5671', 1),
     (2, 'Research on Neural Regeneration Mechanisms for Brain Function Recovery', '권병호', 'Neurobiology and Beyond',
      '뇌 기능 회복을 위한 신경 재생 메커니즘 연구 논문입니다.', 'https://example.com/thesis11', '2024-11-01',
@@ -287,6 +286,17 @@ INSERT INTO room (room_id, name, person_capacity, place, image)
 VALUES (1, '충507C 세미나실', 20, '충무관 507', 'seminar1.jpg'),
        (2, '충506C 세미나실', 20, '충무관 506', 'seminar2.jpg');
 
+INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, user_id, created_at, updated_at)
+VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-01 13:00:00', '2024-12-01 15:00:00', 'MEETING', '김은희교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-02 10:00:00', '2024-12-02 12:00:00', 'MEETING', '김민수교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-03 14:00:00', '2024-12-03 16:00:00', 'MEETING', '전종훈교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-04 09:30:00', '2024-12-04 11:30:00', 'MEETING', '서민석교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-05 15:00:00', '2024-12-05 17:00:00', 'MEETING', '홍성무교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-06 10:30:00', '2024-12-06 12:30:00', 'MEETING', '김은희교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-07 13:30:00', '2024-12-07 15:30:00', 'MEETING', '김민수교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-08 11:00:00', '2024-12-08 13:00:00', 'MEETING', '전종훈교수님 랩미팅', 1, 1, NOW(), NOW()),
+       ('2024-12-09 16:00:00', '2024-12-09 18:00:00', 'MEETING', '서민석교수님 랩미팅', 1, 1, NOW(), NOW());
 
 INSERT INTO reservation (reservation_id, start_time, end_time, purpose, etc, room_id, user_name, password, created_at, updated_at)
 VALUES

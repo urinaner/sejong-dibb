@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.common.domain.BaseEntity;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.room.domain.Room;
@@ -47,38 +48,31 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(name = "user_name")
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Admin admin;
 
-    @Column(name = "password")
-    private String password;
-
-
-    public boolean isPasswordMatch(String inputPassword) {
-        return this.password.equals(inputPassword);
-    }
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, String username, String password) {
+                        String etc, Room room, Admin admin) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.room = room;
-        this.username = username;
-        this.password = password;
+        this.admin = admin;
+
     }
 
-    public static Reservation of(ReservationCreateDto dto, Room room) {
+    public static Reservation of(ReservationCreateDto dto, Room room, Admin admin) {
         return Reservation.builder()
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
                 .etc(dto.getEtc())
                 .room(room)
-                .username(dto.getUserName())
-                .password(dto.getPassword())
+                .admin(admin)
                 .build();
     }
 

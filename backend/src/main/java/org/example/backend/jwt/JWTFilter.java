@@ -9,14 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.admin.domain.entity.CustomUserDetails;
-import org.example.backend.jwt.exception.JwtException;
-import org.example.backend.jwt.exception.JwtExceptionType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -24,100 +24,106 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
+    private static final List<String> REFRESH_TOKEN_PATHS = List.of(
+            "/api/specific-path",
+            "/api/another-path"
+    );
+
     public JWTFilter(JWTUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        AntPathMatcher matcher = new AntPathMatcher();
+
+        boolean isSwaggerPath = matcher.match("/v3/api-docs/**", path) ||
+                matcher.match("/swagger-ui/**", path) ||
+                matcher.match("/swagger-resources/**", path) ||
+                matcher.match("/webjars/**", path);
+
+        log.info("Path: {}, Is Swagger Path: {}", path, isSwaggerPath);
+        return isSwaggerPath || path.equals("/api/admin/login");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("JWTFilter.doFilterInternal");
-
         String requestURI = request.getRequestURI();
+        log.info("Request URI: {}", requestURI);
 
-        // 로그인 경로는 필터를 건너뜀
-        if ("/api/admin/login".equals(requestURI)) {
-            filterChain.doFilter(request, response);
+        String authorization = request.getHeader("Authorization");
+
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            handleAccessToken(authorization, request, response, filterChain);
+        } else if (isRefreshTokenPath(requestURI)) {
+            handleRefreshToken(request, response);
+        } else {
+            filterChain.doFilter(request, response); // 다음 필터로 전달
+        }
+    }
+
+    private void handleAccessToken(String authorization, HttpServletRequest request,
+                                   HttpServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
+        String accessToken = authorization.split(" ")[1];
+        if (!jwtUtil.isExpired(accessToken)) {
+            log.info("Access token is valid");
+
+            String loginId = jwtUtil.getLoginId(accessToken);
+            String role = jwtUtil.getRole(accessToken);
+
+            Admin admin = Admin.builder()
+                    .username(loginId)
+                    .password("hashedPassword")
+                    .role(role)
+                    .build();
+
+            CustomUserDetails customUserDetails = new CustomUserDetails(admin);
+
+            Authentication authToken = new UsernamePasswordAuthenticationToken(
+                    customUserDetails, null, customUserDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            filterChain.doFilter(request, response); // 다음 필터로 전달
+        } else {
+            log.error("Access token is expired");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Access token expired\"}");
+        }
+    }
+
+    private void handleRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String refreshToken = extractRefreshTokenFromBody(request);
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            log.error("Refresh token is missing");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Refresh token missing\"}");
             return;
         }
 
-        // Access Token 검증 (Authorization 헤더)
-        String authorization = request.getHeader("Authorization");
-        String accessToken = null;
-
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            accessToken = authorization.split(" ")[1];
-            if (!jwtUtil.isExpired(accessToken)) {
-                log.info("Access token is valid");
-
-                // JWT에서 사용자 정보 추출
-                String loginId = jwtUtil.getLoginId(accessToken);
-                String role = jwtUtil.getRole(accessToken);
-
-                Admin admin = Admin.builder()
-                        .username(loginId)
-                        .password("hashedPassword")
-                        .role(role)
-                        .build();
-
-                CustomUserDetails customUserDetails = new CustomUserDetails(admin);
-
-                Authentication authToken = new UsernamePasswordAuthenticationToken(
-                        customUserDetails,
-                        null,
-                        customUserDetails.getAuthorities()
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                filterChain.doFilter(request, response); // 다음 필터로 요청 전달
-                return;
-            }
-        }
-
-        // Access Token이 만료된 경우 또는 없는 경우 Refresh Token 검증
-        try {
-            String refreshToken = extractRefreshTokenFromBody(request);
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                log.error("Refresh token is missing in request body");
-                throw new JwtException(JwtExceptionType.EMPTY_TOKEN);
-            }
-
-            if (jwtUtil.isExpired(refreshToken)) {
-                log.error("Refresh token has expired");
-                throw new JwtException(JwtExceptionType.TOKEN_EXPIRED);
-            }
-
-            log.info("Valid refresh token");
-
-            // Refresh Token이 유효하면 새로운 Access Token 생성 및 반환
-            String newAccessToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken), 1800 * 1000L);
-            String newRefreshToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken), 60 * 60 * 24 * 30 * 1000L);
-
-            // 응답 바디에 JSON 데이터 작성
-            response.setContentType("application/json"); // JSON 형식으로 설정
-            response.setCharacterEncoding("UTF-8");
-
-            // JSON 데이터 생성
-            String jsonResponse = String.format(
-                    "{\"accessToken\": \"%s\", \"refreshToken\": \"%s\"}",
-                    newAccessToken,
-                    newRefreshToken
-            );
-
-            // 응답에 JSON 데이터 작성
-            response.getWriter().write(jsonResponse);
-
-
-            log.info("New access token generated: " + newAccessToken);
-            return ;
-        } catch (JwtException ex) {
-            log.error("Token validation failed: " + ex.getMessage());
+        if (jwtUtil.isExpired(refreshToken)) {
+            log.error("Refresh token has expired");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"" + ex.getMessage() + "\"}");
+            response.getWriter().write("{\"error\": \"Refresh token expired\"}");
+            return;
         }
-        return ;
+
+        log.info("Refresh token is valid");
+
+        String newAccessToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken),
+                1800 * 1000L);
+        String newRefreshToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken),
+                60 * 60 * 24 * 30 * 1000L);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(String.format(
+                "{\"accessToken\": \"%s\", \"refreshToken\": \"%s\"}",
+                newAccessToken, newRefreshToken
+        ));
     }
 
     private String extractRefreshTokenFromBody(HttpServletRequest request) {
@@ -131,7 +137,6 @@ public class JWTFilter extends OncePerRequestFilter {
             log.error("Failed to read request body", e);
         }
 
-        // JSON 형식의 본문을 파싱
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(body.toString());
@@ -139,7 +144,10 @@ public class JWTFilter extends OncePerRequestFilter {
         } catch (JsonProcessingException e) {
             log.error("Failed to parse request body as JSON", e);
         }
-
         return null;
+    }
+
+    private boolean isRefreshTokenPath(String requestURI) {
+        return REFRESH_TOKEN_PATHS.stream().anyMatch(path -> new AntPathMatcher().match(path, requestURI));
     }
 }
