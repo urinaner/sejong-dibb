@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.domain.dto.ReservationDeleteRequest;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
@@ -29,7 +30,10 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResDto>> createReservation(
             @PathVariable(value = "roomId") Long roomId,
             @RequestBody @Valid ReservationCreateDto reqDto) {
-        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto);
+
+        Admin admin = Admin.builder()
+                .build();
+        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, admin);
         log.debug("Reservation created successfully: {}", resDtos);
         return ResponseEntity.ok(resDtos);
     }
@@ -71,7 +75,7 @@ public class ReservationController {
             @PathVariable(value = "roomId") Long roomId,
             @PathVariable(value = "reservationId") Long reservationId,
             @RequestBody ReservationDeleteRequest request) {
-        reservationService.deleteReservation(reservationId, request.getPassword());
+        reservationService.deleteReservation(reservationId);
         return ResponseEntity.ok().build();
     }
 

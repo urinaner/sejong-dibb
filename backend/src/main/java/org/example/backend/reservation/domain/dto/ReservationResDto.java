@@ -20,11 +20,10 @@ public class ReservationResDto {
     private String etc;
     private Long roomId;
     private String userName;
-    private String password;
 
     public ReservationResDto(Long id, LocalDateTime startTime, LocalDateTime endTime,
                              ReservationPurpose purpose, String etc,
-                             Long roomId, String userName, String password) {
+                             Long roomId, String userName) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -32,7 +31,6 @@ public class ReservationResDto {
         this.etc = etc;
         this.roomId = roomId;
         this.userName = userName;
-        this.password = password;
     }
 
     public static ReservationResDto of(Reservation reservation) {
@@ -43,8 +41,7 @@ public class ReservationResDto {
                 reservation.getPurpose(),
                 reservation.getEtc(),
                 reservation.getRoom().getId(),
-                reservation.getUsername(),
-                reservation.getPassword()
+                reservation.getAdmin().getUsername()
         );
     }
 }
