@@ -15,7 +15,7 @@ import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.exception.BoardException;
 import org.example.backend.board.exception.BoardExceptionType;
 import org.example.backend.board.repository.BoardRepository;
-import org.example.backend.global.config.aws.LocalFileUploader;
+import org.example.backend.global.config.file.LocalFileUploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
