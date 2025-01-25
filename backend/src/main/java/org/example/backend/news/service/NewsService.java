@@ -3,7 +3,7 @@ package org.example.backend.news.service;
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.aws.LocalFileUploader;
+import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
 import org.example.backend.news.domain.entity.News;
