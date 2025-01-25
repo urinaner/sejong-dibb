@@ -3,9 +3,9 @@ FROM board;
 DELETE
 FROM thesis;
 DELETE
-FROM room;
-DELETE
 FROM reservation;
+DELETE
+FROM room;
 DELETE
 FROM seminar;
 DELETE
