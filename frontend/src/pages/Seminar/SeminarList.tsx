@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   PlusCircle,
@@ -18,6 +18,7 @@ import {
 import { queryClient } from '../../lib/react-query/queryClient';
 import { Modal, useModal } from '../../components/Modal';
 import { SEJONG_COLORS } from '../../constants/colors';
+import { media } from '../../styles/media';
 import Pagination from '../../common/Pagination/Pagination';
 
 const ITEMS_PER_PAGE = 10;
@@ -28,6 +29,7 @@ const SeminarList = () => {
   const { openModal } = useModal();
   const [currentPage, setCurrentPage] = useState(1); // 1부터 시작하도록 수정
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
+  const [isMobile, setIsMobile] = useState(false); // 접속 기기가 모바일인지
 
   const {
     data: seminarData,
@@ -116,6 +118,19 @@ const SeminarList = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768); // 768px 이하를 모바일로 간주
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize); // 창 크기 변경 감지
+
+    return () => {
+      window.removeEventListener('resize', handleResize); // 이벤트 리스너 정리
+    };
+  }, []);
+
   if (isLoading) return <LoadingSpinner>로딩 중...</LoadingSpinner>;
   if (isError)
     return (
@@ -138,64 +153,84 @@ const SeminarList = () => {
         )}
       </Header>
 
-      <Table>
-        <thead>
-          <tr>
-            <Th width="5%">번호</Th>
-            <Th width="25%">세미나명</Th>
-            <Th width="10%">발표자</Th>
-            <Th width="15%">소속</Th>
-            <Th width="10%">장소</Th>
-            <SortableTh
-              width="25%"
-              onClick={() =>
-                setSortDirection((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'))
-              }
-              isActive={true}
-              sortDirection={sortDirection.toLowerCase() as 'asc' | 'desc'}
-            >
-              일시
-            </SortableTh>
-            {auth?.isAuthenticated && <Th width="10%">관리</Th>}
-          </tr>
-        </thead>
-        <tbody>
+      {isMobile ? (
+        <ListContainer>
           {seminarData?.data.map((seminar) => (
-            <Tr
+            <Seminar
               key={seminar.id}
               onClick={() => navigate(`/news/seminar/${seminar.id}`)}
             >
-              <Td>{seminar.id}</Td>
-              <TitleTd>{seminar.name}</TitleTd>
-              <Td>{seminar.speaker}</Td>
-              <Td>{seminar.company}</Td>
-              <Td>{seminar.place}</Td>
-              <DateTimeTd>
-                <DateTimeText>
-                  <div>{formatDateTime(seminar.startTime)}</div>
-                  <div>~ {formatDateTime(seminar.endTime)}</div>
-                </DateTimeText>
-              </DateTimeTd>
-              {auth?.isAuthenticated && (
-                <ActionTd>
-                  <ActionButton
-                    onClick={(e) => handleEdit(e, seminar.id)}
-                    color="blue"
-                  >
-                    <Edit2 size={16} />
-                  </ActionButton>
-                  <ActionButton
-                    onClick={(e) => handleDelete(e, seminar.id)}
-                    color="red"
-                  >
-                    <Trash2 size={16} />
-                  </ActionButton>
-                </ActionTd>
-              )}
-            </Tr>
+              <SeminarName>{seminar.name}</SeminarName>
+              <DateTimeText>
+                <div>{formatDateTime(seminar.startTime)}</div>
+                <div>~ {formatDateTime(seminar.endTime)}</div>
+              </DateTimeText>
+              <div>{seminar.speaker}</div>
+              <div>{seminar.company}</div>
+              <div>{seminar.place}</div>
+            </Seminar>
           ))}
-        </tbody>
-      </Table>
+        </ListContainer>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <Th width="5%">번호</Th>
+              <Th width="25%">세미나명</Th>
+              <Th width="10%">발표자</Th>
+              <Th width="15%">소속</Th>
+              <Th width="10%">장소</Th>
+              <SortableTh
+                width="25%"
+                onClick={() =>
+                  setSortDirection((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'))
+                }
+                isActive={true}
+                sortDirection={sortDirection.toLowerCase() as 'asc' | 'desc'}
+              >
+                일시
+              </SortableTh>
+              {auth?.isAuthenticated && <Th width="10%">관리</Th>}
+            </tr>
+          </thead>
+          <tbody>
+            {seminarData?.data.map((seminar) => (
+              <Tr
+                key={seminar.id}
+                onClick={() => navigate(`/news/seminar/${seminar.id}`)}
+              >
+                <Td>{seminar.id}</Td>
+                <TitleTd>{seminar.name}</TitleTd>
+                <Td>{seminar.speaker}</Td>
+                <Td>{seminar.company}</Td>
+                <Td>{seminar.place}</Td>
+                <DateTimeTd>
+                  <DateTimeText>
+                    <div>{formatDateTime(seminar.startTime)}</div>
+                    <div>~ {formatDateTime(seminar.endTime)}</div>
+                  </DateTimeText>
+                </DateTimeTd>
+                {auth?.isAuthenticated && (
+                  <ActionTd>
+                    <ActionButton
+                      onClick={(e) => handleEdit(e, seminar.id)}
+                      color="blue"
+                    >
+                      <Edit2 size={16} />
+                    </ActionButton>
+                    <ActionButton
+                      onClick={(e) => handleDelete(e, seminar.id)}
+                      color="red"
+                    >
+                      <Trash2 size={16} />
+                    </ActionButton>
+                  </ActionTd>
+                )}
+              </Tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
       {seminarData?.data.length === 0 && (
         <EmptyMessage>등록된 세미나가 없습니다.</EmptyMessage>
@@ -215,11 +250,19 @@ export default SeminarList;
 const Container = styled.div`
   max-width: 1400px;
   width: 95%;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  ${media.mobile} {
+    width: 100vw;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: none;
+    box-shadow: none;
+  }
 `;
 
 const Header = styled.div`
@@ -236,6 +279,10 @@ const Title = styled.h1`
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   font-weight: 600;
+
+  ${media.mobile} {
+    font-size: 1.75rem;
+  }
 `;
 
 const CreateButton = styled.button`
@@ -261,6 +308,50 @@ const CreateButton = styled.button`
     transform: translateY(1px);
     box-shadow: none;
   }
+
+  ${media.mobile} {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    width: 8.25rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
+`;
+
+const ListContainer = styled.div``;
+
+const Seminar = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
+  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
+  border-radius: 20px;
+  color: #333;
+
+  div {
+    margin-bottom: 0.2rem;
+  }
+
+  div:nth-of-type(1) {
+    margin-bottom: 0.75rem;
+  }
+
+  span {
+    font-weight: bold;
+    color: ${SEJONG_COLORS.GRAY};
+  }
+
+  &:active {
+    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
+  }
+`;
+
+const SeminarName = styled.div`
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  font-weight: 600;
 `;
 
 const Table = styled.table`
@@ -353,6 +444,17 @@ const DateTimeText = styled.div`
 
   div {
     padding: 0.25rem 0;
+  }
+
+  ${media.mobile} {
+    flex-direction: row;
+
+    div {
+      color: ${SEJONG_COLORS.GRAY};
+      /* margin: 0 !important; */
+      padding: 0;
+      height: min-content;
+    }
   }
 `;
 

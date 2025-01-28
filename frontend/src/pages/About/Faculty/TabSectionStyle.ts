@@ -53,11 +53,13 @@ export const TabList = styled.div`
 `;
 
 export const TabButton = styled.button<{ $isActive: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem 2rem;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
   font-weight: ${(props) => (props.$isActive ? '600' : '500')};
   color: ${(props) =>
     props.$isActive ? SEJONG_COLORS.CRIMSON_RED : props.theme.colors.grey[500]};
@@ -117,6 +119,22 @@ export const TabContent = styled.div`
     border-left: 0;
     border-right: 0;
   }
+`;
+
+export const SectionTitle = styled.h3`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
+`;
+
+export const SectionContent = styled.div`
+  color: ${(props) => props.theme.colors.grey[500]};
+  line-height: 1.6;
+  font-size: 1rem;
 `;
 
 export const LoadingWrapper = styled.div`

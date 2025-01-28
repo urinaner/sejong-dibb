@@ -72,7 +72,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
         ProfessorException exception = assertThrows(ProfessorException.class,
                 () -> professorService.saveProfessor(dto, null));
 
-        assertEquals(ProfessorExceptionType.REQUIRED_NAME, exception.exceptionType());
+        assertEquals(ProfessorExceptionType.NOT_FOUND_PROFESSOR, exception.exceptionType());
     }
 
     @Test

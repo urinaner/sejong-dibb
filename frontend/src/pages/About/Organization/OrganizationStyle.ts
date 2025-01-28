@@ -1,17 +1,28 @@
 import styled from 'styled-components';
 import { Wrapper, Content, Title, InfoCard } from '../AboutStyle';
+import { media } from '../../../styles/media';
 
 export const OrgWrapper = styled(Wrapper)`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 40px 20px;
   max-width: 1400px;
   width: 80vw;
+
+  ${media.mobile} {
+    padding: 20px 0;
+    width: 90vw;
+  }
 `;
 
 export const OrgContent = styled(Content)`
   background-color: ${({ theme }) => theme.colors.white};
   max-width: 800px;
   margin: 0 auto;
+
+  ${media.mobile} {
+    padding: 12px 0;
+    /* background-color: tomato; */
+  }
 `;
 
 export const OrgTitle = styled(Title)`
@@ -57,11 +68,22 @@ export const OrgCard = styled(InfoCard)`
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   }
 
+  ${media.mobile} {
+    padding: 32px;
+  }
+
   dl {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 24px 30px;
     align-items: start;
+
+    ${media.mobile} {
+      display: flex;
+      flex-direction: column;
+
+      gap: 16px;
+    }
 
     dt {
       font-weight: 600;
@@ -110,6 +132,11 @@ export const OrgCard = styled(InfoCard)`
       &:not(:last-child) {
         padding-bottom: ${({ theme }) => theme.spacing.xl};
         border-bottom: 1px dashed ${({ theme }) => theme.colors.grey[200]};
+      }
+
+      ${media.mobile} {
+        padding: 0 0 16px 0 !important;
+        width: 100%;
       }
     }
 

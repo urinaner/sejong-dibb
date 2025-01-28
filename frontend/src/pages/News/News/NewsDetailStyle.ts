@@ -48,7 +48,7 @@ export const NewsHeader = styled.header`
 export const NewsTitle = styled.h1`
   margin: 0;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: ${SEJONG_COLORS.GRAY};
   line-height: 1.4;
   letter-spacing: -0.02em;

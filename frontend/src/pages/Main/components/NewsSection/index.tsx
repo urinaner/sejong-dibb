@@ -22,7 +22,7 @@ export const NewsSection = () => {
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>뉴스를 불러오는데 실패했습니다.</div>;
 
-  const news = data?.data || [];
+  const news = data || [];
 
   return (
     <NewsSectionContainer>

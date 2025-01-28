@@ -3,7 +3,7 @@ package org.example.backend.professor.service;
 import static org.example.backend.professor.exception.ProfessorExceptionType.NOT_FOUND_PROFESSOR;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.global.config.aws.S3Uploader;
+import org.example.backend.global.config.aws.LocalFileUploader;
 import org.example.backend.professor.domain.dto.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.ProfessorResDto;
 import org.example.backend.professor.domain.entity.Professor;
@@ -12,6 +12,7 @@ import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
 import org.example.backend.thesis.service.ThesisService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfessorService {
     private final ProfessorRepository professorRepository;
     private final ThesisService thesisService;
-    private final S3Uploader s3Uploader;
+    private final LocalFileUploader localFileUploader;
     private static final String dirName = "profile";
 
+    @Value("${server.url}")
+    private String serverUrl;
     @Transactional
     public Long saveProfessor(ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
         validateUserUniqueFields(professorReqDto);
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
-            professorReqDto.setProfileImage(uploadImageUrl);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
+            professorReqDto.setProfileImage(uploadImageUrl + serverUrl);
         }
 
         Professor professor = Professor.of(professorReqDto);
@@ -65,7 +68,7 @@ public class ProfessorService {
     @Transactional
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            String uploadImageUrl = s3Uploader.upload(multipartFile, dirName);
+            String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
             professorReqDto.setProfileImage(uploadImageUrl);
         }
         Professor professor = findProfessorById(professorId);

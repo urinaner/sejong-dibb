@@ -6,12 +6,13 @@ import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEM
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
 import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -27,22 +28,15 @@ public class ReservationService {
     private final RoomRepository roomRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto) {
+    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto, Admin user) {
         Room room = getSeminarRoomById(seminarRoomId);
 
         validateReservationOverlap(reqDto, seminarRoomId);
 
-        Reservation reservation = Reservation.of(reqDto, room);
+        Reservation reservation = Reservation.of(reqDto, room, user);
         reservationRepository.save(reservation);
         return List.of(ReservationResDto.of(reservation));
 
-    }
-
-    public List<ReservationResDto> getReservationsByRoom(Long seminarRoomId) {
-        getSeminarRoomById(seminarRoomId);
-        return reservationRepository.finaReservationsBySeminarRoom(seminarRoomId).stream()
-                .map(ReservationResDto::of)
-                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -72,13 +66,8 @@ public class ReservationService {
 
 
     @Transactional
-    public void deleteReservation(Long id, String password) {
+    public void deleteReservation(Long id) {
         Reservation reservation = getReservationById(id);
-        System.out.println(reservation.getPassword());
-        if (!reservation.isPasswordMatch(password)) {
-            throw new ReservationException(NOT_VALID_RESERVATION_PASSWORD);
-        }
-
         reservationRepository.delete(reservation);
     }
 

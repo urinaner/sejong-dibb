@@ -9,8 +9,8 @@ import {
   useSeminar,
   seminarKeys,
 } from '../../hooks/queries/useSeminar';
-import { SeminarDto } from '../../config/apiConfig';
 import { queryClient } from '../../lib/react-query/queryClient';
+import { media } from '../../styles/media';
 
 const SeminarDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -244,13 +244,13 @@ const TitleSection = styled.div`
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1a202c;
   margin: 0 0 1rem 0;
   line-height: 1.2;
 
-  @media (max-width: 768px) {
-    font-size: 2rem;
+  ${media.mobile} {
+    font-size: 1.5rem;
   }
 `;
 
@@ -259,6 +259,11 @@ const SubInfo = styled.div`
   gap: 2rem;
   color: #64748b;
   font-size: 0.95rem;
+
+  ${media.mobile} {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
 const WriterInfo = styled.div`

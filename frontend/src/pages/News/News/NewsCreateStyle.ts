@@ -23,7 +23,7 @@ export const Header = styled.div`
   h1 {
     margin: 0;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 800;
     color: ${SEJONG_COLORS.GRAY};
     letter-spacing: -0.02em;
   }

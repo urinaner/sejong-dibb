@@ -1,7 +1,6 @@
 package org.example.backend.global.config.aws;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.professor.exception.ProfessorException;
@@ -13,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,16 +23,14 @@ import static org.example.backend.professor.exception.ProfessorExceptionType.NOT
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class S3Uploader {
+public class LocalFileUploader {
 
-    private static final String FILE_DELETE_SUCCESS = "파일이 삭제되었습니다.";
-    private static final String FILE_DELETE_FAILURE = "파일 삭제에 실패했습니다.";
+    private static final String FILE_SAVE_SUCCESS = "파일이 로컬에 저장되었습니다.";
+    private static final String FILE_SAVE_FAILURE = "파일 저장에 실패했습니다.";
     private static final String FILE_CONVERSION_ERROR = "파일 변환 중 에러가 발생했습니다.";
 
-    private final AmazonS3Client amazonS3Client;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    @Value("${local.file.storage.path}")
+    private String storagePath;
 
     @Transactional
     public String upload(MultipartFile multipartFile, String dirName) {
@@ -38,27 +38,40 @@ public class S3Uploader {
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_FILE));
 
         String fileName = generateFileName(dirName, convertedFile.getName());
-        String uploadUrl = uploadToS3(convertedFile, fileName);
+        String savedFilePath = saveToLocal(convertedFile, fileName);
 
-        deleteLocalFile(convertedFile);
-        return uploadUrl;
+        deleteLocalFile(convertedFile); // 임시 파일 삭제
+        return savedFilePath;
     }
 
     private String generateFileName(String dirName, String originalFileName) {
-        return String.format("%s/%s", dirName, originalFileName);
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String uuid = UUID.randomUUID().toString();
+        return String.format("%s/%s_%s%s", dirName, originalFileName, uuid, fileExtension);
     }
+    private String saveToLocal(File file, String fileName) {
+        Path dirPath = Paths.get(storagePath, fileName).getParent();
+        try {
+            if (!Files.exists(dirPath)) {
+                Files.createDirectories(dirPath);
+            }
+            Path targetPath = Paths.get(storagePath, fileName);
+            Files.copy(file.toPath(), targetPath);
+            log.info("파일 저장 성공: {}", targetPath);
 
-    private String uploadToS3(File file, String fileName) {
-        log.info("S3Uploader: 파일을 S3에 업로드 중 - 파일 이름: {}", fileName);
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+            // URL 생성
+            return "/uploads/" + fileName;
+        } catch (IOException e) {
+            log.error("파일 저장 실패: {}", fileName, e);
+            throw new RuntimeException("파일 저장 실패", e);
+        }
     }
 
     private void deleteLocalFile(File file) {
         if (file.delete()) {
-            log.info(FILE_DELETE_SUCCESS);
+            log.info("임시 파일이 삭제되었습니다.");
         } else {
-            log.warn(FILE_DELETE_FAILURE);
+            log.warn("임시 파일 삭제에 실패했습니다.");
         }
     }
 
