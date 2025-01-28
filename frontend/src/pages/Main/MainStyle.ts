@@ -363,6 +363,7 @@ export const SeminarContainer = styled.div`
   }
 
   button:first-of-type {
+    font-family: 'NanumSquare';
     flex: 2;
     min-height: 180px;
     display: flex;
