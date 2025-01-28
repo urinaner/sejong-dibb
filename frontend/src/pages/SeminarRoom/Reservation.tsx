@@ -236,7 +236,7 @@ function Reservation() {
           <RoomName>{selectedRoom}</RoomName>
           <div style={{ display: 'flex' }}>
             <div style={{ flexGrow: '1' }}>
-              <RoomImg src="/seminarRoom1.jpg" />
+              <RoomImg src="/seminarRoom1.jpeg" />
             </div>
             <div style={{ flexGrow: '1' }}>
               <Capacity>수용인원</Capacity>
