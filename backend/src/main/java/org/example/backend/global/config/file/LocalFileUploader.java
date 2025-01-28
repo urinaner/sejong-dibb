@@ -1,4 +1,4 @@
-package org.example.backend.global.config.aws;
+package org.example.backend.global.config.file;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
