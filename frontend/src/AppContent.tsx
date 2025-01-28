@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Route, Routes, useLocation } from 'react-router-dom';
-// import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -58,22 +58,21 @@ const PageTransition = ({ children }: PageTransitionProps) => {
   const location = useLocation();
 
   return (
-    // <AnimatePresence mode="wait">
-    //   <motion.div
-    //     key={location.pathname}
-    //     initial={{ opacity: 0, y: 20 }}
-    //     animate={{ opacity: 1, y: 0 }}
-    //     exit={{ opacity: 0, y: -20 }}
-    //     transition={{
-    //       duration: 0.3,
-    //       ease: 'easeInOut',
-    //     }}
-    //     className="w-full"
-    //   >
-    //     <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
-    //   </motion.div>
-    // </AnimatePresence>
-    <></>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{
+          duration: 0.3,
+          ease: 'easeInOut',
+        }}
+        className="w-full"
+      >
+        <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -95,7 +94,7 @@ const InnerContainer = styled.div`
   flex: 1;
   // overflow-x: hidden 제거
 `;
-const ContentWrapper = styled.div<{ isAuthPage: boolean }>`
+const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -103,16 +102,16 @@ const ContentWrapper = styled.div<{ isAuthPage: boolean }>`
   max-width: 100%; // 추가
   height: 100%;
   align-items: center;
-  // padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
+  padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
 `;
-// const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
-//   position: relative;
-//   width: 100vw;
-//   z-index: 0;
-//   margin-top: ${(props) =>
-//     props.isAuthPage ? '0' : '125px'}; // TopHeader + Header 높이
-//   margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
-// `;
+const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
+  position: relative;
+  width: 100vw;
+  z-index: 0;
+  margin-top: ${(props) =>
+    props.isAuthPage ? '0' : '125px'}; // TopHeader + Header 높이
+  margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
+`;
 
 function AppContent() {
   const location = useLocation();
@@ -169,15 +168,10 @@ function AppContent() {
 
   const pageContent = getCurrentPageContent();
 
-  type Props = {
-    children: React.ReactNode; // 또는 React.ReactElement
-    isAuthPage: boolean;
-  };
-
   return (
     <PageContainer ref={containerRef}>
       <Header />
-      {/* <BannerWrapper isAuthPage={isAuthPage}>
+      <BannerWrapper isAuthPage={isAuthPage}>
         <AnimatePresence mode="wait">
           {isHomePage ? (
             <MainBanner
@@ -189,7 +183,7 @@ function AppContent() {
             !isAuthPage && pageContent && <PageBanner content={pageContent} />
           )}
         </AnimatePresence>
-      </BannerWrapper> */}
+      </BannerWrapper>
       <InnerContainer>
         <ContentWrapper isAuthPage={isAuthPage}>
           <PageTransition>

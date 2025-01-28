@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-// import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MainBannerProps } from '../../../types/banner';
 import { useVideoBanner } from '../VideoBanner/hooks/useVideoBanner';
 import SlideControls from '../VideoBanner/SlideControls';
@@ -18,13 +18,13 @@ const Container = styled.div`
   }
 `;
 
-// const VideoContainer = styled(motion.div)`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-// `;
+const VideoContainer = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
 
 const VideoElement = styled.video`
   width: 100%;
@@ -32,30 +32,30 @@ const VideoElement = styled.video`
   object-fit: cover;
 `;
 
-// const Content = styled(motion.div)`
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   text-align: right;
-//   z-index: 2;
-//   width: 90%;
-//   max-width: 1200px;
-//   padding-right: 5%;
-// `;
+const Content = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: right;
+  z-index: 2;
+  width: 90%;
+  max-width: 1200px;
+  padding-right: 5%;
+`;
 
-// const TitleContainer = styled(motion.div)`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 0.5rem;
-//   max-width: 600px;
-//   margin-left: auto;
-// `;
+const TitleContainer = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin-left: auto;
+`;
 
-// const TitleLine = styled(motion.div)`
-//   overflow: hidden;
-//   position: relative;
-// `;
+const TitleLine = styled(motion.div)`
+  overflow: hidden;
+  position: relative;
+`;
 
 const Title = styled.h1`
   color: #ffffff;
@@ -172,7 +172,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
         <VideoContainer
           key={`video-${currentIndex}`}
           variants={videoVariants}
@@ -202,7 +202,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
             </TitleContainer>
           </Content>
         </VideoContainer>
-      </AnimatePresence> */}
+      </AnimatePresence>
 
       {videoArray.length > 1 && (
         <SlideControls

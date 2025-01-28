@@ -1,4 +1,3 @@
-//Main.tsx
 import {
   MainContainer,
   PaperContainer,
