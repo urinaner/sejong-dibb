@@ -94,10 +94,10 @@ export const InfoGroup = styled.div`
 export const InfoTitle = styled.h3`
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   padding-bottom: 0.5rem;
