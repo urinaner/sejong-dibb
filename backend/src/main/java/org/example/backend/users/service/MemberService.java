@@ -1,20 +1,57 @@
 package org.example.backend.users.service;
 
 import java.io.IOException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.users.domain.dto.member.SjLoginReq;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
+import org.example.backend.users.domain.entity.Role;
+import org.example.backend.users.domain.entity.Users;
+import org.example.backend.users.repository.AdminRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-@Component
+
+@Service
+@RequiredArgsConstructor
 public class MemberService {
     private final String MOODLER_LOGIN_URL = "https://sjulms.moodler.kr/login/index.php";
     private final String AUTH_FAILED = "인증에 실패하였습니다.";
     private final String USER_INFO_MISSING = "사용자 정보를 찾을 수 없습니다.";
+
+    private final AdminRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public Users authenticateAndSaveUser(SjLoginReq loginRequest) throws AuthenticationException {
+        // 1. 세종대 로그인 수행
+        SjUserProfile profile = authenticate(loginRequest);
+
+        // 2. DB에서 해당 loginId가 존재하는지 확인
+        Optional<Users> existingUser = usersRepository.findByLoginId(loginRequest.getUserId());
+
+        if (existingUser.isPresent()) {
+            return existingUser.get();  // 기존 유저 반환
+        }
+
+        // 3. 존재하지 않으면 새 유저 생성 후 저장
+        Users newUser = Users.builder()
+                .loginId(loginRequest.getUserId())
+                .password(passwordEncoder.encode(loginRequest.getPassword())) // 비밀번호 암호화
+                .username(profile.getName())  // 세종대에서 가져온 이름 저장
+                .email(null)  // 필요하면 추가 (세종대에서 제공 여부 확인)
+                .phoneN(null) // 필요하면 추가
+                .role(Role.MEMBER)  // 기본적으로 일반 사용자로 설정
+                .build();
+
+        usersRepository.save(newUser);
+        return newUser;
+
+    }
 
     public SjUserProfile authenticate(SjLoginReq loginRequest) throws AuthenticationException {
         try {

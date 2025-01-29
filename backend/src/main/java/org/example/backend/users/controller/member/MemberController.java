@@ -1,18 +1,15 @@
 package org.example.backend.users.controller.member;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.admin.AccessTokenReq;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.member.SjLoginReq;
+import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
-    private final  MemberService memberService;
+    private final MemberService memberService;
 
-//    @PostMapping("/join")
-//    public String joinProcess(@RequestBody SignInReqDto joinDTO) {
-//        memberService.joinProcess(joinDTO);
-//
-//        return "ok";
-//    }
-//
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody SjLoginReq loginRequest) {
+        try {
+            Users user = memberService.authenticateAndSaveUser(loginRequest);
+            return ResponseEntity.ok(user);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: " + e.getMessage());
+        }
+    }
+
 //    @PostMapping("/signOut")
 //    public ResponseEntity<Void> signOut(@RequestHeader(value = AUTHORIZATION) String accessToken) {
 //        AccessTokenReq accessTokenReq = new AccessTokenReq();
