@@ -11,8 +11,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.entity.Admin;
 import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.domain.entity.Role;
+import org.example.backend.users.domain.entity.Users;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,12 +73,12 @@ public class JWTFilter extends OncePerRequestFilter {
             log.info("Access token is valid");
 
             String loginId = jwtUtil.getLoginId(accessToken);
-            String role = jwtUtil.getRole(accessToken);
+            Role role = jwtUtil.getRole(accessToken);
 
-            Admin admin = Admin.builder()
+            Users admin = Users.builder()
                     .username(loginId)
                     .password("hashedPassword")
-                    .role(role)
+                    .role(Role.ADMIN)
                     .build();
 
             CustomUserDetails customUserDetails = new CustomUserDetails(admin);

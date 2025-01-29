@@ -15,12 +15,12 @@ import org.example.backend.users.domain.dto.SignInReqDto;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "admin")
-public class Admin {
+@Table(name = "users")
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "admin_id")
+    @Column(name = "users_id")
     private Long id;
 
     @Column(name = "login_id", nullable = false)
@@ -33,20 +33,23 @@ public class Admin {
 
     private String email;
 
+    private String phoneN;
+
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
 
     @Builder
-    private Admin(String loginId, String password, String username, String email, String role) {
+    private Users(String loginId, String password, String username, String email, String phoneN, Role role) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;
         this.email = email;
+        this.phoneN = phoneN;
         this.role = role;
     }
 
-    public static Admin of(SignInReqDto dto, String encodedPassword) {
-        return Admin.builder()
+    public static Users of(SignInReqDto dto, String encodedPassword) {
+        return Users.builder()
                 .loginId(dto.getLoginId())
                 .password(encodedPassword)
                 .build();

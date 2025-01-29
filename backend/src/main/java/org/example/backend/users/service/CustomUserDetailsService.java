@@ -1,8 +1,8 @@
 package org.example.backend.users.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.entity.Admin;
 import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.repository.AdminRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         log.info("CustomUserDetailsService.loadUserByLoginId: {}", loginId);
 
-        Admin userData = userRepository.findByLoginId(loginId)
+        Users userData = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with loginId: " + loginId)); // 사용자가 존재하지 않을 경우 예외 던지기
 

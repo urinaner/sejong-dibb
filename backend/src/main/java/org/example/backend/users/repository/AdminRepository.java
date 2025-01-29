@@ -1,14 +1,13 @@
 package org.example.backend.users.repository;
 
-import org.example.backend.users.domain.entity.Admin;
+import java.util.Optional;
+import org.example.backend.users.domain.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface AdminRepository extends JpaRepository<Users, Long> {
+    Users findByUsername(String username);
 
-public interface AdminRepository extends JpaRepository<Admin, Long> {
-    Admin findByUsername(String username);
-
-    Optional<Admin> findByLoginId(String loginId);
+    Optional<Users> findByLoginId(String loginId);
 
     Boolean existsByUsername(String username);
 

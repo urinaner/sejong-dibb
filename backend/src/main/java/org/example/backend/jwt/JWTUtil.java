@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.users.domain.entity.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,15 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("loginId", String.class);
     }
 
-    public String getRole(String token) {
+    public Role getRole(String token) {
+        String roleString = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
 
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
+        return Role.valueOf(roleString);
     }
 
     public Boolean isExpired(String token) {
@@ -45,7 +52,7 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String loginId, String role, Long expiredMs) {
+    public String createJwt(String loginId, Role role, Long expiredMs) {
 
         log.info("JWTUtil.createJwt");
 

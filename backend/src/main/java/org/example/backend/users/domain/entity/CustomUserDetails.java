@@ -1,17 +1,16 @@
 package org.example.backend.users.domain.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 @Slf4j
 public class CustomUserDetails implements UserDetails {
-    private final Admin admin;
+    private final Users admin;
 
-    public CustomUserDetails(Admin admin) {
+    public CustomUserDetails(Users admin) {
         this.admin = admin;
     }
 
@@ -25,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
             @Override
             public String getAuthority() {
 
-                return admin.getRole();
+                return admin.getRole().toString();
             }
         });
 

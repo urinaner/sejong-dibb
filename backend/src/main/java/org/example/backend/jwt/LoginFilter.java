@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.domain.entity.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -70,8 +71,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt(loginId, role, 1800 * 1000L);
-        String refreshToken = jwtUtil.createJwt(loginId, role, 60 * 60 * 24 * 30 * 1000L);
+        String accessToken = jwtUtil.createJwt(loginId, Role.valueOf(role), 1800 * 1000L);
+        String refreshToken = jwtUtil.createJwt(loginId, Role.valueOf(role), 60 * 60 * 24 * 30 * 1000L);
 
         // 응답 바디에 JSON 데이터 작성
         response.setContentType("application/json"); // JSON 형식으로 설정
