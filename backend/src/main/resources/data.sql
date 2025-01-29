@@ -16,6 +16,8 @@ DELETE
 FROM admin;
 DELETE
 FROM news;
+DELETE
+FROM users;
 
 
 -- Department 더미 데이터 (1개)
@@ -29,9 +31,9 @@ VALUES (1, '바이오융합공학과',
         '9:00 - 18:00',
         'https://home.sejong.ac.kr/~bioscidpt/map/24Ex');
 
--- Admin 더미 데이터 (1개)
-INSERT INTO admin (admin_id, login_id, password, username, email, role)
-VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com', 'ADMIN');
+-- users 더미 데이터
+INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
+VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com', '010-1234-5678', 'ADMIN');
 
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profile_image)
