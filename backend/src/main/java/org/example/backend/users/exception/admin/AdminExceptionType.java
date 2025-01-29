@@ -1,4 +1,4 @@
-package org.example.backend.users.exception;
+package org.example.backend.users.exception.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.exception.BaseExceptionType;

@@ -1,4 +1,4 @@
-package org.example.backend.users.domain.dto.mail;
+package org.example.backend.users.domain.dto.admin.mail;
 
 import lombok.Data;
 

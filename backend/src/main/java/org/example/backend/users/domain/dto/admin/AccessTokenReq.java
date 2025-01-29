@@ -1,4 +1,4 @@
-package org.example.backend.users.domain.dto;
+package org.example.backend.users.domain.dto.admin;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

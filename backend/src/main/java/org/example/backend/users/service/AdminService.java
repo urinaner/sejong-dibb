@@ -1,15 +1,15 @@
 package org.example.backend.users.service;
 
-import static org.example.backend.users.exception.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
-import static org.example.backend.users.exception.AdminExceptionType.INVALID_ACCESS_TOKEN;
+import static org.example.backend.users.exception.admin.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
+import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_ACCESS_TOKEN;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.AccessTokenReq;
-import org.example.backend.users.domain.dto.SignInReqDto;
+import org.example.backend.users.domain.dto.admin.AccessTokenReq;
+import org.example.backend.users.domain.dto.admin.SignInReqDto;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
-import org.example.backend.users.exception.AdminException;
+import org.example.backend.users.exception.admin.AdminException;
 import org.example.backend.users.repository.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
