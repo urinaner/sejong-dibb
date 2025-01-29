@@ -21,7 +21,6 @@ const ProfileSection = memo(
         setCopyMessage(`${label} 복사되었습니다`);
         setIsCopyModalOpen(true);
 
-        // 2초 후 자동으로 모달 닫기
         setTimeout(() => {
           setIsCopyModalOpen(false);
         }, 2000);
@@ -33,41 +32,56 @@ const ProfileSection = memo(
     };
 
     const handleExternalLink = (url: string) => {
+      if (!url.startsWith('http')) {
+        url = `https://${url}`;
+      }
       window.open(url, '_blank', 'noopener noreferrer');
     };
+
+    const majors = professor.major.split(',').map((major) => major.trim());
 
     return (
       <>
         <S.ProfileContainer>
-          <S.ImageSection>
-            <S.ProfileImage
-              src={professor.profileImage || defaultImage}
-              alt={`${professor.name} 교수`}
-              onError={onImageError}
-              loading="lazy"
-            />
-          </S.ImageSection>
+          <S.ImageWrapper>
+            <S.ImageSection>
+              <S.ProfileImage
+                src={professor.profileImage || defaultImage}
+                alt={`${professor.name} 교수`}
+                onError={onImageError}
+                loading="lazy"
+              />
+            </S.ImageSection>
+          </S.ImageWrapper>
 
           <S.InfoSection>
             <S.InfoGroup>
-              <S.InfoTitle>전공 분야</S.InfoTitle>
+              <S.InfoTitle>
+                <span>전공 분야</span>
+                <S.TagCount>{majors.length}</S.TagCount>
+              </S.InfoTitle>
               <S.MajorTags>
-                {professor.major.split(',').map((major, index) => (
-                  <S.MajorTag key={index}>{major.trim()}</S.MajorTag>
+                {majors.map((major, index) => (
+                  <S.MajorTag key={index}>{major}</S.MajorTag>
                 ))}
               </S.MajorTags>
             </S.InfoGroup>
 
             <S.InfoGroup>
-              <S.InfoTitle>연락처 정보</S.InfoTitle>
+              <S.InfoTitle>
+                <span>연락처 정보</span>
+              </S.InfoTitle>
               <S.ContactList>
                 {professor.email && (
                   <S.ContactItem>
-                    <Mail size={18} />
+                    <S.ContactIcon>
+                      <Mail size={18} />
+                    </S.ContactIcon>
                     <S.ContactText>{professor.email}</S.ContactText>
                     <S.IconButton
                       onClick={() => handleCopy(professor.email, '이메일이')}
                       aria-label="이메일 복사"
+                      title="이메일 복사"
                     >
                       <Copy size={16} />
                     </S.IconButton>
@@ -76,11 +90,14 @@ const ProfileSection = memo(
 
                 {professor.phoneN && (
                   <S.ContactItem>
-                    <Phone size={18} />
+                    <S.ContactIcon>
+                      <Phone size={18} />
+                    </S.ContactIcon>
                     <S.ContactText>{professor.phoneN}</S.ContactText>
                     <S.IconButton
                       onClick={() => handleCopy(professor.phoneN, '전화번호가')}
                       aria-label="전화번호 복사"
+                      title="전화번호 복사"
                     >
                       <Copy size={16} />
                     </S.IconButton>
@@ -89,18 +106,22 @@ const ProfileSection = memo(
 
                 {professor.lab && (
                   <S.ContactItem>
-                    <MapPin size={18} />
+                    <S.ContactIcon>
+                      <MapPin size={18} />
+                    </S.ContactIcon>
                     <S.ContactText>{professor.lab}</S.ContactText>
                   </S.ContactItem>
                 )}
 
                 {professor.homepage && (
                   <S.ContactItem>
-                    <Globe size={18} />
+                    <S.ContactIcon>
+                      <Globe size={18} />
+                    </S.ContactIcon>
                     <S.ContactLink
                       onClick={() => handleExternalLink(professor.homepage)}
                     >
-                      {professor.homepage}
+                      <span>{professor.homepage}</span>
                       <ExternalLink size={14} />
                     </S.ContactLink>
                   </S.ContactItem>
@@ -110,7 +131,6 @@ const ProfileSection = memo(
           </S.InfoSection>
         </S.ProfileContainer>
 
-        {/* 복사 완료 토스트 모달 */}
         <Modal
           isOpen={isCopyModalOpen}
           onClose={() => setIsCopyModalOpen(false)}

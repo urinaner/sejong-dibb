@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { AlertTriangle, Search, ExternalLink } from 'lucide-react';
+import {
+  AlertTriangle,
+  Search,
+  ExternalLink,
+  FileText,
+  Calendar,
+  BookOpen,
+  Hash,
+} from 'lucide-react';
 import axios from 'axios';
 import { apiEndpoints } from '../../../../config/apiConfig';
 import * as S from './PublicationsStyle';
@@ -105,6 +113,14 @@ const Publications: React.FC<PublicationsProps> = ({ professorId }) => {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+    });
+  };
+
   if (loading) {
     return <S.LoadingWrapper>데이터를 불러오는 중입니다...</S.LoadingWrapper>;
   }
@@ -148,60 +164,66 @@ const Publications: React.FC<PublicationsProps> = ({ professorId }) => {
         {filteredTheses.length === 0 ? (
           <S.EmptyMessage>검색 결과가 없습니다.</S.EmptyMessage>
         ) : (
-          <S.Table>
-            <thead>
-              <tr>
-                <S.Th>번호</S.Th>
-                <S.Th>논문 제목</S.Th>
-                <S.Th>저자</S.Th>
-                <S.Th>학술지</S.Th>
-                <S.Th>출판 연도</S.Th>
-                <S.Th>출판 정보</S.Th>
-                <S.Th>바로가기</S.Th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTheses.map((thesis, index) => (
-                <tr key={index}>
-                  <S.Td>{index + 1}</S.Td>
-                  <S.Td>{thesis.content}</S.Td>
-                  <S.Td>{thesis.author}</S.Td>
-                  <S.Td>{thesis.journal}</S.Td>
-                  <S.Td>{new Date(thesis.publicationDate).getFullYear()}</S.Td>
-                  <S.Td>
-                    {thesis.publicationCollection ||
-                    thesis.publicationIssue ||
-                    thesis.publicationPage ? (
-                      <span>
-                        {`Vol. ${thesis.publicationCollection || '-'}${
-                          thesis.publicationIssue
-                            ? `, No. ${thesis.publicationIssue}`
-                            : ''
-                        }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`}
-                        {thesis.issn && ` (ISSN: ${thesis.issn})`}
-                      </span>
-                    ) : (
-                      '-'
-                    )}
-                  </S.Td>
-                  <S.Td>
-                    <S.LinkButton
-                      onClick={() =>
-                        window.open(
-                          thesis.link,
-                          '_blank',
-                          'noopener noreferrer',
-                        )
-                      }
-                      aria-label="논문 링크 열기"
-                    >
-                      <ExternalLink size={18} />
-                    </S.LinkButton>
-                  </S.Td>
-                </tr>
-              ))}
-            </tbody>
-          </S.Table>
+          filteredTheses.map((thesis, index) => (
+            <S.ThesisCard key={index}>
+              <S.ThesisTitle>
+                <div>
+                  <FileText size={18} />
+                  {thesis.content}
+                </div>
+                <S.LinkButton
+                  onClick={() =>
+                    window.open(thesis.link, '_blank', 'noopener noreferrer')
+                  }
+                  aria-label="논문 링크 열기"
+                >
+                  <ExternalLink size={16} />
+                  링크
+                </S.LinkButton>
+              </S.ThesisTitle>
+
+              <S.MetaGrid>
+                <S.MetaItem>
+                  <Calendar size={16} />
+                  <div>
+                    <S.MetaLabel>출판일</S.MetaLabel>
+                    <br />
+                    <S.MetaValue>
+                      {formatDate(thesis.publicationDate)}
+                    </S.MetaValue>
+                  </div>
+                </S.MetaItem>
+
+                <S.MetaItem>
+                  <BookOpen size={16} />
+                  <div>
+                    <S.MetaLabel>저널</S.MetaLabel>
+                    <br />
+                    <S.MetaValue>{thesis.journal}</S.MetaValue>
+                  </div>
+                </S.MetaItem>
+
+                <S.MetaItem>
+                  <Hash size={16} />
+                  <div>
+                    <S.MetaLabel>출판 정보</S.MetaLabel>
+                    <br />
+                    <S.MetaValue>
+                      {thesis.publicationCollection ||
+                      thesis.publicationIssue ||
+                      thesis.publicationPage
+                        ? `${thesis.publicationCollection ? `Vol. ${thesis.publicationCollection}` : ''}${
+                            thesis.publicationIssue
+                              ? `, No. ${thesis.publicationIssue}`
+                              : ''
+                          }${thesis.publicationPage ? `, pp. ${thesis.publicationPage}` : ''}`
+                        : '-'}
+                    </S.MetaValue>
+                  </div>
+                </S.MetaItem>
+              </S.MetaGrid>
+            </S.ThesisCard>
+          ))
         )}
       </S.ThesisList>
 
