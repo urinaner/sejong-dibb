@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MainBannerProps } from '../../../types/banner';
@@ -79,11 +79,57 @@ const MainBanner: React.FC<MainBannerProps> = ({
   autoPlayInterval = 10000,
   logo,
 }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentQuality, setCurrentQuality] = useState<string>('auto');
+  const [networkStatus, setNetworkStatus] = useState<string>('high');
+
+  // 네트워크 상태 체크
+  useEffect(() => {
+    const connection =
+      (navigator as any).connection ||
+      (navigator as any).mozConnection ||
+      (navigator as any).webkitConnection;
+
+    if (connection) {
+      const updateNetworkStatus = () => {
+        if (connection.downlink >= 5) {
+          setNetworkStatus('high');
+          setCurrentQuality('1080p');
+        } else if (connection.downlink >= 2) {
+          setNetworkStatus('medium');
+          setCurrentQuality('720p');
+        } else {
+          setNetworkStatus('low');
+          setCurrentQuality('480p');
+        }
+      };
+
+      connection.addEventListener('change', updateNetworkStatus);
+      updateNetworkStatus();
+
+      return () =>
+        connection.removeEventListener('change', updateNetworkStatus);
+    }
+  }, []);
+
+  // 비디오 배열 구성
   const videoArray: Video[] =
     videos.length > 0
       ? videos
       : videoSrc && title
-        ? [{ id: '1', src: videoSrc, title: title.split('\n') }]
+        ? [
+            {
+              id: '1',
+              sources: [
+                {
+                  src: videoSrc,
+                  type: 'video/mp4',
+                  quality: '1080p',
+                },
+              ],
+              title: title.split('\n'),
+            },
+          ]
         : [];
 
   const { currentIndex, isPaused, setIsPaused, handleNext, handlePrev } =
@@ -102,7 +148,6 @@ const MainBanner: React.FC<MainBannerProps> = ({
     setTimeout(() => setIsTransitioning(false), 1000);
   };
 
-  // Animation variants
   const videoVariants = {
     enter: {
       opacity: 0,
@@ -131,7 +176,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
     visible: {
       transition: {
         staggerChildren: 0.12,
-        delayChildren: 0.4, // 비디오 페이드인 후 시작
+        delayChildren: 0.4,
       },
     },
     exit: {
@@ -152,7 +197,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: [0.33, 1, 0.68, 1], // custom easing
+        ease: [0.33, 1, 0.68, 1],
       },
     },
     exit: {
@@ -166,6 +211,8 @@ const MainBanner: React.FC<MainBannerProps> = ({
   };
 
   if (videoArray.length === 0) return null;
+
+  const currentVideo = videoArray[currentIndex];
 
   return (
     <Container
@@ -181,12 +228,21 @@ const MainBanner: React.FC<MainBannerProps> = ({
           exit="exit"
         >
           <VideoElement
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
-            src={videoArray[currentIndex].src}
-          />
+            poster={currentVideo.poster}
+          >
+            {currentVideo.sources.map((source, idx) => (
+              <source
+                key={`${source.type}-${idx}`}
+                src={source.src}
+                type={source.type}
+              />
+            ))}
+          </VideoElement>
           <Content>
             <TitleContainer
               variants={titleContainerVariants}
@@ -194,7 +250,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
               animate="visible"
               exit="exit"
             >
-              {videoArray[currentIndex].title.map((line, index) => (
+              {currentVideo.title.map((line, index) => (
                 <TitleLine key={`title-${index}`} variants={titleLineVariants}>
                   <Title>{line}</Title>
                 </TitleLine>
