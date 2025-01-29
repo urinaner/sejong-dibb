@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.AccessTokenReq;
 import org.example.backend.users.domain.dto.SignInReqDto;
-import org.example.backend.users.domain.entity.Admin;
+import org.example.backend.users.domain.entity.Role;
+import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.AdminException;
 import org.example.backend.users.repository.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,10 +37,10 @@ public class AdminService {
             throw new AdminException(ALREADY_EXIST_LOGIN_ID);
         }
 
-        Admin admin = Admin.builder()
+        Users admin = Users.builder()
                 .loginId(loginId)
                 .password(bCryptPasswordEncoder.encode(password))
-                .role("ROLE_ADMIN")
+                .role(Role.ADMIN)
                 .build();
 
         adminRepository.save(admin);
@@ -63,7 +64,7 @@ public class AdminService {
         }
     }
 
-    public Admin getAdminById(Long id) {
+    public Users getAdminById(Long id) {
         return adminRepository.findById(id)
                 .orElseThrow(() -> new AdminException(INVALID_ACCESS_TOKEN));
     }
