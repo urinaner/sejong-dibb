@@ -1,6 +1,8 @@
 import { Video } from '../components/Banner/VideoBanner/types';
 
-const CDN_URL = 'https://pub-e4ab6fbbf2154b7bb658f18011c1b707.r2.dev';
+const CDN_URL = 'https://video-cache-worker.pillow12360.workers.dev';
+
+const VIDEO_BASE_URL = process.env.REACT_APP_VIDEO_BASE_URL || '';
 
 export const mainVideos: Video[] = [
   {
