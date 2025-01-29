@@ -1,4 +1,4 @@
-package org.example.backend.admin.controller;
+package org.example.backend.users.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package org.example.backend.admin.domain.entity;
+package org.example.backend.users.domain.entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

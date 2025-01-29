@@ -6,7 +6,7 @@ import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEM
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.users.domain.entity.Admin;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.room.domain.Room;

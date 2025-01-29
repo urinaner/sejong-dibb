@@ -1,9 +1,9 @@
-package org.example.backend.admin.service;
+package org.example.backend.users.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.admin.domain.entity.Admin;
-import org.example.backend.admin.domain.entity.CustomUserDetails;
-import org.example.backend.admin.repository.AdminRepository;
+import org.example.backend.users.domain.entity.Admin;
+import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.repository.AdminRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

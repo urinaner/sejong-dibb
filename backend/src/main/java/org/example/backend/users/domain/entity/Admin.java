@@ -1,4 +1,4 @@
-package org.example.backend.admin.domain.entity;
+package org.example.backend.users.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.admin.domain.dto.SignInReqDto;
+import org.example.backend.users.domain.dto.SignInReqDto;
 
 @Entity
 @Getter

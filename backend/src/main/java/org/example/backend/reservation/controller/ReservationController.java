@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.users.domain.entity.Admin;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.domain.dto.ReservationDeleteRequest;
 import org.example.backend.reservation.domain.dto.ReservationResDto;

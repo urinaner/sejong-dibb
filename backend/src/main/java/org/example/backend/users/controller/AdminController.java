@@ -1,12 +1,12 @@
-package org.example.backend.admin.controller;
+package org.example.backend.users.controller;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.admin.domain.dto.AccessTokenReq;
-import org.example.backend.admin.domain.dto.SignInReqDto;
-import org.example.backend.admin.service.AdminService;
+import org.example.backend.users.domain.dto.AccessTokenReq;
+import org.example.backend.users.domain.dto.SignInReqDto;
+import org.example.backend.users.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

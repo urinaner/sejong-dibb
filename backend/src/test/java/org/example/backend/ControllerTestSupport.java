@@ -2,7 +2,7 @@ package org.example.backend;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.backend.admin.service.AdminService;
+import org.example.backend.users.service.AdminService;
 import org.example.backend.department.controller.DepartmentController;
 import org.example.backend.department.service.DepartmentService;
 import org.example.backend.jwt.JWTUtil;
