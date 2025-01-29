@@ -1,10 +1,15 @@
 import axios, { AxiosInstance } from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+// 환경에 따른 baseURL 설정
+const BASE_URL =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_API_URL
+    : '/api';
+
 // axios 인스턴스 생성
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: API_URL,
-  withCredentials: true, // CORS 요청에서 쿠키 전송 허용
+  baseURL: BASE_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -14,7 +19,6 @@ export const axiosInstance: AxiosInstance = axios.create({
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    // XSRF-TOKEN 쿠키가 있다면 헤더에 추가
     const xsrfToken = document.cookie
       .split('; ')
       .find((row) => row.startsWith('XSRF-TOKEN='))
@@ -38,12 +42,13 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // 인증 에러 처리
       window.location.href = '/login';
     }
     return Promise.reject(error);
   },
 );
+
+// DTO 인터페이스 정의
 export interface NewsReqDto {
   title: string;
   content: string;
@@ -104,18 +109,26 @@ export interface SeminarDto {
   company: string;
 }
 
+// API 엔드포인트 생성을 위한 유틸리티 함수
+const createEndpoint = (path: string) => {
+  return process.env.NODE_ENV === 'development'
+    ? `${process.env.REACT_APP_API_URL}${path}`
+    : path;
+};
+
+// API Endpoints
 export const apiEndpoints = {
   news: {
-    list: `${API_URL}/api/news`,
+    list: createEndpoint('/api/news'),
     listWithPage: (page: number, size: number) => {
       const params = new URLSearchParams({
         page: page.toString(),
         size: size.toString(),
       });
-      return `${API_URL}/api/news?${params.toString()}`;
+      return createEndpoint(`/api/news?${params.toString()}`);
     },
     create: {
-      url: `${API_URL}/api/news`,
+      url: createEndpoint('/api/news'),
       getFormData: (newsReqDto: NewsReqDto, imageFile?: File | null) => {
         const formData = new FormData();
         formData.append(
@@ -130,9 +143,9 @@ export const apiEndpoints = {
         return formData;
       },
     },
-    get: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+    get: (newsId: string | number) => createEndpoint(`/api/news/${newsId}`),
     update: {
-      url: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+      url: (newsId: string | number) => createEndpoint(`/api/news/${newsId}`),
       getFormData: (newsReqDto: NewsReqDto, imageFile?: File | null) => {
         const formData = new FormData();
         formData.append(
@@ -147,11 +160,11 @@ export const apiEndpoints = {
         return formData;
       },
     },
-    delete: (newsId: string | number) => `${API_URL}/api/news/${newsId}`,
+    delete: (newsId: string | number) => createEndpoint(`/api/news/${newsId}`),
   },
 
   thesis: {
-    list: `${API_URL}/api/thesis`,
+    list: createEndpoint('/api/thesis'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -160,10 +173,10 @@ export const apiEndpoints = {
       if (sort && sort.length > 0) {
         sort.forEach((sortItem) => params.append('sort', sortItem));
       }
-      return `${API_URL}/api/thesis?${params.toString()}`;
+      return createEndpoint(`/api/thesis?${params.toString()}`);
     },
     create: {
-      url: `${API_URL}/api/thesis`,
+      url: createEndpoint('/api/thesis'),
       getFormData: (thesisReqDto: ThesisReqDto, imageFile?: File | null) => {
         const formData = new FormData();
         formData.append('thesisReqDto', JSON.stringify(thesisReqDto));
@@ -173,9 +186,9 @@ export const apiEndpoints = {
         return formData;
       },
     },
-    get: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
+    get: (thesisId: string) => createEndpoint(`/api/thesis/${thesisId}`),
     update: {
-      url: (id: string) => `${API_URL}/api/thesis/${id}`,
+      url: (id: string) => createEndpoint(`/api/thesis/${id}`),
       getFormData: (thesisReqDto: ThesisReqDto, file?: File | null) => {
         const formData = new FormData();
         formData.append(
@@ -190,11 +203,11 @@ export const apiEndpoints = {
         return formData;
       },
     } as ThesisEndpoint,
-    delete: (thesisId: string) => `${API_URL}/api/thesis/${thesisId}`,
+    delete: (thesisId: string) => createEndpoint(`/api/thesis/${thesisId}`),
   },
 
   professor: {
-    list: `${API_URL}/api/professor`,
+    list: createEndpoint('/api/professor'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -203,10 +216,10 @@ export const apiEndpoints = {
       if (sort && sort.length > 0) {
         sort.forEach((sortItem) => params.append('sort', sortItem));
       }
-      return `${API_URL}/api/professor?${params.toString()}`;
+      return createEndpoint(`/api/professor?${params.toString()}`);
     },
     create: {
-      url: `${API_URL}/api/professor`,
+      url: createEndpoint('/api/professor'),
       getFormData: (
         professorReqDto: ProfessorReqDto,
         imageFile?: File | null,
@@ -225,7 +238,7 @@ export const apiEndpoints = {
       },
     },
     update: {
-      url: (id: number) => `${API_URL}/api/professor/${id}`,
+      url: (id: number) => createEndpoint(`/api/professor/${id}`),
       getFormData: (
         professorReqDto: ProfessorReqDto,
         imageFile?: File | null,
@@ -244,13 +257,12 @@ export const apiEndpoints = {
       },
     },
     get: (professorId: number | string) =>
-      `${API_URL}/api/professor/${professorId}`,
+      createEndpoint(`/api/professor/${professorId}`),
     delete: (professorId: number | string) =>
-      `${API_URL}/api/professor/${professorId}`,
-
+      createEndpoint(`/api/professor/${professorId}`),
     thesis: {
-      base: `${API_URL}/api/thesis`,
-      list: `${API_URL}/api/thesis`,
+      base: createEndpoint('/api/thesis'),
+      list: createEndpoint('/api/thesis'),
       listWithPage: (page: number, size: number, sort?: string[]) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -259,49 +271,50 @@ export const apiEndpoints = {
         if (sort && sort.length > 0) {
           sort.forEach((sortItem) => params.append('sort', sortItem));
         }
-        return `${API_URL}/api/thesis?${params.toString()}`;
+        return createEndpoint(`/api/thesis?${params.toString()}`);
       },
-      create: `${API_URL}/api/thesis`,
-      get: (thesisId: number | string) => `${API_URL}/api/thesis/${thesisId}`,
+      create: createEndpoint('/api/thesis'),
+      get: (thesisId: number | string) =>
+        createEndpoint(`/api/thesis/${thesisId}`),
       update: (thesisId: number | string) =>
-        `${API_URL}/api/thesis/${thesisId}`,
+        createEndpoint(`/api/thesis/${thesisId}`),
       delete: (thesisId: number | string) =>
-        `${API_URL}/api/thesis/${thesisId}`,
+        createEndpoint(`/api/thesis/${thesisId}`),
     },
-
-    detail: (professorId: number) => `${API_URL}/api/professor/${professorId}`,
+    detail: (professorId: number) =>
+      createEndpoint(`/api/professor/${professorId}`),
   },
 
   admin: {
-    login: `${API_URL}/api/admin/login`,
-    signOut: `${API_URL}/api/admin/signOut`,
-    register: `${API_URL}/api/admin/join`,
+    login: createEndpoint('/api/admin/login'),
+    signOut: createEndpoint('/api/admin/signOut'),
+    register: createEndpoint('/api/admin/join'),
   },
 
   user: {
-    login: `${API_URL}/api/user/login`,
-    signOut: `${API_URL}/logout`,
-    register: `${API_URL}/register`,
+    login: createEndpoint('/api/user/login'),
+    signOut: createEndpoint('/api/logout'),
+    register: createEndpoint('/api/register'),
   },
 
   department: {
-    get: (id: string) => `${API_URL}/api/departments/${id}`,
-    update: (id: string) => `${API_URL}/api/departments/${id}`,
-    delete: (id: string) => `${API_URL}/api/departments/${id}`,
-    create: `${API_URL}/api/departments`,
+    get: (id: string) => createEndpoint(`/api/departments/${id}`),
+    update: (id: string) => createEndpoint(`/api/departments/${id}`),
+    delete: (id: string) => createEndpoint(`/api/departments/${id}`),
+    create: createEndpoint('/api/departments'),
   },
 
   main: {
-    get: `${API_URL}/api/`,
+    get: createEndpoint('/api/'),
   },
 
   board: {
-    base: `${API_URL}/api/board`,
-    download: `${API_URL}/api/board/download`,
+    base: createEndpoint('/api/board'),
+    download: createEndpoint('/api/board/download'),
     listWithPage: (page: number, size: number) =>
-      `${API_URL}/api/board?page=${page}&size=${size}`,
+      createEndpoint(`/api/board?page=${page}&size=${size}`),
     create: {
-      url: `${API_URL}/api/board`,
+      url: createEndpoint('/api/board'),
       getFormData: (boardReqDto: BoardReqDto, files: File[]) => {
         const formData = new FormData();
         formData.append(
@@ -321,15 +334,17 @@ export const apiEndpoints = {
         return formData;
       },
     },
-    get: (boardId: string) => `${API_URL}/api/board/${boardId}`,
-    update: (boardId: string) => `${API_URL}/api/board/${boardId}`,
-    delete: (boardId: string) => `${API_URL}/api/board/${boardId}`,
+    get: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
+    update: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
+    delete: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
     getByCategory: (category: string, page: number, size: number) =>
-      `${API_URL}/api/board/category/${category}?page=${page}&size=${size}`,
+      createEndpoint(
+        `/api/board/category/${category}?page=${page}&size=${size}`,
+      ),
   },
 
   seminar: {
-    list: `${API_URL}/api/seminar`,
+    list: createEndpoint('/api/seminar'),
     listWithPage: (page: number, size: number, sortDirection?: string) => {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -338,15 +353,16 @@ export const apiEndpoints = {
       if (sortDirection) {
         params.append('sortDirection', sortDirection);
       }
-      return `${API_URL}/api/seminar?${params.toString()}`;
+      return createEndpoint(`/api/seminar?${params.toString()}`);
     },
-    get: (seminarId: string | number) => `${API_URL}/api/seminar/${seminarId}`,
-    create: `${API_URL}/api/seminar`,
+    get: (seminarId: string | number) =>
+      createEndpoint(`/api/seminar/${seminarId}`),
+    create: createEndpoint('/api/seminar'),
     update: (seminarId: string | number) =>
-      `${API_URL}/api/seminar/${seminarId}`,
+      createEndpoint(`/api/seminar/${seminarId}`),
     delete: (seminarId: string | number) =>
-      `${API_URL}/api/seminar/${seminarId}`,
+      createEndpoint(`/api/seminar/${seminarId}`),
   },
 };
 
-export default API_URL;
+export default BASE_URL;
