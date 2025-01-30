@@ -2,10 +2,6 @@ import graduateImg from '../assets/images/pages/graduate.jpg';
 import undergraduateImg from '../assets/images/pages/undergraduate.jpg';
 import newsImg from '../assets/images/pages/news.jpg';
 import aboutImg from '../assets/images/pages/about.jpg';
-import mainVideo from '../assets/videos/main.mp4';
-import sejongIcon from '../assets/images/sejong-icon.svg';
-import mainVideo1 from '../assets/videos/main.mp4';
-import mainVideo2 from '../assets/videos/main_2.mp4';
 
 export const PAGE_CONTENTS = {
   about: {
@@ -116,7 +112,6 @@ export interface MainContent {
   title: string;
   videos: {
     id: string;
-    src: string;
     title: string[];
   }[];
   logoSrc?: string;
@@ -127,12 +122,10 @@ export const MAIN_CONTENT: MainContent = {
   videos: [
     {
       id: 'video1',
-      src: mainVideo1,
       title: ['integrative', 'bioscience', 'biotechnology'],
     },
     {
       id: 'video2',
-      src: mainVideo2,
       title: ['integrative', 'bioscience', 'biotechnology'],
     },
   ],

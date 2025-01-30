@@ -30,10 +30,7 @@ import ThesisCreate from './pages/News/Thesis/ThesisCreate';
 import ThesisEdit from './pages/News/Thesis/ThesisEdit';
 import ThesisDetail from './pages/News/Thesis/ThesisDetail';
 import Organization from './pages/About/Organization/Organization';
-
-import mainImage from './assets/images/main_picture.svg';
 import Curriculum from './pages/Undergraduate/Curriculum/Curriculum';
-
 import NotFound from './components/Notfound/NotFound';
 import SeminarList from './pages/Seminar/SeminarList';
 import SeminarDetail from './pages/Seminar/SeminarDetail';
