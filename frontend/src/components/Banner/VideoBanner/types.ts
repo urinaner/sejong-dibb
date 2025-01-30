@@ -1,14 +1,16 @@
 export interface VideoSource {
   src: string;
   type: string;
-  quality?: '480p' | '720p' | '1080p';
+  quality: string;
+  default?: boolean;
+  media?: string;
 }
 
 export interface Video {
   id: string;
   sources: VideoSource[];
-  poster?: string;
   title: string[];
+  poster?: string;
 }
 
 export interface MainBannerProps {

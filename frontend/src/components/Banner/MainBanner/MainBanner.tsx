@@ -128,6 +128,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
                 },
               ],
               title: title.split('\n'),
+              poster: undefined,
             },
           ]
         : [];
