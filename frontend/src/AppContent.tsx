@@ -43,6 +43,7 @@ import News from './pages/News/News/News';
 import NewsDetail from './pages/News/News/NewsDetail';
 import NewsCreate from './pages/News/News/NewsCreate';
 import NewsEdit from './pages/News/News/NewsEdit';
+import { mainVideos } from './config/videoConfig';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -175,7 +176,7 @@ function AppContent() {
         <AnimatePresence mode="wait">
           {isHomePage ? (
             <MainBanner
-              videos={MAIN_CONTENT.videos}
+              videos={mainVideos}
               autoPlayInterval={5000}
               logo={MAIN_CONTENT.logoSrc}
             />

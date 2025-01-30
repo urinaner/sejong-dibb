@@ -1,10 +1,20 @@
-export interface Video {
-  id: string;
+export interface VideoSource {
   src: string;
-  title: string[];
+  type: string;
+  quality: string;
+  default?: boolean;
+  media?: string;
 }
 
-export interface VideoBannerProps {
+export interface Video {
+  id: string;
+  sources: VideoSource[];
+  title: string[];
+  poster?: string;
+}
+
+export interface MainBannerProps {
   videos: Video[];
   autoPlayInterval?: number;
+  logo?: string;
 }
