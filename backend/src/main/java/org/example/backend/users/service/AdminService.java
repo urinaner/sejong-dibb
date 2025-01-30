@@ -40,7 +40,7 @@ public class AdminService {
         Users admin = Users.builder()
                 .loginId(loginId)
                 .password(bCryptPasswordEncoder.encode(password))
-                .role(Role.ADMIN)
+                .role(Role.ROLE_ADMIN)
                 .build();
 
         adminRepository.save(admin);

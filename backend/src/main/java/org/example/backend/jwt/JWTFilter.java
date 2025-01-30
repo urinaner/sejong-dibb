@@ -45,7 +45,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 matcher.match("/webjars/**", path);
 
         log.info("Path: {}, Is Swagger Path: {}", path, isSwaggerPath);
-        return isSwaggerPath || path.equals("/api/admin/login");
+        return isSwaggerPath || path.equals("/api/admin/login") || path.equals("/api/member/login");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class JWTFilter extends OncePerRequestFilter {
             Users admin = Users.builder()
                     .username(loginId)
                     .password("hashedPassword")
-                    .role(Role.ADMIN)
+                    .role(Role.ROLE_ADMIN)
                     .build();
 
             CustomUserDetails customUserDetails = new CustomUserDetails(admin);

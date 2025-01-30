@@ -7,6 +7,7 @@ import org.example.backend.jwt.JWTFilter;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.jwt.LoginFilter;
 import org.example.backend.jwt.exception.JwtExceptionFilter;
+import org.example.backend.users.domain.entity.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,6 +75,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/login", "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger*/**", "/uploads/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/member/**").hasRole("MEMBER")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
