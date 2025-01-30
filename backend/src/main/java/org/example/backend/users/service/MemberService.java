@@ -28,24 +28,21 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public Users authenticateAndSaveUser(SjLoginReq loginRequest) throws AuthenticationException {
-        // 1. 세종대 로그인 수행
         SjUserProfile profile = authenticate(loginRequest);
 
-        // 2. DB에서 해당 loginId가 존재하는지 확인
         Optional<Users> existingUser = usersRepository.findByLoginId(loginRequest.getUserId());
 
         if (existingUser.isPresent()) {
-            return existingUser.get();  // 기존 유저 반환
+            return existingUser.get();
         }
 
-        // 3. 존재하지 않으면 새 유저 생성 후 저장
         Users newUser = Users.builder()
                 .loginId(loginRequest.getUserId())
-                .password(passwordEncoder.encode(loginRequest.getPassword())) // 비밀번호 암호화
-                .username(profile.getName())  // 세종대에서 가져온 이름 저장
-                .email(null)  // 필요하면 추가 (세종대에서 제공 여부 확인)
-                .phoneN(null) // 필요하면 추가
-                .role(Role.MEMBER)  // 기본적으로 일반 사용자로 설정
+                .password(passwordEncoder.encode(loginRequest.getPassword()))
+                .username(profile.getName())
+                .email(null)
+                .phoneN(null)
+                .role(Role.MEMBER)
                 .build();
 
         usersRepository.save(newUser);
