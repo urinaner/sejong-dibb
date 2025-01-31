@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
-import org.example.backend.users.domain.dto.LogoutReqDto;
 import org.example.backend.users.domain.dto.member.SjLoginReq;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
@@ -142,9 +141,9 @@ public class MemberService {
         );
     }
 
-    public void logout(LogoutReqDto logoutDto) {
-        setBlacklist(logoutDto.getAccessToken());
-        setBlacklist(logoutDto.getRefreshToken());
+    public void logout(String accessToken, String refreshToken) {
+        setBlacklist(accessToken);
+        setBlacklist(refreshToken);
     }
 
     private void setBlacklist(String token) {

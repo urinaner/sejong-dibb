@@ -75,7 +75,8 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/login", "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**",
+                        .requestMatchers("/api/admin/login", "/api/member/login",
+                                "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", // TODO: 배포 전에  "/api/**" 삭제 필요
                                 "/swagger-resources/**", "/swagger*/**", "/uploads/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

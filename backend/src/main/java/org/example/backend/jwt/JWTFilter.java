@@ -88,7 +88,7 @@ public class JWTFilter extends OncePerRequestFilter {
             Users admin = Users.builder()
                     .username(loginId)
                     .password("hashedPassword")
-                    .role(Role.ROLE_ADMIN)
+                    .role(role)
                     .build();
 
             CustomUserDetails customUserDetails = new CustomUserDetails(admin);
