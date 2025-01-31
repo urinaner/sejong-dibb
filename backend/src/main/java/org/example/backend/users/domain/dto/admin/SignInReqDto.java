@@ -12,6 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @NoArgsConstructor
 public class SignInReqDto {
 
-        private String loginId;
-        private String password;
+    private String loginId;
+    private String password;
 }
