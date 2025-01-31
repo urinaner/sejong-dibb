@@ -2,9 +2,11 @@ package org.example.backend.users.service;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.jwt.JWTUtil;
@@ -42,6 +44,8 @@ public class MemberService {
     private final JWTUtil jwtUtil;
     private final AdminRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final Set<String> tokenBlacklist = new HashSet<>();
 
     public ResponseEntity<?> authenticateAndGenerateToken(SjLoginReq loginRequest) {
         try {
@@ -136,6 +140,23 @@ public class MemberService {
                 nameElement.text().trim(),
                 majorElement.text().trim()
         );
+    }
+
+    public void logout(String accessToken) {
+
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
+
+        if (jwtUtil.isExpired(accessToken)) {
+
+            return;
+        }
+
+        tokenBlacklist.add(accessToken);
+    }
+    public boolean isTokenBlacklisted(String token) {
+        return tokenBlacklist.contains(token);
     }
 }
 

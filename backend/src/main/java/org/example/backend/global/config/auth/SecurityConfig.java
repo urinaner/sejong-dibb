@@ -8,6 +8,7 @@ import org.example.backend.jwt.JWTUtil;
 import org.example.backend.jwt.LoginFilter;
 import org.example.backend.jwt.exception.JwtExceptionFilter;
 import org.example.backend.users.domain.entity.Role;
+import org.example.backend.users.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,11 +28,13 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final MemberService memberService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, MemberService memberService) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.memberService = memberService;
     }
 
     @Bean
@@ -78,7 +81,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil, memberService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

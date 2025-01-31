@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
+import org.example.backend.users.service.MemberService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,14 +25,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final MemberService memberService;
 
     private static final List<String> REFRESH_TOKEN_PATHS = List.of(
             "/api/specific-path",
             "/api/another-path"
     );
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, MemberService memberService) {
         this.jwtUtil = jwtUtil;
+        this.memberService = memberService;
     }
 
     @Override
