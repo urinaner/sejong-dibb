@@ -158,10 +158,5 @@ public class MemberService {
 
         jwtBlacklistService.addToBlacklist(new BlackListTokenDto(token, jwtUtil.getExpiredTime(token)));
     }
-
-    // TODO: 로그인 요청 시 jwtblacklist에 등록되어있는지 확인
-    public boolean isTokenBlacklisted(String token) {
-        return jwtBlacklistService.isBlacklisted(token);
-    }
 }
 
