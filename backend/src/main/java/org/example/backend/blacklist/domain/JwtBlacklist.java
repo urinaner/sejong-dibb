@@ -17,7 +17,7 @@ import org.example.backend.blacklist.dto.BlackListTokenDto;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "black_list")
-public class BlackList {
+public class JwtBlacklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "black_list_id")
@@ -26,12 +26,12 @@ public class BlackList {
     private LocalDateTime expiredTime;
 
     @Builder
-    private BlackList(final String token, final LocalDateTime expiredTime) {
+    private JwtBlacklist(final String token, final LocalDateTime expiredTime) {
         this.token = token;
         this.expiredTime = expiredTime;
     }
 
-    public static BlackList of(BlackListTokenDto dto) {
-        return BlackList.builder().token(dto.getToken()).expiredTime(dto.getExpiredTime()).build();
+    public static JwtBlacklist of(BlackListTokenDto dto) {
+        return JwtBlacklist.builder().token(dto.getToken()).expiredTime(dto.getExpiredTime()).build();
     }
 }
