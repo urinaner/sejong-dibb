@@ -2,14 +2,15 @@ package org.example.backend.users.service;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.blacklist.dto.BlackListTokenDto;
+import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
+import org.example.backend.users.domain.dto.LogoutReqDto;
 import org.example.backend.users.domain.dto.member.SjLoginReq;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
@@ -44,8 +45,7 @@ public class MemberService {
     private final JWTUtil jwtUtil;
     private final AdminRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-
-    private static final Set<String> tokenBlacklist = new HashSet<>();
+    private final JwtBlacklistService jwtBlacklistService;
 
     public ResponseEntity<?> authenticateAndGenerateToken(SjLoginReq loginRequest) {
         try {
@@ -142,21 +142,26 @@ public class MemberService {
         );
     }
 
-    public void logout(String accessToken) {
+    public void logout(LogoutReqDto logoutDto) {
+        setBlacklist(logoutDto.getAccessToken());
+        setBlacklist(logoutDto.getRefreshToken());
+    }
 
-        if (accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
+    private void setBlacklist(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
         }
 
-        if (jwtUtil.isExpired(accessToken)) {
-
+        if (jwtUtil.isExpired(token)) { // 이미 만료된 경우
             return;
         }
 
-        tokenBlacklist.add(accessToken);
+        jwtBlacklistService.addToBlacklist(new BlackListTokenDto(token, jwtUtil.getExpiredTime(token)));
     }
+
+    // TODO: 로그인 요청 시 jwtblacklist에 등록되어있는지 확인
     public boolean isTokenBlacklisted(String token) {
-        return tokenBlacklist.contains(token);
+        return jwtBlacklistService.isBlacklisted(token);
     }
 }
 

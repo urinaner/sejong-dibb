@@ -1,6 +1,6 @@
 package org.example.backend.blacklist.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,5 +10,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BlackListTokenDto {
     private String token;
-    private LocalDateTime expiredTime;
+    private Date expiredTime;
 }

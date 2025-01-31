@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +27,10 @@ public class JwtBlacklist {
     private String token;
 
     @Column(nullable = false)
-    private LocalDateTime expiredTime;
+    private Date expiredTime;
 
     @Builder
-    private JwtBlacklist(final String token, final LocalDateTime expiredTime) {
+    private JwtBlacklist(final String token, final Date expiredTime) {
         this.token = token;
         this.expiredTime = expiredTime;
     }
