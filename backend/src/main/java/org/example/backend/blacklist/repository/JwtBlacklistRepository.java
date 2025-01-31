@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JwtBlacklistRepository extends JpaRepository<JwtBlacklist, Long> {
-    void deleteByExpiresAtBefore(LocalDateTime time);
+    // 특정 토큰이 블랙리스트에 존재하는지 확인
+    boolean existsByToken(String token);
+
+    // 만료된 블랙리스트 토큰 삭제
+    void deleteByExpiredTimeBefore(LocalDateTime time);
 }

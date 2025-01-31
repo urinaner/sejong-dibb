@@ -16,13 +16,17 @@ import org.example.backend.blacklist.dto.BlackListTokenDto;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "black_list")
+@Table(name = "jwt_blacklist")
 public class JwtBlacklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "black_list_id")
+    @Column(name = "jwt_blacklist_id")
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String token;
+
+    @Column(nullable = false)
     private LocalDateTime expiredTime;
 
     @Builder
