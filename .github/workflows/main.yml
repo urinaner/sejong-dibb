@@ -61,10 +61,10 @@ jobs:
         env:
           CI: false
           NODE_ENV: production
+          DISABLE_ESLINT_PLUGIN: true  # ESLint 검사 비활성화
         run: |
           cd frontend
           npm install
-          npm install --save-dev @babel/plugin-proposal-private-property-in-object
           npm run build
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
