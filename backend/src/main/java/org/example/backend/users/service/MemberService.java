@@ -92,6 +92,7 @@ public class MemberService {
                 .username(profile.getName())
                 .email(null)
                 .phoneN(null)
+                .department(profile.getMajor())
                 .role(Role.ROLE_MEMBER)
                 .build();
 

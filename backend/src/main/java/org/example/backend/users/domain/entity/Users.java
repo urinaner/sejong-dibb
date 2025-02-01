@@ -12,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.users.domain.dto.LoginReqDto;
 
 @Entity
 @Getter
@@ -37,25 +36,22 @@ public class Users {
 
     private String phoneN;
 
+    private String department;
+
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    private Users(String loginId, String password, String username, String email, String phoneN, Role role) {
+    private Users(String loginId, String password, String username, String email, String phoneN, Role role,
+                  String department) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;
         this.email = email;
         this.phoneN = phoneN;
         this.role = role;
-    }
-
-    public static Users of(LoginReqDto dto, String encodedPassword) {
-        return Users.builder()
-                .loginId(dto.getLoginId())
-                .password(encodedPassword)
-                .build();
+        this.department = department;
     }
 
     public void updatePassword(String newEncodedPassword) {
