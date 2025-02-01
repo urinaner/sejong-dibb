@@ -2,7 +2,6 @@ package org.example.backend.news.service;
 
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
@@ -73,7 +72,8 @@ public class NewsService {
                 .map(NewsResDto::of);
     }
 
-    public List<News> searchNews(String keyword) {
-        return newsRepository.searchByKeyword(keyword);
+    public Page<NewsResDto> searchNews(String keyword, Pageable pageable) {
+        return newsRepository.searchByKeyword(keyword, pageable)
+                .map(NewsResDto::of);
     }
 }

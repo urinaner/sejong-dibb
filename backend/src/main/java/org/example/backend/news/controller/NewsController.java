@@ -9,7 +9,6 @@ import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
-import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.service.NewsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -75,7 +74,9 @@ public class NewsController {
 
     @Operation(summary = "키워드 검색 API", description = "키워드 검색")
     @GetMapping("/search")
-    public List<News> searchNews(@RequestParam String keyword) {
-        return newsService.searchNews(keyword);
+    public ResponseDto<List<NewsResDto>> searchNews(@RequestParam String keyword,
+                                                    @Valid @ModelAttribute PageRequestDto pageRequest) {
+        Page<NewsResDto> newsList = newsService.searchNews(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(newsList.getNumber(), newsList.getTotalPages(), newsList.getContent());
     }
 }
