@@ -1,4 +1,4 @@
-package org.example.backend.users.domain.dto.admin;
+package org.example.backend.users.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

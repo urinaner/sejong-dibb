@@ -5,7 +5,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.SignInReqDto;
 import org.example.backend.users.service.AdminService;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;

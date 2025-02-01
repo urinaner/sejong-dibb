@@ -1,7 +1,7 @@
 package org.example.backend;
 
 
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.SignInReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.service.MemberService;
 import org.junit.jupiter.api.Disabled;

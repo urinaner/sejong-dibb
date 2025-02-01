@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.SignInReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;

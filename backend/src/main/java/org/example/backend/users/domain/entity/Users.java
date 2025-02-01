@@ -12,7 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.SignInReqDto;
 
 @Entity
 @Getter
