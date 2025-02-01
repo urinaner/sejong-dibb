@@ -15,7 +15,7 @@ import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
-import org.example.backend.users.repository.AdminRepository;
+import org.example.backend.users.repository.UsersRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,7 +42,7 @@ public class MemberService {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final AdminRepository usersRepository;
+    private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtBlacklistService jwtBlacklistService;
 
