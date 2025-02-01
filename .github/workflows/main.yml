@@ -61,8 +61,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          CI=false npm run build
-
+          NODE_ENV=production npm run build
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
         run: |
