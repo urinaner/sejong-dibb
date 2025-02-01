@@ -58,10 +58,13 @@ jobs:
 
       # 프론트엔드 빌드
       - name: Install and Build Frontend
+        env:
+          CI: false
+          NODE_ENV: production
         run: |
           cd frontend
-          npm install
-          NODE_ENV=production npm run build
+          npm install --save-dev @babel/plugin-proposal-private-property-in-object
+          npm run build
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
         run: |
