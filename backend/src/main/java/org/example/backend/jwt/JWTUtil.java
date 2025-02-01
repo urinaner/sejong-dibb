@@ -5,12 +5,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.security.Key;
 import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
+import org.example.backend.users.domain.entity.Role;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -18,8 +18,7 @@ public class JWTUtil {
 
     private Key key;
 
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-
+    public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
 
         byte[] byteSecretKey = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(byteSecretKey);
@@ -27,25 +26,36 @@ public class JWTUtil {
 
     public String getUsername(String token) {
 
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("username", String.class);
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody()
+                .get("username", String.class);
     }
 
     public String getLoginId(String token) {
 
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("loginId", String.class);
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody()
+                .get("loginId", String.class);
     }
 
-    public String getRole(String token) {
+    public Role getRole(String token) {
+        String roleString = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
 
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
+        return Role.valueOf(roleString);
+    }
+
+    public Date getExpiredTime(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
     }
 
     public Boolean isExpired(String token) {
-
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
+        return getExpiredTime(token).before(new Date());
     }
 
-    public String createJwt(String loginId, String role, Long expiredMs) {
+    public String createJwt(String loginId, Role role, Long expiredMs) {
 
         log.info("JWTUtil.createJwt");
 

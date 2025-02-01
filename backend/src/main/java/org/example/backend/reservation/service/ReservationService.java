@@ -1,24 +1,25 @@
 package org.example.backend.reservation.service;
 
-import static org.example.backend.reservation.exception.ReservationExceptionType.*;
+import static org.example.backend.reservation.exception.ReservationExceptionType.EXIST_ALREADY_RESERVATION;
+import static org.example.backend.reservation.exception.ReservationExceptionType.NOT_FOUND_RESERVATION;
 import static org.example.backend.room.exception.RoomExceptionType.NOT_FOUND_SEMINAR_ROOM;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.admin.domain.entity.Admin;
+import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
+import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.exception.ReservationException;
+import org.example.backend.reservation.repository.ReservationRepository;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
-import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.dto.ReservationResDto;
-import org.example.backend.reservation.repository.ReservationRepository;
+import org.example.backend.users.domain.entity.Users;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class ReservationService {
     private final RoomRepository roomRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto, Admin user) {
+    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto, Users user) {
         Room room = getSeminarRoomById(seminarRoomId);
 
         validateReservationOverlap(reqDto, seminarRoomId);

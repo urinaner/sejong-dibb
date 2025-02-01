@@ -3,6 +3,7 @@ package org.example.backend.global.config.auth;
 import java.util.Arrays;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTFilter;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.jwt.LoginFilter;
@@ -26,11 +27,14 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
+                          JwtBlacklistService jwtBlacklistService) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     @Bean
@@ -71,12 +75,16 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/login", "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger*/**", "/uploads/**")
+                        .requestMatchers("/api/admin/login", "/api/member/login",
+                                "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", // TODO: 배포 전에  "/api/**" 삭제 필요
+                                "/swagger-resources/**", "/swagger*/**", "/uploads/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/member/**").hasRole("MEMBER")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil, jwtBlacklistService),
+                        UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

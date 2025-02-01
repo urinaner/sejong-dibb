@@ -16,10 +16,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.admin.domain.entity.Admin;
 import org.example.backend.common.domain.BaseEntity;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.room.domain.Room;
+import org.example.backend.users.domain.entity.Users;
 
 @Entity
 @Getter
@@ -50,12 +50,12 @@ public class Reservation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Admin admin;
+    private Users admin;
 
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, Admin admin) {
+                        String etc, Room room, Users admin) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
@@ -65,7 +65,7 @@ public class Reservation extends BaseEntity {
 
     }
 
-    public static Reservation of(ReservationCreateDto dto, Room room, Admin admin) {
+    public static Reservation of(ReservationCreateDto dto, Room room, Users admin) {
         return Reservation.builder()
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
