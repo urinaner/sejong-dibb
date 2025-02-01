@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
-import org.example.backend.users.domain.dto.member.SjLoginReq;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
-import org.example.backend.users.repository.AdminRepository;
+import org.example.backend.users.repository.UsersRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,17 +42,17 @@ public class MemberService {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final AdminRepository usersRepository;
+    private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtBlacklistService jwtBlacklistService;
 
-    public ResponseEntity<?> authenticateAndGenerateToken(SjLoginReq loginRequest) {
+    public ResponseEntity<?> authenticateAndGenerateToken(LoginReqDto dto) {
         try {
-            Users user = usersRepository.findByLoginId(loginRequest.getUserId())
-                    .orElseGet(() -> authenticateAndSaveUser(loginRequest));
+            Users user = usersRepository.findByLoginId(dto.getLoginId())
+                    .orElseGet(() -> authenticateAndSaveUser(dto));
 
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getLoginId(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(user.getLoginId(), dto.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,21 +77,22 @@ public class MemberService {
         }
     }
 
-    public Users authenticateAndSaveUser(SjLoginReq loginRequest) throws AuthenticationException {
-        SjUserProfile profile = authenticate(loginRequest);
+    public Users authenticateAndSaveUser(LoginReqDto dto) throws AuthenticationException {
+        SjUserProfile profile = authenticate(dto);
 
-        Optional<Users> existingUser = usersRepository.findByLoginId(loginRequest.getUserId());
+        Optional<Users> existingUser = usersRepository.findByLoginId(dto.getLoginId());
 
         if (existingUser.isPresent()) {
             return existingUser.get();
         }
 
         Users newUser = Users.builder()
-                .loginId(loginRequest.getUserId())
-                .password(passwordEncoder.encode(loginRequest.getPassword()))
+                .loginId(dto.getLoginId())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .username(profile.getName())
                 .email(null)
                 .phoneN(null)
+                .department(profile.getMajor())
                 .role(Role.ROLE_MEMBER)
                 .build();
 
@@ -100,9 +101,9 @@ public class MemberService {
 
     }
 
-    public SjUserProfile authenticate(SjLoginReq loginRequest) throws AuthenticationException {
+    public SjUserProfile authenticate(LoginReqDto dto) throws AuthenticationException {
         try {
-            Connection.Response response = executeLoginRequest(loginRequest);
+            Connection.Response response = executeLoginRequest(dto);
 
             if (response.statusCode() != 200) {
                 throw new RuntimeException("서버 오류가 발생했습니다: HTTP " + response.statusCode());
@@ -114,10 +115,10 @@ public class MemberService {
         }
     }
 
-    private Connection.Response executeLoginRequest(SjLoginReq loginRequest) throws IOException {
+    private Connection.Response executeLoginRequest(LoginReqDto dto) throws IOException {
         return Jsoup.connect(MOODLER_LOGIN_URL)
-                .data("username", loginRequest.getUserId())
-                .data("password", loginRequest.getPassword())
+                .data("username", dto.getLoginId())
+                .data("password", dto.getPassword())
                 .method(Connection.Method.POST)
                 .execute();
     }

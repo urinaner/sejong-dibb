@@ -1,7 +1,7 @@
 package org.example.backend;
 
 
-import org.example.backend.users.domain.dto.member.SjLoginReq;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.service.MemberService;
 import org.junit.jupiter.api.Disabled;
@@ -19,7 +19,7 @@ public class SjTest {
     @Test
     @Disabled
     void SjTest() {
-        SjLoginReq test = new SjLoginReq("loginId", "password");
+        LoginReqDto test = new LoginReqDto("loginId", "password");
         SjUserProfile sjProfile = sjAuthService.authenticate(test);
         System.out.println(sjProfile.getMajor());
         System.out.println(sjProfile.getName());
