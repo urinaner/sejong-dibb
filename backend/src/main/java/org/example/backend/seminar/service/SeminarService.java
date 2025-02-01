@@ -2,12 +2,12 @@ package org.example.backend.seminar.service;
 
 import static org.example.backend.seminar.exception.SeminarExceptionType.NOT_FOUND_SEMINAR;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
 import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.exception.SeminarException;
-import org.example.backend.seminar.exception.SeminarExceptionType;
 import org.example.backend.seminar.repository.SeminarRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,5 +53,9 @@ public class SeminarService {
     public Page<SeminarResDto> getAllSeminars(Pageable pageable) {
         return seminarRepository.findAll(pageable)
                 .map(SeminarResDto::of);
+    }
+
+    public List<Seminar> searchSeminar(String keyword) {
+        return seminarRepository.searchByKeyword(keyword);
     }
 }
