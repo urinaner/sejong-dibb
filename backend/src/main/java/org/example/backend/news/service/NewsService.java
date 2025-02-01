@@ -2,6 +2,7 @@ package org.example.backend.news.service;
 
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
@@ -18,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) // JPA가 변경 감지(dirty checking)를 하지 않음 -> 조회 성능 최적화
 public class NewsService {
     private final NewsRepository newsRepository;
     private final LocalFileUploader localFileUploader;
@@ -26,6 +27,7 @@ public class NewsService {
 
     @Value("${server.url}")
     private String serverUrl;
+
     @Transactional
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
 
@@ -69,5 +71,9 @@ public class NewsService {
     public Page<NewsResDto> getAllNews(Pageable pageable) {
         return newsRepository.findAll(pageable)
                 .map(NewsResDto::of);
+    }
+
+    public List<News> searchNews(String keyword) {
+        return newsRepository.searchByKeyword(keyword);
     }
 }

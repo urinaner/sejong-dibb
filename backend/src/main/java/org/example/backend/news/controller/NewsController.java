@@ -9,6 +9,7 @@ import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
+import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.service.NewsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,5 +71,11 @@ public class NewsController {
     public ResponseEntity<?> deleteNews(@PathVariable(name = "newsId") Long newsId) {
         newsService.deleteNews(newsId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "키워드 검색 API", description = "키워드 검색")
+    @GetMapping("/search")
+    public List<News> searchNews(@RequestParam String keyword) {
+        return newsService.searchNews(keyword);
     }
 }
