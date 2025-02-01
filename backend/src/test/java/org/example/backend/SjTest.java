@@ -1,8 +1,9 @@
 package org.example.backend;
 
-import org.example.backend.users.dto.SjLoginReq;
-import org.example.backend.users.dto.SjUserProfile;
-import org.example.backend.users.service.SjAuthService;
+
+import org.example.backend.users.domain.dto.member.SjLoginReq;
+import org.example.backend.users.domain.dto.member.SjUserProfile;
+import org.example.backend.users.service.MemberService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class SjTest {
 
     @Autowired
-    SjAuthService sjAuthService;
+    MemberService sjAuthService;
 
     @Test
     @Disabled
-    void SjTest(){
-        SjLoginReq test = new SjLoginReq("test", "test");
+    void SjTest() {
+        SjLoginReq test = new SjLoginReq("loginId", "password");
         SjUserProfile sjProfile = sjAuthService.authenticate(test);
         System.out.println(sjProfile.getMajor());
         System.out.println(sjProfile.getName());

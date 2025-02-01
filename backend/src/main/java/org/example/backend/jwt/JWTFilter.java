@@ -11,8 +11,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.admin.domain.entity.Admin;
-import org.example.backend.admin.domain.entity.CustomUserDetails;
+import org.example.backend.blacklist.service.JwtBlacklistService;
+import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.domain.entity.Role;
+import org.example.backend.users.domain.entity.Users;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,14 +25,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
 
     private static final List<String> REFRESH_TOKEN_PATHS = List.of(
             "/api/specific-path",
             "/api/another-path"
     );
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, JwtBlacklistService jwtBlacklistService) {
         this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 matcher.match("/webjars/**", path);
 
         log.info("Path: {}, Is Swagger Path: {}", path, isSwaggerPath);
-        return isSwaggerPath || path.equals("/api/admin/login");
+        return isSwaggerPath || path.equals("/api/admin/login") || path.equals("/api/member/login");
     }
 
     @Override
@@ -69,12 +73,19 @@ public class JWTFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
         String accessToken = authorization.split(" ")[1];
         if (!jwtUtil.isExpired(accessToken)) {
+
+            if (jwtBlacklistService.isBlacklisted(accessToken)) {
+                log.error("Access token is expired");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("{\"error\": \"Access token in Jwt blacklist\"}");
+                return;
+            }
+
             log.info("Access token is valid");
-
             String loginId = jwtUtil.getLoginId(accessToken);
-            String role = jwtUtil.getRole(accessToken);
+            Role role = jwtUtil.getRole(accessToken);
 
-            Admin admin = Admin.builder()
+            Users admin = Users.builder()
                     .username(loginId)
                     .password("hashedPassword")
                     .role(role)
@@ -111,8 +122,14 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        log.info("Refresh token is valid");
+        if (jwtBlacklistService.isBlacklisted(refreshToken)) {
+            log.error("Refresh token is expired");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Refresh token in Jwt blacklist\"}");
+            return;
+        }
 
+        log.info("Refresh token is valid");
         String newAccessToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken),
                 1800 * 1000L);
         String newRefreshToken = jwtUtil.createJwt(jwtUtil.getLoginId(refreshToken), jwtUtil.getRole(refreshToken),
