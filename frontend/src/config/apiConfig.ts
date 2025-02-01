@@ -2,9 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 // 환경에 따른 baseURL 설정
 const BASE_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.REACT_APP_API_URL
-    : '/api';
+  process.env.NODE_ENV === 'production' ? '' : process.env.REACT_APP_API_URL;
 
 // axios 인스턴스 생성
 export const axiosInstance: AxiosInstance = axios.create({
@@ -111,9 +109,9 @@ export interface SeminarDto {
 
 // API 엔드포인트 생성을 위한 유틸리티 함수
 const createEndpoint = (path: string) => {
-  return process.env.NODE_ENV === 'development'
-    ? `${process.env.REACT_APP_API_URL}${path}`
-    : path;
+  return process.env.NODE_ENV === 'production'
+    ? path
+    : `${process.env.REACT_APP_API_URL}${path}`;
 };
 
 // API Endpoints
