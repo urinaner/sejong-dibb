@@ -9,7 +9,6 @@ import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
-import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.service.SeminarService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -70,7 +69,9 @@ public class SeminarController {
 
     @Operation(summary = "키워드 검색 API", description = "키워드 검색")
     @GetMapping("/search")
-    public List<Seminar> searchSeminar(@RequestParam String keyword) {
-        return seminarService.searchSeminar(keyword);
+    public ResponseDto<List<SeminarResDto>> searchSeminar(@RequestParam String keyword,
+                                                          @Valid @ModelAttribute PageRequestDto pageRequest) {
+        Page<SeminarResDto> seminarList = seminarService.searchSeminar(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(seminarList.getNumber(), seminarList.getTotalPages(), seminarList.getContent());
     }
 }

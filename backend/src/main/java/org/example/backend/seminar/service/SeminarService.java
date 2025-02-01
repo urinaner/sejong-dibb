@@ -2,7 +2,6 @@ package org.example.backend.seminar.service;
 
 import static org.example.backend.seminar.exception.SeminarExceptionType.NOT_FOUND_SEMINAR;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
@@ -55,7 +54,8 @@ public class SeminarService {
                 .map(SeminarResDto::of);
     }
 
-    public List<Seminar> searchSeminar(String keyword) {
-        return seminarRepository.searchByKeyword(keyword);
+    public Page<SeminarResDto> searchSeminar(String keyword, Pageable pageable) {
+        return seminarRepository.searchByKeyword(keyword, pageable)
+                .map(SeminarResDto::of);
     }
 }
