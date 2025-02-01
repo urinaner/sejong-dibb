@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
-import org.example.backend.users.domain.dto.SignInReqDto;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
@@ -46,7 +46,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtBlacklistService jwtBlacklistService;
 
-    public ResponseEntity<?> authenticateAndGenerateToken(SignInReqDto dto) {
+    public ResponseEntity<?> authenticateAndGenerateToken(LoginReqDto dto) {
         try {
             Users user = usersRepository.findByLoginId(dto.getLoginId())
                     .orElseGet(() -> authenticateAndSaveUser(dto));
@@ -77,7 +77,7 @@ public class MemberService {
         }
     }
 
-    public Users authenticateAndSaveUser(SignInReqDto dto) throws AuthenticationException {
+    public Users authenticateAndSaveUser(LoginReqDto dto) throws AuthenticationException {
         SjUserProfile profile = authenticate(dto);
 
         Optional<Users> existingUser = usersRepository.findByLoginId(dto.getLoginId());
@@ -100,7 +100,7 @@ public class MemberService {
 
     }
 
-    public SjUserProfile authenticate(SignInReqDto dto) throws AuthenticationException {
+    public SjUserProfile authenticate(LoginReqDto dto) throws AuthenticationException {
         try {
             Connection.Response response = executeLoginRequest(dto);
 
@@ -114,7 +114,7 @@ public class MemberService {
         }
     }
 
-    private Connection.Response executeLoginRequest(SignInReqDto dto) throws IOException {
+    private Connection.Response executeLoginRequest(LoginReqDto dto) throws IOException {
         return Jsoup.connect(MOODLER_LOGIN_URL)
                 .data("username", dto.getLoginId())
                 .data("password", dto.getPassword())

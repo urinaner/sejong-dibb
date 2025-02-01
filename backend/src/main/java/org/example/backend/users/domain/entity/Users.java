@@ -12,7 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.users.domain.dto.SignInReqDto;
+import org.example.backend.users.domain.dto.LoginReqDto;
 
 @Entity
 @Getter
@@ -51,7 +51,7 @@ public class Users {
         this.role = role;
     }
 
-    public static Users of(SignInReqDto dto, String encodedPassword) {
+    public static Users of(LoginReqDto dto, String encodedPassword) {
         return Users.builder()
                 .loginId(dto.getLoginId())
                 .password(encodedPassword)

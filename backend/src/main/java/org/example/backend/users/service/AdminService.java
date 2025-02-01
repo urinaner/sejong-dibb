@@ -6,7 +6,7 @@ import static org.example.backend.users.exception.admin.AdminExceptionType.INVAL
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.admin.AccessTokenReq;
-import org.example.backend.users.domain.dto.SignInReqDto;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.admin.AdminException;
@@ -26,7 +26,7 @@ public class AdminService {
     private static final String BEARER_TYPE = "Bearer";
 
     @Transactional(readOnly = false)
-    public void joinProcess(SignInReqDto joinDTO) {
+    public void joinProcess(LoginReqDto joinDTO) {
         String loginId = joinDTO.getLoginId();
         String password = joinDTO.getPassword();
 
