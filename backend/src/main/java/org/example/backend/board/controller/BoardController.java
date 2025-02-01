@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
-import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.service.BoardService;
 import org.example.backend.common.dto.PageRequestDto;
@@ -95,7 +94,9 @@ public class BoardController {
 
     @Operation(summary = "키워드 검색 API", description = "키워드 검색")
     @GetMapping("/search")
-    public List<Board> searchBoard(@RequestParam String keyword) {
-        return boardService.searchBoard(keyword);
+    public ResponseDto<List<BoardResDto>> searchBoard(@RequestParam String keyword,
+                                                      @ModelAttribute @Valid PageRequestDto pageRequest) {
+        Page<BoardResDto> boardList = boardService.searchBoard(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
 }

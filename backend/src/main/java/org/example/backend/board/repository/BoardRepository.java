@@ -1,6 +1,5 @@
 package org.example.backend.board.repository;
 
-import java.util.List;
 import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.entity.Category;
 import org.springframework.data.domain.Page;
@@ -19,5 +18,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // name(title) 또는 content에서 키워드를 포함하는 데이터 검색
     @Query("SELECT b FROM Board b WHERE b.title LIKE %:keyword%")
-    List<Board> searchByKeyword(@Param("keyword") String keyword);
+    Page<Board> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

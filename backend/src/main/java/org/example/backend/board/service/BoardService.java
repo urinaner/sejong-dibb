@@ -128,7 +128,8 @@ public class BoardService {
         boardRepository.incrementViewCount(boardId);
     }
 
-    public List<Board> searchBoard(String keyword) {
-        return boardRepository.searchByKeyword(keyword);
+    public Page<BoardResDto> searchBoard(String keyword, Pageable pageable) {
+        return boardRepository.searchByKeyword(keyword, pageable)
+                .map(BoardResDto::of);
     }
 }
