@@ -9,7 +9,6 @@ import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
-import org.example.backend.thesis.domain.entity.Thesis;
 import org.example.backend.thesis.service.ThesisService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -74,7 +73,9 @@ public class ThesisController {
 
     @Operation(summary = "키워드 검색 API", description = "키워드 검색")
     @GetMapping("/search")
-    public List<Thesis> searchThesis(@RequestParam String keyword) {
-        return thesisService.searchThesis(keyword);
+    public ResponseDto<List<ThesisResDto>> searchThesis(@RequestParam String keyword,
+                                                        @Valid @ModelAttribute PageRequestDto pageRequest) {
+        Page<ThesisResDto> thesisResDtos = thesisService.searchThesis(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 }

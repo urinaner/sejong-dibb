@@ -2,7 +2,6 @@ package org.example.backend.thesis.service;
 
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.professor.domain.entity.Professor;
@@ -91,7 +90,8 @@ public class ThesisService {
                 .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
     }
 
-    public List<Thesis> searchThesis(String keyword) {
-        return thesisRepository.searchByKeyword(keyword);
+    public Page<ThesisResDto> searchThesis(String keyword, Pageable pageable) {
+        return thesisRepository.searchByKeyword(keyword, pageable)
+                .map(ThesisResDto::of);
     }
 }
