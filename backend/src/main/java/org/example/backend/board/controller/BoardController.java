@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.board.domain.dto.BoardReqDto;
 import org.example.backend.board.domain.dto.BoardResDto;
+import org.example.backend.board.domain.entity.Board;
 import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.service.BoardService;
 import org.example.backend.common.dto.PageRequestDto;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +55,7 @@ public class BoardController {
         Page<BoardResDto> boardList = boardService.getAllBoards(pageRequest.toPageable());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
+
     @Operation(summary = "카테고리별 게시판 조회 API", description = "카테고리별 게시판 리스트 반환")
     @GetMapping("/category/{category}")
     public ResponseDto<List<BoardResDto>> getBoardsByCategory(@PathVariable("category") Category category,
@@ -88,5 +91,11 @@ public class BoardController {
     public ResponseEntity<?> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
         boardService.deleteBoard(boardId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "키워드 검색 API", description = "키워드 검색")
+    @GetMapping("/search")
+    public List<Board> searchBoard(@RequestParam String keyword) {
+        return boardService.searchBoard(keyword);
     }
 }
