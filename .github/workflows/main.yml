@@ -63,6 +63,7 @@ jobs:
           NODE_ENV: production
         run: |
           cd frontend
+          npm install
           npm install --save-dev @babel/plugin-proposal-private-property-in-object
           npm run build
       # Docker 이미지 빌드 및 푸시
