@@ -1,4 +1,5 @@
 name: Backend CI/CD using GitHub Actions & Docker
+
 on:
   push:
     branches: [ "main" ]
@@ -15,7 +16,45 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 이전 steps 유지...
+      # 코드 체크아웃
+      - uses: actions/checkout@v4
+
+      # 백엔드 빌드 환경 설정 (JDK 21)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Docker 환경 변수 설정
+      - name: Set up Docker Environment
+        run: |
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
+
+      # 백엔드 설정 파일 생성
+      - name: Create backend configuration files
+        run: |
+          mkdir -p ./backend/src/main/resources
+          cd ./backend/src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > application.yml
+
+      # Gradle 설정
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
+
+      # 백엔드 빌드
+      - name: Build Backend
+        run: |
+          cd backend
+          chmod +x ./gradlew
+          ./gradlew build -x test
+
+      # Node.js 설정 (프론트엔드 빌드를 위한 Node.js 22 설치)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
 
       # 프론트엔드 빌드
       - name: Install and Build Frontend
@@ -42,11 +81,28 @@ jobs:
           
           # 프론트엔드 이미지 빌드 및 푸시
           cd ../frontend
-          # nginx.conf 파일 생성
-          echo "${{ secrets.NGINX_CONF }}" > nginx.conf
-          
           docker build \
             --build-arg REACT_APP_GOOGLE_MAPS_API_KEY="${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}" \
             --build-arg REACT_APP_VIDEO_BASE_URL="${{ secrets.REACT_APP_VIDEO_BASE_URL }}" \
             -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+      # 서버에 docker-compose.yml 생성 및 실행
+      - name: Deploy using Docker Compose
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SJ_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SJ_PRIVATE_KEY }}
+          script: |
+            # 서버 디렉토리로 이동
+            mkdir -p ~/sejong-dibb
+            cd ~/sejong-dibb
+            
+            # GitHub Secrets에서 docker-compose.yml 생성
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            
+            # 기존 컨테이너 정리 및 새 배포 실행
+            docker-compose down -v || true
+            docker-compose pull
+            docker-compose up -d
