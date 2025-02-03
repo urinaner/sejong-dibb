@@ -5,8 +5,9 @@ import static org.example.backend.users.exception.admin.AdminExceptionType.INVAL
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.admin.AccessTokenReq;
 import org.example.backend.users.domain.dto.LoginReqDto;
+import org.example.backend.users.domain.dto.admin.AccessTokenReq;
+import org.example.backend.users.domain.dto.admin.AdminResDto;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.admin.AdminException;
@@ -62,6 +63,13 @@ public class AdminService {
         if (accessToken == null || !accessToken.startsWith(BEARER_TYPE)) {
             throw new AdminException(INVALID_ACCESS_TOKEN);
         }
+    }
+
+    @Transactional
+    public AdminResDto updateAdminPassword(Long adminId, String password) {
+        Users admin = getAdminById(adminId);
+        admin.updatePassword(bCryptPasswordEncoder.encode(password));
+        return AdminResDto.of(admin);
     }
 
     public Users getAdminById(Long id) {
