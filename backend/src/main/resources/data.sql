@@ -13,15 +13,14 @@ FROM professor;
 DELETE
 FROM department;
 DELETE
-FROM admin;
-DELETE
 FROM news;
 DELETE
 FROM users;
 
 
 -- Department 더미 데이터 (1개)
-INSERT INTO department (department_id, korean_name, english_name, intro, phone, location, educational_objective, work_hour, map)
+INSERT INTO department (department_id, korean_name, english_name, intro, phone, location, educational_objective,
+                        work_hour, map)
 VALUES (1, '바이오융합공학과',
         'Bio-Fusion Engineering',
         '학과 소개',
@@ -33,7 +32,8 @@ VALUES (1, '바이오융합공학과',
 
 -- users 더미 데이터
 INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
-VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com', '010-1234-5678', 'ROLE_ADMIN');
+VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
+        '010-1234-5678', 'ROLE_ADMIN');
 
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profile_image)
@@ -60,28 +60,37 @@ VALUES (1, '권병호', '신경생물학', '010-3178-5629', 'kwonbh@sju.ac.kr', 
 
 -- Seminar 더미 데이터 (10개)
 INSERT INTO seminar (seminar_id, name, writer, place, start_time, end_time, speaker, company)
-VALUES (1, 'Genome-wide association study to identify QTL for fruit-related traits in a core collection of 287 tomato accessions',
+VALUES (1,
+        'Genome-wide association study to identify QTL for fruit-related traits in a core collection of 287 tomato accessions',
         '이건', '충무관101A', '2024-11-29 09:00:00', '2024-11-29 10:00:00', '심성철', '세종대학교 바이오산업자원공학'),
-       (2, 'HOW AL PREDICTS SEISMIC SHAKING', '이건', '충무관702', '2024-12-04 09:00:00', '2024-12-04 10:00:00', '이재홍', 'NIHON UNIVERSITY'),
-       (3, 'CRISPR/Cas9-mediated genome editing for crop improvement', '이건', '충무관101A', '2024-11-30 09:00:00', '2024-11-30 10:00:00', '정다은',
+       (2, 'HOW AL PREDICTS SEISMIC SHAKING', '이건', '충무관702', '2024-12-04 09:00:00', '2024-12-04 10:00:00', '이재홍',
+        'NIHON UNIVERSITY'),
+       (3, 'CRISPR/Cas9-mediated genome editing for crop improvement', '이건', '충무관101A', '2024-11-30 09:00:00',
+        '2024-11-30 10:00:00', '정다은',
         '서울대학교 농생명과학대학'),
        (4, 'Metabolomics in precision medicine: Current trends and applications', '이건', '충무관702', '2024-12-01 09:00:00',
         '2024-12-01 10:00:00', '김현지', '한국생명공학연구원'),
-       (5, 'Advanced tissue engineering for regenerative medicine', '이건', '충무관101A', '2024-12-02 09:00:00', '2024-12-02 10:00:00', '박진우',
+       (5, 'Advanced tissue engineering for regenerative medicine', '이건', '충무관101A', '2024-12-02 09:00:00',
+        '2024-12-02 10:00:00', '박진우',
         'KAIST 바이오융합센터'),
-       (6, 'Bioplastics: Sustainable solutions for the future', '이건', '충무관702', '2024-12-03 09:00:00', '2024-12-03 10:00:00', '이민아',
+       (6, 'Bioplastics: Sustainable solutions for the future', '이건', '충무관702', '2024-12-03 09:00:00',
+        '2024-12-03 10:00:00', '이민아',
         'SK 바이오텍'),
-       (7, 'Bioinformatics approaches to microbiome analysis', '이건', '충무관101A', '2024-12-04 09:00:00', '2024-12-04 10:00:00', '최영훈',
+       (7, 'Bioinformatics approaches to microbiome analysis', '이건', '충무관101A', '2024-12-04 09:00:00',
+        '2024-12-04 10:00:00', '최영훈',
         '연세대학교 시스템생물학과'),
-       (8, 'Nanotechnology for drug delivery in cancer treatment', '이건', '충무관702', '2024-12-05 09:00:00', '2024-12-05 10:00:00', '한지수',
+       (8, 'Nanotechnology for drug delivery in cancer treatment', '이건', '충무관702', '2024-12-05 09:00:00',
+        '2024-12-05 10:00:00', '한지수',
         '삼성바이오로직스'),
-       (9, 'Synthetic biology for biofuel production', '이건', '충무관101A', '2024-12-06 09:00:00', '2024-12-06 10:00:00', '김성민',
+       (9, 'Synthetic biology for biofuel production', '이건', '충무관101A', '2024-12-06 09:00:00', '2024-12-06 10:00:00',
+        '김성민',
         'POSTECH 생명공학부'),
        (10, 'Next-generation sequencing in personalized medicine', '이건', '충무관702', '2024-12-07', '2024-12-07', '류정한',
         '이화여자대학교 바이오융합학과');
 
 -- Thesis 더미 데이터 (총 50개)
-INSERT INTO thesis (thesis_id, title, author, journal, content, link, publication_date, thesis_image, publication_collection,
+INSERT INTO thesis (thesis_id, title, author, journal, content, link, publication_date, thesis_image,
+                    publication_collection,
                     publication_issue, publication_page, issn, professor_id)
 VALUES
     -- 권병호 관련 논문
@@ -116,7 +125,8 @@ VALUES
      'https://example.com/thesis2', '2024-02-10',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-10+001.png', '18',
      '2', '33-40', '2431-8934', 2),
-    (7, 'Applications of AI Technology in Neuroscience', '허성문', 'Journal of Neuroscience', '신경과학의 AI 기술 활용 사례를 다룬 논문입니다.',
+    (7, 'Applications of AI Technology in Neuroscience', '허성문', 'Journal of Neuroscience',
+     '신경과학의 AI 기술 활용 사례를 다룬 논문입니다.',
      'https://example.com/thesis12', '2024-11-02',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-11+002.png', '19',
      '12', '227-235', '1212-3344', 2),
@@ -134,7 +144,8 @@ VALUES
      '5', '92-102', '5647-7869', 2),
 
     -- 추은희 관련 논문
-    (11, 'Analysis of Gene Expression Regulation Mechanisms', '추은희', 'Molecular Cell Biology', '유전자 발현 조절 메커니즘을 분석한 논문입니다.',
+    (11, 'Analysis of Gene Expression Regulation Mechanisms', '추은희', 'Molecular Cell Biology',
+     '유전자 발현 조절 메커니즘을 분석한 논문입니다.',
      'https://example.com/thesis3', '2024-03-20',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-12+006.png', '21',
      '3', '55-62', '3241-9876', 3),
@@ -166,7 +177,8 @@ VALUES
      '세포막 신호 전달 메커니즘 연구.', 'https://example.com/thesis44', '2024-08-18',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-15+013.png', '17',
      '9', '95-104', '1234-6543', 4),
-    (19, 'Drug Development through Enzyme Activity Control', '청하람', 'Biochemical Applications', '효소 활성 제어를 통한 약물 개발 연구.',
+    (19, 'Drug Development through Enzyme Activity Control', '청하람', 'Biochemical Applications',
+     '효소 활성 제어를 통한 약물 개발 연구.',
      'https://example.com/thesis25', '2024-05-20',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-15+014.png', '13',
      '2', '73-81', '7564-3456', 5),
@@ -199,7 +211,8 @@ VALUES
      'https://example.com/thesis37', '2024-07-20',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-18+021.png', '18',
      '9', '87-96', '6574-3456', 7),
-    (27, 'Gene Therapy Technologies and Cancer Treatment Potential', '허병도', 'Gene Therapy Advances', '유전자 치료 기술과 암 치료 가능성.',
+    (27, 'Gene Therapy Technologies and Cancer Treatment Potential', '허병도', 'Gene Therapy Advances',
+     '유전자 치료 기술과 암 치료 가능성.',
      'https://example.com/thesis47', '2024-10-05',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-19+022.png', '21',
      '11', '103-112', '7864-5678', 7),
@@ -227,7 +240,8 @@ VALUES
      '단백질 구조 기반 신약 개발 사례.', 'https://example.com/thesis49', '2024-10-25',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-29-18+003.png', '22',
      '11', '98-107', '9876-1234', 9),
-    (34, 'Applications of Nanotechnology in Drug Delivery Systems', '어재봉', 'Drug Delivery Systems', '약물전달시스템에서 나노기술 응용 사례.',
+    (34, 'Applications of Nanotechnology in Drug Delivery Systems', '어재봉', 'Drug Delivery Systems',
+     '약물전달시스템에서 나노기술 응용 사례.',
      'https://example.com/thesis30', '2024-06-25',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-29-19+004.png', '18',
      '5', '71-79', '4567-9087', 10),
@@ -301,73 +315,72 @@ VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교�
        ('2024-12-09 16:00:00', '2024-12-09 18:00:00', 'MEETING', '서민석교수님 랩미팅', 1, 1, NOW(), NOW());
 
 INSERT INTO news (news_id, name, content, view, link, image, created_at)
-VALUES
-    (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발표',
-     '세종대학교 바이오융합공학과가 올해 혁신적인 연구 성과를 발표했습니다.',
-     320,
-     'https://example.com/news1',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+010.png',
-     NOW()),
+VALUES (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발표',
+        '세종대학교 바이오융합공학과가 올해 혁신적인 연구 성과를 발표했습니다.',
+        320,
+        'https://example.com/news1',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+010.png',
+        NOW()),
 
-    (2, '바이오융합공학과, 신입생 환영회 개최',
-     '세종대학교 바이오융합공학과가 신입생들을 위한 환영회를 열었습니다.',
-     150,
-     'https://example.com/news2',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+009.png',
-     NOW()),
+       (2, '바이오융합공학과, 신입생 환영회 개최',
+        '세종대학교 바이오융합공학과가 신입생들을 위한 환영회를 열었습니다.',
+        150,
+        'https://example.com/news2',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+009.png',
+        NOW()),
 
-    (3, '세종대, 바이오 분야 특화 교육 프로그램 개설',
-     '세종대학교가 바이오 분야를 중심으로 한 특화 교육 프로그램을 개설하였습니다.',
-     200,
-     'https://example.com/news3',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+008.png',
-     NOW()),
+       (3, '세종대, 바이오 분야 특화 교육 프로그램 개설',
+        '세종대학교가 바이오 분야를 중심으로 한 특화 교육 프로그램을 개설하였습니다.',
+        200,
+        'https://example.com/news3',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-10+008.png',
+        NOW()),
 
-    (4, '바이오융합공학과 졸업생, 글로벌 기업 취업 성공',
-     '세종대학교 바이오융합공학과 졸업생이 글로벌 기업에 성공적으로 취업했습니다.',
-     400,
-     'https://example.com/news4',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+007.png',
-     NOW()),
+       (4, '바이오융합공학과 졸업생, 글로벌 기업 취업 성공',
+        '세종대학교 바이오융합공학과 졸업생이 글로벌 기업에 성공적으로 취업했습니다.',
+        400,
+        'https://example.com/news4',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+007.png',
+        NOW()),
 
-    (5, '바이오융합공학과, 국제 학술대회 논문 발표',
-     '바이오융합공학과 교수진이 국제 학술대회에서 연구 논문을 발표했습니다.',
-     280,
-     'https://example.com/news5',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+006.png',
-     NOW()),
+       (5, '바이오융합공학과, 국제 학술대회 논문 발표',
+        '바이오융합공학과 교수진이 국제 학술대회에서 연구 논문을 발표했습니다.',
+        280,
+        'https://example.com/news5',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+006.png',
+        NOW()),
 
-    (6, '세종대, 바이오 산업 연구 지원 강화',
-     '세종대학교는 바이오 산업 연구를 위한 지원을 강화하고 있습니다.',
-     170,
-     'https://example.com/news6',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+005.png',
-     NOW()),
+       (6, '세종대, 바이오 산업 연구 지원 강화',
+        '세종대학교는 바이오 산업 연구를 위한 지원을 강화하고 있습니다.',
+        170,
+        'https://example.com/news6',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-09+005.png',
+        NOW()),
 
-    (7, '세종대 바이오융합공학과, 혁신적인 실험실 설립',
-     '세종대학교 바이오융합공학과가 혁신적인 실험실을 설립하였습니다.',
-     310,
-     'https://example.com/news7',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+004.png',
-     NOW()),
+       (7, '세종대 바이오융합공학과, 혁신적인 실험실 설립',
+        '세종대학교 바이오융합공학과가 혁신적인 실험실을 설립하였습니다.',
+        310,
+        'https://example.com/news7',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+004.png',
+        NOW()),
 
-    (8, '세종대 바이오융합공학과, 신약 개발 프로젝트 시작',
-     '세종대학교 바이오융합공학과가 신약 개발 프로젝트를 시작했습니다.',
-     250,
-     'https://example.com/news8',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+002.png',
-     NOW()),
+       (8, '세종대 바이오융합공학과, 신약 개발 프로젝트 시작',
+        '세종대학교 바이오융합공학과가 신약 개발 프로젝트를 시작했습니다.',
+        250,
+        'https://example.com/news8',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+002.png',
+        NOW()),
 
-    (9, '세종대학교, 바이오융합공학과 신임 교수 임용',
-     '세종대학교는 바이오융합공학과에 새로운 교수님을 임용했습니다.',
-     180,
-     'https://example.com/news9',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+003.png',
-     NOW()),
+       (9, '세종대학교, 바이오융합공학과 신임 교수 임용',
+        '세종대학교는 바이오융합공학과에 새로운 교수님을 임용했습니다.',
+        180,
+        'https://example.com/news9',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-08+003.png',
+        NOW()),
 
-    (10, '세종대 바이오융합공학과, 학술 논문 출판',
-     '바이오융합공학과 교수진이 학술 논문을 성공적으로 출판하였습니다.',
-     210,
-     'https://example.com/news10',
-     'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-07+001.png',
-     NOW());
+       (10, '세종대 바이오융합공학과, 학술 논문 출판',
+        '바이오융합공학과 교수진이 학술 논문을 성공적으로 출판하였습니다.',
+        210,
+        'https://example.com/news10',
+        'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-07+001.png',
+        NOW());
