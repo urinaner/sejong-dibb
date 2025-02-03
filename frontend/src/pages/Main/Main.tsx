@@ -1,8 +1,5 @@
-import {
-  MainContainer,
-  ContentWrapper,
-  AnnouncementAndSeminar,
-} from './MainStyle';
+import PageLayout from '../../components/layout/PageLayout';
+import { ContentWrapper, AnnouncementAndSeminar } from './MainStyle';
 import { AnnouncementSection } from './components/AnnouncementSection';
 import { SeminarSection } from './components/SeminarSection';
 import { ShortcutSection } from './components/ShortcutSection';
@@ -11,7 +8,7 @@ import { NewsSection } from './components/NewsSection';
 
 function Main(): JSX.Element {
   return (
-    <MainContainer>
+    <PageLayout>
       <ContentWrapper>
         <AnnouncementAndSeminar>
           <AnnouncementSection />
@@ -21,7 +18,7 @@ function Main(): JSX.Element {
       </ContentWrapper>
       <PaperSection />
       <NewsSection />
-    </MainContainer>
+    </PageLayout>
   );
 }
 
