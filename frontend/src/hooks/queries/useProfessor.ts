@@ -1,7 +1,7 @@
 // src/hooks/queries/useProfessor.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { apiEndpoints } from '../../config/apiConfig';
+import { AxiosError } from 'axios';
+import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
 import {
   Professor,
   ProfessorDetail,
@@ -32,7 +32,7 @@ const professorApi = {
     size,
     sort,
   }: ProfessorQueryParams): Promise<ProfessorListResponse> => {
-    const response = await axios.get(
+    const response = await axiosInstance.get(
       apiEndpoints.professor.listWithPage(page, size, sort),
     );
     return response.data;
@@ -40,7 +40,7 @@ const professorApi = {
 
   // 교수 상세 정보 조회
   getProfessorById: async (id: number): Promise<ProfessorDetailResponse> => {
-    const response = await axios.get(apiEndpoints.professor.detail(id));
+    const response = await axiosInstance.get(apiEndpoints.professor.detail(id));
     return response.data;
   },
 
@@ -48,7 +48,7 @@ const professorApi = {
   createProfessor: async (
     formData: FormData,
   ): Promise<ProfessorCreateResponse> => {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       apiEndpoints.professor.create.url,
       formData,
       {
@@ -63,7 +63,7 @@ const professorApi = {
     id: number,
     formData: FormData,
   ): Promise<ProfessorUpdateResponse> => {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       apiEndpoints.professor.update.url(id),
       formData,
       {
@@ -75,7 +75,9 @@ const professorApi = {
 
   // 교수 정보 삭제
   deleteProfessor: async (id: number): Promise<ProfessorDeleteResponse> => {
-    const response = await axios.delete(apiEndpoints.professor.delete(id));
+    const response = await axiosInstance.delete(
+      apiEndpoints.professor.delete(id),
+    );
     return response.data;
   },
 };

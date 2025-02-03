@@ -1,6 +1,6 @@
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
-import axios from 'axios';
-import { apiEndpoints } from '../../config/apiConfig';
+import type { AxiosError } from 'axios';
+import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
 
 // Query Keys
 export const thesisKeys = {
@@ -45,14 +45,19 @@ export interface ThesisFilter {
 export const useThesisList = (
   filter: ThesisFilter,
   options?: Omit<
-    UseQueryOptions<ThesisResponse, Error, ThesisResponse, readonly unknown[]>,
+    UseQueryOptions<
+      ThesisResponse,
+      AxiosError,
+      ThesisResponse,
+      readonly unknown[]
+    >,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<ThesisResponse, Error>({
+  return useQuery<ThesisResponse, AxiosError>({
     queryKey: thesisKeys.list(filter),
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         apiEndpoints.thesis.listWithPage(filter.page, filter.size, filter.sort),
       );
       return response.data;
@@ -65,14 +70,14 @@ export const useThesisList = (
 export const useThesis = (
   id: string,
   options?: Omit<
-    UseQueryOptions<ThesisItem, Error, ThesisItem, readonly unknown[]>,
+    UseQueryOptions<ThesisItem, AxiosError, ThesisItem, readonly unknown[]>,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<ThesisItem, Error>({
+  return useQuery<ThesisItem, AxiosError>({
     queryKey: thesisKeys.detail(id),
     queryFn: async () => {
-      const response = await axios.get(apiEndpoints.thesis.get(id));
+      const response = await axiosInstance.get(apiEndpoints.thesis.get(id));
       return response.data;
     },
     ...options,
@@ -93,7 +98,7 @@ export const useCreateThesis = () => {
         thesisReqDto,
         imageFile,
       );
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiEndpoints.thesis.create.url,
         formData,
         {
@@ -125,7 +130,7 @@ export const useUpdateThesis = () => {
       );
       const updateUrl = apiEndpoints.thesis.update.url;
       const url = typeof updateUrl === 'function' ? updateUrl(id) : updateUrl;
-      const response = await axios.post(url, formData, {
+      const response = await axiosInstance.post(url, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -139,7 +144,9 @@ export const useUpdateThesis = () => {
 export const useDeleteThesis = () => {
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.delete(apiEndpoints.thesis.delete(id));
+      const response = await axiosInstance.delete(
+        apiEndpoints.thesis.delete(id),
+      );
       return response.data;
     },
   });

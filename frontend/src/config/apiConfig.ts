@@ -2,8 +2,9 @@ import axios, { AxiosInstance } from 'axios';
 
 // 환경에 따른 baseURL 설정
 const BASE_URL =
-  process.env.NODE_ENV === 'production' ? '' : process.env.REACT_APP_API_URL;
-
+  process.env.NODE_ENV === 'production'
+    ? '' // 프로덕션 환경에서는 상대 경로를 위해 빈 문자열 사용
+    : process.env.REACT_APP_API_URL;
 // axios 인스턴스 생성
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -24,6 +25,14 @@ axiosInstance.interceptors.request.use(
 
     if (xsrfToken) {
       config.headers['X-XSRF-TOKEN'] = xsrfToken;
+    }
+
+    // 프로덕션 환경에서 URL 처리
+    if (process.env.NODE_ENV === 'production' && config.url) {
+      // URL이 이미 절대 경로(/로 시작)가 아닌 경우에만 /api 추가
+      if (!config.url.startsWith('/')) {
+        config.url = `/api/${config.url}`;
+      }
     }
 
     return config;
@@ -107,11 +116,8 @@ export interface SeminarDto {
   company: string;
 }
 
-// API 엔드포인트 생성을 위한 유틸리티 함수
 const createEndpoint = (path: string) => {
-  return process.env.NODE_ENV === 'production'
-    ? path
-    : `${process.env.REACT_APP_API_URL}${path}`;
+  return `${BASE_URL}${path}`;
 };
 
 // API Endpoints

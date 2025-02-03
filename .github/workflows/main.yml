@@ -1,16 +1,16 @@
 name: Backend CI/CD using GitHub Actions & Docker
-# 워크플로우 실행 조건 설정
+
 on:
   push:
     branches: [ "main" ]
     paths:
-     - 'backend/**'
-     - 'frontend/**'
+      - 'backend/**'
+      - 'frontend/**'
   pull_request:
     branches: [ "main" ]
     paths:
-     - 'backend/**'
-     - 'frontend/**'
+      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -58,10 +58,14 @@ jobs:
 
       # 프론트엔드 빌드
       - name: Install and Build Frontend
+        env:
+          CI: false
+          NODE_ENV: production
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           cd frontend
           npm install
-          CI=false npm run build
+          npm run build
 
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
@@ -75,7 +79,10 @@ jobs:
           
           # 프론트엔드 이미지 빌드 및 푸시
           cd ../frontend
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
+          docker build \
+            --build-arg REACT_APP_GOOGLE_MAPS_API_KEY="${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}" \
+            --build-arg REACT_APP_VIDEO_BASE_URL="${{ secrets.REACT_APP_VIDEO_BASE_URL }}" \
+            -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
       # 서버에 docker-compose.yml 생성 및 실행

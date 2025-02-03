@@ -1,7 +1,11 @@
 // hooks/useSeminar.ts
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
-import axios from 'axios';
-import { apiEndpoints, SeminarDto } from '../../config/apiConfig';
+import type { AxiosError } from 'axios';
+import {
+  apiEndpoints,
+  axiosInstance,
+  SeminarDto,
+} from '../../config/apiConfig';
 import { SeminarResponse, SeminarFilter } from '../../types/api/seminar';
 
 // Query Keys
@@ -19,17 +23,17 @@ export const useSeminarList = (
   options?: Omit<
     UseQueryOptions<
       SeminarResponse,
-      Error,
+      AxiosError,
       SeminarResponse,
       readonly unknown[]
     >,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<SeminarResponse, Error>({
+  return useQuery<SeminarResponse, AxiosError>({
     queryKey: seminarKeys.list(filter),
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         apiEndpoints.seminar.listWithPage(
           filter.page,
           filter.size,
@@ -46,14 +50,14 @@ export const useSeminarList = (
 export const useSeminar = (
   id: number,
   options?: Omit<
-    UseQueryOptions<SeminarDto, Error, SeminarDto, readonly unknown[]>,
+    UseQueryOptions<SeminarDto, AxiosError, SeminarDto, readonly unknown[]>,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<SeminarDto, Error>({
+  return useQuery<SeminarDto, AxiosError>({
     queryKey: seminarKeys.detail(id),
     queryFn: async () => {
-      const response = await axios.get(apiEndpoints.seminar.get(id));
+      const response = await axiosInstance.get(apiEndpoints.seminar.get(id));
       return response.data;
     },
     ...options,
@@ -64,7 +68,7 @@ export const useSeminar = (
 export const useCreateSeminar = () => {
   return useMutation({
     mutationFn: async (seminarDto: Omit<SeminarDto, 'id'>) => {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiEndpoints.seminar.create,
         seminarDto,
       );
@@ -73,10 +77,11 @@ export const useCreateSeminar = () => {
   });
 };
 
+// PUT - Update Seminar
 export const useUpdateSeminar = () => {
   return useMutation({
     mutationFn: async ({ id, ...seminarDto }: SeminarDto) => {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiEndpoints.seminar.update(id!),
         seminarDto,
       );
@@ -89,7 +94,9 @@ export const useUpdateSeminar = () => {
 export const useDeleteSeminar = () => {
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await axios.delete(apiEndpoints.seminar.delete(id));
+      const response = await axiosInstance.delete(
+        apiEndpoints.seminar.delete(id),
+      );
       return response.data;
     },
   });
