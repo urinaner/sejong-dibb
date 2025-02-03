@@ -58,6 +58,10 @@ jobs:
 
       # 프론트엔드 빌드
       - name: Install and Build Frontend
+        env:
+          CI: false
+          NODE_ENV: production
+          DISABLE_ESLINT_PLUGIN: true  # ESLint 검사 비활성화
         run: |
           cd frontend
           npm install

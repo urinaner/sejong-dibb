@@ -106,11 +106,8 @@ export interface SeminarDto {
   company: string;
 }
 
-// API 엔드포인트 생성을 위한 유틸리티 함수
 const createEndpoint = (path: string) => {
-  return process.env.NODE_ENV === 'production'
-    ? path
-    : `${process.env.REACT_APP_API_URL}${path}`;
+  return `${BASE_URL}${path}`;
 };
 
 // API Endpoints
