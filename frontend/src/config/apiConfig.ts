@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 // 환경에 따른 baseURL 설정
-const BASE_URL =
-  process.env.NODE_ENV === 'production' ? '' : process.env.REACT_APP_API_URL;
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 // axios 인스턴스 생성
 export const axiosInstance: AxiosInstance = axios.create({

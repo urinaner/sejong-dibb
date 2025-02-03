@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",
