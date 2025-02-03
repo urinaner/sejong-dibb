@@ -165,3 +165,32 @@ export const ErrorMessage = styled.div`
   font-size: 0.875rem;
   text-align: center;
 `;
+
+export const PrivacyWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 0.5rem;
+`;
+
+export const Checkbox = styled.input`
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+`;
+
+export const PrivacyLabel = styled.label`
+  font-size: 0.875rem;
+  color: #666;
+  cursor: pointer;
+
+  a {
+    color: #c02327;
+    text-decoration: underline;
+    margin-left: 0.25rem;
+
+    &:hover {
+      color: #b01e22;
+    }
+  }
+`;
