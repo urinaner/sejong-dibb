@@ -7,12 +7,22 @@ const media = {
   tablet: '@media(max-width: 1024px)',
 };
 
+// 공통 레이아웃 상수
+const LAYOUT = {
+  maxWidth: '1200px',
+  padding: '20px',
+  mobilePadding: '16px',
+};
+
 export const MainContainer = styled.div`
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-  margin-top: 5vh;
+  max-width: ${LAYOUT.maxWidth};
+  margin: 5vh auto 0;
+  padding: 0 ${LAYOUT.padding};
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   ${media.tablet} {
     max-width: 90%;
@@ -20,64 +30,58 @@ export const MainContainer = styled.div`
 
   ${media.mobile} {
     max-width: 100%;
-    padding: 0 12px;
-    display: flex;
-    flex-direction: column;
+    padding: 0 ${LAYOUT.mobilePadding};
   }
-  padding: 0 20px;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 export const PaperContainer = styled.section`
+  width: 100%;
+  max-width: ${LAYOUT.maxWidth};
+  margin: 0 auto;
+  padding: ${LAYOUT.padding};
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
 
   ${media.mobile} {
-    padding: 16px;
+    padding: ${LAYOUT.mobilePadding};
   }
 `;
+
 export const NewsSection = styled.section`
   width: 100%;
+  max-width: ${LAYOUT.maxWidth};
   margin: 0 auto;
-  padding: 40px 0; // 좌우 패딩 제거
-  position: relative; // 추가
-  z-index: 2; // 추가
+  padding: 40px ${LAYOUT.padding};
+  position: relative;
+  z-index: 2;
 
   ${media.mobile} {
-    padding: 20px 0;
+    padding: 20px ${LAYOUT.mobilePadding};
   }
 `;
 
 export const TMP = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 24px;
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0;
 
   ${media.tablet} {
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
   }
 
   ${media.mobile} {
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
   }
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  padding: 0; // 패딩 조정
 `;
 
 export const Title = styled.div`
-  margin: 2rem 0 2rem 0;
+  width: 100%;
+  margin: 2rem 0;
   font-size: 30px;
   font-weight: 800;
   color: #5d5a88;
@@ -94,6 +98,7 @@ export const Title = styled.div`
 `;
 
 export const NewsTitle = styled.h2`
+  width: 100%;
   margin: 0 0 16px 0;
   font-size: 32px;
   font-weight: 800;
@@ -115,13 +120,11 @@ export const Paper = styled.article`
   transition:
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 280px;
-  padding: 20px;
+  width: 100%;
+  padding: ${LAYOUT.padding};
   border: solid 1px #d4d2e3;
   border-radius: 16px;
   background-color: white;
@@ -132,17 +135,18 @@ export const Paper = styled.article`
   }
 
   img {
-    width: 240px;
+    width: 100%;
+    max-width: 240px;
     height: auto;
     margin-bottom: 16px;
     border-radius: 8px;
 
     ${media.tablet} {
-      width: 200px;
+      max-width: 200px;
     }
 
     ${media.mobile} {
-      width: 160px;
+      max-width: 160px;
     }
   }
 
@@ -174,14 +178,7 @@ export const Paper = styled.article`
     color: #9e9e9e;
   }
 
-  ${media.tablet} {
-    width: 240px;
-    padding: 16px;
-  }
-
   ${media.mobile} {
-    width: 100%;
-    max-width: 200px;
     padding: 12px;
 
     p:nth-of-type(1) {
@@ -194,49 +191,45 @@ export const Paper = styled.article`
       font-size: 12px;
     }
   }
-  padding: 16px;
-  margin: 0; // 마진 제거
 `;
 
 export const ContentWrapper = styled.section`
-  display: flex;
-  justify-content: space-around;
+  width: 100%;
+  max-width: ${LAYOUT.maxWidth};
   margin: 48px auto;
-  padding: 0 20px;
-  max-width: 1200px;
+  padding: 0 ${LAYOUT.padding};
+  display: flex;
+  justify-content: space-between;
   gap: 24px;
 
   ${media.tablet} {
     margin: 32px auto;
-    padding: 0 16px;
+    padding: 0 ${LAYOUT.mobilePadding};
     gap: 20px;
   }
 
   ${media.mobile} {
     flex-direction: column;
     margin: 24px auto;
-    padding: 0 12px;
     gap: 16px;
   }
 `;
 
 export const AnnouncementAndSeminar = styled.section`
-  flex: 1;
+  flex: 2;
   width: 100%;
-  max-width: 600px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 
   ${media.mobile} {
-    max-width: 100%;
     gap: 16px;
   }
 `;
 
 export const AnnouncementContainer = styled.div`
-  flex: 1;
-  padding: 20px;
+  width: 100%;
+  padding: ${LAYOUT.padding};
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -253,7 +246,7 @@ export const AnnouncementContainer = styled.div`
   }
 
   ${media.mobile} {
-    padding: 16px;
+    padding: ${LAYOUT.mobilePadding};
   }
 `;
 
@@ -297,6 +290,7 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 `;
 
 export const AnnouncementItem = styled.div`
@@ -304,6 +298,7 @@ export const AnnouncementItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 12px 8px;
+  width: 100%;
   cursor: pointer;
   transition: background-color 0.2s ease;
   border-bottom: 1px solid #e2e3e5;
@@ -351,15 +346,16 @@ export const AnnouncementItem = styled.div`
 `;
 
 export const SeminarContainer = styled.div`
+  width: 100%;
   display: flex;
-  gap: 24px; // 추가
+  gap: 24px;
 
   ${media.tablet} {
-    gap: 20px; // 추가
+    gap: 20px;
   }
 
   ${media.mobile} {
-    gap: 16px; // 추가
+    gap: 16px;
   }
 
   button:first-of-type {
@@ -370,7 +366,7 @@ export const SeminarContainer = styled.div`
     overflow: hidden;
     flex-direction: column;
     justify-content: center;
-    padding: 20px;
+    padding: ${LAYOUT.padding};
     background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
     border: none;
     border-radius: 8px;
@@ -395,15 +391,12 @@ export const SeminarContainer = styled.div`
       font-size: 16px;
       font-weight: 800;
       text-align: left;
-
-      white-space: nowrap; // 텍스트가 한 줄로 표시되도록
-      overflow: hidden; /* 넘치는 텍스트는 보이지 않게 */
-      text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
-
-      /* 부모 너비를 넘지 않도록 */
-      flex-shrink: 1; /* 자식 요소 축소 허용 */
-      min-width: 0; /* flex 컨텍스트에서 자식 요소 기본 크기 제한 */
-      max-width: 100%; /* 부모의 너비를 넘지 않도록 제한 */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 1;
+      min-width: 0;
+      max-width: 100%;
 
       ${media.mobile} {
         font-size: 14px;
@@ -420,7 +413,7 @@ export const SeminarContainer = styled.div`
 
     ${media.mobile} {
       min-height: 160px;
-      padding: 16px;
+      padding: ${LAYOUT.mobilePadding};
 
       p:first-of-type {
         font-size: 18px;
@@ -444,7 +437,7 @@ export const SeminarRoomReservation = styled(Link)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: ${LAYOUT.padding};
   background-color: ${token.SEJONG_COLORS.WARM_GRAY1};
   border-radius: 8px;
   color: white;
@@ -465,7 +458,7 @@ export const SeminarRoomReservation = styled(Link)`
 
   ${media.mobile} {
     min-height: 160px;
-    padding: 16px;
+    padding: ${LAYOUT.mobilePadding};
 
     span {
       font-size: 18px;
@@ -480,10 +473,12 @@ export const SeminarRoomReservation = styled(Link)`
 `;
 
 export const ShortcutContainer = styled.section`
+  flex: 1;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
-  padding: 40px 20px;
+  padding: ${LAYOUT.padding};
   background-color: #e9dfda;
   border-radius: 8px;
 
@@ -493,7 +488,7 @@ export const ShortcutContainer = styled.section`
   }
 
   ${media.mobile} {
-    padding: 20px;
+    padding: ${LAYOUT.mobilePadding};
     gap: 16px;
   }
 `;
@@ -503,7 +498,7 @@ export const Shortcut = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: ${LAYOUT.mobilePadding};
   gap: 12px;
   text-align: center;
   color: ${token.SEJONG_COLORS.GRAY};
