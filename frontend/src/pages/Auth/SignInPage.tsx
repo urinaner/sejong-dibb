@@ -217,14 +217,21 @@ const SignInPage: React.FC = () => {
               <HelpLink
                 href="#"
                 onClick={() =>
+                  window.open(
+                    'https://portal.sejong.ac.kr/jsp/inquiry/nmconf.jsp',
+                  )
+                }
+              >
+                아이디/비밀번호 찾기
+              </HelpLink>
+            ) : (
+              <HelpLink
+                href="#"
+                onClick={() =>
                   window.open('https://portal.sejong.ac.kr', '_blank')
                 }
               >
                 포털 바로가기
-              </HelpLink>
-            ) : (
-              <HelpLink href="#" onClick={() => navigate('/find-account')}>
-                아이디/비밀번호 찾기
               </HelpLink>
             )}
           </HelpLinks>
