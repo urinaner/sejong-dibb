@@ -7,7 +7,6 @@ import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
 import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.exception.SeminarException;
-import org.example.backend.seminar.exception.SeminarExceptionType;
 import org.example.backend.seminar.repository.SeminarRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +51,11 @@ public class SeminarService {
 
     public Page<SeminarResDto> getAllSeminars(Pageable pageable) {
         return seminarRepository.findAll(pageable)
+                .map(SeminarResDto::of);
+    }
+
+    public Page<SeminarResDto> searchSeminar(String keyword, Pageable pageable) {
+        return seminarRepository.searchByKeyword(keyword, pageable)
                 .map(SeminarResDto::of);
     }
 }

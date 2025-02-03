@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,5 +69,13 @@ public class ThesisController {
     public ResponseEntity<?> deleteThesis(@PathVariable(name = "thesisId") Long thesisId) {
         thesisService.deleteThesis(thesisId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "키워드 검색 API", description = "키워드 검색")
+    @GetMapping("/search")
+    public ResponseDto<List<ThesisResDto>> searchThesis(@RequestParam String keyword,
+                                                        @Valid @ModelAttribute PageRequestDto pageRequest) {
+        Page<ThesisResDto> thesisResDtos = thesisService.searchThesis(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 }

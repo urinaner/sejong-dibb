@@ -5,7 +5,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.member.SjLoginReq;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody SjLoginReq loginRequest) {
-        return memberService.authenticateAndGenerateToken(loginRequest);
+    public ResponseEntity<?> login(@RequestBody LoginReqDto dto) {
+        return memberService.authenticateAndGenerateToken(dto);
     }
 
     @PostMapping("/logout")

@@ -5,7 +5,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.service.AdminService;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class AdminController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public String joinProcess(@RequestBody SignInReqDto joinDTO) {
+    public String joinProcess(@RequestBody LoginReqDto joinDTO) {
         adminService.joinProcess(joinDTO);
 
         return "ok";

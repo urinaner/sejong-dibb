@@ -6,11 +6,11 @@ import static org.example.backend.users.exception.admin.AdminExceptionType.INVAL
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.admin.AccessTokenReq;
-import org.example.backend.users.domain.dto.admin.SignInReqDto;
+import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.admin.AdminException;
-import org.example.backend.users.repository.AdminRepository;
+import org.example.backend.users.repository.UsersRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AdminService {
 
-    private final AdminRepository adminRepository;
+    private final UsersRepository usersRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private static final String BEARER_TYPE = "Bearer";
 
     @Transactional(readOnly = false)
-    public void joinProcess(SignInReqDto joinDTO) {
+    public void joinProcess(LoginReqDto joinDTO) {
         String loginId = joinDTO.getLoginId();
         String password = joinDTO.getPassword();
 
@@ -43,11 +43,11 @@ public class AdminService {
                 .role(Role.ROLE_ADMIN)
                 .build();
 
-        adminRepository.save(admin);
+        usersRepository.save(admin);
     }
 
     private boolean validateExistLoginId(String loginId) {
-        Boolean isExist = adminRepository.existsByLoginId(loginId);
+        Boolean isExist = usersRepository.existsByLoginId(loginId);
 
         if (isExist) {
             return true;
@@ -65,7 +65,7 @@ public class AdminService {
     }
 
     public Users getAdminById(Long id) {
-        return adminRepository.findById(id)
+        return usersRepository.findById(id)
                 .orElseThrow(() -> new AdminException(INVALID_ACCESS_TOKEN));
     }
 }

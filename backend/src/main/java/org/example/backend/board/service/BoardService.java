@@ -42,6 +42,7 @@ public class BoardService {
         Board savedBoard = boardRepository.save(board);
         return savedBoard.getId();
     }
+
     public BoardResDto getBoard(Long boardId) {
         Board board = findBoardById(boardId);
         return BoardResDto.of(board);
@@ -125,5 +126,10 @@ public class BoardService {
     @Transactional
     public void readCount(Long boardId) {
         boardRepository.incrementViewCount(boardId);
+    }
+
+    public Page<BoardResDto> searchBoard(String keyword, Pageable pageable) {
+        return boardRepository.searchByKeyword(keyword, pageable)
+                .map(BoardResDto::of);
     }
 }

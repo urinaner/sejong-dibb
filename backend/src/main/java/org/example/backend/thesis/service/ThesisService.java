@@ -29,6 +29,7 @@ public class ThesisService {
 
     @Value("${server.url}")
     private String serverUrl;
+
     @Transactional
     public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
@@ -87,5 +88,10 @@ public class ThesisService {
     private Thesis findThesisById(Long thesisId) {
         return thesisRepository.findById(thesisId)
                 .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
+    }
+
+    public Page<ThesisResDto> searchThesis(String keyword, Pageable pageable) {
+        return thesisRepository.searchByKeyword(keyword, pageable)
+                .map(ThesisResDto::of);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -64,5 +65,13 @@ public class SeminarController {
     public ResponseEntity<?> deleteSeminar(@PathVariable(name = "seminarId") Long seminarId) {
         seminarService.deleteSeminar(seminarId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "키워드 검색 API", description = "키워드 검색")
+    @GetMapping("/search")
+    public ResponseDto<List<SeminarResDto>> searchSeminar(@RequestParam String keyword,
+                                                          @Valid @ModelAttribute PageRequestDto pageRequest) {
+        Page<SeminarResDto> seminarList = seminarService.searchSeminar(keyword, pageRequest.toPageable());
+        return ResponseDto.ok(seminarList.getNumber(), seminarList.getTotalPages(), seminarList.getContent());
     }
 }
