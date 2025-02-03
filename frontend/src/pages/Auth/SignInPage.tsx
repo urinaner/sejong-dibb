@@ -129,9 +129,6 @@ const SignInPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  // ... 나머지 JSX 반환 부분은 동일 ...
-
   return (
     <Container>
       <ContentWrapper>
