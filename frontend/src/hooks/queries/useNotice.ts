@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { apiEndpoints } from '../../config/apiConfig';
+import type { AxiosError } from 'axios';
+import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
 import type {
   NoticeQueryParams,
   NoticeRequest,
@@ -37,13 +37,13 @@ const noticeApi = {
         ? `${apiEndpoints.board.getByCategory(category, page, size)}`
         : `${apiEndpoints.board.base}?${queryParams.toString()}`;
 
-    const response = await axios.get<NoticeListResponse>(url);
+    const response = await axiosInstance.get<NoticeListResponse>(url);
     return response.data;
   },
 
   getById: async (id: number): Promise<NoticeSingleResponse> => {
     try {
-      const response = await axios.get<NoticeSingleResponse>(
+      const response = await axiosInstance.get<NoticeSingleResponse>(
         apiEndpoints.board.get(id.toString()),
       );
       return response.data;
@@ -70,7 +70,7 @@ const noticeApi = {
         boardData,
         files || [],
       );
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiEndpoints.board.create.url,
         formData,
         {
@@ -109,7 +109,7 @@ const noticeApi = {
         files.forEach((file) => formData.append('boardFiles', file));
       }
 
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         apiEndpoints.board.update(id.toString()),
         formData,
         {
@@ -125,7 +125,7 @@ const noticeApi = {
 
   delete: async (id: number): Promise<NoticeDeleteResponse> => {
     try {
-      const response = await axios.delete(
+      const response = await axiosInstance.delete(
         apiEndpoints.board.delete(id.toString()),
       );
       return response.data;

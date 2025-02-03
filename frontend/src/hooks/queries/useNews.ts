@@ -8,7 +8,7 @@ import {
 import axios, { AxiosError } from 'axios';
 import { newsApi, NewsFormRequest } from '../../api/news';
 import type { NewsResponse, PaginationParams } from '../../types/api';
-import { apiEndpoints } from '../../config/apiConfig';
+import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
 
 export interface NewsItem {
   id: number;
@@ -53,8 +53,10 @@ export const useGetNews = (
   return useQuery({
     queryKey: newsKeys.detail(id),
     queryFn: async () => {
-      const response = await axios.get<NewsItem>(apiEndpoints.news.get(id));
-      return response.data; // response.data에서 실제 뉴스 데이터 추출
+      const response = await axiosInstance.get<NewsItem>(
+        apiEndpoints.news.get(id),
+      );
+      return response.data;
     },
     enabled: !!id,
   });
