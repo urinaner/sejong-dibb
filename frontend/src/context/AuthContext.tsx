@@ -84,12 +84,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const userName = payload.loginId;
         const userRole = payload.role;
 
+        // role 비교 로직 수정
+        const isAdminUser = userRole === 'ROLE_ADMIN';
+
         localStorage.setItem('user', userName);
-        localStorage.setItem('isAdmin', String(userRole === 'ADMIN'));
+        localStorage.setItem('isAdmin', String(isAdminUser));
 
         setUser(userName);
         setIsAuthenticated(true);
-        setIsAdmin(userRole === 'ADMIN');
+        setIsAdmin(isAdminUser);
 
         axiosInstance.defaults.headers.common['Authorization'] =
           `Bearer ${accessToken}`;

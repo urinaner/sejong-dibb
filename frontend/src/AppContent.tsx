@@ -41,6 +41,7 @@ import NewsDetail from './pages/News/News/NewsDetail';
 import NewsCreate from './pages/News/News/NewsCreate';
 import NewsEdit from './pages/News/News/NewsEdit';
 import { mainVideos } from './config/videoConfig';
+import ChangeAdminPassword from './pages/Admin/ChangeAdminPassword/ChangeAdminPassword';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -304,6 +305,14 @@ function AppContent() {
                 element={
                   <ProtectedRoute requireAuth requireAdmin>
                     <NewsEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/change-password"
+                element={
+                  <ProtectedRoute requireAuth requireAdmin>
+                    <ChangeAdminPassword />
                   </ProtectedRoute>
                 }
               />
