@@ -367,6 +367,10 @@ export const apiEndpoints = {
     delete: (seminarId: string | number) =>
       createEndpoint(`/api/seminar/${seminarId}`),
   },
+  member: {
+    login: createEndpoint('/api/member/login'),
+    logout: createEndpoint('/api/member/logout'),
+  },
 };
 
 export default BASE_URL;

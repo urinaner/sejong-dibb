@@ -70,10 +70,7 @@ function renderSightMapSections() {
     {
       title: '서비스',
       titleLink: '/seminar-rooms/reservation',
-      contents: [
-        { name: '예약센터', link: '/seminar-rooms/reservation' },
-        { name: '관리자', link: '/signin' },
-      ],
+      contents: [{ name: '예약센터', link: '/seminar-rooms/reservation' }],
     },
   ];
 

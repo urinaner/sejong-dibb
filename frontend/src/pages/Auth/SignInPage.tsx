@@ -19,6 +19,9 @@ import {
   ErrorMessage,
   Tabs,
   Tab,
+  PrivacyLabel,
+  Checkbox,
+  PrivacyWrapper,
 } from './SignInPageStyle';
 
 const SignInPage: React.FC = () => {
@@ -30,6 +33,7 @@ const SignInPage: React.FC = () => {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
 
   if (!context) {
     throw new Error('Auth context is undefined');
@@ -52,6 +56,21 @@ const SignInPage: React.FC = () => {
     clearError();
 
     if (isSubmitting) return;
+
+    if (!privacyAgreed) {
+      openModal(
+        <>
+          <Modal.Header>알림</Modal.Header>
+          <Modal.Content>
+            <p>개인정보 수집 및 이용에 동의해주세요.</p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Button onClick={closeModal}>확인</Button>
+          </Modal.Footer>
+        </>,
+      );
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -110,9 +129,6 @@ const SignInPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  // ... 나머지 JSX 반환 부분은 동일 ...
-
   return (
     <Container>
       <ContentWrapper>
@@ -120,7 +136,10 @@ const SignInPage: React.FC = () => {
           <img src="/sejong-icon.svg" alt="세종대학교 로고" />
         </LogoContainer>
 
-        <Title>세종대학교 바이오융합공학전공</Title>
+        <Title>
+          세종대학교 <br />
+          바이오융합공학전공
+        </Title>
         <SubTitle>
           세종대학교 포털과 동일한 학번 및 비밀번호를 사용하여 로그인
         </SubTitle>
@@ -167,6 +186,28 @@ const SignInPage: React.FC = () => {
             />
           </InputWrapper>
 
+          <PrivacyWrapper>
+            <Checkbox
+              type="checkbox"
+              id="privacy-agreement"
+              checked={privacyAgreed}
+              onChange={(e) => setPrivacyAgreed(e.target.checked)}
+              disabled={isSubmitting}
+            />
+            <PrivacyLabel htmlFor="privacy-agreement">
+              개인정보 수집 및 이용에 동의합니다.
+              <a
+                href="/privacy-policy"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/privacy-policy');
+                }}
+              >
+                약관보기
+              </a>
+            </PrivacyLabel>
+          </PrivacyWrapper>
+
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? '로그인 중...' : '로그인'}
           </Button>
@@ -176,14 +217,21 @@ const SignInPage: React.FC = () => {
               <HelpLink
                 href="#"
                 onClick={() =>
+                  window.open(
+                    'https://portal.sejong.ac.kr/jsp/inquiry/nmconf.jsp',
+                  )
+                }
+              >
+                아이디/비밀번호 찾기
+              </HelpLink>
+            ) : (
+              <HelpLink
+                href="#"
+                onClick={() =>
                   window.open('https://portal.sejong.ac.kr', '_blank')
                 }
               >
                 포털 바로가기
-              </HelpLink>
-            ) : (
-              <HelpLink href="#" onClick={() => navigate('/find-account')}>
-                아이디/비밀번호 찾기
               </HelpLink>
             )}
           </HelpLinks>

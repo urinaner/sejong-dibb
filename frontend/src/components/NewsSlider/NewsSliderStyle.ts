@@ -14,38 +14,34 @@ const media = {
   mobile: '@media(max-width: 768px)',
   small: '@media(max-width: 480px)',
 };
+
 export const OuterContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  padding: 0;
-  overflow: visible;
-  isolation: isolate; // 새로 추가
+  overflow: hidden;
+  isolation: isolate;
 `;
-// 실제 슬라이더를 감싸는 컨테이너
+
 export const SliderContainer = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   position: relative;
-  padding: 0 60px;
-  z-index: 1; // 수정
+  padding: 0 40px;
+  z-index: 1;
 
   ${media.mobile} {
-    padding: 0 40px;
+    padding: 0 30px;
   }
 `;
-// 슬라이더 내용물을 감싸는 래퍼
+
 export const SliderWrapper = styled.div`
   width: 100%;
   position: relative;
-  overflow: visible; // hidden에서 visible로 변경
+  overflow: hidden;
+  padding: 10px 0;
 `;
 
-// 실제 슬라이딩되는 트랙
 export const SliderTrack = styled.div<SliderTrackProps>`
   display: flex;
   gap: ${(props) => props.gap}px;
@@ -54,7 +50,6 @@ export const SliderTrack = styled.div<SliderTrackProps>`
   width: 100%;
 `;
 
-// 개별 카드 래퍼
 export const NewsCardWrapper = styled.div<NewsCardWrapperProps>`
   flex: 0 0
     calc(
@@ -73,7 +68,7 @@ export const NewsCardWrapper = styled.div<NewsCardWrapperProps>`
   }
 `;
 
-// 나머지 스타일 컴포넌트들...
+// 기존 스타일 유지
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 100%;
   height: 180px;
@@ -155,6 +150,7 @@ export const ViewCount = styled.div`
     font-size: 12px;
   }
 `;
+
 const BaseButton = styled.button`
   position: absolute;
   top: 50%;
@@ -168,16 +164,19 @@ const BaseButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2; // 수정
+  z-index: 2;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  pointer-events: auto;
+
+  &:hover {
+    background: #f8f8f8;
+  }
 `;
 
 export const PrevButton = styled(BaseButton)`
-  left: 10px;
+  left: 0;
 `;
 
 export const NextButton = styled(BaseButton)`
-  right: 10px;
+  right: 0;
 `;

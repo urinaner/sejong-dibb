@@ -35,14 +35,32 @@ export const TopHeaderTitle = styled.div`
 
 export const TopNavList = styled.ul`
   display: flex;
-  gap: 2.25rem;
+  align-items: center;
+  gap: 2rem;
   margin: 0;
-  padding-right: 1.125rem;
+  padding: 0;
   list-style: none;
-  justify-content: flex-end;
+  height: 100%;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+
+    /* LOGIN/LOGOUT 버튼 숨기기 */
+    & > li:last-child {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
 `;
 
 export const TopNavItem = styled.li`
+  height: 100%;
+  display: flex;
+  align-items: center;
+
   a {
     color: white;
     text-decoration: none;
@@ -50,14 +68,33 @@ export const TopNavItem = styled.li`
     font-weight: 500;
     padding: 0;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.2s ease;
 
     &:hover {
-      text-decoration: underline;
+      opacity: 0.8;
+      text-decoration: none;
+    }
+  }
+
+  &:last-child a {
+    position: relative;
+    padding: 0 1.5rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -1rem;
+      height: 1rem;
+      width: 1px;
+      background-color: rgba(255, 255, 255, 0.3);
     }
   }
 `;
 
-// 메인 헤더 컨테이너
+// 메인 헤더 컨테이너 (이하 동일)
 export const HeaderContainer = styled(motion.header)<{
   $isDropdownOpen: boolean;
 }>`
@@ -96,11 +133,10 @@ export const HeaderNav = styled.div`
   justify-content: flex-end;
 `;
 
-// 기본 페이지 컨텐츠를 위한 래퍼 컴포넌트 추가
 export const PageWrapper = styled.div`
-  padding-top: 145px; // TopHeader(45px) + Header(100px) 높이의 합
+  padding-top: 145px;
 
   @media (max-width: 768px) {
-    padding-top: 125px; // TopHeader(45px) + Header(80px)
+    padding-top: 125px;
   }
 `;

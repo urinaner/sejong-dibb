@@ -15,7 +15,7 @@ export const MainContainer = styled.div`
   margin-top: 5vh;
 
   ${media.tablet} {
-    max-width: 90%;
+    max-width: 90vw;
   }
 
   ${media.mobile} {

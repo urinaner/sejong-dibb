@@ -5,8 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
-import axios from 'axios';
-import { apiEndpoints } from '../config/apiConfig';
+import { axiosInstance } from '../config/apiConfig';
 
 interface JwtPayload {
   loginId: string;
@@ -18,6 +17,11 @@ interface JwtPayload {
 interface LoginCredentials {
   loginId: string;
   password: string;
+}
+
+interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 interface AuthContextType {
@@ -51,7 +55,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => setError(null);
 
-  // JWT 토큰 디코딩 함수
   const decodeJWT = (token: string): JwtPayload => {
     try {
       const base64Url = token.split('.')[1];
@@ -69,54 +72,65 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // 인증 상태 설정 함수
-  const setAuthState = (token: string | null) => {
-    if (token) {
+  const setAuthState = (tokens: TokenResponse | null) => {
+    if (tokens) {
       try {
-        // JWT 토큰 저장
-        localStorage.setItem('token', token);
+        const { accessToken, refreshToken } = tokens;
 
-        // 토큰 디코딩하여 사용자 정보 추출
-        const payload = decodeJWT(token);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        const payload = decodeJWT(accessToken);
         const userName = payload.loginId;
         const userRole = payload.role;
 
-        // 사용자 정보 저장
         localStorage.setItem('user', userName);
         localStorage.setItem('isAdmin', String(userRole === 'ADMIN'));
 
-        // 상태 업데이트
         setUser(userName);
         setIsAuthenticated(true);
         setIsAdmin(userRole === 'ADMIN');
 
-        // axios 기본 헤더 설정
-        // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        axiosInstance.defaults.headers.common['Authorization'] =
+          `Bearer ${accessToken}`;
       } catch (error) {
         console.error('Auth state setting error:', error);
         setAuthState(null);
       }
     } else {
-      // 로그아웃 시 모든 인증 정보 제거
-      localStorage.removeItem('token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       localStorage.removeItem('isAdmin');
-      delete axios.defaults.headers.common['Authorization'];
+      delete axiosInstance.defaults.headers.common['Authorization'];
       setUser(null);
       setIsAuthenticated(false);
       setIsAdmin(false);
     }
   };
 
-  // 토큰 만료 체크
-  const checkTokenExpiration = useCallback(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
+  const checkTokenExpiration = useCallback(async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (accessToken && refreshToken) {
       try {
-        const payload = decodeJWT(token);
+        const payload = decodeJWT(accessToken);
         if (payload.exp * 1000 < Date.now()) {
-          // 토큰이 만료되었으면 로그아웃
-          signout();
+          try {
+            const response = await axiosInstance.post('api/member/refresh', {
+              refreshToken: refreshToken,
+            });
+
+            const newTokens: TokenResponse = {
+              accessToken: response.data.accessToken,
+              refreshToken: response.data.refreshToken,
+            };
+
+            setAuthState(newTokens);
+          } catch (error) {
+            signout();
+          }
         }
       } catch {
         signout();
@@ -124,17 +138,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // 초기화
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setAuthState(token);
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (accessToken && refreshToken) {
+      setAuthState({ accessToken, refreshToken });
       checkTokenExpiration();
     }
 
-    // 주기적으로 토큰 만료 체크
-    // const interval = setInterval(checkTokenExpiration, 6000000); // 1분마다 체크
-    // return () => clearInterval(interval);
+    const interval = setInterval(checkTokenExpiration, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, [checkTokenExpiration]);
 
   const signin = async (
@@ -150,26 +164,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearError();
 
     try {
-      const loginEndpoint = isAdminLogin
-        ? apiEndpoints.admin.login
-        : apiEndpoints.user.login;
-
-      const response = await axios.post(loginEndpoint, credentials, {
-        headers: {
-          'Content-Type': isAdminLogin
-            ? 'multipart/form-data'
-            : 'application/json',
+      const response = await axiosInstance.post(
+        isAdminLogin ? 'api/admin/login' : 'api/member/login',
+        credentials,
+        {
+          headers: {
+            'Content-Type': isAdminLogin
+              ? 'multipart/form-data'
+              : 'application/json',
+          },
         },
-      });
+      );
 
-      // Authorization 헤더에서 토큰 추출
-      const authHeader = response.headers['authorization'];
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new Error('Invalid authentication token');
+      const { accessToken, refreshToken } = response.data;
+      if (!accessToken || !refreshToken) {
+        throw new Error('Invalid authentication response');
       }
 
-      const token = authHeader.split(' ')[1];
-      setAuthState(token);
+      setAuthState({ accessToken, refreshToken });
     } catch (error: any) {
       let errorMessage = '로그인에 실패했습니다.';
       if (error.response) {
@@ -197,7 +209,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signout = useCallback(async () => {
     try {
-      await axios.post(apiEndpoints.admin.signOut);
+      const refreshToken = localStorage.getItem('refreshToken');
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!refreshToken || !accessToken) {
+        throw new Error('No authentication tokens found');
+      }
+
+      await axiosInstance.post(
+        'api/member/logout',
+        { refreshToken },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
