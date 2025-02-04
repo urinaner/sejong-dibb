@@ -4,89 +4,132 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../../config/apiConfig';
 import { Modal } from '../../../components/Modal';
 
-const PageContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+`;
+
+const ContentWrapper = styled.div`
   width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  max-width: 460px;
+  text-align: center;
+  margin-top: 64px;
+`;
+
+const LogoContainer = styled.div`
+  margin-bottom: 2.5rem;
+
+  img {
+    width: 140px;
+    height: auto;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 32px;
-  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+`;
+
+const SubTitle = styled.p`
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
 `;
 
 const Form = styled.form`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 1.5rem;
 `;
 
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+const InputWrapper = styled.div`
+  margin-bottom: 1rem;
+  text-align: left;
 `;
 
 const Label = styled.label`
-  font-size: 14px;
-  font-weight: 600;
-  color: #666;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 500;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
+  padding: 0.875rem 1rem;
+  border: 1px solid #e2e8f0;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 0.95rem;
 
   &:focus {
     outline: none;
-    border-color: #5d5a88;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
   }
-`;
 
-const ErrorMessage = styled.span`
-  font-size: 12px;
-  color: #e53e3e;
-  margin-top: 4px;
+  &::placeholder {
+    color: #a0aec0;
+  }
 `;
 
 const Button = styled.button<{ disabled?: boolean }>`
   width: 100%;
-  padding: 12px;
-  background-color: ${(props) => (props.disabled ? '#ddd' : '#5d5a88')};
+  padding: 1rem;
+  background-color: ${(props) => (props.disabled ? '#e2e8f0' : '#c02327')};
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  margin-top: 20px;
-  transition: background-color 0.2s;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: ${(props) => (props.disabled ? '#ddd' : '#4a4870')};
+  &:hover:not(:disabled) {
+    background-color: #b01e22;
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #e53e3e;
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+  padding: 0.875rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+`;
+
 const PasswordRequirements = styled.ul`
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #666;
-  margin-top: 8px;
-  padding-left: 20px;
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+  text-align: left;
 
   li {
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
   }
+`;
+
+const Footer = styled.div`
+  margin-top: 2rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
 `;
 
 function ChangeAdminPassword() {
@@ -233,65 +276,80 @@ function ChangeAdminPassword() {
   };
 
   return (
-    <PageContainer>
-      <Title>관리자 비밀번호 변경</Title>
-      <Form onSubmit={handleSubmit}>
-        <InputGroup>
-          <Label>현재 비밀번호</Label>
-          <Input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="현재 비밀번호를 입력하세요"
-            disabled={isSubmitting}
-          />
-        </InputGroup>
+    <Container>
+      <ContentWrapper>
+        <LogoContainer>
+          <img src="/sejong-icon.svg" alt="세종대학교 로고" />
+        </LogoContainer>
 
-        <InputGroup>
-          <Label>새 비밀번호</Label>
-          <Input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="새 비밀번호를 입력하세요"
-            disabled={isSubmitting}
-          />
-          <PasswordRequirements>
-            <li>8자 이상</li>
-            <li>대문자 포함</li>
-            <li>소문자 포함</li>
-            <li>숫자 포함</li>
-            <li>특수문자 포함</li>
-          </PasswordRequirements>
-        </InputGroup>
+        <Title>관리자 비밀번호 변경</Title>
+        <SubTitle>
+          아래의 비밀번호 요구사항에 맞춰 새로운 비밀번호를 설정해주세요.
+        </SubTitle>
 
-        <InputGroup>
-          <Label>새 비밀번호 확인</Label>
-          <Input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="새 비밀번호를 다시 입력하세요"
-            disabled={isSubmitting}
-          />
-        </InputGroup>
+        <Form onSubmit={handleSubmit}>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+          <InputWrapper>
+            <Label>현재 비밀번호</Label>
+            <Input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="현재 비밀번호를 입력하세요"
+              disabled={isSubmitting}
+            />
+          </InputWrapper>
 
-        <Button
-          type="submit"
-          disabled={
-            isSubmitting || !currentPassword || !newPassword || !confirmPassword
-          }
-        >
-          {isSubmitting ? '변경 중...' : '비밀번호 변경'}
-        </Button>
-      </Form>
+          <InputWrapper>
+            <Label>새 비밀번호</Label>
+            <Input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="새 비밀번호를 입력하세요"
+              disabled={isSubmitting}
+            />
+            <PasswordRequirements>
+              <li>8자 이상의 길이</li>
+              <li>영문 대문자 1자 이상 포함</li>
+              <li>영문 소문자 1자 이상 포함</li>
+              <li>숫자 1자 이상 포함</li>
+              <li>특수문자 1자 이상 포함</li>
+            </PasswordRequirements>
+          </InputWrapper>
+
+          <InputWrapper>
+            <Label>새 비밀번호 확인</Label>
+            <Input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="새 비밀번호를 다시 입력하세요"
+              disabled={isSubmitting}
+            />
+          </InputWrapper>
+
+          <Button
+            type="submit"
+            disabled={
+              isSubmitting ||
+              !currentPassword ||
+              !newPassword ||
+              !confirmPassword
+            }
+          >
+            {isSubmitting ? '변경 중...' : '비밀번호 변경'}
+          </Button>
+        </Form>
+
+        <Footer>© Sejong University. All rights reserved.</Footer>
+      </ContentWrapper>
 
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
-    </PageContainer>
+    </Container>
   );
 }
 
