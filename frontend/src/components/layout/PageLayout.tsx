@@ -1,4 +1,3 @@
-// src/components/layout/PageLayout.tsx
 import React from 'react';
 import styled from 'styled-components';
 
@@ -11,7 +10,7 @@ const Layout = styled.div`
 `;
 
 const Container = styled.div`
-  width: 100%;
+  width: 90vw;
   max-width: 1200px;
   padding: 0 20px;
   margin: 0 auto;
@@ -31,7 +30,9 @@ interface PageLayoutProps {
   children: React.ReactNode;
 }
 
-export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
+export const PageLayout: React.FC<PageLayoutProps> = ({
+  children,
+}): JSX.Element => {
   return (
     <Layout>
       <Container>{children}</Container>
