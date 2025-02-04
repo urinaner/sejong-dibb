@@ -132,12 +132,47 @@ const Footer = styled.div`
   font-size: 0.875rem;
 `;
 
+const VerifyButton = styled(Button)`
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+`;
+
+const NewPasswordSection = styled.div<{ verified: boolean }>`
+  opacity: ${(props) => (props.verified ? '1' : '0.5')};
+  pointer-events: ${(props) => (props.verified ? 'all' : 'none')};
+  transition: opacity 0.3s ease;
+`;
+
+const VerifyMessage = styled.div<{ isSuccess: boolean }>`
+  color: ${(props) => (props.isSuccess ? '#2f855a' : '#e53e3e')};
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: ${(props) => (props.isSuccess ? '#2f855a' : '#e53e3e')};
+  }
+`;
+
 function ChangeAdminPassword() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState<{
+    text: string;
+    success: boolean;
+  } | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const navigate = useNavigate();
@@ -150,6 +185,32 @@ function ChangeAdminPassword() {
   const closeModal = () => {
     setIsOpen(false);
     setModalContent(null);
+  };
+
+  const handleVerifyPassword = async () => {
+    if (!currentPassword || isVerifying) return;
+
+    setIsVerifying(true);
+    setVerifyMessage(null);
+
+    try {
+      const response = await axiosInstance.post('/api/admin/verify-password', {
+        currentPassword,
+      });
+
+      if (response.status === 200) {
+        setIsVerified(true);
+        setVerifyMessage({ text: '비밀번호가 확인되었습니다.', success: true });
+      }
+    } catch (err: any) {
+      setVerifyMessage({
+        text: '현재 비밀번호가 올바르지 않습니다.',
+        success: false,
+      });
+      setIsVerified(false);
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const validatePassword = (password: string): boolean => {
@@ -167,19 +228,18 @@ function ChangeAdminPassword() {
       isLongEnough
     );
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (isSubmitting) return;
+    if (isSubmitting || !isVerified) return;
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       openModal(
         <>
           <Modal.Header>입력 오류</Modal.Header>
           <Modal.Content>
-            <p>모든 필드를 입력해주세요.</p>
+            <p>새 비밀번호를 모두 입력해주세요.</p>
           </Modal.Content>
           <Modal.Footer>
             <Button onClick={closeModal}>확인</Button>
@@ -284,7 +344,7 @@ function ChangeAdminPassword() {
 
         <Title>관리자 비밀번호 변경</Title>
         <SubTitle>
-          아래의 비밀번호 요구사항에 맞춰 새로운 비밀번호를 설정해주세요.
+          먼저 현재 비밀번호를 확인한 후, 새로운 비밀번호를 설정해주세요.
         </SubTitle>
 
         <Form onSubmit={handleSubmit}>
@@ -295,52 +355,67 @@ function ChangeAdminPassword() {
             <Input
               type="password"
               value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              onChange={(e) => {
+                setCurrentPassword(e.target.value);
+                setIsVerified(false);
+                setVerifyMessage(null);
+              }}
               placeholder="현재 비밀번호를 입력하세요"
-              disabled={isSubmitting}
+              disabled={isVerifying || isVerified}
             />
+            <VerifyButton
+              type="button"
+              onClick={handleVerifyPassword}
+              disabled={!currentPassword || isVerifying || isVerified}
+            >
+              {isVerifying ? '확인 중...' : '비밀번호 확인'}
+            </VerifyButton>
+            {verifyMessage && (
+              <VerifyMessage isSuccess={verifyMessage.success}>
+                {verifyMessage.text}
+              </VerifyMessage>
+            )}
           </InputWrapper>
 
-          <InputWrapper>
-            <Label>새 비밀번호</Label>
-            <Input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="새 비밀번호를 입력하세요"
-              disabled={isSubmitting}
-            />
-            <PasswordRequirements>
-              <li>8자 이상의 길이</li>
-              <li>영문 대문자 1자 이상 포함</li>
-              <li>영문 소문자 1자 이상 포함</li>
-              <li>숫자 1자 이상 포함</li>
-              <li>특수문자 1자 이상 포함</li>
-            </PasswordRequirements>
-          </InputWrapper>
+          <NewPasswordSection verified={isVerified}>
+            <InputWrapper>
+              <Label>새 비밀번호</Label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="새 비밀번호를 입력하세요"
+                disabled={!isVerified || isSubmitting}
+              />
+              <PasswordRequirements>
+                <li>8자 이상의 길이</li>
+                <li>영문 대문자 1자 이상 포함</li>
+                <li>영문 소문자 1자 이상 포함</li>
+                <li>숫자 1자 이상 포함</li>
+                <li>특수문자 1자 이상 포함</li>
+              </PasswordRequirements>
+            </InputWrapper>
 
-          <InputWrapper>
-            <Label>새 비밀번호 확인</Label>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="새 비밀번호를 다시 입력하세요"
-              disabled={isSubmitting}
-            />
-          </InputWrapper>
+            <InputWrapper>
+              <Label>새 비밀번호 확인</Label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="새 비밀번호를 다시 입력하세요"
+                disabled={!isVerified || isSubmitting}
+              />
+            </InputWrapper>
 
-          <Button
-            type="submit"
-            disabled={
-              isSubmitting ||
-              !currentPassword ||
-              !newPassword ||
-              !confirmPassword
-            }
-          >
-            {isSubmitting ? '변경 중...' : '비밀번호 변경'}
-          </Button>
+            <Button
+              type="submit"
+              disabled={
+                !isVerified || isSubmitting || !newPassword || !confirmPassword
+              }
+            >
+              {isSubmitting ? '변경 중...' : '비밀번호 변경'}
+            </Button>
+          </NewPasswordSection>
         </Form>
 
         <Footer>© Sejong University. All rights reserved.</Footer>
