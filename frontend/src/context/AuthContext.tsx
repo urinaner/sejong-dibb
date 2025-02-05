@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { axiosInstance } from '../config/apiConfig';
+import Cookies from 'js-cookie';
 
 interface JwtPayload {
   loginId: string;
@@ -22,6 +23,10 @@ interface LoginCredentials {
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
 interface AuthContextType {
@@ -42,9 +47,16 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+const COOKIE_OPTIONS = {
+  secure: true, // HTTPS에서만 작동
+  sameSite: 'strict' as const, // CSRF 방지
+  expires: new Date(Date.now() + 30 * 60 * 1000), // 30분
+};
+
+const REFRESH_COOKIE_OPTIONS = {
+  ...COOKIE_OPTIONS,
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7일
+};
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
@@ -77,18 +89,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const { accessToken, refreshToken } = tokens;
 
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+        // 쿠키에 토큰 저장
+        Cookies.set('accessToken', accessToken, COOKIE_OPTIONS);
+        Cookies.set('refreshToken', refreshToken, REFRESH_COOKIE_OPTIONS);
 
         const payload = decodeJWT(accessToken);
         const userName = payload.loginId;
         const userRole = payload.role;
-
-        // role 비교 로직 수정
         const isAdminUser = userRole === 'ROLE_ADMIN';
-
-        localStorage.setItem('user', userName);
-        localStorage.setItem('isAdmin', String(isAdminUser));
 
         setUser(userName);
         setIsAuthenticated(true);
@@ -101,39 +109,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setAuthState(null);
       }
     } else {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('isAdmin');
-      delete axiosInstance.defaults.headers.common['Authorization'];
+      // 쿠키에서 토큰 제거
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
+
       setUser(null);
       setIsAuthenticated(false);
       setIsAdmin(false);
+      delete axiosInstance.defaults.headers.common['Authorization'];
     }
   };
 
   const checkTokenExpiration = useCallback(async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = Cookies.get('accessToken');
+    const refreshToken = Cookies.get('refreshToken');
 
     if (accessToken && refreshToken) {
       try {
         const payload = decodeJWT(accessToken);
         if (payload.exp * 1000 < Date.now()) {
-          try {
-            const response = await axiosInstance.post('api/member/refresh', {
-              refreshToken: refreshToken,
-            });
+          // 토큰 갱신
+          const response = await axiosInstance.post('api/member/refresh', {
+            refreshToken,
+          });
 
-            const newTokens: TokenResponse = {
-              accessToken: response.data.accessToken,
-              refreshToken: response.data.refreshToken,
-            };
+          const newTokens: TokenResponse = {
+            accessToken: response.data.accessToken,
+            refreshToken: response.data.refreshToken,
+          };
 
-            setAuthState(newTokens);
-          } catch (error) {
-            signout();
-          }
+          setAuthState(newTokens);
         }
       } catch {
         signout();
@@ -142,8 +147,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = Cookies.get('accessToken');
+    const refreshToken = Cookies.get('refreshToken');
 
     if (accessToken && refreshToken) {
       setAuthState({ accessToken, refreshToken });
@@ -212,22 +217,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signout = useCallback(async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = Cookies.get('refreshToken');
+      const accessToken = Cookies.get('accessToken');
 
-      if (!refreshToken || !accessToken) {
-        throw new Error('No authentication tokens found');
-      }
-
-      await axiosInstance.post(
-        'api/member/logout',
-        { refreshToken },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      if (refreshToken && accessToken) {
+        await axiosInstance.post(
+          'api/member/logout',
+          { refreshToken },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           },
-        },
-      );
+        );
+      }
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
