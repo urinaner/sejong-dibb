@@ -2,6 +2,7 @@ package org.example.backend.users.service;
 
 import static org.example.backend.users.exception.admin.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
 import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_ACCESS_TOKEN;
+import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_VALID_PASSWORD;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +73,14 @@ public class AdminService {
         return AdminResDto.of(admin);
     }
 
+
+    public void validatePassword(Long adminId, String password) {
+        Users admin = getAdminById(adminId);
+        boolean matched = admin.matchPassword(password, bCryptPasswordEncoder);
+        if (!matched) {
+            throw new AdminException(NOT_VALID_PASSWORD);
+        }
+    }
     public Users getAdminById(Long id) {
         return usersRepository.findById(id)
                 .orElseThrow(() -> new AdminException(INVALID_ACCESS_TOKEN));

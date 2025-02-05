@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.users.exception.admin.AdminException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -60,5 +62,12 @@ public class Users {
 
     public boolean isEqualEmail(String email) {
         return this.email.equals(email);
+    }
+
+    public boolean matchPassword(String password, PasswordEncoder bCryptPasswordEncoder) {
+        if (!bCryptPasswordEncoder.matches(password, this.password)) {
+            return false;
+        }
+        return true;
     }
 }

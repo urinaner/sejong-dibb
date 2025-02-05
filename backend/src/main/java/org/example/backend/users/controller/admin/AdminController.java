@@ -11,6 +11,7 @@ import org.example.backend.users.service.AdminService;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,14 @@ public class AdminController {
         log.info("entered logout api");
         memberService.logout(accessToken, body.get("refreshToken"));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 성공 시 204 반환
+    }
+
+    @GetMapping("/{adminId}")
+    public ResponseEntity<?> validatePassword(@PathVariable(name = "adminId") Long adminId,
+                                                   @RequestBody Map<String, String> request) {
+        String password = request.get("password");
+        adminService.validatePassword(adminId, password);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
     @PostMapping("/{adminId}")
