@@ -27,13 +27,13 @@ axiosInstance.interceptors.request.use(
       config.headers['X-XSRF-TOKEN'] = xsrfToken;
     }
 
-    // 프로덕션 환경에서 URL 처리
-    if (process.env.NODE_ENV === 'production' && config.url) {
-      // URL이 이미 절대 경로(/로 시작)가 아닌 경우에만 /api 추가
-      if (!config.url.startsWith('/')) {
-        config.url = `/api/${config.url}`;
-      }
-    }
+    // // 프로덕션 환경에서 URL 처리
+    // if (process.env.NODE_ENV === 'production' && config.url) {
+    //   // URL이 이미 절대 경로(/로 시작)가 아닌 경우에만 /api 추가
+    //   if (!config.url.startsWith('/')) {
+    //     config.url = `${config.url}`;
+    //   }
+    // }
 
     return config;
   },
