@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import * as S from './FooterStyle';
+import useAuth from '../../hooks/useAuth';
 
 function Footer() {
   return (
@@ -30,6 +30,8 @@ function Footer() {
 
 // SightMap 섹션 렌더링 (기존 코드 유지)
 function renderSightMapSections() {
+  const { isAdmin } = useAuth();
+
   const sections = [
     {
       title: '학과',
@@ -70,7 +72,12 @@ function renderSightMapSections() {
     {
       title: '서비스',
       titleLink: '/seminar-rooms/reservation',
-      contents: [{ name: '예약센터', link: '/seminar-rooms/reservation' }],
+      contents: [
+        { name: '예약센터', link: '/seminar-rooms/reservation' },
+        ...(isAdmin
+          ? [{ name: '비밀번호 변경', link: '/admin/change-password' }]
+          : []),
+      ],
     },
   ];
 
