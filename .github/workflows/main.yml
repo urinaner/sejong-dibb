@@ -98,6 +98,7 @@ jobs:
             cd ~/sejong-dibb
             
             # GitHub Secrets에서 docker-compose.yml 생성
+            echo "DOCKER_COMPOSE_YML=${{ secrets.DOCKER_COMPOSE_YML }}"  # 추가된 디버깅 로그
             echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
            
             
