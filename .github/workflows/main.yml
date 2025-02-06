@@ -98,7 +98,10 @@ jobs:
             cd ~/sejong-dibb
             
             # GitHub Secrets에서 docker-compose.yml 생성
-            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            # echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            cat << 'EOF' > docker-compose.yml
+            ${{ secrets.DOCKER_COMPOSE_YML }}
+            EOF
             
             # 기존 컨테이너 정리 및 새 배포 실행
             docker-compose down -v || true
