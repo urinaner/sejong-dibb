@@ -37,9 +37,6 @@ public class Board extends BaseEntity {
     @Column(name = "file_list", length = 1000)
     private List<String> fileList;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private Category category;
