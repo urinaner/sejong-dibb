@@ -25,6 +25,12 @@ export const PAGE_CONTENTS = {
         image: aboutImg,
         path: '/about/organization',
       },
+      studentconcil: {
+        title: '학생회 소개',
+        description: '미래를 이끌어나갈 바이오융합공학부 학생회를 소개합니다.',
+        image: aboutImg,
+        path: '/about/studentcouncil',
+      },
     },
   },
   undergraduate: {

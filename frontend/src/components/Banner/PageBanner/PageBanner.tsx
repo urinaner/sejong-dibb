@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { PageBannerProps } from '../../../types/banner';
-import { SEJONG_COLORS } from '../../../constants/colors';
 
 const BannerContainer = styled.div`
   position: relative;
