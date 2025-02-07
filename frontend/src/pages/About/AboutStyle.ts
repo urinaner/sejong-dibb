@@ -57,6 +57,7 @@ export const InfoCard = styled.div`
     box-shadow 0.3s ease,
     transform 0.3s ease;
   max-width: 900px;
+  width: 80vw;
   margin: 0 auto;
 
   &:hover {
