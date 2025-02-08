@@ -7,10 +7,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.admin.AdminResDto;
+import org.example.backend.users.domain.entity.CustomUserDetails;
+import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.service.AdminService;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +64,10 @@ public class AdminController {
 
     @PostMapping("/test")
     public String test() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        log.info("username: {}", username);
         return "test";
     }
 }

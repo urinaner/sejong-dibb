@@ -85,8 +85,10 @@ public class JWTFilter extends OncePerRequestFilter {
             String loginId = jwtUtil.getLoginId(accessToken);
             Role role = jwtUtil.getRole(accessToken);
 
+            log.info("Decoded loginId: {}", jwtUtil.getLoginId(accessToken));
+
             Users admin = Users.builder()
-                    .username(loginId)
+                    .loginId(loginId)
                     .password("hashedPassword")
                     .role(role)
                     .build();
@@ -97,7 +99,9 @@ public class JWTFilter extends OncePerRequestFilter {
                     customUserDetails, null, customUserDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authToken);
-
+            // 잘 SecurityContextHolder에 저장되었는지 확인
+            log.info("SecurityContextHolder.getContext().getAuthentication(): {}",
+                    SecurityContextHolder.getContext().getAuthentication());
             filterChain.doFilter(request, response); // 다음 필터로 전달
         } else {
             log.error("Access token is expired");
