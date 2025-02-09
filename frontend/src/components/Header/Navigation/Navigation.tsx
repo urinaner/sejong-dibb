@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { AuthContext } from '../../../context/AuthContext';
 import NavItem from './NavItem';
+import { navItems as navigationItems } from '../constants';
 
 import Profile from '../Profile/Profile';
 import {
@@ -12,6 +13,7 @@ import {
   MobileNavButton,
   MobileSubMenu,
 } from './NavigationStyle';
+import { navItems } from '../constants';
 
 interface NavigationProps {
   onDropdownChange?: (isOpen: boolean) => void;
@@ -27,49 +29,6 @@ interface NavigationItem {
   path: string;
   menuItems: MenuItem[];
 }
-
-const navigationItems: NavigationItem[] = [
-  {
-    title: '학과',
-    path: '/about',
-    menuItems: [
-      { name: '학과소개', path: '/about' },
-      { name: '조직도', path: '/about/organization' },
-      { name: '교수소개', path: '/about/faculty' },
-    ],
-  },
-  {
-    title: '대학',
-    path: '/undergraduate/curriculum',
-    menuItems: [
-      { name: '학부교과과정', path: '/undergraduate/curriculum' },
-      { name: '입학/장학', path: '/undergraduate/admission-scholarship' },
-    ],
-  },
-  {
-    title: '대학원',
-    path: '/graduate/overview',
-    menuItems: [
-      { name: '소개', path: '/graduate/overview' },
-      { name: '교과과정', path: '/graduate/curriculum' },
-    ],
-  },
-  {
-    title: '바융소식',
-    path: '/news',
-    menuItems: [
-      { name: '학부뉴스', path: '/news' },
-      { name: '공지사항', path: '/news/noticeboard' },
-      { name: '세미나', path: '/news/seminar' },
-      { name: '연구논문', path: '/news/thesis' },
-    ],
-  },
-  {
-    title: '⏱ 서비스',
-    path: '/seminar-rooms/reservation',
-    menuItems: [{ name: '예약센터', path: '/seminar-rooms/reservation' }],
-  },
-];
 
 const Navigation: React.FC<NavigationProps> = ({ onDropdownChange }) => {
   const { isMobile } = useResponsive();

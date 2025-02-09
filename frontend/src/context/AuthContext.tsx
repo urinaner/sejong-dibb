@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { axiosInstance } from '../config/apiConfig';
 import Cookies from 'js-cookie';
+import useAuth from '../hooks/useAuth';
 
 interface JwtPayload {
   loginId: string;

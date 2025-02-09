@@ -8,8 +8,7 @@ import Footer from './components/Footer/Footer';
 import MainBanner from './components/Banner/MainBanner/MainBanner';
 import PageBanner from './components/Banner/PageBanner/PageBanner';
 import { MAIN_CONTENT, PAGE_CONTENTS } from './constants/pageContents';
-
-// Pages imports...
+// page
 import Main from './pages/Main/Main';
 import SignInPage from './pages/Auth/SignInPage';
 import Hyperlink from './pages/Undergraduate/Hyperlink';
@@ -42,6 +41,7 @@ import NewsCreate from './pages/News/News/NewsCreate';
 import NewsEdit from './pages/News/News/NewsEdit';
 import { mainVideos } from './config/videoConfig';
 import ChangeAdminPassword from './pages/Admin/ChangeAdminPassword/ChangeAdminPassword';
+import StudentCouncil from './pages/About/StudentCouncil/StudentCouncil';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -211,6 +211,10 @@ function AppContent() {
               <Route path="/about/faculty" element={<Professor />} />
               <Route path="/about/faculty/:id" element={<ProfessorDetail />} />
               <Route path="/about/organization" element={<Organization />} />
+              <Route
+                path="/about/studentcouncil"
+                element={<StudentCouncil />}
+              />
 
               {/* news */}
               <Route path="/news/noticeboard" element={<NoticeBoard />} />

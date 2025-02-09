@@ -6,6 +6,7 @@ export const navItems = [
       { name: '학과소개', path: '/about' },
       { name: '교수소개', path: '/about/faculty' },
       { name: '조직도', path: '/about/organization' },
+      { name: '학생회', path: '/about/studentcouncil' },
     ],
   },
   {
