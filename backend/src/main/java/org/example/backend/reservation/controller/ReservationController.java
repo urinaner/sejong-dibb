@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.common.aop.auth.LoginUser;
 import org.example.backend.reservation.domain.dto.ReservationCreateDto;
 import org.example.backend.reservation.domain.dto.ReservationDeleteRequest;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.service.ReservationService;
-import org.example.backend.users.domain.entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,13 +27,10 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/{roomId}/reservation")
-    public ResponseEntity<List<ReservationResDto>> createReservation(
+    public ResponseEntity<ReservationResDto> createReservation(
             @PathVariable(value = "roomId") Long roomId,
-            @RequestBody @Valid ReservationCreateDto reqDto) {
-
-        Users users = Users.builder()
-                .build();
-        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, users);
+            @RequestBody @Valid ReservationCreateDto reqDto, @LoginUser String loginId) {
+        ReservationResDto resDtos = reservationService.createReservation(roomId, reqDto, loginId);
         log.debug("Reservation created successfully: {}", resDtos);
         return ResponseEntity.ok(resDtos);
     }
