@@ -196,7 +196,7 @@ function ChangeAdminPassword() {
     setVerifyMessage(null);
 
     try {
-      const response = await axiosInstance.post('/api/validate/admin/1', {
+      const response = await axiosInstance.post('/api/admin/validate/1', {
         password: currentPassword,
       });
 
@@ -293,6 +293,7 @@ function ChangeAdminPassword() {
           <Modal.Header>성공</Modal.Header>
           <Modal.Content>
             <p>비밀번호가 성공적으로 변경되었습니다.</p>
+            <p>자동으로 로그아웃됩니다.</p>
           </Modal.Content>
           <Modal.Footer>
             <Button
