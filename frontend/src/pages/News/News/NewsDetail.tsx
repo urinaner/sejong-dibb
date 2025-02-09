@@ -84,10 +84,7 @@ const NewsDetail = () => {
         </NewsHeader>
         <NewsDivider />
         {newsItems.image && (
-          <NewsImage
-            src={`https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/${newsItems.image}`}
-            alt={newsItems.title}
-          />
+          <NewsImage src={`${newsItems.image}`} alt={newsItems.title} />
         )}
         <NewsContent>{newsItems.content}</NewsContent>
         {newsItems.link && (

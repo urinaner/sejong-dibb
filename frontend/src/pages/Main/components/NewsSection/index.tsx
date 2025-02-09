@@ -6,11 +6,18 @@ import {
 import NewsSlider from '../../../../components/NewsSlider/NewsSlider';
 import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 import { useGetNewsList } from '../../../../hooks/queries/useNews';
-import { NewsItem } from './types';
+
+interface NewsSectionProps {
+  maxItems?: number;
+}
 
 export const NewsSection = () => {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useGetNewsList({
+  const {
+    data: newsData,
+    isLoading,
+    error,
+  } = useGetNewsList({
     page: 0,
     size: 8,
   });
@@ -22,7 +29,7 @@ export const NewsSection = () => {
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>뉴스를 불러오는데 실패했습니다.</div>;
 
-  const news = data || [];
+  const news = newsData?.data || [];
 
   return (
     <NewsSectionContainer>

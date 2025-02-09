@@ -3,7 +3,7 @@ import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
 export const Container = styled.div`
-  max-width: 100%;
+  max-width: 900px;
   width: 80vw;
   margin: 0 auto;
   padding: 2.5rem 0.5rem;

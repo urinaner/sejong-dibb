@@ -19,8 +19,8 @@ const colors = {
 };
 
 export const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
+  max-width: 900px;
+  width: 80vw;
   margin: 0 auto;
   padding: 40px 20px;
 
@@ -119,14 +119,12 @@ export const WriteButton = styled.button`
     font-size: 0.85rem;
   }
 `;
-
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   font-size: 1rem;
   background-color: #fff;
   text-align: center;
-  table-layout: fixed;
 `;
 
 export const Th = styled.th`

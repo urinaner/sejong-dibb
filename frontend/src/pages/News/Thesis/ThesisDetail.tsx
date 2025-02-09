@@ -143,7 +143,7 @@ const ThesisDetail: React.FC = () => {
         </S.NavigationSection>
 
         <S.TitleSection>
-          <S.Title>{thesis.content}</S.Title>
+          <S.Title>{thesis.title}</S.Title>
           <S.Subtitle>{thesis.author}</S.Subtitle>
         </S.TitleSection>
 

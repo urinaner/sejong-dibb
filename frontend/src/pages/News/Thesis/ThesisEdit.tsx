@@ -135,6 +135,7 @@ const ThesisEdit: React.FC = () => {
     }
 
     const thesisReqDto: Omit<ThesisItem, 'id'> = {
+      title: formData.title.trim(),
       author: formData.author.trim(),
       journal: formData.journal.trim(),
       content: formData.content.trim(),

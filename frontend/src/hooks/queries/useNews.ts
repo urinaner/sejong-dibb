@@ -7,9 +7,7 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { newsApi, NewsFormRequest } from '../../api/news';
-import type { NewsResponse, PaginationParams } from '../../types/api';
 import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
-
 export interface NewsItem {
   id: number;
   title: string;
@@ -19,11 +17,12 @@ export interface NewsItem {
   link: string;
   image: string;
 }
+
 export interface NewsListResponse {
   message: string;
   page: number;
   totalPage: number;
-  data: NewsItem[]; // 이미 배열 타입임
+  data: NewsItem[];
 }
 
 export const newsKeys = {
@@ -34,16 +33,17 @@ export const newsKeys = {
   details: () => [...newsKeys.all, 'detail'] as const,
   detail: (id: number) => [...newsKeys.details(), id] as const,
 };
-
 export const useGetNewsList = (params: {
   page: number;
   size: number;
-}): UseQueryResult<NewsItem[], AxiosError> => {
+}): UseQueryResult<NewsListResponse, AxiosError> => {
   return useQuery({
     queryKey: newsKeys.list(params),
     queryFn: async () => {
-      const response = await newsApi.getNewsList(params);
-      return response; // API가 이미 NewsItem[] 형태로 반환
+      const response = await axiosInstance.get<NewsListResponse>(
+        apiEndpoints.news.listWithPage(params.page, params.size),
+      );
+      return response.data;
     },
   });
 };

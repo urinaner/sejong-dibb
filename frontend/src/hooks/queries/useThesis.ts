@@ -14,6 +14,7 @@ export const thesisKeys = {
 
 // Types
 export interface ThesisItem {
+  title: string;
   id: number;
   author: string;
   journal: string;
