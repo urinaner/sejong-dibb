@@ -1,4 +1,4 @@
-package org.example.backend.common.logging;
+package org.example.backend.common.aop.logging;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,7 +34,7 @@ public class LoggingAspect {
     private void allPresentation() {
     }
 
-    @Pointcut("@annotation(org.example.backend.common.logging.Logging)")
+    @Pointcut("@annotation(org.example.backend.common.aop.logging.Logging)")
     private void logging() {
     }
 

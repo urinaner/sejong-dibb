@@ -18,6 +18,7 @@ import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
 import org.example.backend.users.domain.entity.Users;
+import org.example.backend.users.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +28,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
+    private final UsersRepository usersRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long seminarRoomId, ReservationCreateDto reqDto, Users user) {
+    public ReservationResDto createReservation(Long seminarRoomId, ReservationCreateDto reqDto, String loginId) {
         Room room = getSeminarRoomById(seminarRoomId);
+        Users user = usersRepository.findByLoginId(loginId).get();
 
         validateReservationOverlap(reqDto, seminarRoomId);
 
         Reservation reservation = Reservation.of(reqDto, room, user);
         reservationRepository.save(reservation);
-        return List.of(ReservationResDto.of(reservation));
+        return ReservationResDto.of(reservation);
 
     }
 

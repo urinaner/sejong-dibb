@@ -14,7 +14,7 @@ import org.example.backend.board.domain.entity.Category;
 import org.example.backend.board.service.BoardService;
 import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
-import org.example.backend.common.logging.Logging;
+import org.example.backend.common.aop.logging.Logging;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

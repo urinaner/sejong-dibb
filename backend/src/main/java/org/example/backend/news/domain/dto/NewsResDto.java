@@ -36,7 +36,7 @@ public class NewsResDto {
                 .title(news.getTitle())
                 .content(news.getContent())
                 .view(news.getView())
-                .createDate(news.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .createDate(news.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .link(news.getLink())
                 .image(news.getImage())
                 .build();
