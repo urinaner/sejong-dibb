@@ -32,8 +32,10 @@ VALUES (1, '바이오융합공학과',
 
 -- users 더미 데이터
 INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
-VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com','010-1234-5678', 'ROLE_ADMIN'),
-        (2, 'member', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '멤버', 'member@example.com', '010-1111-2222', 'ROLE_MEMBER');
+VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
+        '010-1234-5678', 'ROLE_ADMIN'),
+       (2, 'member', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '멤버', 'member@example.com',
+        '010-1111-2222', 'ROLE_MEMBER');
 
 
 -- Professor 더미 데이터 (10개)
