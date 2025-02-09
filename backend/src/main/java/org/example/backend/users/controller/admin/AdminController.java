@@ -46,7 +46,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 성공 시 204 반환
     }
 
-    @GetMapping("/{adminId}")
+    @PostMapping("/{adminId}")
     public ResponseEntity<?> validatePassword(@PathVariable(name = "adminId") Long adminId,
                                                    @RequestBody Map<String, String> request) {
         String password = request.get("password");
