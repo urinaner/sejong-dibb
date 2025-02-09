@@ -303,7 +303,7 @@ INSERT INTO room (room_id, name, person_capacity, place, image)
 VALUES (1, '충507C 세미나실', 20, '충무관 507', 'seminar1.jpg'),
        (2, '충506C 세미나실', 20, '충무관 506', 'seminar2.jpg');
 
-INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, user_id, created_at, updated_at)
+INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, user_id, created_date, updated_date)
 VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-01 13:00:00', '2024-12-01 15:00:00', 'MEETING', '김은희교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-02 10:00:00', '2024-12-02 12:00:00', 'MEETING', '김민수교수님 랩미팅', 1, 1, NOW(), NOW()),
@@ -315,7 +315,7 @@ VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교�
        ('2024-12-08 11:00:00', '2024-12-08 13:00:00', 'MEETING', '전종훈교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-09 16:00:00', '2024-12-09 18:00:00', 'MEETING', '서민석교수님 랩미팅', 1, 1, NOW(), NOW());
 
-INSERT INTO news (news_id, name, content, view, link, image, created_at)
+INSERT INTO news (news_id, name, content, view, link, image, created_date)
 VALUES (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발표',
         '세종대학교 바이오융합공학과가 올해 혁신적인 연구 성과를 발표했습니다.',
         320,
