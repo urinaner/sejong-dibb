@@ -94,7 +94,7 @@ const ThesisList: React.FC = () => {
                 <S.ThesisTitle
                   onClick={() => navigate(`/news/thesis/${thesis.id}`)}
                 >
-                  {thesis.content}
+                  {thesis.title}
                 </S.ThesisTitle>
 
                 <S.ThesisMetadata>

@@ -23,6 +23,7 @@ const ThesisCreate: React.FC = () => {
   const createThesisMutation = useCreateThesis();
 
   const [formData, setFormData] = useState<ThesisReqDto>({
+    title: '',
     author: '',
     journal: '',
     content: '',
@@ -196,6 +197,19 @@ const ThesisCreate: React.FC = () => {
               </S.ImageUploadContainer>
             </S.FormGroup>
 
+            <S.FormGroup>
+              <S.Label>
+                제목<S.RequiredMark>*</S.RequiredMark>
+              </S.Label>
+              <S.Input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="논문명을 입력하세요"
+                required
+              />
+            </S.FormGroup>
             <S.FormGroup>
               <S.Label>
                 저자<S.RequiredMark>*</S.RequiredMark>

@@ -3,6 +3,7 @@ import { Image as ImageIcon } from 'lucide-react';
 import * as S from './ThesisCreateStyle';
 
 export interface ThesisFormData {
+  title: string;
   author: string;
   journal: string;
   content: string;
@@ -65,7 +66,19 @@ const ThesisForm: React.FC<ThesisFormProps> = ({
           </S.HelperText>
         </S.ImageUploadContainer>
       </S.FormGroup>
-
+      <S.FormGroup>
+        <S.Label>
+          제목<S.RequiredMark>*</S.RequiredMark>
+        </S.Label>
+        <S.Input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={onChange}
+          placeholder="논문 제목을 입력하세요"
+          required
+        />
+      </S.FormGroup>
       <S.FormGroup>
         <S.Label>
           저자<S.RequiredMark>*</S.RequiredMark>

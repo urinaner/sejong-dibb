@@ -75,6 +75,7 @@ export interface BoardReqDto {
 }
 
 export interface ThesisReqDto {
+  title: string;
   author: string;
   journal: string;
   content: string;
