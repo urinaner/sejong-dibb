@@ -1,23 +1,3 @@
-DELETE
-FROM board;
-DELETE
-FROM thesis;
-DELETE
-FROM reservation;
-DELETE
-FROM room;
-DELETE
-FROM seminar;
-DELETE
-FROM professor;
-DELETE
-FROM department;
-DELETE
-FROM news;
-DELETE
-FROM users;
-
-
 -- Department 더미 데이터 (1개)
 INSERT INTO department (department_id, korean_name, english_name, intro, phone, location, educational_objective,
                         work_hour, map)
