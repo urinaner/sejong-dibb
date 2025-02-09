@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../../config/apiConfig';
 import { Modal } from '../../../components/Modal';
+import useAuth from '../../../hooks/useAuth';
 
 const Container = styled.div`
   display: flex;
@@ -176,6 +177,7 @@ function ChangeAdminPassword() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const navigate = useNavigate();
+  const { signout } = useAuth();
 
   const openModal = (content: React.ReactNode) => {
     setModalContent(content);
@@ -194,8 +196,8 @@ function ChangeAdminPassword() {
     setVerifyMessage(null);
 
     try {
-      const response = await axiosInstance.post('/api/admin/verify-password', {
-        currentPassword,
+      const response = await axiosInstance.post('/api/validate/admin/1', {
+        password: currentPassword,
       });
 
       if (response.status === 200) {
@@ -228,6 +230,7 @@ function ChangeAdminPassword() {
       isLongEnough
     );
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -281,9 +284,8 @@ function ChangeAdminPassword() {
 
     try {
       setIsSubmitting(true);
-      await axiosInstance.post('/api/admin/change-password', {
-        currentPassword,
-        newPassword,
+      await axiosInstance.post('/api/admin/1', {
+        password: newPassword,
       });
 
       openModal(
@@ -294,9 +296,9 @@ function ChangeAdminPassword() {
           </Modal.Content>
           <Modal.Footer>
             <Button
-              onClick={() => {
+              onClick={async () => {
                 closeModal();
-                navigate('/');
+                await signout();
               }}
             >
               확인
