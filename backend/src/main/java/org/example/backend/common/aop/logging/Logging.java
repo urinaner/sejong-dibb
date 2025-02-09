@@ -1,4 +1,4 @@
-package org.example.backend.common.logging;
+package org.example.backend.common.aop.logging;
 
 
 import java.lang.annotation.ElementType;
