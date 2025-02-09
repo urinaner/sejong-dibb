@@ -27,10 +27,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
     private final JwtBlacklistService jwtBlacklistService;
 
-    private static final List<String> REFRESH_TOKEN_PATHS = List.of(
-            "/api/specific-path",
-            "/api/another-path"
-    );
+    private static final String REFRESH_TOKEN_PATH = "/api/refresh";
 
     public JWTFilter(JWTUtil jwtUtil, JwtBlacklistService jwtBlacklistService) {
         this.jwtUtil = jwtUtil;
@@ -169,6 +166,6 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     private boolean isRefreshTokenPath(String requestURI) {
-        return REFRESH_TOKEN_PATHS.stream().anyMatch(path -> new AntPathMatcher().match(path, requestURI));
+        return new AntPathMatcher().match(REFRESH_TOKEN_PATH, requestURI);
     }
 }
