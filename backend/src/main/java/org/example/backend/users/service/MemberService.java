@@ -1,10 +1,13 @@
 package org.example.backend.users.service;
 
+import static org.example.backend.users.exception.member.MemberExceptionType.DEPARTMENT_NOT_BIO;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import jdk.jshell.spi.ExecutionControl.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
@@ -15,6 +18,7 @@ import org.example.backend.users.domain.dto.member.SjUserProfile;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
+import org.example.backend.users.exception.member.MemberException;
 import org.example.backend.users.repository.UsersRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -84,6 +88,11 @@ public class MemberService {
 
         if (existingUser.isPresent()) {
             return existingUser.get();
+        }
+
+        // 바이오융합공학과(, 컴퓨터공학과, 양자원자력공학과) 학생만 가입 가능
+        if (!profile.getMajor().equals("바이오융합공학과") && !profile.getMajor().equals("컴퓨터공학과")) {
+            throw new MemberException(DEPARTMENT_NOT_BIO);
         }
 
         Users newUser = Users.builder()
