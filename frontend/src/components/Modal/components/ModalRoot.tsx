@@ -94,13 +94,13 @@ const Overlay = styled.div`
   animation: ${fadeIn} 0.2s ease-out;
 `;
 
-const ModalContent = styled.div<{ className?: string }>`
+const ModalContent = styled.div<{ className?: string; $isWide?: boolean }>`
   position: relative;
   background-color: white;
   border-radius: 1rem;
   min-width: 320px;
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: ${(props) => (props.$isWide ? '80vw' : '90vw')};
+
   overflow-y: auto;
   box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.25),

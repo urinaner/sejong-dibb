@@ -51,7 +51,7 @@ const StudentCouncil = (): JSX.Element => {
           </InfoCard>
         </InfoSection>
         <SocialLink
-          href="https://www.instagram.com/gbio_ha_ru"
+          href="https://www.instagram.com/bio_ha_ru?igsh=MTd3M2gzdTZ6dHBrNg=="
           target="_blank"
           rel="noopener noreferrer"
         >
