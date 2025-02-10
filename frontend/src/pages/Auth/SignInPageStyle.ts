@@ -43,7 +43,7 @@ export const SubTitle = styled.p`
 `;
 
 // Form components
-export const Form = styled.div`
+export const Form = styled.form`
   background: white;
   padding: 2rem;
   border-radius: 8px;
