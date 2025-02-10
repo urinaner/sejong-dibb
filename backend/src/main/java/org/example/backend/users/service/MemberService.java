@@ -1,6 +1,8 @@
 package org.example.backend.users.service;
 
 import static org.example.backend.users.exception.member.MemberExceptionType.DEPARTMENT_NOT_BIO;
+import static org.example.backend.users.exception.member.MemberExceptionType.INVALID_ID_OR_PASSWORD;
+import static org.example.backend.users.exception.member.MemberExceptionType.SERVER_ERROR;
 
 import java.io.IOException;
 import java.util.Map;
@@ -66,7 +68,7 @@ public class MemberService {
             Connection.Response response = executeLoginRequest(dto);
 
             if (response.statusCode() != 200) {
-                throw new RuntimeException("서버 오류가 발생했습니다: HTTP " + response.statusCode());
+                throw new MemberException(SERVER_ERROR);
             }
 
             return parseUserProfile(response.parse());
@@ -86,7 +88,7 @@ public class MemberService {
     private SjUserProfile parseUserProfile(Document document) throws AuthenticationException {
         Element userInfo = document.selectFirst("div.user-info-picture");
         if (userInfo == null) {
-            throw new RuntimeException(AUTH_FAILED);
+            throw new MemberException(INVALID_ID_OR_PASSWORD);
         }
 
         Element nameElement = document.selectFirst("h4");
