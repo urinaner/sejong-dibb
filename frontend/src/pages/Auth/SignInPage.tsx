@@ -75,17 +75,14 @@ const SignInPage: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      // 관리자/학생 로그인 데이터 준비
       const isAdminLogin = activeTab === 'admin';
       let loginData;
 
       if (isAdminLogin) {
-        // 관리자 로그인: FormData 형식
         loginData = new FormData();
         loginData.append('loginId', loginId);
         loginData.append('password', password);
       } else {
-        // 학생 로그인: JSON 형식
         loginData = {
           loginId,
           password,
@@ -94,6 +91,8 @@ const SignInPage: React.FC = () => {
 
       await signin(loginData, isAdminLogin);
 
+      // 로그인 성공 시에만 모달을 표시하고 홈으로 이동
+      navigate('/');
       openModal(
         <>
           <Modal.Header>로그인 성공</Modal.Header>
@@ -101,19 +100,13 @@ const SignInPage: React.FC = () => {
             <p>{isAdminLogin ? '관리자' : '학생'} 계정으로 로그인되었습니다.</p>
           </Modal.Content>
           <Modal.Footer>
-            <Button
-              onClick={() => {
-                closeModal();
-                navigate('/');
-              }}
-            >
-              확인
-            </Button>
+            <Button onClick={closeModal}>확인</Button>
           </Modal.Footer>
         </>,
       );
     } catch (err) {
       console.error('Login failed:', err);
+      // 로그인 실패 시 모달만 표시
       openModal(
         <>
           <Modal.Header>로그인 실패</Modal.Header>
@@ -129,6 +122,7 @@ const SignInPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <Container>
       <ContentWrapper>
