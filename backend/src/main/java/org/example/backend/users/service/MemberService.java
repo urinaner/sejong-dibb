@@ -52,8 +52,7 @@ public class MemberService {
 
     public ResponseEntity<?> authenticateAndGenerateToken(LoginReqDto dto) {
         try {
-            Users user = usersRepository.findByLoginId(dto.getLoginId())
-                    .orElseGet(() -> authenticateAndSaveUser(dto));
+            Users user = authenticateAndSaveUser(dto);
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getLoginId(), dto.getPassword())
