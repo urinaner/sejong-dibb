@@ -10,6 +10,7 @@ import org.example.backend.jwt.LoginFilter;
 import org.example.backend.jwt.exception.JwtExceptionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -75,6 +76,38 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 관리자 전용: 뉴스 생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/news").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/news/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/news/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/news/**").permitAll()
+
+                        // 관리자 전용: 공지사항 생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/board").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/board/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/board/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll()
+
+                        // 관리자 전용: 세미나 생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/seminar").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/seminar/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/seminar/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/seminar/**").permitAll()
+
+                        // 관리자 전용: 논문 생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/thesis").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/thesis/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/thesis/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/thesis/**").permitAll()
+
                         .requestMatchers("/api/admin/login", "/api/member/login",
                                 "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", // TODO: 배포 전에  "/api/**" 삭제 필요
                                 "/swagger-resources/**", "/swagger*/**", "/uploads/**")
