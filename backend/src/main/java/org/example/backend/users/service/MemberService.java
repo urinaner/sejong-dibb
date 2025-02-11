@@ -1,13 +1,11 @@
 package org.example.backend.users.service;
 
 import static org.example.backend.users.exception.member.MemberExceptionType.DEPARTMENT_NOT_BIO;
+import static org.example.backend.users.exception.member.MemberExceptionType.INVALID_ID_OR_PASSWORD;
+import static org.example.backend.users.exception.member.MemberExceptionType.SERVER_ERROR;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Optional;
-import jdk.jshell.spi.ExecutionControl.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
@@ -15,24 +13,15 @@ import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.member.SjUserProfile;
-import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
-import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.member.MemberException;
-import org.example.backend.users.repository.UsersRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -44,33 +33,17 @@ public class MemberService {
     private final String AUTH_FAILED = "인증에 실패하였습니다.";
     private final String USER_INFO_MISSING = "사용자 정보를 찾을 수 없습니다.";
 
-    private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final UsersRepository usersRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtBlacklistService jwtBlacklistService;
 
     public ResponseEntity<?> authenticateAndGenerateToken(LoginReqDto dto) {
         try {
-            Users user = usersRepository.findByLoginId(dto.getLoginId())
-                    .orElseGet(() -> authenticateAndSaveUser(dto));
+            authenticateAndValidateMajor(dto);
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getLoginId(), dto.getPassword())
-            );
+            String role = "ROLE_MEMBER";
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-            String loginId = customUserDetails.getUsername();
-
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-            GrantedAuthority auth = iterator.next();
-            String role = auth.getAuthority();
-
-            String accessToken = jwtUtil.createJwt(loginId, Role.valueOf(role), 1800 * 1000L);
-            String refreshToken = jwtUtil.createJwt(loginId, Role.valueOf(role), 60 * 60 * 24 * 30 * 1000L);
+            String accessToken = jwtUtil.createJwt(dto.getLoginId(), Role.valueOf(role), 1800 * 1000L);
+            String refreshToken = jwtUtil.createJwt(dto.getLoginId(), Role.valueOf(role), 60 * 60 * 24 * 30 * 1000L);
 
             return ResponseEntity.ok().body(Map.of(
                     "accessToken", accessToken,
@@ -81,33 +54,13 @@ public class MemberService {
         }
     }
 
-    public Users authenticateAndSaveUser(LoginReqDto dto) throws AuthenticationException {
+    public void authenticateAndValidateMajor(LoginReqDto dto) throws AuthenticationException {
         SjUserProfile profile = authenticate(dto);
-
-        Optional<Users> existingUser = usersRepository.findByLoginId(dto.getLoginId());
-
-        if (existingUser.isPresent()) {
-            return existingUser.get();
-        }
 
         // 바이오융합공학과(, 컴퓨터공학과, 양자원자력공학과) 학생만 가입 가능
         if (!profile.getMajor().equals("바이오융합공학과") && !profile.getMajor().equals("컴퓨터공학과")) {
             throw new MemberException(DEPARTMENT_NOT_BIO);
         }
-
-        Users newUser = Users.builder()
-                .loginId(dto.getLoginId())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .username(profile.getName())
-                .email(null)
-                .phoneN(null)
-                .department(profile.getMajor())
-                .role(Role.ROLE_MEMBER)
-                .build();
-
-        usersRepository.save(newUser);
-        return newUser;
-
     }
 
     public SjUserProfile authenticate(LoginReqDto dto) throws AuthenticationException {
@@ -115,7 +68,7 @@ public class MemberService {
             Connection.Response response = executeLoginRequest(dto);
 
             if (response.statusCode() != 200) {
-                throw new RuntimeException("서버 오류가 발생했습니다: HTTP " + response.statusCode());
+                throw new MemberException(SERVER_ERROR);
             }
 
             return parseUserProfile(response.parse());
@@ -135,7 +88,7 @@ public class MemberService {
     private SjUserProfile parseUserProfile(Document document) throws AuthenticationException {
         Element userInfo = document.selectFirst("div.user-info-picture");
         if (userInfo == null) {
-            throw new RuntimeException(AUTH_FAILED);
+            throw new MemberException(INVALID_ID_OR_PASSWORD);
         }
 
         Element nameElement = document.selectFirst("h4");
