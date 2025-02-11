@@ -67,7 +67,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     jvmArgs '-XX:+EnableDynamicAgentLoading'
-    enabled = false
+    enabled = true
 }
 
 tasks.withType(JavaCompile) {
