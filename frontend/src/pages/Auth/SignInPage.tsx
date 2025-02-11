@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useModal } from '../../components/Modal';
 import { Modal } from '../../components/Modal';
+import { TermsModal } from '../../components/Modal/templates/TermsModal';
 import {
   Container,
   ContentWrapper,
@@ -27,13 +29,19 @@ import {
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
   const context = useContext(AuthContext);
-  const [isOpen, setIsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+  const modal = useModal();
   const [activeTab, setActiveTab] = useState<'student' | 'admin'>('student');
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [termsModal, setTermsModal] = useState<{
+    isOpen: boolean;
+    type: 'terms' | 'privacy' | 'collection';
+  }>({
+    isOpen: false,
+    type: 'terms',
+  });
 
   if (!context) {
     throw new Error('Auth context is undefined');
@@ -41,14 +49,32 @@ const SignInPage: React.FC = () => {
 
   const { signin, error, clearError } = context;
 
-  const openModal = (content: React.ReactNode) => {
-    setModalContent(content);
-    setIsOpen(true);
+  const handleOpenTerms = (type: 'terms' | 'privacy' | 'collection') => {
+    setTermsModal({
+      isOpen: true,
+      type,
+    });
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-    setModalContent(null);
+  const handleCloseTerms = () => {
+    setTermsModal((prev) => ({
+      ...prev,
+      isOpen: false,
+    }));
+  };
+
+  const showAlertModal = (title: string, message: string) => {
+    modal.openModal(
+      <>
+        <Modal.Header>{title}</Modal.Header>
+        <Modal.Content>
+          <p>{message}</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Modal.CloseButton onClick={modal.closeModal}>확인</Modal.CloseButton>
+        </Modal.Footer>
+      </>,
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,17 +84,7 @@ const SignInPage: React.FC = () => {
     if (isSubmitting) return;
 
     if (!privacyAgreed) {
-      openModal(
-        <>
-          <Modal.Header>알림</Modal.Header>
-          <Modal.Content>
-            <p>개인정보 수집 및 이용에 동의해주세요.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Button onClick={closeModal}>확인</Button>
-          </Modal.Footer>
-        </>,
-      );
+      showAlertModal('알림', '개인정보 수집 및 이용에 동의해주세요.');
       return;
     }
 
@@ -91,32 +107,16 @@ const SignInPage: React.FC = () => {
 
       await signin(loginData, isAdminLogin);
 
-      // 로그인 성공 시에만 모달을 표시하고 홈으로 이동
       navigate('/');
-      openModal(
-        <>
-          <Modal.Header>로그인 성공</Modal.Header>
-          <Modal.Content>
-            <p>{isAdminLogin ? '관리자' : '학생'} 계정으로 로그인되었습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Button onClick={closeModal}>확인</Button>
-          </Modal.Footer>
-        </>,
+      showAlertModal(
+        '로그인 성공',
+        `${isAdminLogin ? '관리자' : '학생'} 계정으로 로그인되었습니다.`,
       );
     } catch (err) {
       console.error('Login failed:', err);
-      // 로그인 실패 시 모달만 표시
-      openModal(
-        <>
-          <Modal.Header>로그인 실패</Modal.Header>
-          <Modal.Content>
-            <p>로그인에 실패했습니다. 다시 시도해주세요.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Button onClick={closeModal}>확인</Button>
-          </Modal.Footer>
-        </>,
+      showAlertModal(
+        '로그인 실패',
+        '로그인에 실패했습니다. 다시 시도해주세요.',
       );
     } finally {
       setIsSubmitting(false);
@@ -138,7 +138,7 @@ const SignInPage: React.FC = () => {
           세종대학교 포털과 동일한 학번 및 비밀번호를 사용하여 로그인
         </SubTitle>
 
-        <Form as="form" onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Tabs>
             <Tab
               type="button"
@@ -189,16 +189,21 @@ const SignInPage: React.FC = () => {
               disabled={isSubmitting}
             />
             <PrivacyLabel htmlFor="privacy-agreement">
-              개인정보 수집 및 이용에 동의합니다.
-              <a
-                href="/privacy-policy"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/privacy-policy');
-                }}
+              <button
+                type="button"
+                onClick={() => handleOpenTerms('collection')}
               >
-                약관보기
-              </a>
+                개인정보 수집 및 이용
+              </button>
+              에 동의합니다.{' '}
+              <button type="button" onClick={() => handleOpenTerms('terms')}>
+                이용약관
+              </button>{' '}
+              및{' '}
+              <button type="button" onClick={() => handleOpenTerms('privacy')}>
+                개인정보처리방침
+              </button>{' '}
+              보기
             </PrivacyLabel>
           </PrivacyWrapper>
 
@@ -234,9 +239,11 @@ const SignInPage: React.FC = () => {
         <Footer>© Sejong University. All rights reserved.</Footer>
       </ContentWrapper>
 
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        {modalContent}
-      </Modal>
+      <TermsModal
+        type={termsModal.type}
+        isOpen={termsModal.isOpen}
+        onClose={handleCloseTerms}
+      />
     </Container>
   );
 };

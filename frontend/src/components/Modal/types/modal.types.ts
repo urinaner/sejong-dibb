@@ -6,6 +6,7 @@ export interface ModalRootProps {
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  isWide?: boolean;
 }
 
 // 서브 컴포넌트들의 공통 Props 타입
