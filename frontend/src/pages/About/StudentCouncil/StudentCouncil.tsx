@@ -27,7 +27,7 @@ const StudentCouncil = (): JSX.Element => {
     <Wrapper>
       <Content>
         <Logo src="/haru.png" alt="하루 학생회 로고" />
-        <Title>제7대 바이오융합공학부 학생회</Title>
+        <Title>제7대 바이오융합공학전공 학생회</Title>
         <Description>
           &ldquo;하루(Haru)&rdquo; 학생회
           <br />
