@@ -54,7 +54,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ image, onClose }) => {
         <CloseButton onClick={onClose}>
           <X size={24} />
         </CloseButton>
-        <ModalImage src={image.url} alt={image.title} />
+        <ModalImage src={image.url} />
       </ModalContent>
     </ModalOverlay>
   );

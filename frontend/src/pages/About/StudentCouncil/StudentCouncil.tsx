@@ -22,23 +22,6 @@ const introContent = `
 학우분들의 의견에 귀 기울이며 학우분들의 의사를 대변하고 다양한 학과 행사를 기획하여 학우분들의 학교생활이 더욱 풍요로워지고, 학우분들의 단합력을 증진 시킬 수 있도록 노력하고 있습니다. 
 `;
 
-const customImages = [
-  {
-    id: 1,
-    url: '/activities/2024-03-01_신입생환영회.jpg',
-    title: '신입생 환영회',
-    date: '2024.03.01',
-    description: '2024학년도 신입생 환영회',
-  },
-  {
-    id: 2,
-    url: '/activities/2024-03-15_MT.jpg',
-    title: '학생회 MT',
-    date: '2024.03.15',
-    description: '2024년도 1학기 MT',
-  },
-];
-
 const StudentCouncil = (): JSX.Element => {
   return (
     <Wrapper>
@@ -70,7 +53,6 @@ const StudentCouncil = (): JSX.Element => {
           <>
             {/* 또는 커스텀 이미지와 함께 사용 */}
             <ActivitySlider
-              customImages={customImages}
               autoPlayInterval={3000} // 선택적으로 자동 재생 간격 조정 가능
             />
           </>
