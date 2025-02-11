@@ -87,39 +87,6 @@ const StyledHeader = styled(Modal.Header)`
   border-bottom: 1px solid #e5e7eb;
 `;
 
-const StyledFooter = styled(Modal.Footer)`
-  padding: 1.5rem 2rem;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-`;
-
-const CloseButton = styled(Modal.CloseButton)`
-  padding: 0.75rem 2rem;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  font-size: 1rem;
-  letter-spacing: -0.01em;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-
-  &:hover {
-    background-color: #1557b0;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
 export interface TermsModalProps {
   type: 'terms' | 'privacy' | 'collection';
   isOpen: boolean;
