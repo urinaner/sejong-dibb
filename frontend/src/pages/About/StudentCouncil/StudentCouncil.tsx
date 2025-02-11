@@ -63,7 +63,7 @@ const StudentCouncil = (): JSX.Element => {
           rel="noopener noreferrer"
         >
           <Instagram size={32} />
-          <span>@gbio_ha_ru</span>
+          <span>@bio_ha_ru</span>
         </SocialLink>
       </Content>
     </Wrapper>
