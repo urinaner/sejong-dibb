@@ -180,7 +180,6 @@ function Footer() {
           </span>
         </S.Copyright>
       </S.FooterInner>
-
       <TermsModal
         type={termsModal.type}
         isOpen={termsModal.isOpen}
