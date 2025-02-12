@@ -1,6 +1,7 @@
 import React from 'react';
 import * as S from './FooterStyle';
 import useAuth from '../../hooks/useAuth';
+import { TermsModal } from '../Modal/templates/TermsModal';
 
 function Footer() {
   return (
@@ -40,6 +41,7 @@ function renderSightMapSections() {
         { name: '학과소개', link: '/about' },
         { name: '조직도', link: '/about/organization' },
         { name: '교수소개', link: '/about/faculty' },
+        { name: '학생회 ', link: '/about/studentcouncil' },
       ],
     },
     {
