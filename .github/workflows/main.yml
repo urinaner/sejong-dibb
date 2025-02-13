@@ -99,6 +99,6 @@ jobs:
            
             
             # 기존 컨테이너 정리 및 새 배포 실행
-            docker-compose down -v || true
+            docker-compose down || true
             docker-compose pull
             docker-compose up -d

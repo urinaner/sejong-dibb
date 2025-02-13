@@ -43,7 +43,7 @@ export const SubTitle = styled.p`
 `;
 
 // Form components
-export const Form = styled.div`
+export const Form = styled.form`
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -183,14 +183,29 @@ export const PrivacyLabel = styled.label`
   font-size: 0.875rem;
   color: #666;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
 
-  a {
-    color: #c02327;
-    text-decoration: underline;
-    margin-left: 0.25rem;
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #1a73e8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
 
     &:hover {
-      color: #b01e22;
+      text-decoration: underline;
+      color: #1557b0;
+    }
+
+    &:focus {
+      outline: none;
+      text-decoration: underline;
     }
   }
 `;
