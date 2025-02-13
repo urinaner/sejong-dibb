@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         corsRegistry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000",
-                        "http://sejong-bioconvergence-temp.s3-website.ap-northeast-2.amazonaws.com");
+                        "https://ibb.sejong.ac.kr");
     }
 
     @Override
