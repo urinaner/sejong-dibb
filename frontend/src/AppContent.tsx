@@ -42,6 +42,7 @@ import NewsEdit from './pages/News/News/NewsEdit';
 import { mainVideos } from './config/videoConfig';
 import ChangeAdminPassword from './pages/Admin/ChangeAdminPassword/ChangeAdminPassword';
 import StudentCouncil from './pages/About/StudentCouncil/StudentCouncil';
+import Calendar from './features/seminarRoom/components/Calender/Calendar';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -219,10 +220,7 @@ function AppContent() {
               {/* news */}
               <Route path="/news/noticeboard" element={<NoticeBoard />} />
               <Route path="/news/noticeboard/:id" element={<NoticeDetail />} />
-              <Route
-                path="/seminar-rooms/reservation"
-                element={<Reservation />}
-              />
+              <Route path="/seminar-rooms/reservation" element={<Calendar />} />
               <Route path="/news/seminar" element={<SeminarList />} />
               <Route path="/news/seminar/:id" element={<SeminarDetail />} />
               <Route path="/news/thesis" element={<ThesisList />} />

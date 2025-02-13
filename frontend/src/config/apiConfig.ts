@@ -369,6 +369,7 @@ export const apiEndpoints = {
     login: createEndpoint('/api/member/login'),
     logout: createEndpoint('/api/member/logout'),
   },
+
   reservation: {
     list: createEndpoint('/api/room'),
     monthlyList: (roomId: number, yearMonth: string) =>

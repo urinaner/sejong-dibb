@@ -7,8 +7,6 @@ export interface Reservation {
   etc?: string;
   userId: number;
   status: ReservationStatus;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export type ReservationPurpose = 'MEETING' | 'SEMINAR' | 'CLASS' | 'OTHER';
