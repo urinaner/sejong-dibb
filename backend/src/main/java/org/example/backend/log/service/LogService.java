@@ -12,6 +12,6 @@ public class LogService {
     private final LogRepository logRepository;
 
     public void saveAll(List<RequestResponseLog> logs) {
-        logRepository.saveAll(logs);
+        logRepository.saveAllLogs(logs);
     }
 }
