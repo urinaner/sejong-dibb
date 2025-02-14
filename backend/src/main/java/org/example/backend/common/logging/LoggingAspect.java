@@ -4,16 +4,20 @@ package org.example.backend.common.logging;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
+import org.example.backend.log.domain.RequestResponseLog;
+import org.example.backend.log.service.BulkLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,27 +27,43 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class LoggingAspect {
 
-    private static final List<String> excludeNames = Arrays.asList("image", "images", "request");
+    private static final List<String> excludeNames = Arrays.asList("fileList", "request");
+    private static final int MAX_RESPONSE_BODY_LENGTH = 65000;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final BulkLogManager bulkLogManager;
+
+    private final ThreadLocal<RequestResponseLog> requestLogHolder = new ThreadLocal<>();
+
+
 
     @Pointcut("execution(public * org.example.backend.*.controller.*.*(..))")
     private void allPresentation() {
     }
 
-    @Pointcut("@annotation(org.example.backend.common.logging.Logging)")
-    private void logging() {
-    }
-
-    @Before("allPresentation() && logging()")
-    public void requestLogging(final JoinPoint joinPoint) {
+    @Before("allPresentation()")
+    public void logRequest(final JoinPoint joinPoint) {
         final HttpServletRequest request = getRequest();
         final Map<String, Object> args = getSpecificParameters(joinPoint);
 
         printRequestLog(request, args);
+
+        // 💡 요청 로그 객체 생성 후 ThreadLocal에 저장
+        RequestResponseLog logEntry = new RequestResponseLog();
+        logEntry.setMethod(request.getMethod());
+        logEntry.setPath(request.getRequestURI());
+        try {
+            logEntry.setRequestBody(objectMapper.writeValueAsString(args));
+        } catch (JsonProcessingException e) {
+            logEntry.setRequestBody("null");
+        }
+        logEntry.setCreatedAt(LocalDateTime.now());
+
+        requestLogHolder.set(logEntry);
     }
 
     private HttpServletRequest getRequest() {
@@ -63,6 +83,8 @@ public class LoggingAspect {
                 params.put(parameterNames[i], args[i]);
             }
         }
+        log.info("[FILTERED PARAMS] {}", params);
+
 
         return params;
     }
@@ -76,9 +98,61 @@ public class LoggingAspect {
         }
     }
 
-    @AfterReturning(value = "allPresentation() && logging()", returning = "responseEntity")
-    public void requestLogging(final ResponseEntity<?> responseEntity) {
-        printResponseLog(responseEntity);
+
+    @AfterReturning(value = "allPresentation()", returning = "responseEntity")
+    public void logResponse(final ResponseEntity<?> responseEntity) {
+        try {
+            RequestResponseLog logEntry = requestLogHolder.get();
+            if (logEntry == null) return;
+
+            final String responseStatus = responseEntity.getStatusCode().toString();
+            Object processedBody = truncateFileList(responseEntity.getBody());
+            String responseBody = objectMapper.writeValueAsString(processedBody);
+            String truncatedResponseBody = limitStringLength(responseBody);
+
+            log.info("[RESPONSE {}] {}", responseStatus, truncatedResponseBody);
+
+            // 💡 기존 요청 로그에 응답 정보 추가
+            logEntry.setResponseStatus(responseStatus);
+            logEntry.setResponseBody(truncatedResponseBody);
+
+            // 💡 단일 로그로 저장
+            bulkLogManager.addLog(logEntry);
+
+        } catch (JsonProcessingException e) {
+            log.warn("[LOGGING ERROR] Response 로깅에 실패했습니다");
+        } finally {
+            // 💡 ThreadLocal 메모리 누수 방지
+            requestLogHolder.remove();
+        }
+    }
+    @SuppressWarnings("unchecked")
+    private Object truncateFileList(Object body) {
+        if (body == null) {
+            return null;
+        }
+
+        if (body instanceof Map) {
+            Map<String, Object> map = new HashMap<>((Map<String, Object>) body);
+
+            // 로그 저장 제외할 필드 목록
+            List<String> excludedKeys = Arrays.asList("fileList", "largeData", "extraInfo");
+
+            for (String key : excludedKeys) {
+                map.remove(key);
+            }
+
+            return map;
+        }
+
+        return body;
+    }
+
+    private String limitStringLength(String str) {
+        if (str != null && str.length() > MAX_RESPONSE_BODY_LENGTH) {
+            return str.substring(0, MAX_RESPONSE_BODY_LENGTH - 3) + "...";
+        }
+        return str;
     }
 
     private void printResponseLog(final ResponseEntity<?> responseEntity) {
@@ -89,4 +163,5 @@ public class LoggingAspect {
             log.warn("[LOGGING ERROR] Response 로깅에 실패했습니다");
         }
     }
+
 }
