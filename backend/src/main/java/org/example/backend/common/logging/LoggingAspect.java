@@ -49,6 +49,7 @@ public class LoggingAspect {
     public void logRequest(final JoinPoint joinPoint) {
         final HttpServletRequest request = getRequest();
         final Map<String, Object> args = getSpecificParameters(joinPoint);
+        String clientIp = getClientIp(request);
 
         printRequestLog(request, args);
 
@@ -56,6 +57,8 @@ public class LoggingAspect {
         RequestResponseLog logEntry = new RequestResponseLog();
         logEntry.setMethod(request.getMethod());
         logEntry.setPath(request.getRequestURI());
+        logEntry.setClientIp(clientIp);
+
         try {
             logEntry.setRequestBody(objectMapper.writeValueAsString(args));
         } catch (JsonProcessingException e) {
@@ -64,6 +67,13 @@ public class LoggingAspect {
         logEntry.setCreatedAt(LocalDateTime.now());
 
         requestLogHolder.set(logEntry);
+    }
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For"); // 프록시 환경 고려
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr(); // 기본 IP 가져오기
+        }
+        return ip;
     }
 
     private HttpServletRequest getRequest() {
@@ -110,7 +120,7 @@ public class LoggingAspect {
             String responseBody = objectMapper.writeValueAsString(processedBody);
             String truncatedResponseBody = limitStringLength(responseBody);
 
-            log.info("[RESPONSE {}] {}", responseStatus, truncatedResponseBody);
+            log.info("[RESPONSE {}] [IP {}] {}", responseStatus, logEntry.getClientIp(), truncatedResponseBody); // ✅ IP 추가
 
             // 💡 기존 요청 로그에 응답 정보 추가
             logEntry.setResponseStatus(responseStatus);

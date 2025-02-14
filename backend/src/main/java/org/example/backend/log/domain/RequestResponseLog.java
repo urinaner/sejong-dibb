@@ -22,5 +22,6 @@ public class RequestResponseLog {
     @Column(columnDefinition = "LONGTEXT")
     private String responseBody;
     private LocalDateTime createdAt;
+    private String clientIp;
 
 }
