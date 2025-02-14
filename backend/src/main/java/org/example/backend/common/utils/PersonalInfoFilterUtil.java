@@ -1,6 +1,9 @@
 package org.example.backend.common.utils;
 
+import static org.example.backend.board.exception.BoardExceptionType.INVALID_CONTENT;
+
 import java.util.regex.Pattern;
+import org.example.backend.board.exception.BoardException;
 
 public class PersonalInfoFilterUtil {
     private static final String[] PERSONAL_INFO_PATTERNS = {
@@ -15,7 +18,7 @@ public class PersonalInfoFilterUtil {
     public static void validatePersonalInfo(String content) {
         for (String pattern : PERSONAL_INFO_PATTERNS) {
             if (Pattern.compile(pattern).matcher(content).find()) {
-                throw new RuntimeException("개인정보(주민등록번호, 전화번호, 이메일)는 입력할 수 없습니다.");
+                throw new BoardException(INVALID_CONTENT);
             }
         }
     }
