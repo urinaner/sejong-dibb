@@ -2,11 +2,14 @@ package org.example.backend.users.controller.admin;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+import jakarta.transaction.Transactional;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.admin.AdminResDto;
+import org.example.backend.users.domain.dto.admin.mail.MailReqDto;
+import org.example.backend.users.domain.dto.admin.mail.MailResDto;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.service.AdminService;
@@ -60,6 +63,13 @@ public class AdminController {
         String password = request.get("password");
         AdminResDto adminResDto = adminService.updateAdminPassword(adminId, password);
         return new ResponseEntity<>(adminResDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/sendEmail")
+    public ResponseEntity<Void> sendEmail(@RequestBody MailReqDto mailReqDto) {
+        MailResDto dto = adminService.createTmpPasswordMail(mailReqDto);
+        adminService.mailSend(dto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/test")
