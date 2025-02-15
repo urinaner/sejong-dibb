@@ -9,9 +9,6 @@ import {
   ProfessorQueryParams,
   ProfessorListResponse,
   ProfessorDetailResponse,
-  ProfessorCreateResponse,
-  ProfessorUpdateResponse,
-  ProfessorDeleteResponse,
 } from '../../types/api/professor';
 
 // Query Keys
@@ -24,62 +21,35 @@ const professorKeys = {
   detail: (id: number) => [...professorKeys.details(), id] as const,
 } as const;
 
-// API Functions
-const professorApi = {
-  // 교수 목록 조회
-  getProfessors: async ({
-    page,
-    size,
-    sort,
-  }: ProfessorQueryParams): Promise<ProfessorListResponse> => {
-    const response = await axiosInstance.get(
-      apiEndpoints.professor.listWithPage(page, size, sort),
-    );
-    return response.data;
-  },
+// Query Hooks
+export const useProfessors = (params: ProfessorQueryParams) => {
+  return useQuery<ProfessorListResponse, AxiosError>({
+    queryKey: professorKeys.list(params),
+    queryFn: async () => {
+      const response = await axiosInstance.get<ProfessorListResponse>(
+        apiEndpoints.professor.listWithPage(
+          params.page,
+          params.size,
+          params.sort,
+        ),
+      );
+      return response.data;
+    },
+    placeholderData: (previousData) => previousData,
+  });
+};
 
-  // 교수 상세 정보 조회
-  getProfessorById: async (id: number): Promise<ProfessorDetailResponse> => {
-    const response = await axiosInstance.get(apiEndpoints.professor.detail(id));
-    return response.data;
-  },
-
-  // 교수 정보 생성
-  createProfessor: async (
-    formData: FormData,
-  ): Promise<ProfessorCreateResponse> => {
-    const response = await axiosInstance.post(
-      apiEndpoints.professor.create.url,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    return response.data;
-  },
-
-  // 교수 정보 수정
-  updateProfessor: async (
-    id: number,
-    formData: FormData,
-  ): Promise<ProfessorUpdateResponse> => {
-    const response = await axiosInstance.post(
-      apiEndpoints.professor.update.url(id),
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    return response.data;
-  },
-
-  // 교수 정보 삭제
-  deleteProfessor: async (id: number): Promise<ProfessorDeleteResponse> => {
-    const response = await axiosInstance.delete(
-      apiEndpoints.professor.delete(id),
-    );
-    return response.data;
-  },
+export const useProfessorDetail = (id: number) => {
+  return useQuery<ProfessorDetailResponse, AxiosError>({
+    queryKey: professorKeys.detail(id),
+    queryFn: async () => {
+      const response = await axiosInstance.get<ProfessorDetailResponse>(
+        apiEndpoints.professor.detail(id),
+      );
+      return response.data;
+    },
+    enabled: !!id,
+  });
 };
 
 // Utils
@@ -88,7 +58,6 @@ export const createProfessorFormData = (
   imageFile?: File | null,
 ): FormData => {
   const formData = new FormData();
-
   formData.append(
     'professorReqDto',
     new Blob([JSON.stringify(professorData)], {
@@ -103,29 +72,31 @@ export const createProfessorFormData = (
   return formData;
 };
 
-// Query Hooks
-export const useProfessors = (params: ProfessorQueryParams) => {
-  return useQuery<ProfessorListResponse, AxiosError>({
-    queryKey: professorKeys.list(params),
-    queryFn: () => professorApi.getProfessors(params),
-    placeholderData: (previousData) => previousData,
-  });
-};
-
-export const useProfessorDetail = (id: number) => {
-  return useQuery<ProfessorDetailResponse, AxiosError>({
-    queryKey: professorKeys.detail(id),
-    queryFn: () => professorApi.getProfessorById(id),
-    enabled: !!id,
-  });
-};
-
 // Mutation Hooks
 export const useCreateProfessor = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<ProfessorCreateResponse, AxiosError, FormData>({
-    mutationFn: (formData) => professorApi.createProfessor(formData),
+  return useMutation<number, AxiosError, FormData>({
+    mutationFn: async (formData) => {
+      // Get XSRF token from cookie
+      const xsrfToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+
+      const response = await axiosInstance.post<number>(
+        apiEndpoints.professor.create.url,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
+          },
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: professorKeys.lists(),
@@ -137,13 +108,26 @@ export const useCreateProfessor = () => {
 export const useUpdateProfessor = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    ProfessorUpdateResponse,
-    AxiosError,
-    { id: number; formData: FormData }
-  >({
-    mutationFn: ({ id, formData }) =>
-      professorApi.updateProfessor(id, formData),
+  return useMutation<number, AxiosError, { id: number; formData: FormData }>({
+    mutationFn: async ({ id, formData }) => {
+      const xsrfToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+
+      const response = await axiosInstance.post<number>(
+        apiEndpoints.professor.update.url(id),
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
+          },
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: professorKeys.lists(),
@@ -158,8 +142,24 @@ export const useUpdateProfessor = () => {
 export const useDeleteProfessor = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<ProfessorDeleteResponse, AxiosError, number>({
-    mutationFn: professorApi.deleteProfessor,
+  return useMutation<number, AxiosError, number>({
+    mutationFn: async (id) => {
+      const xsrfToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+
+      const response = await axiosInstance.delete<number>(
+        apiEndpoints.professor.delete(id),
+        {
+          headers: {
+            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
+          },
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: professorKeys.lists(),

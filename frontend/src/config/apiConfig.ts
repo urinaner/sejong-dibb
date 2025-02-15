@@ -103,6 +103,7 @@ export interface ProfessorReqDto {
   homepage: string;
   lab: string;
   profileImage: string;
+  departmentId: number;
 }
 
 interface ThesisEndpoint {
