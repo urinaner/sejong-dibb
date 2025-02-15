@@ -24,6 +24,7 @@ import {
   FileList,
   FileItem,
 } from './NoticeCreateStyle';
+import { AxiosError } from 'axios';
 
 const CATEGORIES = [
   { value: 'undergraduate', label: '학부' },
@@ -162,7 +163,18 @@ const NoticeEdit: React.FC = () => {
       showResultModal(true, '게시글이 성공적으로 수정되었습니다.');
     } catch (error) {
       console.error('Error updating post:', error);
-      showResultModal(false, '게시글 수정 중 오류가 발생했습니다.');
+      let errorMessage = '게시글 수정 중 오류가 발생했습니다.';
+
+      // AxiosError 타입 가드 추가
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          errorMessage = '인증이 필요합니다. 다시 로그인해주세요.';
+        } else if (error.response?.status === 403) {
+          errorMessage = '수정 권한이 없습니다.';
+        }
+      }
+
+      showResultModal(false, errorMessage);
     } finally {
       setIsSubmitting(false);
     }

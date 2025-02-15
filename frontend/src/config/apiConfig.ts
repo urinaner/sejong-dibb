@@ -41,6 +41,13 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+export const publicAxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
 
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(

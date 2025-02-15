@@ -1,5 +1,3 @@
-// src/features/seminarRoom/components/Calender/components/RoomInfo/index.tsx
-
 import React from 'react';
 import {
   HeaderContainer,
@@ -18,22 +16,20 @@ interface RoomInfoProps {
 function RoomInfo({ roomId }: RoomInfoProps) {
   return (
     <>
-      <HeaderContainer>
-        <RoomName>세미나실 {roomId}</RoomName>
-      </HeaderContainer>
+      <HeaderContainer> </HeaderContainer>
       <RoomContainer>
         <StyledRoomInfo>
           <div style={{ display: 'flex' }}>
             <div style={{ flexGrow: '1' }}>
               {/* public 폴더의 이미지는 루트 경로(/)부터 시작 */}
-              <RoomImg src="/seminarRoom1.jpeg" alt={`세미나실 ${roomId}`} />
+              <RoomImg src="/seminarRoom.jpeg" />
             </div>
             <div style={{ flexGrow: '1' }}>
               <Capacity>수용인원</Capacity>
-              <span>30명</span>
+              <span>15명</span>
               <br />
               <Location>장소</Location>
-              <span>충무관 501호</span>
+              <span>충무관 507C호</span>
             </div>
           </div>
         </StyledRoomInfo>

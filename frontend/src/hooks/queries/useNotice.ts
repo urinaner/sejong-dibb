@@ -109,11 +109,15 @@ const noticeApi = {
         files.forEach((file) => formData.append('boardFiles', file));
       }
 
+      // multipart/form-data 설정과 함께 axiosInstance 사용
       const response = await axiosInstance.post(
         apiEndpoints.board.update(id.toString()),
         formData,
         {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            // Authorization 헤더는 axiosInstance에 의해 자동으로 추가됨
+          },
         },
       );
       return response.data;
@@ -125,6 +129,7 @@ const noticeApi = {
 
   delete: async (id: number): Promise<NoticeDeleteResponse> => {
     try {
+      // axiosInstance 사용하여 자동으로 Authorization 헤더 포함
       const response = await axiosInstance.delete(
         apiEndpoints.board.delete(id.toString()),
       );

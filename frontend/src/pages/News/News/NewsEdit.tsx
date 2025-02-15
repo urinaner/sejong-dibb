@@ -27,7 +27,7 @@ import {
   FileList,
   FileItem,
 } from './NewsCreateStyle';
-import { apiEndpoints } from '../../../config/apiConfig';
+import { apiEndpoints, axiosInstance } from '../../../config/apiConfig';
 import axios from 'axios';
 
 interface NewsData {
@@ -162,7 +162,6 @@ const NewsEdit: React.FC = () => {
       </>,
     );
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -180,7 +179,6 @@ const NewsEdit: React.FC = () => {
       setIsSubmitting(true);
 
       const formData = new FormData();
-      // HTML 태그 제거
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = content;
       const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
@@ -210,7 +208,8 @@ const NewsEdit: React.FC = () => {
         formData.append('newsImage', imageFile);
       }
 
-      const response = await axios.post(
+      // axios 대신 axiosInstance 사용
+      const response = await axiosInstance.post(
         apiEndpoints.news.update.url(newsId),
         formData,
         {
@@ -225,7 +224,11 @@ const NewsEdit: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error updating news:', error);
-      if (error.response?.status === 404) {
+      if (error.response?.status === 401) {
+        showErrorModal('인증 오류', '로그인이 필요합니다.');
+      } else if (error.response?.status === 403) {
+        showErrorModal('권한 오류', '수정 권한이 없습니다.');
+      } else if (error.response?.status === 404) {
         showErrorModal('뉴스 없음', '해당 뉴스를 찾을 수 없습니다.');
       } else if (error.response?.status === 400) {
         showErrorModal('입력 오류', error.response.data.message);
