@@ -178,15 +178,12 @@ export const Checkbox = styled.input`
   height: 16px;
   cursor: pointer;
 `;
-
 export const PrivacyLabel = styled.label`
   font-size: 0.875rem;
   color: #666;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  display: inline-block;
+  line-height: 1.5;
 
   button {
     background: none;
