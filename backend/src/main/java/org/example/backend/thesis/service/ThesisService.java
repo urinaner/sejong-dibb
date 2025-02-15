@@ -2,6 +2,7 @@ package org.example.backend.thesis.service;
 
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.professor.domain.entity.Professor;
@@ -47,8 +48,7 @@ public class ThesisService {
 
 
     private Professor findProfessorById(Long professorId) {
-        return professorRepository.findById(professorId)
-                .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
+        return professorRepository.findById(professorId).orElse(null);
     }
 
     public ThesisResDto getThesis(Long thesisId) {
