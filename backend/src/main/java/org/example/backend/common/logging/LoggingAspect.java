@@ -53,7 +53,6 @@ public class LoggingAspect {
 
         printRequestLog(request, args);
 
-        // 💡 요청 로그 객체 생성 후 ThreadLocal에 저장
         RequestResponseLog logEntry = new RequestResponseLog();
         logEntry.setMethod(request.getMethod());
         logEntry.setPath(request.getRequestURI());
@@ -69,9 +68,9 @@ public class LoggingAspect {
         requestLogHolder.set(logEntry);
     }
     private String getClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For"); // 프록시 환경 고려
+        String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr(); // 기본 IP 가져오기
+            ip = request.getRemoteAddr();
         }
         return ip;
     }
@@ -122,17 +121,14 @@ public class LoggingAspect {
 
             log.info("[RESPONSE {}] [IP {}] {}", responseStatus, logEntry.getClientIp(), truncatedResponseBody); // ✅ IP 추가
 
-            // 💡 기존 요청 로그에 응답 정보 추가
             logEntry.setResponseStatus(responseStatus);
             logEntry.setResponseBody(truncatedResponseBody);
 
-            // 💡 단일 로그로 저장
             bulkLogManager.addLog(logEntry);
 
         } catch (JsonProcessingException e) {
             log.warn("[LOGGING ERROR] Response 로깅에 실패했습니다");
         } finally {
-            // 💡 ThreadLocal 메모리 누수 방지
             requestLogHolder.remove();
         }
     }
@@ -145,7 +141,6 @@ public class LoggingAspect {
         if (body instanceof Map) {
             Map<String, Object> map = new HashMap<>((Map<String, Object>) body);
 
-            // 로그 저장 제외할 필드 목록
             List<String> excludedKeys = Arrays.asList("fileList", "largeData", "extraInfo");
 
             for (String key : excludedKeys) {
