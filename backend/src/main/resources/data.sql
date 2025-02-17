@@ -364,3 +364,7 @@ VALUES (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발�
         'https://example.com/news10',
         'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-07+001.png',
         NOW());
+
+ALTER TABLE thesis
+    ADD FULLTEXT INDEX ft_index_title_author_journal_content (title, author, journal, content)
+  WITH PARSER ngram;
