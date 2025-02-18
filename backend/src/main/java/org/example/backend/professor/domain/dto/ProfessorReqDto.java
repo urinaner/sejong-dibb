@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.professor.domain.entity.AcademicBackground;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +39,8 @@ public class ProfessorReqDto {
     @Size(max = 30, message = "직위는 최대 30자까지 입력 가능합니다.")
     private String position;
 
+    private AcademicBackground academicBackground;
+
     @Schema(description = "교수 홈페이지", example = "https://www.sju.ac.kr/professor/example")
     @Size(max = 200, message = "홈페이지 URL은 최대 200자까지 입력 가능합니다.")
     private String homepage;
@@ -51,24 +54,27 @@ public class ProfessorReqDto {
 
     @Builder
     private ProfessorReqDto(String name, String major, String phoneN, String email,
-                            String position, String homepage, String lab) {
+                            String position, AcademicBackground academicBackground, String homepage, String lab) {
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;
         this.email = email;
         this.position = position;
+        this.academicBackground = academicBackground;
         this.homepage = homepage;
         this.lab = lab;
     }
 
     public static ProfessorReqDto of(String name, String major, String phoneN, String email,
-                                     String position, String homepage, String lab) {
+                                     String position, AcademicBackground academicBackground, String homepage,
+                                     String lab) {
         return ProfessorReqDto.builder()
                 .name(name)
                 .major(major)
                 .phoneN(phoneN)
                 .email(email)
                 .position(position)
+                .academicBackground(academicBackground)
                 .homepage(homepage)
                 .lab(lab)
                 .build();

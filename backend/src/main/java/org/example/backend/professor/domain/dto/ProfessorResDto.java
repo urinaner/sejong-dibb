@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.professor.domain.entity.AcademicBackground;
 import org.example.backend.professor.domain.entity.Professor;
 
 @Getter
@@ -28,6 +29,8 @@ public class ProfessorResDto {
     @Schema(description = "교수 직위", example = "정교수")
     private String position;
 
+    private AcademicBackground academicBackground;
+
     @Schema(description = "교수 홈페이지", example = "https://www.sju.ac.kr/professor/example")
     private String homepage;
 
@@ -39,13 +42,14 @@ public class ProfessorResDto {
 
     @Builder
     private ProfessorResDto(Long id, String name, String major, String phoneN, String email,
-                            String position, String homepage, String lab, String profileImage) {
+                            String position,AcademicBackground academicBackground, String homepage, String lab, String profileImage) {
         this.id = id;
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;
         this.email = email;
         this.position = position;
+        this.academicBackground = academicBackground;
         this.homepage = homepage;
         this.lab = lab;
         this.profileImage = profileImage;
@@ -59,9 +63,11 @@ public class ProfessorResDto {
                 .phoneN(professor.getPhoneN())
                 .email(professor.getEmail())
                 .position(professor.getPosition())
+                .academicBackground(professor.getAcademicBackground())
                 .homepage(professor.getHomepage())
                 .lab(professor.getLab())
                 .profileImage(professor.getProfileImage())
                 .build();
     }
+
 }
