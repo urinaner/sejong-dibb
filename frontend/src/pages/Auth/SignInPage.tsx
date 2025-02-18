@@ -195,7 +195,8 @@ const SignInPage: React.FC = () => {
               >
                 개인정보 수집 및 이용
               </button>
-              에 동의합니다.{' '}
+              에 동의합니다.
+              <br />
               <button type="button" onClick={() => handleOpenTerms('terms')}>
                 이용약관
               </button>{' '}

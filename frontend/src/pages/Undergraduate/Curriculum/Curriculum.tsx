@@ -303,7 +303,7 @@ const Curriculum: React.FC = () => {
     <S.Container>
       <S.ImageWrapper>
         {renderImage('curriculum', {
-          src: '/curriculum-2025.jpg',
+          src: '/curriculum-2025.png',
           alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
           scale: scaleCur,
           position: positionCur,
