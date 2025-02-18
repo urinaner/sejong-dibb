@@ -10,6 +10,7 @@ import { Modal, useModal } from '../../../components/Modal';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import 'react-quill/dist/quill.snow.css';
+import useNotice from '../../../hooks/queries/useNotice';
 
 interface BoardDetail {
   id: number;
@@ -34,6 +35,8 @@ const NoticeDetail: React.FC = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
+  const { useDeleteNotice } = useNotice;
+  const deleteNoticeMutation = useDeleteNotice();
 
   const [downloadingFiles, setDownloadingFiles] = useState<Set<string>>(
     new Set(),
@@ -181,7 +184,7 @@ const NoticeDetail: React.FC = () => {
 
     try {
       setIsDeleting(true);
-      await axios.delete(apiEndpoints.board.delete(id));
+      await deleteNoticeMutation.mutateAsync(post.id);
       showResultModal(true);
     } catch (error) {
       console.error('Failed to delete post:', error);

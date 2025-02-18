@@ -18,7 +18,6 @@ export const Information = styled.div`
   padding: 40px 220px;
   white-space: nowrap;
   border-radius: 24px;
-  font-family: 'Noto Sans KR', serif;
   font-weight: 600;
   font-size: 22px;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);

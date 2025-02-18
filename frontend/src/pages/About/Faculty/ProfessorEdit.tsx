@@ -15,6 +15,12 @@ import { apiEndpoints } from '../../../config/apiConfig';
 import Button from '../../../common/Button/Button';
 import { Modal, useModal } from '../../../components/Modal';
 import * as S from './ProfessorEditStyle';
+import {
+  createProfessorFormData,
+  getErrorMessage,
+  useProfessorDetail,
+  useUpdateProfessor,
+} from '../../../hooks/queries/useProfessor';
 
 interface ProfessorFormData {
   name: string;
@@ -25,9 +31,10 @@ interface ProfessorFormData {
   homepage: string;
   lab: string;
   profileImage: string;
+  departmentId: number;
 }
 
-const ProfessorEdit: React.FC = () => {
+const ProfessorEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { openModal } = useModal();
@@ -36,6 +43,8 @@ const ProfessorEdit: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const updateMutation = useUpdateProfessor();
+  const { data: professor, isLoading } = useProfessorDetail(Number(id));
 
   const [formData, setFormData] = useState<ProfessorFormData>({
     name: '',
@@ -46,6 +55,7 @@ const ProfessorEdit: React.FC = () => {
     homepage: '',
     lab: '',
     profileImage: '',
+    departmentId: 0,
   });
 
   const fetchProfessorData = useCallback(async () => {
@@ -146,7 +156,6 @@ const ProfessorEdit: React.FC = () => {
     },
     [openModal],
   );
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -162,7 +171,7 @@ const ProfessorEdit: React.FC = () => {
             입력 오류
           </Modal.Header>
           <Modal.Content>
-            <p>이름, 이메일, 직위는 필수 입력 항목입니다.</p>
+            <p>모든 필수 항목을 입력해주세요.</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
@@ -174,43 +183,11 @@ const ProfessorEdit: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-
-      const formDataToSend = new FormData();
-
-      // professorReqDto로 키 이름 변경
-      formDataToSend.append(
-        'professorReqDto',
-        new Blob(
-          [
-            JSON.stringify({
-              name: formData.name.trim(),
-              email: formData.email.trim(),
-              position: formData.position.trim(),
-              major: formData.major,
-              phoneN: formData.phoneN,
-              homepage: formData.homepage,
-              lab: formData.lab,
-              departmentId: 1,
-            }),
-          ],
-          { type: 'application/json' },
-        ),
-      );
-
-      // profileImage로 키 이름 변경
-      if (imageFile) {
-        formDataToSend.append('profileImage', imageFile);
-      }
-
-      await axios.post(
-        apiEndpoints.professor.update.url(Number(id)),
-        formDataToSend,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
+      const formDataToSend = createProfessorFormData(formData, imageFile);
+      await updateMutation.mutateAsync({
+        id: Number(id),
+        formData: formDataToSend,
+      });
 
       openModal(
         <>
@@ -237,7 +214,7 @@ const ProfessorEdit: React.FC = () => {
             수정 실패
           </Modal.Header>
           <Modal.Content>
-            <p>교수 정보 수정 중 오류가 발생했습니다.</p>
+            <p>{getErrorMessage(error)}</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
@@ -249,10 +226,9 @@ const ProfessorEdit: React.FC = () => {
     }
   };
 
+  // 로딩 상태 처리
   if (loading) {
-    return (
-      <S.LoadingContainer>데이터를 불러오는 중입니다...</S.LoadingContainer>
-    );
+    return <div>Loading...</div>;
   }
 
   return (

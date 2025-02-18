@@ -52,7 +52,7 @@ public class Thesis {
     private String issn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id", nullable = true)
     private Professor professor;
 
     @Builder

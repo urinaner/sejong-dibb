@@ -8,6 +8,7 @@ import {
 import axios, { AxiosError } from 'axios';
 import { newsApi, NewsFormRequest } from '../../api/news';
 import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
+
 export interface NewsItem {
   id: number;
   title: string;
@@ -33,6 +34,7 @@ export const newsKeys = {
   details: () => [...newsKeys.all, 'detail'] as const,
   detail: (id: number) => [...newsKeys.details(), id] as const,
 };
+
 export const useGetNewsList = (params: {
   page: number;
   size: number;
@@ -47,6 +49,7 @@ export const useGetNewsList = (params: {
     },
   });
 };
+
 export const useGetNews = (
   id: number,
 ): UseQueryResult<NewsItem, AxiosError> => {
@@ -64,12 +67,40 @@ export const useGetNews = (
 
 export const useCreateNews = (): UseMutationResult<
   number,
-  AxiosError,
-  NewsFormRequest
+  AxiosError<{ message: string }>,
+  {
+    newsFormData: NewsFormRequest;
+    imageFile?: File;
+  }
 > => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: newsApi.createNews,
+    mutationFn: async ({ newsFormData, imageFile }) => {
+      const formData = new FormData();
+      formData.append(
+        'newsReqDto',
+        new Blob([JSON.stringify(newsFormData)], {
+          type: 'application/json',
+        }),
+      );
+
+      if (imageFile) {
+        formData.append('newsImage', imageFile);
+      }
+
+      const response = await axiosInstance.post<number>(
+        apiEndpoints.news.create.url,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
@@ -93,14 +124,14 @@ export const useUpdateNews = (): UseMutationResult<
   });
 };
 
-export const useDeleteNews = (): UseMutationResult<
-  void,
-  AxiosError,
-  number
-> => {
+export const useDeleteNews = () => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: newsApi.deleteNews,
+
+  return useMutation<void, AxiosError, number>({
+    mutationFn: async (id: number) => {
+      const response = await axiosInstance.delete(apiEndpoints.news.delete(id));
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },

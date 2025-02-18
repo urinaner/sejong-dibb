@@ -12,7 +12,6 @@ export const Container = styled.div`
   width: 80vw;
   margin: 0 auto;
   padding: 40px 20px;
-  background-color: ${(props) => props.theme.colors.grey[50]};
 
   ${media.mobile} {
     width: 100%;
