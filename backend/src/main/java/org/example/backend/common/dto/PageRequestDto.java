@@ -31,7 +31,7 @@ public class PageRequestDto {
         return PageRequest.of(page, size, direction, sort);
     }
 
-    public Pageable toPageable(boolean isNativeQuery) {
+    public Pageable toPageableUnsorted() {
         return PageRequest.of(page, size, Sort.unsorted());
     }
 }
