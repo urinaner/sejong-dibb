@@ -125,15 +125,15 @@ export interface MainContent {
 }
 
 export const MAIN_CONTENT: MainContent = {
-  title: 'integrative\n' + 'bioscience and\n' + 'biotechnology',
+  title: 'Integrative\n' + 'Bioscience and\n' + 'Biotechnology',
   videos: [
     {
       id: 'video1',
-      title: ['integrative', 'bioscience', 'biotechnology'],
+      title: ['Integrative', 'Bioscience', 'Biotechnology'],
     },
     {
       id: 'video2',
-      title: ['integrative', 'bioscience', 'biotechnology'],
+      title: ['Integrative', 'Bioscience', 'Biotechnology'],
     },
   ],
 };
