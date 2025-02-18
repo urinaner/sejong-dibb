@@ -28,9 +28,6 @@ const TabSection: React.FC<TabSectionProps> = ({ professorId }) => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      // case 'basic':
-      // return <BasicInfo professorId={professorId} />;
-      // case 'research':
       case 'publications':
         return <Publications professorId={professorId} />;
       default:

@@ -11,15 +11,14 @@ export const Container = styled.div`
   width: 80vw;
   margin: 0 auto;
   padding: 40px 20px;
-  background-color: ${(props) => props.theme.colors.grey[50]};
 
   ${media.mobile} {
-    width: 100%;
+    width: 90vw;
     padding: 20px 16px;
   }
 
   ${media.tablet} {
-    width: 90%;
+    width: 80vw;
     padding: 30px 20px;
   }
 `;

@@ -13,13 +13,9 @@ export const ProfileContainer = styled.section`
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid ${(props) => props.theme.colors.grey[200]};
-  margin-bottom: 2rem;
+  border: 1px solid margin-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-  ${media.tablet} {
-    gap: 1.5rem;
-  }
+    
 
   ${media.mobile} {
     flex-direction: column;
