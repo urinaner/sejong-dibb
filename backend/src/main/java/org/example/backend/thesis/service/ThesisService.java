@@ -47,8 +47,7 @@ public class ThesisService {
 
 
     private Professor findProfessorById(Long professorId) {
-        return professorRepository.findById(professorId)
-                .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
+        return professorRepository.findById(professorId).orElse(null);
     }
 
     public ThesisResDto getThesis(Long thesisId) {
