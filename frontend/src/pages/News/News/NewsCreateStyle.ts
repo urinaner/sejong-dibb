@@ -1,18 +1,16 @@
 import styled from 'styled-components';
 import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
-
 export const Container = styled.div`
-  max-width: 900px;
   width: 80vw;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 2.5rem 0.5rem;
 
   ${media.mobile} {
-    padding: 2rem 1rem;
+    width: 95vw;
+    padding: 2rem 0.5rem;
   }
 `;
-
 export const ContentWrapper = styled.div`
   background: white;
 `;
