@@ -54,13 +54,13 @@ export const NewsCard = styled.div`
     padding: 1rem 0;
   }
 `;
-
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 200px;
   min-width: 200px;
   height: 150px;
   background-image: url(${(props) => props.imageUrl});
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
   background-color: ${SEJONG_COLORS.COOL_GRAY};
 
