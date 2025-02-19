@@ -3,6 +3,7 @@ package org.example.backend.news.service;
 import static org.example.backend.news.exception.NewsExceptionType.NOT_FOUND_NEWS;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.common.utils.PersonalInfoFilterUtil;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
@@ -29,6 +30,7 @@ public class NewsService {
 
     @Transactional
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
+        PersonalInfoFilterUtil.validatePersonalInfo(newsReqDto.getContent());
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);

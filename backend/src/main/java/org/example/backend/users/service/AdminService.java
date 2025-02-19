@@ -2,6 +2,10 @@ package org.example.backend.users.service;
 
 import static org.example.backend.users.exception.admin.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
 import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_ACCESS_TOKEN;
+import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_PASSWORD_PATTERN;
+import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_VALID_PASSWORD;
+
+import java.util.regex.Pattern;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_FOUND_ADMIN;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_FOUND_MAIL_RECEIVER;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_MATCH_EMAIL;
@@ -79,6 +83,7 @@ public class AdminService {
 
     @Transactional
     public AdminResDto updateAdminPassword(Long adminId, String password) {
+        checkPassword(password);
         Users admin = getAdminById(adminId);
         admin.updatePassword(bCryptPasswordEncoder.encode(password));
         return AdminResDto.of(admin);
@@ -90,6 +95,14 @@ public class AdminService {
         boolean matched = admin.matchPassword(password, bCryptPasswordEncoder);
         if (!matched) {
             throw new AdminException(NOT_VALID_PASSWORD);
+        }
+    }
+
+    private void checkPassword(String password) {
+        String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+
+        if (!Pattern.matches(passwordPattern, password)) {
+            throw new AdminException(INVALID_PASSWORD_PATTERN);
         }
     }
     public Users getAdminById(Long id) {
