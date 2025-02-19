@@ -21,6 +21,7 @@ const News = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
+  const API_BASE_URL = 'https://ibb.sejong.ac.kr';
 
   const {
     data: newsData,
@@ -162,7 +163,7 @@ const News = () => {
         {newsData.data.map((item) => (
           <S.NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <S.NewsImage
-              imageUrl={`${item.image}`}
+              imageUrl={`${API_BASE_URL}${item.image}`}
               onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
                 e.currentTarget.classList.add('error');
               }}

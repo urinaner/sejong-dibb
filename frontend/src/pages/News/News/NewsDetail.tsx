@@ -23,6 +23,7 @@ import {
 const NewsDetail = () => {
   const { newsId } = useParams();
   const navigate = useNavigate();
+  const API_BASE_URL = 'https://ibb.sejong.ac.kr';
 
   const {
     data: newsItems,
@@ -84,7 +85,10 @@ const NewsDetail = () => {
         </NewsHeader>
         <NewsDivider />
         {newsItems.image && (
-          <NewsImage src={`${newsItems.image}`} alt={newsItems.title} />
+          <NewsImage
+            src={`${API_BASE_URL}${newsItems.image}`}
+            alt={newsItems.title}
+          />
         )}
         <NewsContent>{newsItems.content}</NewsContent>
         {newsItems.link && (
