@@ -1,0 +1,263 @@
+/* GoogleCalendarStyle.css - 반응형 레이아웃 적용 */
+/* 기본 변수 정의 */
+:root {
+  --fc-border-color: #e0e0e0;
+  --fc-button-bg-color: #1a73e8;
+  --fc-button-border-color: #1a73e8;
+  --fc-button-hover-bg-color: #1a66ca;
+  --fc-button-hover-border-color: #1a66ca;
+  --fc-button-active-bg-color: #1967d2;
+  --fc-today-bg-color: #e8f0fe;
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: #fff;
+}
+
+/* 캘린더 컨테이너 - 페이지 레이아웃에 맞게 조절 */
+.fc-container {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 200px); /* 헤더/푸터 고려 */
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.fc {
+  height: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  --fc-border-color: #e0e0e0;
+  --fc-button-bg-color: #1a73e8;
+  --fc-button-border-color: #1a73e8;
+  --fc-button-hover-bg-color: #1a66ca;
+  --fc-button-hover-border-color: #1a66ca;
+  --fc-button-active-bg-color: #1967d2;
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: #fff;
+  --fc-today-bg-color: #e8f0fe;
+}
+
+/* 뷰 하네스(view harness) - 캘린더 본체 컨테이너 */
+.fc-view-harness {
+  min-height: 500px; /* 최소 높이 설정 */
+  height: calc(100vh - 280px) !important; /* 헤더/푸터/툴바 고려한 동적 높이 */
+  transition: height 0.3s ease;
+}
+
+/* 반응형 툴바 */
+.fc-toolbar {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1em !important;
+  gap: 10px;
+}
+
+.fc-toolbar-title {
+  font-size: 18px !important;
+  font-weight: 500;
+}
+
+/* 이벤트 스타일링 */
+.fc-event {
+  padding: 2px 4px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: 0.85em;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+}
+
+/* 날짜 셀 스타일링 */
+.fc-daygrid-day {
+  min-height: 6em;
+  transition: background-color 0.2s;
+}
+
+.fc-daygrid-day:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-day-today {
+  background-color: var(--fc-today-bg-color) !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+  .fc-view-harness {
+    min-height: 400px;
+    height: calc(100vh - 220px) !important;
+  }
+
+  .fc-toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fc-toolbar-chunk {
+    margin-bottom: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .fc-toolbar-title {
+    font-size: 16px !important;
+    text-align: center;
+  }
+
+  .fc-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .fc-button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .fc-daygrid-day {
+    min-height: 4em;
+  }
+
+  .fc-col-header-cell-cushion,
+  .fc-daygrid-day-number {
+    font-size: 0.85em;
+  }
+
+  .fc-event {
+    font-size: 0.7em;
+    padding: 1px 2px;
+  }
+}
+
+/* 태블릿 대응 */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .fc-view-harness {
+    min-height: 450px;
+    height: calc(100vh - 250px) !important;
+  }
+
+  .fc-toolbar-title {
+    font-size: 17px !important;
+  }
+
+  .fc-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* 더 많은 이벤트 표시기 스타일링 */
+.fc-daygrid-more-link {
+  background-color: #f1f3f4;
+  color: #1a73e8;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: 2px 0;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.fc-daygrid-more-link:hover {
+  background-color: #e8eaed;
+  text-decoration: none;
+}
+
+/* 시간 그리드 뷰 스타일링 */
+.fc-timegrid-slot {
+  height: 40px !important;
+}
+
+.fc-timegrid-now-indicator-line {
+  border-color: #ea4335;
+  z-index: 4;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  border-color: #ea4335;
+  border-width: 5px;
+}
+
+/* 버튼 스타일링 */
+.fc-button {
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+  font-weight: 500;
+}
+
+.fc-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.4);
+}
+
+.fc-button:active {
+  transform: scale(0.97);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 부드러운 뷰 전환 애니메이션 */
+.fc-view-harness.fc-view-harness-active {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.7;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 주말 색상 */
+.fc-day-sun .fc-daygrid-day-number,
+.fc-day-sun .fc-col-header-cell-cushion {
+  color: #ea4335;
+}
+
+.fc-day-sat .fc-daygrid-day-number,
+.fc-day-sat .fc-col-header-cell-cushion {
+  color: #4285f4;
+}
+
+/* 세종대학교 테마 컬러 적용 */
+.university-theme .fc-button-primary {
+  background-color: #B71C1C;
+  border-color: #B71C1C;
+}
+
+.university-theme .fc-button-primary:hover {
+  background-color: #8B0000;
+  border-color: #8B0000;
+}
+
+.university-theme .fc-day-today .fc-daygrid-day-number {
+  background-color: #B71C1C;
+}
+
+.university-theme .fc-daygrid-more-link {
+  color: #B71C1C;
+}
