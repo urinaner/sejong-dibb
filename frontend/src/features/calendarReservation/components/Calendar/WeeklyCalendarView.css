@@ -2,310 +2,312 @@
 
 /* 주간 뷰 기본 컨테이너 스타일링 */
 .fc-timeGridWeek-view {
-    background-color: transparent;
-    border-radius: 8px;
-    padding-bottom: 12px;
+  background-color: transparent;
+  border-radius: 8px;
+  padding-bottom: 12px;
 }
 
 /* 주간 뷰 헤더 스타일링 */
 .fc-timeGridWeek-view .fc-col-header {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-bottom: 1px solid #e0e0e0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .fc-timeGridWeek-view .fc-col-header-cell {
-    padding: 10px 0;
-    vertical-align: middle;
-    border: none;
+  padding: 10px 0;
+  vertical-align: middle;
+  border: none;
 }
 
 .fc-timeGridWeek-view .fc-col-header-cell-cushion {
-    padding: 8px 4px;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1.3;
-    color: #333;
+  padding: 8px 4px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.3;
+  color: #333;
 }
 
 /* 요일 이름과 날짜 분리 표시 */
 .fc-timeGridWeek-view .fc-col-header-cell-cushion::before {
-    content: attr(data-weekday);
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 4px;
+  content: attr(data-weekday);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 /* 현재 날짜 강조 - 더 미니멀하게 */
 .fc-timeGridWeek-view .fc-day-today .fc-col-header-cell-cushion {
-    background-color: transparent;
-    color: #B71C1C;
-    font-weight: 700;
-    position: relative;
+  background-color: transparent;
+  color: #b71c1c;
+  font-weight: 700;
+  position: relative;
 }
 
 .fc-timeGridWeek-view .fc-day-today .fc-col-header-cell-cushion::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 24px;
-    height: 2px;
-    background-color: #B71C1C;
-    border-radius: 1px;
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 2px;
+  background-color: #b71c1c;
+  border-radius: 1px;
 }
 
 /* 시간축 스타일링 - 더 깔끔하게 */
 .fc-timeGridWeek-view .fc-timegrid-axis {
-    padding: 0 12px;
-    font-size: 13px;
-    font-weight: 400;
-    color: #666;
-    background-color: transparent;
-    width: 70px !important;
-    text-align: right;
-    border-right: 1px solid #f0f0f0;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  background-color: transparent;
+  width: 70px !important;
+  text-align: right;
+  border-right: 1px solid #f0f0f0;
 }
 
 /* 시간 슬롯 구분선 개선 - 더 얇고 밝게 */
 .fc-timeGridWeek-view .fc-timegrid-slot {
-    height: 50px !important;
-    border-color: #f5f5f5;
+  height: 50px !important;
+  border-color: #f5f5f5;
 }
 
 /* 모든 배경색 제거 */
 .fc-timeGridWeek-view .fc-timegrid-slot-lane {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 /* 시간 슬롯 호버 효과 - 매우 미묘하게 */
 .fc-timeGridWeek-view .fc-timegrid-slot:hover {
-    background-color: rgba(240, 244, 248, 0.4);
+  background-color: rgba(240, 244, 248, 0.4);
 }
 
 /* 현재 시간 표시선 개선 - 더 섬세하게 */
 .fc-timeGridWeek-view .fc-timegrid-now-indicator-line {
-    border-color: #B71C1C;
-    border-width: 1px;
-    z-index: 5;
-    opacity: 0.7;
+  border-color: #b71c1c;
+  border-width: 1px;
+  z-index: 5;
+  opacity: 0.7;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-now-indicator-arrow {
-    border-color: #B71C1C;
-    border-width: 4px;
-    margin-top: -4px;
-    opacity: 0.7;
+  border-color: #b71c1c;
+  border-width: 4px;
+  margin-top: -4px;
+  opacity: 0.7;
 }
 
 /* 주간 뷰 이벤트 스타일링 - 그림자 줄이고 경계 부드럽게 */
 .fc-timeGridWeek-view .fc-timegrid-event {
-    border-radius: 4px;
-    padding: 4px 8px;
-    margin: 1px 2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
-    overflow: hidden;
-    border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 1px 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  overflow: hidden;
+  border: none;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 /* 이벤트 유형별 스타일링 - 좌측 보더만 유지하고 투명도 추가 */
 .fc-timeGridWeek-view .fc-timegrid-event.seminar-event {
-    background-color: rgba(26, 115, 232, 0.9);
-    border-left: 3px solid #0b4f9e;
+  background-color: rgba(26, 115, 232, 0.9);
+  border-left: 3px solid #0b4f9e;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.class-event {
-    background-color: rgba(11, 128, 67, 0.9);
-    border-left: 3px solid #06572c;
+  background-color: rgba(11, 128, 67, 0.9);
+  border-left: 3px solid #06572c;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.meeting-event {
-    background-color: rgba(246, 191, 38, 0.9);
-    border-left: 3px solid #d5a31f;
-    color: #333;
+  background-color: rgba(246, 191, 38, 0.9);
+  border-left: 3px solid #d5a31f;
+  color: #333;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.other-event {
-    background-color: rgba(97, 97, 97, 0.9);
-    border-left: 3px solid #424242;
+  background-color: rgba(97, 97, 97, 0.9);
+  border-left: 3px solid #424242;
 }
 
 /* 이벤트 내부 타이틀과 시간 스타일링 */
 .fc-timeGridWeek-view .fc-event-time {
-    font-weight: 500;
-    font-size: 0.85em;
-    margin-bottom: 2px;
-    opacity: 0.9;
+  font-weight: 500;
+  font-size: 0.85em;
+  margin-bottom: 2px;
+  opacity: 0.9;
 }
 
 .fc-timeGridWeek-view .fc-event-title {
-    font-weight: 400;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  font-weight: 400;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /* 이벤트 길이에 따른 처리 - 최소 높이 조정 */
 .fc-timeGridWeek-view .fc-timegrid-event.short-event {
-    min-height: 28px;
+  min-height: 28px;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.medium-event {
-    min-height: 45px;
+  min-height: 45px;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.long-event {
-    min-height: 65px;
+  min-height: 65px;
 }
 
 /* 주말 날짜 색상 - 더 부드럽게 */
 .fc-timeGridWeek-view .fc-day-sun .fc-col-header-cell-cushion {
-    color: rgba(211, 47, 47, 0.8) !important;
+  color: rgba(211, 47, 47, 0.8) !important;
 }
 
 .fc-timeGridWeek-view .fc-day-sat .fc-col-header-cell-cushion {
-    color: rgba(26, 115, 232, 0.8) !important;
+  color: rgba(26, 115, 232, 0.8) !important;
 }
 
 /* 현재 날짜 스타일 - 매우 미묘하게 */
 .fc-timeGridWeek-view .fc-day-today {
-    background-color: rgba(255, 235, 238, 0.15) !important;
+  background-color: rgba(255, 235, 238, 0.15) !important;
 }
 
 /* 스크롤바 커스터마이징 - 더 얇고 미니멀하게 */
 .fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  width: 8px;
+  height: 8px;
 }
 
 .fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 4px;
+  background: transparent;
+  border-radius: 4px;
 }
 
 .fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* 활성 셀 표시 개선 */
 .fc-timegrid-col-events {
-    margin: 0 4px !important;
+  margin: 0 4px !important;
 }
 
 /* 시간 그리드 컬럼 테두리 개선 - 매우 얇게 */
 .fc-timegrid-col {
-    border-left: 1px solid #f0f0f0 !important;
+  border-left: 1px solid #f0f0f0 !important;
 }
 
 /* 더 선명한 시간 구분선 - 더 얇게 */
 .fc-timegrid-slots tr:not(:last-child) td {
-    border-bottom: 1px dotted #f0f0f0 !important;
+  border-bottom: 1px dotted #f0f0f0 !important;
 }
 
 /* 시간 레이블 너비 일정하게 맞추기 */
 .fc-timegrid-axis-cushion {
-    width: 50px;
-    text-align: right;
-    font-size: 12px;
-    color: #888;
+  width: 50px;
+  text-align: right;
+  font-size: 12px;
+  color: #888;
 }
 
 /* 업무 시간 표시선 - 업무 시작/종료 시간만 표시 */
-.fc-timeGridWeek-view .fc-timegrid-slot[data-time="09:00:00"] td {
-    border-top: 1px solid rgba(183, 28, 28, 0.15) !important;
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time='09:00:00'] td {
+  border-top: 1px solid rgba(183, 28, 28, 0.15) !important;
 }
 
-.fc-timeGridWeek-view .fc-timegrid-slot[data-time="18:00:00"] td {
-    border-top: 1px solid rgba(183, 28, 28, 0.15) !important;
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time='18:00:00'] td {
+  border-top: 1px solid rgba(183, 28, 28, 0.15) !important;
 }
 
 /* 점심 시간 표시 - 더 미묘하게 */
-.fc-timeGridWeek-view .fc-timegrid-slot[data-time="12:00:00"] td,
-.fc-timeGridWeek-view .fc-timegrid-slot[data-time="13:00:00"] td {
-    border-top: 1px dashed rgba(246, 191, 38, 0.2) !important;
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time='12:00:00'] td,
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time='13:00:00'] td {
+  border-top: 1px dashed rgba(246, 191, 38, 0.2) !important;
 }
 
 /* 헬퍼 클래스 */
 .weekday-name {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 13px;
-    color: #666;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #666;
 }
 
 .date-number {
-    display: block;
-    font-size: 16px;
-    color: #333;
+  display: block;
+  font-size: 16px;
+  color: #333;
 }
 
 /* 이벤트 상태에 따른 스타일 */
 .fc-timeGridWeek-view .fc-timegrid-event.status-confirmed {
-    border-left-width: 4px;
+  border-left-width: 4px;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.status-pending {
-    border-style: dashed;
-    opacity: 0.85;
+  border-style: dashed;
+  opacity: 0.85;
 }
 
 .fc-timeGridWeek-view .fc-timegrid-event.status-cancelled {
-    text-decoration: line-through;
-    opacity: 0.6;
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 /* 타임라인 그리드 배경 완전 제거 */
 .fc-timegrid-cols table {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 /* 모바일 대응 */
 @media screen and (max-width: 768px) {
-    .fc-timeGridWeek-view .fc-col-header-cell-cushion {
-        font-size: 12px;
-        padding: 4px 2px;
-    }
+  .fc-timeGridWeek-view .fc-col-header-cell-cushion {
+    font-size: 12px;
+    padding: 4px 2px;
+  }
 
-    .fc-timeGridWeek-view .fc-col-header-cell-cushion::before {
-        font-size: 11px;
-    }
+  .fc-timeGridWeek-view .fc-col-header-cell-cushion::before {
+    font-size: 11px;
+  }
 
-    .fc-timeGridWeek-view .fc-timegrid-axis {
-        width: 40px !important;
-        font-size: 11px;
-        padding: 0 4px;
-    }
+  .fc-timeGridWeek-view .fc-timegrid-axis {
+    width: 40px !important;
+    font-size: 11px;
+    padding: 0 4px;
+  }
 
-    .fc-timeGridWeek-view .fc-timegrid-slot {
-        height: 40px !important;
-    }
+  .fc-timeGridWeek-view .fc-timegrid-slot {
+    height: 40px !important;
+  }
 
-    .fc-timeGridWeek-view .fc-timegrid-event {
-        padding: 2px 4px;
-    }
+  .fc-timeGridWeek-view .fc-timegrid-event {
+    padding: 2px 4px;
+  }
 
-    .fc-timeGridWeek-view .fc-event-time,
-    .fc-timeGridWeek-view .fc-event-title {
-        font-size: 0.75em;
-    }
+  .fc-timeGridWeek-view .fc-event-time,
+  .fc-timeGridWeek-view .fc-event-title {
+    font-size: 0.75em;
+  }
 }

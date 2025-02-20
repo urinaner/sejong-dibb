@@ -19,25 +19,23 @@ export const useCalendarEvents = (roomId: number, refetchData: () => void) => {
     setSelectedReservation,
   } = useReservationStore();
 
-  const {
-    useUpdateReservation,
-    useDeleteReservation,
-  } = useReservationQuery(roomId);
+  const { useUpdateReservation, useDeleteReservation } =
+    useReservationQuery(roomId);
 
   // 날짜 선택 핸들러 (새 예약 생성)
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     openModal(
       <ReservationForm
         roomId={roomId}
-    startTime={selectInfo.startStr}
-    endTime={selectInfo.endStr}
-    onSave={(newReservation) => {
-      addReservation(newReservation);
-      // 현재 표시 중인 월의 데이터 다시 로드
-      refetchData();
-    }}
-    />,
-  );
+        startTime={selectInfo.startStr}
+        endTime={selectInfo.endStr}
+        onSave={(newReservation) => {
+          addReservation(newReservation);
+          // 현재 표시 중인 월의 데이터 다시 로드
+          refetchData();
+        }}
+      />,
+    );
   };
 
   // 이벤트 클릭 핸들러 (예약 상세 보기)
@@ -48,26 +46,25 @@ export const useCalendarEvents = (roomId: number, refetchData: () => void) => {
     openModal(
       <EventDetailModal
         reservation={reservation}
-    onDelete={(id: number) => {
-      deleteReservation(id);
-      // 삭제 후 데이터 다시 로드
-      refetchData();
-    }}
-    onEdit={() => {
-      openModal(
-        <ReservationForm
-          roomId={roomId}
-      reservation={reservation}
-      onSave={(updatedReservation) => {
-        updateReservation(updatedReservation.id, updatedReservation);
-        // 수정 후 데이터 다시 로드
-        refetchData();
-      }}
+        onDelete={(id: number) => {
+          deleteReservation(id);
+          // 삭제 후 데이터 다시 로드
+          refetchData();
+        }}
+        onEdit={() => {
+          openModal(
+            <ReservationForm
+              roomId={roomId}
+              reservation={reservation}
+              onSave={(updatedReservation) => {
+                updateReservation(updatedReservation.id, updatedReservation);
+                refetchData();
+              }}
+            />,
+          );
+        }}
       />,
     );
-    }}
-    />,
-  );
   };
 
   // 이벤트 드래그 핸들러
@@ -154,6 +151,6 @@ export const useCalendarEvents = (roomId: number, refetchData: () => void) => {
     handleDateSelect,
     handleEventClick,
     handleEventDrop,
-    handleEventResize
+    handleEventResize,
   };
 };
