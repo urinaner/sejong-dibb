@@ -71,7 +71,7 @@ public class SeminarController {
     @GetMapping("/search")
     public ResponseDto<List<SeminarResDto>> searchSeminar(@RequestParam String keyword,
                                                           @Valid @ModelAttribute PageRequestDto pageRequest) {
-        Page<SeminarResDto> seminarList = seminarService.searchSeminar(keyword, pageRequest.toPageable());
+        Page<SeminarResDto> seminarList = seminarService.searchSeminar(keyword, pageRequest.toPageableUnsorted());
         return ResponseDto.ok(seminarList.getNumber(), seminarList.getTotalPages(), seminarList.getContent());
     }
 }

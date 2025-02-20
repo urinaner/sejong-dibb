@@ -75,7 +75,7 @@ public class ThesisController {
     @GetMapping("/search")
     public ResponseDto<List<ThesisResDto>> searchThesis(@RequestParam String keyword,
                                                         @Valid @ModelAttribute PageRequestDto pageRequest) {
-        Page<ThesisResDto> thesisResDtos = thesisService.searchThesis(keyword, pageRequest.toPageable());
+        Page<ThesisResDto> thesisResDtos = thesisService.searchThesisFulltext(keyword, pageRequest.toPageableUnsorted());
         return ResponseDto.ok(thesisResDtos.getNumber(), thesisResDtos.getTotalPages(), thesisResDtos.getContent());
     }
 }

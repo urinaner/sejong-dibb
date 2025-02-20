@@ -2,6 +2,7 @@ package org.example.backend.thesis.service;
 
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
@@ -14,6 +15,7 @@ import org.example.backend.thesis.exception.ThesisException;
 import org.example.backend.thesis.repository.ThesisRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,8 +92,22 @@ public class ThesisService {
                 .orElseThrow(() -> new ThesisException(NOT_FOUND_THESIS));
     }
 
-    public Page<ThesisResDto> searchThesis(String keyword, Pageable pageable) {
-        return thesisRepository.searchByKeyword(keyword, pageable)
-                .map(ThesisResDto::of);
+    public Page<ThesisResDto> searchThesisFulltext(String keyword, Pageable pageable) {
+        // Step1) ID만 페이징 조회
+        Page<Long> idPage = thesisRepository.searchThesisIdsByFulltext(keyword, pageable);
+
+        // 조회된 ID가 없으면 빈 페이지 반환
+        if (idPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        // Step2) Fetch Join으로 실제 Thesis + Professor 로딩
+        List<Thesis> thesisList = thesisRepository.findAllByIdInWithProfessor(idPage.getContent());
+        List<ThesisResDto> dtoList = thesisList.stream()
+                .map(ThesisResDto::of)
+                .toList();
+
+        // 최종 Page<>로 래핑
+        return new PageImpl<>(dtoList, pageable, idPage.getTotalElements());
     }
 }

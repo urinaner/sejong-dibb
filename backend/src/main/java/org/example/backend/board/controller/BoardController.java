@@ -96,7 +96,7 @@ public class BoardController {
     @GetMapping("/search")
     public ResponseDto<List<BoardResDto>> searchBoard(@RequestParam String keyword,
                                                       @ModelAttribute @Valid PageRequestDto pageRequest) {
-        Page<BoardResDto> boardList = boardService.searchBoard(keyword, pageRequest.toPageable());
+        Page<BoardResDto> boardList = boardService.searchBoard(keyword, pageRequest.toPageableUnsorted());
         return ResponseDto.ok(boardList.getNumber(), boardList.getTotalPages(), boardList.getContent());
     }
 }
