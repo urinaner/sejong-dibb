@@ -61,8 +61,7 @@ function Calendar() {
   return (
     <Container>
       {/* 세미나실 정보 */}
-      <RoomInfo roomId={ROOM_ID} />
-
+      <RoomInfo />
       {/* 커스텀 캘린더 툴바 */}
       <CalendarToolbar
         selectedDate={selectedDate}

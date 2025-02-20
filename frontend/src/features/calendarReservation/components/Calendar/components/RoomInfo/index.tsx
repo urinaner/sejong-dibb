@@ -1,28 +1,21 @@
 import React from 'react';
 import {
-  HeaderContainer,
   RoomContainer,
   RoomInfo as StyledRoomInfo,
-  RoomName,
   RoomImg,
-  CalendarTitle,
   RoomImageContainer,
   RoomDetailsContainer,
   RoomDetail,
   RoomDetailLabel,
 } from '../../CalendarStyle';
-import seminarRoomImg from '../../../../../../assets/images/seminarRoom1.jpeg';
 
 interface RoomInfoProps {
   roomId: number;
 }
 
-function RoomInfo({ roomId }: RoomInfoProps) {
+function RoomInfo() {
   return (
     <>
-      <HeaderContainer>
-        <CalendarTitle>세미나실 예약</CalendarTitle>
-      </HeaderContainer>
       <RoomContainer>
         <StyledRoomInfo>
           <RoomImageContainer>
