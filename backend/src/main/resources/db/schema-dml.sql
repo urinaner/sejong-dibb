@@ -365,19 +365,4 @@ VALUES (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발�
         'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-07+001.png',
         NOW());
 
-ALTER TABLE news
-    ADD FULLTEXT INDEX ft_news_title_content (title, content)
-    WITH PARSER ngram;
-
-ALTER TABLE board
-    ADD FULLTEXT INDEX ft_board_title_content (title, content)
-    WITH PARSER ngram;
-
-ALTER TABLE seminar
-    ADD FULLTEXT INDEX ft_seminar_name_speaker_company_place (name, speaker, company, place)
-    WITH PARSER ngram;
-
-ALTER TABLE thesis
-    ADD FULLTEXT INDEX ft_index_title_author_journal_content (title, author, journal, content)
-    WITH PARSER ngram;
 
