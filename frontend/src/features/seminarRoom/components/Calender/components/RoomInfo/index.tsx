@@ -5,9 +5,13 @@ import {
   RoomInfo as StyledRoomInfo,
   RoomName,
   RoomImg,
-  Capacity,
-  Location,
+  CalendarTitle,
+  RoomImageContainer,
+  RoomDetailsContainer,
+  RoomDetail,
+  RoomDetailLabel,
 } from '../../CalendarStyle';
+import seminarRoomImg from '../../../../assets/images/seminarRoom1.jpeg';
 
 interface RoomInfoProps {
   roomId: number;
@@ -16,22 +20,33 @@ interface RoomInfoProps {
 function RoomInfo({ roomId }: RoomInfoProps) {
   return (
     <>
-      <HeaderContainer> </HeaderContainer>
+      <HeaderContainer>
+        <CalendarTitle>세미나실 예약</CalendarTitle>
+      </HeaderContainer>
       <RoomContainer>
+        <RoomName>세미나실 {roomId}</RoomName>
         <StyledRoomInfo>
-          <div style={{ display: 'flex' }}>
-            <div style={{ flexGrow: '1' }}>
-              {/* public 폴더의 이미지는 루트 경로(/)부터 시작 */}
-              <RoomImg src="/seminarRoom.jpeg" />
-            </div>
-            <div style={{ flexGrow: '1' }}>
-              <Capacity>수용인원</Capacity>
-              <span>15명</span>
-              <br />
-              <Location>장소</Location>
-              <span>충무관 507C호</span>
-            </div>
-          </div>
+          <RoomImageContainer>
+            <RoomImg src={seminarRoomImg} alt={`세미나실 ${roomId}`} />
+          </RoomImageContainer>
+          <RoomDetailsContainer>
+            <RoomDetail>
+              <RoomDetailLabel>수용인원:</RoomDetailLabel>
+              <span>30명</span>
+            </RoomDetail>
+
+            <RoomDetail>
+              <RoomDetailLabel>위치:</RoomDetailLabel>
+              <span>충무관 501호</span>
+            </RoomDetail>
+
+            <RoomDetail>
+              <RoomDetailLabel>이용안내:</RoomDetailLabel>
+              <span>
+                교내 구성원만 이용 가능합니다. 예약은 최소 1일 전에 해주세요.
+              </span>
+            </RoomDetail>
+          </RoomDetailsContainer>
         </StyledRoomInfo>
       </RoomContainer>
     </>
