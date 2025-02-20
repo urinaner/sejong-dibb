@@ -18,6 +18,7 @@ import {
   getEventClassNames,
 } from '../../utils/utils';
 import './GoogleCalendarStyles.css';
+import './WeeklyCalendarView.css';
 
 // 상수 정의
 const ROOM_ID = 1; // 1번 세미나실 고정

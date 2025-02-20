@@ -1,0 +1,350 @@
+/* WeeklyCalendarView.css - 세종대학교 주간 뷰 스타일 개선 */
+
+/* 주간 뷰 기본 컨테이너 스타일링 */
+.fc-timeGridWeek-view {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    padding-bottom: 12px;
+}
+
+/* 주간 뷰 헤더 스타일링 */
+.fc-timeGridWeek-view .fc-col-header {
+    background-color: #f8f9fa;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.fc-timeGridWeek-view .fc-col-header-cell {
+    padding: 10px 0;
+    vertical-align: middle;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.fc-timeGridWeek-view .fc-col-header-cell-cushion {
+    padding: 8px 4px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.3;
+    color: #333;
+}
+
+/* 요일 이름과 날짜 분리 표시 */
+.fc-timeGridWeek-view .fc-col-header-cell-cushion::before {
+    content: attr(data-weekday);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* 현재 날짜 강조 */
+.fc-timeGridWeek-view .fc-day-today .fc-col-header-cell-cushion {
+    background-color: #B71C1C;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+/* 시간축 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-axis {
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    background-color: #f8f9fa;
+    width: 80px !important;
+    text-align: right;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* 시간 슬롯 구분선 개선 */
+.fc-timeGridWeek-view .fc-timegrid-slot {
+    height: 50px !important;
+    border-color: #eeeeee;
+    transition: background-color 0.2s;
+}
+
+/* 짝수/홀수 시간 구분 */
+.fc-timeGridWeek-view .fc-timegrid-slot-lane:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* 업무시간(9-18시) 강조 */
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="09:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="10:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="11:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="12:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="13:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="14:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="15:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="16:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="17:"] {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 점심시간 강조 */
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="12:"],
+.fc-timeGridWeek-view .fc-timegrid-slot[data-time^="13:"] {
+    background-color: #fff8e1;
+}
+
+/* 시간 슬롯 호버 효과 */
+.fc-timeGridWeek-view .fc-timegrid-slot:hover {
+    background-color: #f0f4f8;
+}
+
+/* 현재 시간 표시선 개선 */
+.fc-timeGridWeek-view .fc-timegrid-now-indicator-line {
+    border-color: #B71C1C;
+    border-width: 2px;
+    z-index: 5;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-now-indicator-arrow {
+    border-color: #B71C1C;
+    border-width: 5px;
+    margin-top: -5px;
+}
+
+/* 주간 뷰 이벤트 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event {
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin: 1px 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+/* 이벤트 유형별 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event.seminar-event {
+    background-color: #1a73e8;
+    border-left: 4px solid #0b4f9e;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event.class-event {
+    background-color: #0b8043;
+    border-left: 4px solid #06572c;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event.meeting-event {
+    background-color: #f6bf26;
+    border-left: 4px solid #d5a31f;
+    color: #333;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event.other-event {
+    background-color: #616161;
+    border-left: 4px solid #424242;
+}
+
+/* 세미나 이벤트 세부 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event[data-purpose="SEMINAR"] {
+    background-color: #1a73e8;
+    border-left: 4px solid #0b4f9e;
+}
+
+/* 수업 이벤트 세부 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event[data-purpose="CLASS"] {
+    background-color: #0b8043;
+    border-left: 4px solid #06572c;
+}
+
+/* 회의 이벤트 세부 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event[data-purpose="MEETING"] {
+    background-color: #f6bf26;
+    border-left: 4px solid #d5a31f;
+    color: #333;
+}
+
+/* 기타 이벤트 세부 스타일링 */
+.fc-timeGridWeek-view .fc-timegrid-event[data-purpose="OTHER"] {
+    background-color: #616161;
+    border-left: 4px solid #424242;
+}
+
+/* 이벤트 내부 타이틀과 시간 스타일링 */
+.fc-timeGridWeek-view .fc-event-time {
+    font-weight: 600;
+    font-size: 0.85em;
+    margin-bottom: 2px;
+}
+
+.fc-timeGridWeek-view .fc-event-title {
+    font-weight: 500;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* 이벤트 내용 기반 상태 표시 - 길이에 따른 처리 */
+.fc-timeGridWeek-view .fc-timegrid-event.short-event {
+    min-height: 30px;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event.medium-event {
+    min-height: 50px;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-event.long-event {
+    min-height: 70px;
+}
+
+/* 주말 날짜 색상 유지 */
+.fc-timeGridWeek-view .fc-day-sun .fc-col-header-cell-cushion {
+    color: #D32F2F !important;
+}
+
+.fc-timeGridWeek-view .fc-day-sat .fc-col-header-cell-cushion {
+    color: #1a73e8 !important;
+}
+
+/* 현재 날짜 스타일 */
+.fc-timeGridWeek-view .fc-day-today {
+    background-color: #ffebee33 !important;
+}
+
+/* 일정이 없는 셀에 대한 표시 개선 */
+.fc-timeGridWeek-view .fc-timegrid-col.fc-day-past {
+    background-color: #f9f9f9;
+}
+
+/* 스크롤바 커스터마이징 */
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+    border: 2px solid #f1f1f1;
+}
+
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+/* 활성 셀 표시 개선 */
+.fc-timegrid-col-events {
+    margin: 0 4px !important;
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+    .fc-timeGridWeek-view .fc-col-header-cell-cushion {
+        font-size: 12px;
+        padding: 6px 2px;
+    }
+
+    .fc-timeGridWeek-view .fc-col-header-cell-cushion::before {
+        font-size: 12px;
+    }
+
+    .fc-timeGridWeek-view .fc-timegrid-axis {
+        width: 50px !important;
+        font-size: 12px;
+        padding: 0 6px;
+    }
+
+    .fc-timeGridWeek-view .fc-timegrid-slot {
+        height: 40px !important;
+    }
+
+    .fc-timeGridWeek-view .fc-timegrid-event {
+        padding: 2px 4px;
+    }
+
+    .fc-timeGridWeek-view .fc-event-time,
+    .fc-timeGridWeek-view .fc-event-title {
+        font-size: 0.75em;
+    }
+}
+
+/* 날짜 포맷팅 커스텀 스크립트를 위한 helper 클래스 */
+.weekday-name {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.date-number {
+    display: block;
+    font-size: 16px;
+}
+
+/* 이벤트 초점(포커스) 스타일 */
+.fc-event:focus {
+    outline: 2px solid #B71C1C;
+    outline-offset: 2px;
+}
+
+/* 시간 그리드 컬럼 테두리 개선 */
+.fc-timegrid-col {
+    border-left: 1px solid #e0e0e0 !important;
+}
+
+/* 더 선명한 시간 구분선 */
+.fc-timegrid-slots tr:not(:last-child) td {
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+/* 시간 레이블 너비 일정하게 맞추기 */
+.fc-timegrid-axis-cushion {
+    width: 60px;
+    text-align: right;
+}
+
+/* 첨부 추가기능: FullCalendar에 직접 통합할 자바스크립트 예시 */
+/*
+document.addEventListener('DOMContentLoaded', function() {
+  // 주간 뷰 날짜 포맷팅 커스터마이즈
+  document.querySelectorAll('.fc-timeGridWeek-view .fc-col-header-cell-cushion').forEach(el => {
+    const date = new Date(el.closest('.fc-col-header-cell').getAttribute('data-date'));
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const weekday = weekdays[date.getDay()];
+    const dateNum = date.getDate();
+
+    el.innerHTML = `
+      <span class="weekday-name">${weekday}</span>
+      <span class="date-number">${dateNum}</span>
+    `;
+  });
+
+  // 시간대별 이벤트 분류
+  document.querySelectorAll('.fc-timegrid-event').forEach(el => {
+    const start = new Date(el.getAttribute('data-start'));
+    const end = new Date(el.getAttribute('data-end'));
+    const durationMinutes = (end - start) / (1000 * 60);
+
+    if (durationMinutes <= 60) {
+      el.classList.add('short-event');
+    } else if (durationMinutes <= 120) {
+      el.classList.add('medium-event');
+    } else {
+      el.classList.add('long-event');
+    }
+
+    // 이벤트 목적에 따른 클래스 추가
+    const purpose = el.getAttribute('data-purpose');
+    if (purpose) {
+      el.classList.add(`${purpose.toLowerCase()}-event`);
+    }
+  });
+});
+*/

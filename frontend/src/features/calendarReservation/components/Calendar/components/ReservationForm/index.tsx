@@ -33,7 +33,7 @@ const Input = styled.input`
   padding: 12px 16px;
   border: 1px solid #dadce0;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   transition: all 0.2s;
   background-color: #f8f9fa;
 
@@ -85,7 +85,7 @@ const TimeInputsContainer = styled.div`
 
 const InfoMessage = styled.p`
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 14px;
   color: #5f6368;
   font-style: italic;
 `;
