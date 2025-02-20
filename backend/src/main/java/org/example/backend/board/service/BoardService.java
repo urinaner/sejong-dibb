@@ -129,7 +129,7 @@ public class BoardService {
     }
 
     public Page<BoardResDto> searchBoard(String keyword, Pageable pageable) {
-        return boardRepository.searchByKeyword(keyword, pageable)
+        return boardRepository.searchByKeywordFulltext(keyword, pageable)
                 .map(BoardResDto::of);
     }
 }
