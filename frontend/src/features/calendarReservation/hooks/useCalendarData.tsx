@@ -95,15 +95,7 @@ export const useCalendarData = (
       const calendarApi = calendarRef.current.getApi();
       calendarApi.changeView(mode);
 
-      setViewMode(
-        mode === 'dayGridMonth'
-          ? 'month'
-          : mode === 'timeGridWeek'
-            ? 'week'
-            : mode === 'timeGridDay'
-              ? 'day'
-              : 'list',
-      );
+      setViewMode(mode === 'dayGridMonth' ? 'month' : 'week');
     }
   };
 
@@ -118,15 +110,7 @@ export const useCalendarData = (
     }
 
     // 뷰 모드 업데이트
-    setViewMode(
-      info.view.type === 'dayGridMonth'
-        ? 'month'
-        : info.view.type === 'timeGridWeek'
-          ? 'week'
-          : info.view.type === 'timeGridDay'
-            ? 'day'
-            : 'list',
-    );
+    setViewMode(info.view.type === 'dayGridMonth' ? 'month' : 'week');
   };
 
   // 캘린더 크기 조정

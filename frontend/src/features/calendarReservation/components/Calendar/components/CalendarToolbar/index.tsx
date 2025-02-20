@@ -11,7 +11,7 @@ import {
   ViewButton,
 } from '../styles';
 
-type ViewMode = 'month' | 'week' | 'day' | 'list';
+type ViewMode = 'month' | 'week';
 
 interface CalendarToolbarProps {
   selectedDate: Date;
@@ -19,9 +19,7 @@ interface CalendarToolbarProps {
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onToday: () => void;
-  onViewModeChange: (
-    mode: 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek',
-  ) => void;
+  onViewModeChange: (mode: 'dayGridMonth' | 'timeGridWeek') => void;
 }
 
 const Index: React.FC<CalendarToolbarProps> = ({
@@ -68,9 +66,9 @@ const Index: React.FC<CalendarToolbarProps> = ({
             />
           </svg>
         </ArrowButton>
-
-        <CurrentDate>{format(selectedDate, 'yyyy년 M월')}</CurrentDate>
       </NavigationButtons>
+
+      <CurrentDate>{format(selectedDate, 'yyyy년 M월')}</CurrentDate>
 
       <ViewButtons>
         <ViewButton
@@ -84,18 +82,6 @@ const Index: React.FC<CalendarToolbarProps> = ({
           onClick={() => onViewModeChange('timeGridWeek')}
         >
           주
-        </ViewButton>
-        <ViewButton
-          active={viewMode === 'day'}
-          onClick={() => onViewModeChange('timeGridDay')}
-        >
-          일
-        </ViewButton>
-        <ViewButton
-          active={viewMode === 'list'}
-          onClick={() => onViewModeChange('listWeek')}
-        >
-          목록
         </ViewButton>
       </ViewButtons>
     </ToolbarContainer>

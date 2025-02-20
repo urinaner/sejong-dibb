@@ -2,15 +2,16 @@
 import styled from 'styled-components';
 
 export const CalendarToolbar = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   margin-bottom: 20px;
-  flex-wrap: wrap;
+  width: 100%;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 16px;
   }
 `;
 
@@ -18,6 +19,13 @@ export const NavigationButtons = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-self: start;
+
+  @media (max-width: 768px) {
+    justify-self: center;
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 export const TodayButton = styled.button`
@@ -64,13 +72,17 @@ export const ArrowButton = styled.button`
 `;
 
 export const CurrentDate = styled.h2`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
   margin: 0;
-  padding: 0 16px;
+  padding: 0;
+  text-align: center;
+  justify-self: center;
+  color: #333;
 
   @media (max-width: 768px) {
-    font-size: 16px;
+    font-size: 18px;
+    order: -1; /* 모바일에서 맨 위로 배치 */
   }
 `;
 
@@ -79,9 +91,12 @@ export const ViewButtons = styled.div`
   border: 1px solid #ddd;
   border-radius: 20px;
   overflow: hidden;
+  justify-self: end;
 
   @media (max-width: 768px) {
+    justify-self: center;
     width: 100%;
+    max-width: 280px;
   }
 `;
 

@@ -103,9 +103,9 @@ function Calendar() {
             hour12: false,
           }}
           slotMinTime="08:00:00"
-          slotMaxTime="22:00:00"
+          slotMaxTime="18:00:00"
           allDaySlot={false}
-          firstDay={1}
+          firstDay={0}
           locale="ko"
           themeSystem="bootstrap5"
           nowIndicator={true}
