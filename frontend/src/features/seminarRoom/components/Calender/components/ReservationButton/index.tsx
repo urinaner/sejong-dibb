@@ -1,7 +1,8 @@
 import React from 'react';
-import { ReservationBtn } from '../../CalendarStyle';
+import { ReservationBtn, ReservationBtnContainer } from '../../CalendarStyle';
 import { useModal } from '../../../../../../components/Modal';
 import ReservationForm from '../ReservationForm';
+import { CalendarPlus } from 'lucide-react';
 
 interface ReservationButtonProps {
   roomId: number;
@@ -15,11 +16,12 @@ function ReservationButton({ roomId }: ReservationButtonProps) {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <ReservationBtnContainer>
       <ReservationBtn onClick={handleCreateReservation}>
+        <CalendarPlus size={18} />
         예약하기
       </ReservationBtn>
-    </div>
+    </ReservationBtnContainer>
   );
 }
 

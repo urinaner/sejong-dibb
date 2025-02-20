@@ -1,13 +1,21 @@
 import React, { useCallback } from 'react';
 import { format } from 'date-fns';
-import { StyledCalendar } from '../../CalendarStyle';
+import {
+  StyledCalendar,
+  TileContainer,
+  ReservationTile,
+  MoreCount,
+  LegendContainer,
+  LegendItem,
+  LegendColor,
+  calendarColors,
+} from '../../CalendarStyle';
 import useReservationStore from '../../../../store/reservationStore';
 import { useReservationQuery } from '../../../../hooks/useReservationQuery';
 import type { Reservation } from '../../../../types/reservation.types';
 import DailyReservationModal from '../DailyReservationModal';
 import { useModal } from '../../../../../../components/Modal';
 import moment from 'moment';
-import { ReservationTile, TileContainer } from './CalendarViewStyle';
 
 interface CalendarViewProps {
   roomId: number;
@@ -18,12 +26,9 @@ function CalendarView({ roomId }: CalendarViewProps) {
   const { selectedDate, setSelectedDate } = useReservationStore();
   const { useMonthlyReservations } = useReservationQuery(roomId);
 
-  const [currentYearMonth, setCurrentYearMonth] = React.useState(
-    format(selectedDate, 'yyyy-MM'),
-  );
-
+  const yearMonth = format(selectedDate, 'yyyy-MM');
   const { data: monthlyReservations, refetch: refetchMonthly } =
-    useMonthlyReservations(currentYearMonth);
+    useMonthlyReservations(yearMonth);
 
   const handleDateChange = (date: moment.MomentInput) => {
     const newDate = new Date(moment(date).format('YYYY-MM-DD'));
@@ -31,10 +36,9 @@ function CalendarView({ roomId }: CalendarViewProps) {
   };
 
   const handleMonthChange = useCallback(
-    ({ activeStartDate }: { activeStartDate: Date | null }) => {
-      if (activeStartDate) {
-        const newYearMonth = format(activeStartDate, 'yyyy-MM');
-        setCurrentYearMonth(newYearMonth);
+    (viewArgs: { activeStartDate: Date | null }) => {
+      if (viewArgs.activeStartDate) {
+        const newYearMonth = format(viewArgs.activeStartDate, 'yyyy-MM');
         refetchMonthly();
       }
     },
@@ -48,10 +52,10 @@ function CalendarView({ roomId }: CalendarViewProps) {
 
   const getColorByPurpose = (purpose: Reservation['purpose']) => {
     const colors = {
-      SEMINAR: '#1a73e8',
-      CLASS: '#34d399',
-      MEETING: '#f59e0b',
-      OTHER: '#9ca3af',
+      SEMINAR: calendarColors.seminar,
+      CLASS: calendarColors.class,
+      MEETING: calendarColors.meeting,
+      OTHER: calendarColors.other,
     };
     return colors[purpose] || colors.OTHER;
   };
@@ -67,22 +71,29 @@ function CalendarView({ roomId }: CalendarViewProps) {
 
     if (reservationsForDate.length === 0) return null;
 
-    const visibleReservations = reservationsForDate.slice(0, 2);
+    const visibleReservations = reservationsForDate.slice(0, 3);
     const moreCount = reservationsForDate.length - visibleReservations.length;
 
     return (
-      <TileContainer>
+      <TileContainer className="reservation-container">
         {visibleReservations.map((reservation, index) => (
           <ReservationTile
             key={index}
             style={{ backgroundColor: getColorByPurpose(reservation.purpose) }}
           >
-            {format(new Date(reservation.startTime), 'HH:mm')}~
+            {format(new Date(reservation.startTime), 'HH:mm')} -{' '}
             {format(new Date(reservation.endTime), 'HH:mm')}
           </ReservationTile>
         ))}
         {moreCount > 0 && (
-          <div className="more-count">{moreCount}개 더보기</div>
+          <MoreCount
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              handleDayClick(date);
+            }}
+          >
+            +{moreCount}개 더보기
+          </MoreCount>
         )}
       </TileContainer>
     );
@@ -98,20 +109,41 @@ function CalendarView({ roomId }: CalendarViewProps) {
   };
 
   return (
-    <StyledCalendar
-      calendarType="gregory"
-      locale="ko"
-      formatDay={(locale, date) => format(date, 'd')}
-      prev2Label={null}
-      next2Label={null}
-      minDetail="year"
-      onChange={handleDateChange}
-      onClickDay={handleDayClick}
-      onActiveStartDateChange={handleMonthChange}
-      tileContent={tileContent}
-      tileClassName={tileClassName}
-      value={selectedDate}
-    />
+    <>
+      <LegendContainer>
+        <LegendItem>
+          <LegendColor color={calendarColors.seminar} />
+          <span>세미나</span>
+        </LegendItem>
+        <LegendItem>
+          <LegendColor color={calendarColors.class} />
+          <span>수업</span>
+        </LegendItem>
+        <LegendItem>
+          <LegendColor color={calendarColors.meeting} />
+          <span>회의</span>
+        </LegendItem>
+        <LegendItem>
+          <LegendColor color={calendarColors.other} />
+          <span>기타</span>
+        </LegendItem>
+      </LegendContainer>
+
+      <StyledCalendar
+        calendarType="gregory"
+        locale="ko"
+        formatDay={(locale, date) => ''} // 날짜 숫자는 ::before로 표시
+        prev2Label={null}
+        next2Label={null}
+        minDetail="year"
+        onChange={handleDateChange}
+        onClickDay={handleDayClick}
+        onActiveStartDateChange={handleMonthChange}
+        tileContent={tileContent}
+        tileClassName={tileClassName}
+        value={selectedDate}
+      />
+    </>
   );
 }
 

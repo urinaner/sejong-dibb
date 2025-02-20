@@ -42,7 +42,7 @@ import NewsEdit from './pages/News/News/NewsEdit';
 import { mainVideos } from './config/videoConfig';
 import ChangeAdminPassword from './pages/Admin/ChangeAdminPassword/ChangeAdminPassword';
 import StudentCouncil from './pages/About/StudentCouncil/StudentCouncil';
-import Calendar from './features/seminarRoom/components/Calender/Calendar';
+import Calendar from './features/calendarReservation/components/Calendar/index';
 
 interface PageTransitionProps {
   children: React.ReactNode;
