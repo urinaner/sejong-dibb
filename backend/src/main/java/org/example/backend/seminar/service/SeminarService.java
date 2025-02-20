@@ -55,7 +55,7 @@ public class SeminarService {
     }
 
     public Page<SeminarResDto> searchSeminar(String keyword, Pageable pageable) {
-        return seminarRepository.searchByKeyword(keyword, pageable)
+        return seminarRepository.searchByKeywordFulltext(keyword, pageable)
                 .map(SeminarResDto::of);
     }
 }
