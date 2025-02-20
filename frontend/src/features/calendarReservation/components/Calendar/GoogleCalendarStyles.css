@@ -1,13 +1,17 @@
-/* GoogleCalendarStyle.css - 반응형 레이아웃 적용 */
+/* GoogleCalendarStyle.css - 세종대학교 테마 적용 */
 /* 기본 변수 정의 */
 :root {
+  --sejong-primary: #B71C1C;
+  --sejong-primary-dark: #8B0000;
+  --sejong-primary-light: #D32F2F;
+  --sejong-secondary: #324d60;
   --fc-border-color: #e0e0e0;
-  --fc-button-bg-color: #1a73e8;
-  --fc-button-border-color: #1a73e8;
-  --fc-button-hover-bg-color: #1a66ca;
-  --fc-button-hover-border-color: #1a66ca;
-  --fc-button-active-bg-color: #1967d2;
-  --fc-today-bg-color: #e8f0fe;
+  --fc-button-bg-color: var(--sejong-primary);
+  --fc-button-border-color: var(--sejong-primary);
+  --fc-button-hover-bg-color: var(--sejong-primary-dark);
+  --fc-button-hover-border-color: var(--sejong-primary-dark);
+  --fc-button-active-bg-color: var(--sejong-primary-dark);
+  --fc-today-bg-color: #ffebee; /* 연한 빨간색 배경 */
   --fc-event-border-color: transparent;
   --fc-page-bg-color: #fff;
 }
@@ -16,50 +20,38 @@
 .fc-container {
   width: 100%;
   height: 100%;
-  min-height: calc(100vh - 200px); /* 헤더/푸터 고려 */
+  min-height: calc(100vh - 250px); /* 헤더/푸터/네비게이션 고려 */
   margin: 0 auto;
   background: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  padding-bottom: 20px;
 }
 
 .fc {
   height: 100%;
   font-family: 'Noto Sans KR', sans-serif;
   --fc-border-color: #e0e0e0;
-  --fc-button-bg-color: #1a73e8;
-  --fc-button-border-color: #1a73e8;
-  --fc-button-hover-bg-color: #1a66ca;
-  --fc-button-hover-border-color: #1a66ca;
-  --fc-button-active-bg-color: #1967d2;
+  --fc-button-bg-color: var(--sejong-primary);
+  --fc-button-border-color: var(--sejong-primary);
+  --fc-button-hover-bg-color: var(--sejong-primary-dark);
+  --fc-button-hover-border-color: var(--sejong-primary-dark);
+  --fc-button-active-bg-color: var(--sejong-primary-dark);
   --fc-event-border-color: transparent;
   --fc-page-bg-color: #fff;
-  --fc-today-bg-color: #e8f0fe;
+  --fc-today-bg-color: #ffebee;
 }
 
 /* 뷰 하네스(view harness) - 캘린더 본체 컨테이너 */
 .fc-view-harness {
   min-height: 500px; /* 최소 높이 설정 */
-  height: calc(100vh - 280px) !important; /* 헤더/푸터/툴바 고려한 동적 높이 */
+  height: calc(100vh - 320px) !important; /* 헤더/푸터/툴바 고려한 동적 높이 */
   transition: height 0.3s ease;
-}
-
-/* 반응형 툴바 */
-.fc-toolbar {
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 1em !important;
-  gap: 10px;
-}
-
-.fc-toolbar-title {
-  font-size: 18px !important;
-  font-weight: 500;
 }
 
 /* 이벤트 스타일링 */
 .fc-event {
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-radius: 4px;
   border-left: 4px solid;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -68,7 +60,7 @@
 }
 
 .fc-event:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
   z-index: 5;
 }
@@ -88,7 +80,7 @@
 }
 
 .fc-day-today .fc-daygrid-day-number {
-  background-color: #1a73e8;
+  background-color: var(--sejong-primary);
   color: white;
   border-radius: 50%;
   width: 24px;
@@ -99,39 +91,92 @@
   margin: 4px;
 }
 
+/* 세미나, 회의, 수업 등 이벤트 유형별 색상 */
+.fc-event.seminar-event {
+  background-color: #1a73e8;
+  border-left-color: #0b4f9e;
+}
+
+.fc-event.class-event {
+  background-color: #0b8043;
+  border-left-color: #06572c;
+}
+
+.fc-event.meeting-event {
+  background-color: #f6bf26;
+  border-left-color: #d5a31f;
+  color: #333 !important;
+}
+
+.fc-event.other-event {
+  background-color: #616161;
+  border-left-color: #424242;
+}
+
+/* 주간/일간 뷰 스타일링 */
+.fc-timegrid-slot {
+  height: 40px !important;
+  transition: background-color 0.2s;
+}
+
+.fc-timegrid-slot:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-timegrid-now-indicator-line {
+  border-color: var(--sejong-primary);
+  z-index: 4;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  border-color: var(--sejong-primary);
+  border-width: 5px;
+}
+
+/* 주말 색상 */
+.fc-day-sun .fc-daygrid-day-number,
+.fc-day-sun .fc-col-header-cell-cushion {
+  color: var(--sejong-primary-light);
+}
+
+.fc-day-sat .fc-daygrid-day-number,
+.fc-day-sat .fc-col-header-cell-cushion {
+  color: #1a73e8;
+}
+
+/* 목록 뷰 스타일링 */
+.fc-list-day-cushion {
+  background-color: #f5f5f5 !important;
+  padding: 8px 14px !important;
+}
+
+.fc-list-event {
+  transition: background-color 0.15s;
+  cursor: pointer;
+}
+
+.fc-list-event:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-list-event-dot {
+  border-color: transparent !important;
+}
+
+.fc-list-event-title {
+  font-weight: 500;
+}
+
+.fc-list-event-time {
+  width: 130px;
+  color: #666;
+}
+
 /* 모바일 대응 */
 @media screen and (max-width: 768px) {
   .fc-view-harness {
     min-height: 400px;
-    height: calc(100vh - 220px) !important;
-  }
-
-  .fc-toolbar {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .fc-toolbar-chunk {
-    margin-bottom: 8px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .fc-toolbar-title {
-    font-size: 16px !important;
-    text-align: center;
-  }
-
-  .fc-button-group {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .fc-button {
-    padding: 4px 8px;
-    font-size: 12px;
+    height: calc(100vh - 280px) !important;
   }
 
   .fc-daygrid-day {
@@ -145,75 +190,34 @@
 
   .fc-event {
     font-size: 0.7em;
-    padding: 1px 2px;
-  }
-}
-
-/* 태블릿 대응 */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .fc-view-harness {
-    min-height: 450px;
-    height: calc(100vh - 250px) !important;
+    padding: 2px 4px;
   }
 
-  .fc-toolbar-title {
-    font-size: 17px !important;
+  .fc-list-event-time {
+    width: 90px;
+    font-size: 12px;
   }
 
-  .fc-button {
-    padding: 6px 12px;
-    font-size: 13px;
+  .fc-list-event-title {
+    font-size: 12px;
   }
 }
 
 /* 더 많은 이벤트 표시기 스타일링 */
 .fc-daygrid-more-link {
   background-color: #f1f3f4;
-  color: #1a73e8;
+  color: var(--sejong-primary);
   border-radius: 4px;
-  padding: 2px 4px;
+  padding: 2px 6px;
   margin: 2px 0;
-  font-size: 0.85em;
+  font-size: 0.8em;
   font-weight: 500;
   transition: background-color 0.2s;
 }
 
 .fc-daygrid-more-link:hover {
-  background-color: #e8eaed;
+  background-color: #ffebee;
   text-decoration: none;
-}
-
-/* 시간 그리드 뷰 스타일링 */
-.fc-timegrid-slot {
-  height: 40px !important;
-}
-
-.fc-timegrid-now-indicator-line {
-  border-color: #ea4335;
-  z-index: 4;
-}
-
-.fc-timegrid-now-indicator-arrow {
-  border-color: #ea4335;
-  border-width: 5px;
-}
-
-/* 버튼 스타일링 */
-.fc-button {
-  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: scale(1);
-  font-weight: 500;
-}
-
-.fc-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.4);
-}
-
-.fc-button:active {
-  transform: scale(0.97);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* 부드러운 뷰 전환 애니메이션 */
@@ -224,7 +228,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0.7;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -232,32 +236,40 @@
   }
 }
 
-/* 주말 색상 */
-.fc-day-sun .fc-daygrid-day-number,
-.fc-day-sun .fc-col-header-cell-cushion {
-  color: #ea4335;
+/* 툴팁 & 팝오버 스타일링 */
+.fc-event-selected {
+  z-index: 10;
 }
 
-.fc-day-sat .fc-daygrid-day-number,
-.fc-day-sat .fc-col-header-cell-cushion {
-  color: #4285f4;
+.fc-event-selected:after {
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
-/* 세종대학교 테마 컬러 적용 */
-.university-theme .fc-button-primary {
-  background-color: #B71C1C;
-  border-color: #B71C1C;
+.fc-popover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.university-theme .fc-button-primary:hover {
-  background-color: #8B0000;
-  border-color: #8B0000;
+.fc-popover-header {
+  background-color: var(--sejong-primary);
+  color: white;
+  padding: 8px 10px;
+  font-weight: 500;
 }
 
-.university-theme .fc-day-today .fc-daygrid-day-number {
-  background-color: #B71C1C;
+.fc-popover-body {
+  padding: 8px;
 }
 
-.university-theme .fc-daygrid-more-link {
-  color: #B71C1C;
+.fc-popover-close {
+  color: white;
+  font-size: 1.2em;
+  opacity: 0.8;
+}
+
+.fc-popover-close:hover {
+  opacity: 1;
+  background: none;
 }
