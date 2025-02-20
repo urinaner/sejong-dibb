@@ -21,6 +21,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         FROM board b
         WHERE MATCH(b. title, b.content)
               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
+        ORDER BY b.board_id
         """,
             countQuery = """
         SELECT COUNT(*)

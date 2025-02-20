@@ -76,7 +76,7 @@ public class NewsController {
     @GetMapping("/search")
     public ResponseDto<List<NewsResDto>> searchNews(@RequestParam String keyword,
                                                     @Valid @ModelAttribute PageRequestDto pageRequest) {
-        Page<NewsResDto> newsList = newsService.searchNews(keyword, pageRequest.toPageable());
+        Page<NewsResDto> newsList = newsService.searchNews(keyword, pageRequest.toPageableUnsorted());
         return ResponseDto.ok(newsList.getNumber(), newsList.getTotalPages(), newsList.getContent());
     }
 }
