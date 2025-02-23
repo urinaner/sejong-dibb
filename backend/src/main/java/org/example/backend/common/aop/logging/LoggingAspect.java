@@ -108,17 +108,25 @@ public class LoggingAspect {
     }
 
 
-    @AfterReturning(value = "allPresentation()", returning = "responseEntity")
-    public void logResponse(final ResponseEntity<?> responseEntity) {
+    @AfterReturning(value = "allPresentation()", returning = "returnValue")
+    public void logResponse(final Object returnValue) {
         try {
             RequestResponseLog logEntry = requestLogHolder.get();
             if (logEntry == null) return;
 
-            final String responseStatus = responseEntity.getStatusCode().toString();
-            Object processedBody = truncateFileList(responseEntity.getBody());
-            String responseBody = objectMapper.writeValueAsString(processedBody);
-            String truncatedResponseBody = limitStringLength(responseBody);
+            String responseStatus;
+            Object processedBody;
 
+            if (returnValue instanceof ResponseEntity<?> responseEntity) {
+                responseStatus = responseEntity.getStatusCode().toString();
+                processedBody = truncateFileList(responseEntity.getBody());
+            } else {
+                responseStatus = "200 OK";
+                processedBody = truncateFileList(returnValue);
+            }
+
+            String responseBodyStr = objectMapper.writeValueAsString(processedBody);
+            String truncatedResponseBody = limitStringLength(responseBodyStr);
             log.info("[RESPONSE {}] [IP {}] {}", responseStatus, logEntry.getClientIp(), truncatedResponseBody);
 
             logEntry.setResponseStatus(responseStatus);
@@ -138,9 +146,7 @@ public class LoggingAspect {
             return null;
         }
 
-        if (body instanceof Map) {
-            Map<String, Object> map = new HashMap<>((Map<String, Object>) body);
-
+        if (body instanceof Map map) {
             List<String> excludedKeys = Arrays.asList("fileList", "largeData", "extraInfo");
 
             for (String key : excludedKeys) {
