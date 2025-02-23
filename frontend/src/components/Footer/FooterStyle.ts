@@ -139,3 +139,21 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
 `;
+
+export const TermsWrapper = styled.div`
+  margin-bottom: 1rem;
+`;
+export const TermsButton = styled.button`
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

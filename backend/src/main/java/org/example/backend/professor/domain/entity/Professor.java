@@ -44,11 +44,15 @@ public class Professor {
     @Column(name = "position")
     private String position;
 
+    @Column(name = "academicBackground")
+    private AcademicBackground academicBackground;
+
     @Column(name = "homepage")
     private String homepage;
 
     @Column(name = "lab")
     private String lab;
+
 
     @Column(name = "profileImage", length = 1000)
     private String profileImage;
@@ -58,12 +62,13 @@ public class Professor {
 
     @Builder
     private Professor(String name, String major, String phoneN, String email,
-                      String position, String homepage, String lab, String profileImage) {
+                      String position, AcademicBackground academicBackground, String homepage, String lab, String profileImage) {
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;
         this.email = email;
         this.position = position;
+        this.academicBackground = academicBackground;
         this.homepage = homepage;
         this.lab = lab;
         this.profileImage = profileImage;
@@ -76,6 +81,7 @@ public class Professor {
                 .phoneN(dto.getPhoneN())
                 .email(dto.getEmail())
                 .position(dto.getPosition())
+                .academicBackground(dto.getAcademicBackground())
                 .homepage(dto.getHomepage())
                 .lab(dto.getLab())
                 .profileImage(dto.getProfileImage())
@@ -88,6 +94,7 @@ public class Professor {
         this.phoneN = dto.getPhoneN();
         this.email = dto.getEmail();
         this.position = dto.getPosition();
+        this.academicBackground = dto.getAcademicBackground();
         this.homepage = dto.getHomepage();
         this.lab = dto.getLab();
         this.profileImage = dto.getProfileImage();

@@ -26,7 +26,7 @@ export const mainVideos: Video[] = [
       },
     ],
     poster: `${CDN_URL}/main_poster.jpg`,
-    title: ['integrative', 'bioscience', 'biotechnology'],
+    title: ['Integrative', 'Bioscience', 'Biotechnology'],
   },
   {
     id: '2',
@@ -51,6 +51,6 @@ export const mainVideos: Video[] = [
       },
     ],
     poster: `${CDN_URL}/main_2_poster.jpg`,
-    title: ['integrative', 'bioscience', 'biotechnology'],
+    title: ['Integrative', 'Bioscience', 'Biotechnology'],
   },
 ];

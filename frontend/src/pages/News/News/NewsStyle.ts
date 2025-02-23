@@ -8,8 +8,8 @@ export const Container = styled.div`
   margin: 0 auto;
   padding: 2.5rem 0.5rem;
   flex-direction: column;
-  align-items: center; /* 추가 */
-  display: flex; /* 추가 */
+  align-items: center;
+  display: flex;
 
   ${media.mobile} {
     width: 95%;
@@ -54,13 +54,13 @@ export const NewsCard = styled.div`
     padding: 1rem 0;
   }
 `;
-
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 200px;
   min-width: 200px;
   height: 150px;
   background-image: url(${(props) => props.imageUrl});
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
   background-color: ${SEJONG_COLORS.COOL_GRAY};
 

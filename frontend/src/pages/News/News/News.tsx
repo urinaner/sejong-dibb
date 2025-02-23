@@ -13,6 +13,7 @@ import {
 import { queryClient } from '../../../lib/react-query/queryClient';
 import * as S from './NewsStyle';
 import Pagination from '../../../common/Pagination/Pagination';
+import { AxiosError } from 'axios';
 
 const News = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -20,6 +21,7 @@ const News = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
+  const API_BASE_URL = 'https://ibb.sejong.ac.kr';
 
   const {
     data: newsData,
@@ -59,7 +61,6 @@ const News = () => {
       </>,
     );
   };
-
   const confirmDelete = async (newsId: number) => {
     try {
       await deleteMutation.mutateAsync(newsId, {
@@ -78,19 +79,32 @@ const News = () => {
             </>,
           );
         },
+        onError: (error: AxiosError) => {
+          let errorMessage = '뉴스를 삭제하는 중 오류가 발생했습니다.';
+
+          if (error.response?.status === 401) {
+            errorMessage = '로그인이 필요합니다.';
+          } else if (error.response?.status === 403) {
+            errorMessage = '삭제 권한이 없습니다.';
+          } else if (error.response?.status === 404) {
+            errorMessage = '해당 뉴스를 찾을 수 없습니다.';
+          }
+
+          openModal(
+            <>
+              <Modal.Header>삭제 실패</Modal.Header>
+              <Modal.Content>
+                <p>{errorMessage}</p>
+              </Modal.Content>
+              <Modal.Footer>
+                <Modal.CloseButton />
+              </Modal.Footer>
+            </>,
+          );
+        },
       });
     } catch (error) {
-      openModal(
-        <>
-          <Modal.Header>삭제 실패</Modal.Header>
-          <Modal.Content>
-            <p>뉴스를 삭제하는 중 오류가 발생했습니다.</p>
-          </Modal.Content>
-          <Modal.Footer>
-            <Modal.CloseButton />
-          </Modal.Footer>
-        </>,
-      );
+      console.error('Error deleting news:', error);
     }
   };
 
@@ -149,7 +163,7 @@ const News = () => {
         {newsData.data.map((item) => (
           <S.NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <S.NewsImage
-              imageUrl={`${item.image}`}
+              imageUrl={`${API_BASE_URL}${item.image}`}
               onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
                 e.currentTarget.classList.add('error');
               }}

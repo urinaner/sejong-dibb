@@ -15,6 +15,7 @@ public enum AdminExceptionType implements BaseExceptionType {
     NOT_FOUND_MAIL(NOT_FOUND, "메일을 찾을 수 없습니다"),
     NOT_MATCH_EMAIL(NOT_FOUND, "이메일이 관리자 정보와 일치하지 않습니다"),
     NOT_FOUND_MAIL_RECEIVER(NOT_FOUND, "메일 수신자가 설정되지 않았습니다"),
+    INVALID_PASSWORD_PATTERN(NOT_FOUND, "비밀번호는 8자 이상, 대문자 1개 이상, 소문자 1개 이상, 숫자 1개 이상, 특수문자 1개 이상 포함해야 합니다.")
     ;
 
     private final HttpStatus httpStatus;

@@ -22,6 +22,8 @@ import {
   FileItem,
 } from './NewsCreateStyle';
 import { useCreateNews } from '../../../hooks/queries/useNews';
+import { NewsFormRequest } from '../../../api/news';
+import axios, { AxiosError } from 'axios';
 
 interface NewsFormData {
   title: string;
@@ -121,39 +123,43 @@ const NewsCreate: React.FC = () => {
     }
 
     try {
-      // HTML 태그 제거
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = content;
       const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
 
-      const newsFormData: NewsFormData = {
+      const newsFormData: NewsFormRequest = {
         title: title.trim(),
         content: cleanContent.trim(),
         createDate: new Date().toISOString().split('T')[0],
+        link: link.trim() || undefined,
       };
 
-      if (link.trim()) {
-        newsFormData.link = link.trim();
-      }
-
-      if (imageFile) {
-        newsFormData.newsImage = imageFile;
-      }
-
-      const result = await createNewsMutation.mutateAsync(newsFormData, {
-        onSuccess: (newsId) => {
-          showSuccessModal(newsId);
-        },
-        onError: (error: any) => {
-          if (error.response?.status === 400) {
-            showErrorModal('입력 오류', error.response.data.message);
-          } else {
-            showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
-          }
-        },
+      const newsId = await createNewsMutation.mutateAsync({
+        newsFormData,
+        imageFile: imageFile || undefined,
       });
+
+      showSuccessModal(newsId);
     } catch (error) {
       console.error('Error creating news:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          showErrorModal(
+            '입력 오류',
+            typeof error.response.data === 'string'
+              ? error.response.data
+              : '입력 형식이 올바르지 않습니다.',
+          );
+        } else if (error.response?.status === 401) {
+          showErrorModal('인증 오류', '로그인이 필요합니다.');
+        } else if (error.response?.status === 403) {
+          showErrorModal('권한 오류', '뉴스 등록 권한이 없습니다.');
+        } else {
+          showErrorModal('등록 실패', '뉴스 등록 중 오류가 발생했습니다');
+        }
+      } else {
+        showErrorModal('시스템 오류', '예기치 않은 오류가 발생했습니다.');
+      }
     }
   };
 

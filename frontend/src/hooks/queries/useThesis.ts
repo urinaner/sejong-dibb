@@ -1,7 +1,10 @@
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
-
+import {
+  apiEndpoints,
+  axiosInstance,
+  publicAxiosInstance,
+} from '../../config/apiConfig';
 // Query Keys
 export const thesisKeys = {
   all: ['thesis'] as const,

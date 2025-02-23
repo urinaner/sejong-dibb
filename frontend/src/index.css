@@ -1,5 +1,11 @@
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 * {
   box-sizing: border-box;
+}
+
+.rbc-calendar {
+  min-height: 600px;
 }
 
 html,

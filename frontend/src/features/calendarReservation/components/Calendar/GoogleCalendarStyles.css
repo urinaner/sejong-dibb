@@ -1,0 +1,336 @@
+/* GoogleCalendarStyle.css - 세종대학교 테마 적용 */
+/* 기본 변수 정의 */
+:root {
+  --sejong-primary: #b71c1c;
+  --sejong-primary-dark: #8b0000;
+  --sejong-primary-light: #d32f2f;
+  --sejong-secondary: #324d60;
+  --fc-border-color: #e0e0e0;
+  --fc-button-bg-color: var(--sejong-primary);
+  --fc-button-border-color: var(--sejong-primary);
+  --fc-button-hover-bg-color: var(--sejong-primary-dark);
+  --fc-button-hover-border-color: var(--sejong-primary-dark);
+  --fc-button-active-bg-color: var(--sejong-primary-dark);
+  --fc-today-bg-color: #ffebee; /* 연한 빨간색 배경 */
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: #fff;
+}
+
+/* 캘린더 컨테이너 - 페이지 레이아웃에 맞게 조절 */
+.fc-container {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 250px); /* 헤더/푸터/네비게이션 고려 */
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.fc {
+  height: 100%;
+  --fc-border-color: #e0e0e0;
+  --fc-button-bg-color: var(--sejong-primary);
+  --fc-button-border-color: var(--sejong-primary);
+  --fc-button-hover-bg-color: var(--sejong-primary-dark);
+  --fc-button-hover-border-color: var(--sejong-primary-dark);
+  --fc-button-active-bg-color: var(--sejong-primary-dark);
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: #fff;
+  --fc-today-bg-color: #ffebee;
+}
+
+/* 뷰 하네스(view harness) - 캘린더 본체 컨테이너 */
+.fc-view-harness {
+  min-height: 500px; /* 최소 높이 설정 */
+  transition: height 0.3s ease;
+}
+
+/* 이벤트 스타일링 */
+.fc-event {
+  padding: 3px 6px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: 0.85em;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.fc-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+}
+
+/* 날짜 셀 및 헤더 가운데 정렬 */
+.fc .fc-col-header-cell-cushion {
+  padding: 8px 4px;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+}
+
+.fc .fc-daygrid-day-number {
+  width: 100%;
+  text-align: center;
+  padding: 4px;
+}
+
+/* 월 제목 가운데 정렬 */
+.fc .fc-toolbar-title {
+  text-align: center;
+  width: 100%;
+}
+
+/* 날짜 셀 스타일링 */
+.fc-daygrid-day {
+  min-height: 6em;
+  transition: background-color 0.2s;
+}
+
+.fc-daygrid-day:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-day-today {
+  background-color: var(--fc-today-bg-color) !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: var(--sejong-primary);
+  color: white !important;
+  border-radius: 50%;
+  width: 28px !important;
+  height: 28px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 4px auto;
+  padding: 0;
+}
+
+/* 주말 색상 설정 - 좀 더 명확한 선택자 사용 */
+.fc-day-sun .fc-daygrid-day-number,
+.fc-col-header-cell.fc-day-sun .fc-col-header-cell-cushion {
+  color: #d32f2f !important; /* 일요일 빨간색 */
+}
+
+.fc-day-sat .fc-daygrid-day-number,
+.fc-col-header-cell.fc-day-sat .fc-col-header-cell-cushion {
+  color: #1a73e8 !important; /* 토요일 파란색 */
+}
+
+/* 주간/일간 뷰에서도 주말 색상 적용 */
+.fc-timeGridWeek-view
+  .fc-col-header-cell.fc-day-sun
+  .fc-col-header-cell-cushion,
+.fc-timeGridDay-view.fc-day-sun .fc-col-header-cell-cushion {
+  color: #d32f2f !important;
+}
+
+.fc-timeGridWeek-view
+  .fc-col-header-cell.fc-day-sat
+  .fc-col-header-cell-cushion,
+.fc-timeGridDay-view.fc-day-sat .fc-col-header-cell-cushion {
+  color: #1a73e8 !important;
+}
+
+/* 세미나, 회의, 수업 등 이벤트 유형별 색상 */
+.fc-event.seminar-event {
+  background-color: #1a73e8;
+  border-left-color: #0b4f9e;
+}
+
+.fc-event.class-event {
+  background-color: #0b8043;
+  border-left-color: #06572c;
+}
+
+.fc-event.meeting-event {
+  background-color: #f6bf26;
+  border-left-color: #d5a31f;
+  color: #333 !important;
+}
+
+.fc-event.other-event {
+  background-color: #616161;
+  border-left-color: #424242;
+}
+
+/* 주간/일간 뷰 스타일링 */
+.fc-timegrid-slot {
+  height: 40px !important;
+  transition: background-color 0.2s;
+}
+
+.fc-timegrid-slot:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-timegrid-now-indicator-line {
+  border-color: var(--sejong-primary);
+  z-index: 4;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  border-color: var(--sejong-primary);
+  border-width: 5px;
+}
+
+/* 목록 뷰 스타일링 */
+.fc-list-day-cushion {
+  background-color: #f5f5f5 !important;
+  padding: 8px 14px !important;
+}
+
+.fc-list-event {
+  transition: background-color 0.15s;
+  cursor: pointer;
+}
+
+.fc-list-event:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-list-event-dot {
+  border-color: transparent !important;
+}
+
+.fc-list-event-title {
+  font-weight: 500;
+}
+
+.fc-list-event-time {
+  width: 130px;
+  color: #666;
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+  .fc-view-harness {
+    min-height: 400px;
+    height: calc(100vh - 280px) !important;
+  }
+
+  .fc-daygrid-day {
+    min-height: 4em;
+  }
+
+  .fc-col-header-cell-cushion,
+  .fc-daygrid-day-number {
+    font-size: 0.85em;
+  }
+
+  .fc-event {
+    font-size: 0.7em;
+    padding: 2px 4px;
+  }
+
+  .fc-list-event-time {
+    width: 90px;
+    font-size: 12px;
+  }
+
+  .fc-list-event-title {
+    font-size: 12px;
+  }
+
+  /* 모바일에서 오늘 날짜 표시 크기 조정 */
+  .fc-day-today .fc-daygrid-day-number {
+    width: 24px !important;
+    height: 24px;
+    font-size: 0.8em;
+  }
+}
+
+/* 더 많은 이벤트 표시기 스타일링 */
+.fc-daygrid-more-link {
+  background-color: #f1f3f4;
+  color: var(--sejong-primary);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 2px auto;
+  font-size: 0.8em;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  text-align: center;
+  display: block;
+  width: 80%;
+}
+
+.fc-daygrid-more-link:hover {
+  background-color: #ffebee;
+  text-decoration: none;
+}
+
+/* 부드러운 뷰 전환 애니메이션 */
+.fc-view-harness.fc-view-harness-active {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.7;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 툴팁 & 팝오버 스타일링 */
+.fc-event-selected {
+  z-index: 10;
+}
+
+.fc-event-selected:after {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.fc-popover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fc-popover-header {
+  background-color: var(--sejong-primary);
+  color: white;
+  padding: 8px 10px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.fc-popover-body {
+  padding: 8px;
+}
+
+.fc-popover-close {
+  color: white;
+  font-size: 1.2em;
+  opacity: 0.8;
+}
+
+.fc-popover-close:hover {
+  opacity: 1;
+  background: none;
+}
+
+/* 툴바 버튼 중앙 정렬 */
+.fc-header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 툴바 제목 중앙 정렬을 위한 추가 스타일 */
+.fc .fc-toolbar.fc-header-toolbar .fc-toolbar-chunk:nth-child(2) {
+  flex-grow: 1;
+  text-align: center;
+}

@@ -41,6 +41,13 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+export const publicAxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
 
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
@@ -96,6 +103,7 @@ export interface ProfessorReqDto {
   homepage: string;
   lab: string;
   profileImage: string;
+  departmentId: number;
 }
 
 interface ThesisEndpoint {
@@ -368,6 +376,24 @@ export const apiEndpoints = {
   member: {
     login: createEndpoint('/api/member/login'),
     logout: createEndpoint('/api/member/logout'),
+  },
+
+  reservation: {
+    list: createEndpoint('/api/room'),
+    monthlyList: (roomId: number, yearMonth: string) =>
+      createEndpoint(
+        `/api/room/${roomId}/reservation/month?yearMonth=${yearMonth}`,
+      ),
+    dailyList: (roomId: number, date: string) =>
+      createEndpoint(`/api/room/${roomId}/reservation?date=${date}`),
+    create: (roomId: number) =>
+      createEndpoint(`/api/room/${roomId}/reservation`),
+    get: (roomId: number, reservationId: number) =>
+      createEndpoint(`/api/room/${roomId}/reservation/${reservationId}`),
+    update: (roomId: number, reservationId: number) =>
+      createEndpoint(`/api/room/${roomId}/reservation/${reservationId}`),
+    delete: (roomId: number, reservationId: number) =>
+      createEndpoint(`/api/room/${roomId}/reservation/${reservationId}`),
   },
 };
 

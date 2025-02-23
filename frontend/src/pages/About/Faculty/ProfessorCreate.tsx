@@ -7,12 +7,17 @@ import {
   Globe,
   MapPin,
   Image as ImageIcon,
+  CheckCircle,
 } from 'lucide-react';
-import axios from 'axios';
-import { apiEndpoints, ProfessorReqDto } from '../../../config/apiConfig';
+import { ProfessorReqDto } from '../../../config/apiConfig';
 import { Modal, useModal } from '../../../components/Modal';
 import Button from '../../../common/Button/Button';
 import * as S from './ProfessorEditStyle';
+import {
+  createProfessorFormData,
+  getErrorMessage,
+  useCreateProfessor,
+} from '../../../hooks/queries/useProfessor';
 
 const ProfessorCreate: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +25,7 @@ const ProfessorCreate: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const createMutation = useCreateProfessor();
 
   const [formData, setFormData] = useState<ProfessorReqDto>({
     name: '',
@@ -30,15 +36,70 @@ const ProfessorCreate: React.FC = () => {
     homepage: '',
     lab: '',
     profileImage: '',
+    departmentId: 0,
   });
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+
+      if (name === 'phoneN') {
+        // 숫자와 하이픈만 허용
+        const digits = value.replace(/[^\d-]/g, '');
+
+        // 하이픈 제거
+        const numbers = digits.replace(/-/g, '');
+
+        let formattedNumber = '';
+
+        // 번호 길이에 따른 포맷팅
+        if (numbers.length > 0) {
+          // 서울(02)로 시작하는 경우
+          if (numbers.startsWith('02')) {
+            if (numbers.length <= 2) {
+              formattedNumber = numbers;
+            } else if (numbers.length <= 6) {
+              formattedNumber = `${numbers.slice(0, 2)}-${numbers.slice(2)}`;
+            } else {
+              formattedNumber = `${numbers.slice(0, 2)}-${numbers.slice(2, 6)}-${numbers.slice(6, 10)}`;
+            }
+          }
+          // 지역번호 또는 휴대폰 번호인 경우
+          else {
+            if (numbers.length <= 3) {
+              formattedNumber = numbers;
+            } else if (numbers.length <= 7) {
+              formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+            } else {
+              const endIndex = Math.min(numbers.length, 11);
+
+              // 지역번호에 따른 다른 분할 (031, 032 등)
+              if (
+                numbers.startsWith('03') ||
+                numbers.startsWith('04') ||
+                numbers.startsWith('05') ||
+                numbers.startsWith('06')
+              ) {
+                // 지역번호-국번-번호 형식
+                formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6, endIndex)}`;
+              } else {
+                // 기본 휴대폰 번호 형식 (010, 011 등)
+                formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, endIndex)}`;
+              }
+            }
+          }
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          [name]: formattedNumber,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
     },
     [],
   );
@@ -104,12 +165,9 @@ const ProfessorCreate: React.FC = () => {
     ) {
       openModal(
         <>
-          <Modal.Header>
-            <AlertCircle size={48} color="#E53E3E" />
-            입력 오류
-          </Modal.Header>
+          <Modal.Header>입력 오류</Modal.Header>
           <Modal.Content>
-            <p>이름, 이메일, 직위는 필수 입력 항목입니다.</p>
+            <p>모든 필수 항목을 입력해주세요.</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
@@ -120,30 +178,13 @@ const ProfessorCreate: React.FC = () => {
     }
 
     try {
-      setIsSubmitting(true);
-
-      const formDataToSend = new FormData();
-      formDataToSend.append(
-        'professorReqDto',
-        new Blob([JSON.stringify(formData)], {
-          type: 'application/json',
-        }),
-      );
-
-      if (imageFile) {
-        formDataToSend.append('profileImage', imageFile);
-      }
-
-      await axios.post(apiEndpoints.professor.create.url, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const formDataToSend = createProfessorFormData(formData, imageFile);
+      await createMutation.mutateAsync(formDataToSend);
 
       openModal(
         <>
           <Modal.Header>
-            <AlertCircle size={48} color="#38A169" />
+            <CheckCircle size={48} color="#38A169" />
             등록 완료
           </Modal.Header>
           <Modal.Content>
@@ -158,23 +199,17 @@ const ProfessorCreate: React.FC = () => {
       console.error('Error creating professor:', error);
       openModal(
         <>
-          <Modal.Header>
-            <AlertCircle size={48} color="#E53E3E" />
-            등록 실패
-          </Modal.Header>
+          <Modal.Header>등록 실패</Modal.Header>
           <Modal.Content>
-            <p>교수 정보 등록 중 오류가 발생했습니다.</p>
+            <p>{getErrorMessage(error)}</p>
           </Modal.Content>
           <Modal.Footer>
             <Modal.CloseButton />
           </Modal.Footer>
         </>,
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
-
   return (
     <S.Container>
       <S.HeaderContainer>

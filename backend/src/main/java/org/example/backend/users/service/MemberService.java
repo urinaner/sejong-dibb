@@ -58,7 +58,7 @@ public class MemberService {
         SjUserProfile profile = authenticate(dto);
 
         // 바이오융합공학과(, 컴퓨터공학과, 양자원자력공학과) 학생만 가입 가능
-        if (!profile.getMajor().equals("바이오융합공학과") && !profile.getMajor().equals("컴퓨터공학과")) {
+        if (!profile.getMajor().contains("바이오융합공학") && !profile.getMajor().equals("컴퓨터공학과")) {
             throw new MemberException(DEPARTMENT_NOT_BIO);
         }
     }
