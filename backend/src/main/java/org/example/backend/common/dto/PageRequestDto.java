@@ -30,4 +30,8 @@ public class PageRequestDto {
         Sort.Direction direction = Sort.Direction.valueOf(sortDirection.toUpperCase());
         return PageRequest.of(page, size, direction, sort);
     }
+
+    public Pageable toPageableUnsorted() {
+        return PageRequest.of(page, size, Sort.unsorted());
+    }
 }

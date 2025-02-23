@@ -1,5 +1,6 @@
 package org.example.backend.thesis.repository;
 
+import java.util.List;
 import org.example.backend.thesis.domain.entity.Thesis;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +11,29 @@ import org.springframework.data.repository.query.Param;
 public interface ThesisRepository extends JpaRepository<Thesis, Long> {
     Page<Thesis> findByProfessorId(Long professorId, Pageable pageable);
 
-    // title, author, journal, content 에서 키워드를 포함하는 데이터 검색
-    // fetch join 사용하여 N+1 문제 해결 (Lazy Loading을 무시하고, 한 번의 쿼리로 논문과 교수 정보를 미리 가져옴)
-    @Query("SELECT t FROM Thesis t JOIN FETCH t.professor WHERE t.title LIKE %:keyword% OR t.author LIKE %:keyword% "
-            + "OR t.journal LIKE %:keyword% OR t.content LIKE %:keyword%")
-    Page<Thesis> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    // 1) thesis_id만 조회 (Native Query Using Ngram, Fulltext)
+    @Query(value = """
+        SELECT t.thesis_id
+          FROM thesis t
+         WHERE MATCH(t.title, t.author, t.journal, t.content)
+               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
+        ORDER BY t.thesis_id
+        """,
+                countQuery = """
+        SELECT COUNT(*)
+          FROM thesis t
+         WHERE MATCH(t.title, t.author, t.journal, t.content)
+               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
+    """,
+            nativeQuery = true)
+    Page<Long> searchThesisIdsByFulltext(@Param("keyword") String keyword, Pageable pageable);
+
+    // 2) Fetch Join으로 Thesis + Professor (N + 1 문제 해결)
+    @Query("""
+        SELECT t
+          FROM Thesis t
+          JOIN FETCH t.professor
+         WHERE t.id IN :ids
+    """)
+    List<Thesis> findAllByIdInWithProfessor(@Param("ids") List<Long> ids);
 }

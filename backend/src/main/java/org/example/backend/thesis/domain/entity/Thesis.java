@@ -11,6 +11,7 @@ import org.example.backend.thesis.domain.dto.ThesisReqDto;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "thesis")
 public class Thesis {
 
     @Id
