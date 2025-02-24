@@ -65,9 +65,7 @@ const MainContent = styled(motion.main)<{ $isAuthPage: boolean }>`
   padding: ${(props) => (props.$isAuthPage ? '0' : '20px')};
 `;
 
-const PageContentContainer = styled.div<{ $type: LayoutType }>`
-  ${layoutStyles}
-`;
+const PageContentContainer = styled.div<{ $type: LayoutType }>``;
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
@@ -77,13 +75,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <PageContainer>
       <Header />
-      <MainContent
-        $isAuthPage={isAuthPage}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-      >
+      <MainContent $isAuthPage={isAuthPage}>
         <PageContentContainer $type={type}>{children}</PageContentContainer>
       </MainContent>
       <Footer />
