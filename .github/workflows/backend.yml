@@ -1,0 +1,44 @@
+name: Build & Push Backend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'   # backend 폴더 안이 변경된 경우만 트리거
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 자바 세팅
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Gradle 빌드
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v2
+      - name: Build Backend
+        run: |
+          cd backend
+          chmod +x ./gradlew
+          ./gradlew build -x test
+
+      # Gradle 캐시
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      # Docker 로그인 & 빌드 & 푸시
+      - name: Docker build & push (Backend)
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          cd backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
