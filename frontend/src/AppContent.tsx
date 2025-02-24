@@ -1,11 +1,7 @@
-// AppContent.tsx
 import React, { Suspense, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
 import MainBanner from './components/Banner/MainBanner/MainBanner';
 import PageBanner from './components/Banner/PageBanner/PageBanner';
 import { MAIN_CONTENT, PAGE_CONTENTS } from './constants/pageContents';
@@ -125,12 +121,10 @@ function AppContent() {
 
   const pageContent = getCurrentPageContent();
 
-  // 페이지 전환 시 500ms 동안 전환 상태를 관리 (현재 로딩 스피너 조건 그대로 사용)
   const isTransitioning = usePageTransition();
 
   return (
     <PageContainer ref={containerRef}>
-      <Header />
       <BannerWrapper isAuthPage={isAuthPage}>
         <AnimatePresence mode="wait">
           {isHomePage ? (
