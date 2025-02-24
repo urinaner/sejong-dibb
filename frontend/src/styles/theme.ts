@@ -1,12 +1,6 @@
-// theme.ts
-const breakpoints = {
-  mobile: '320px',
-  tablet: '768px',
-  laptop: '1024px',
-  desktop: '1440px',
-};
+import { DefaultTheme } from 'styled-components';
 
-export const theme = {
+export const theme: DefaultTheme = {
   colors: {
     white: '#FFFFFF',
     primary: {
@@ -23,12 +17,36 @@ export const theme = {
       500: '#51626F',
     },
   },
-  breakpoints,
-  media: {
-    mobile: `@media (max-width: ${breakpoints.mobile})`,
-    tablet: `@media (max-width: ${breakpoints.tablet})`,
-    laptop: `@media (max-width: ${breakpoints.laptop})`,
-    desktop: `@media (max-width: ${breakpoints.desktop})`,
+  layout: {
+    types: {
+      default: {
+        width: '85vw',
+        maxWidth: '1800px',
+        padding: '40px 20px',
+      },
+      full: {
+        width: '100%',
+        maxWidth: '100%',
+        padding: '40px 0',
+      },
+      auth: {
+        width: '100%',
+        maxWidth: '100%',
+        padding: '0',
+      },
+    },
+    mobilePadding: '20px 16px',
+    tabletPadding: '30px 20px',
+    zIndexes: {
+      base: 1,
+      overlay: 100,
+    },
+  },
+  breakpoints: {
+    mobile: '320px',
+    tablet: '768px',
+    laptop: '1024px',
+    desktop: '1440px',
   },
   fontSizes: {
     xs: '0.75rem',
@@ -52,7 +70,4 @@ export const theme = {
     fast: '0.2s',
     base: '0.3s',
   },
-} as const;
-
-export type Theme = typeof theme;
-export default theme;
+};

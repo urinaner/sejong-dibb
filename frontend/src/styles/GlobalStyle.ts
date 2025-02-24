@@ -1,7 +1,19 @@
-import { createGlobalStyle } from 'styled-components';
-
+import { createGlobalStyle, css } from 'styled-components';
+const globalOverrides = css`
+  [class*='Container'],
+  [class*='Wrapper'],
+  [class*='Content'],
+  [class*='Layout'] {
+    &:not(.preserve-style) {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+`;
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+    ${globalOverrides}
+    @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
 
   * {
     margin: 0;

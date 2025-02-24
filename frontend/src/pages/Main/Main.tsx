@@ -8,7 +8,7 @@ import { NewsSection } from './components/NewsSection';
 
 function Main(): JSX.Element {
   return (
-    <PageLayout>
+    <>
       <ContentWrapper>
         <AnnouncementAndSeminar>
           <AnnouncementSection />
@@ -18,7 +18,7 @@ function Main(): JSX.Element {
       </ContentWrapper>
       <PaperSection />
       <NewsSection />
-    </PageLayout>
+    </>
   );
 }
 
