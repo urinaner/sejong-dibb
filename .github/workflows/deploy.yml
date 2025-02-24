@@ -6,7 +6,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    needs: [ build-backend, build-frontend ]  # 두 빌드가 완료된 후에 실행
     steps:
       - name: SSH to server & Deploy
         uses: appleboy/ssh-action@v0.1.4
