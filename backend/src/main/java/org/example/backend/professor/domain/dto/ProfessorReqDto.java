@@ -26,7 +26,7 @@ public class ProfessorReqDto {
 
     @Schema(description = "교수 전화번호", example = "010-1234-5678")
     @NotBlank(message = "전화번호는 필수 입력값입니다.")
-    @Pattern(regexp = "010-\\d{4}-\\d{4}", message = "전화번호는 '010-1234-5678' 형식이어야 합니다.")
+    @Pattern(regexp = "\\d{2}-\\d{4}-\\d{4}", message = "전화번호는 '00-0000-0000' 형식이어야 합니다.")
     private String phoneN;
 
     @Schema(description = "교수 이메일", example = "example@sju.ac.kr")
