@@ -60,6 +60,11 @@ const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   height: 100%;
   align-items: center;
   padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
+
+  /* 모바일에서 패딩 조정 */
+  @media (max-width: 768px) {
+    padding: ${(props) => (props.isAuthPage ? '0' : '0')};
+  }
 `;
 
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
@@ -138,15 +143,13 @@ function AppContent() {
           )}
         </AnimatePresence>
       </BannerWrapper>
-      <InnerContainer>
-        <ContentWrapper isAuthPage={isAuthPage}>
-          <AppLayout>
-            <PageTransition>
-              <AppRoutes />
-            </PageTransition>
-          </AppLayout>
-        </ContentWrapper>
-      </InnerContainer>
+      <ContentWrapper isAuthPage={isAuthPage}>
+        <AppLayout>
+          <PageTransition>
+            <AppRoutes />
+          </PageTransition>
+        </AppLayout>
+      </ContentWrapper>
       {/* 전환 상태가 true일 때 로딩 스피너 표시 */}
       {isTransitioning && <LoadingSpinner />}
     </PageContainer>
