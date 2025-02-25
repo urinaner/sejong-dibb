@@ -5,19 +5,22 @@ import { SeminarSection } from './components/SeminarSection';
 import { ShortcutSection } from './components/ShortcutSection';
 import { PaperSection } from './components/PaperSection';
 import { NewsSection } from './components/NewsSection';
+import Container from '../../styles/Container';
 
 function Main(): JSX.Element {
   return (
     <>
-      <ContentWrapper>
-        <AnnouncementAndSeminar>
-          <AnnouncementSection />
-          <SeminarSection />
-        </AnnouncementAndSeminar>
-        <ShortcutSection />
-      </ContentWrapper>
-      <PaperSection />
-      <NewsSection />
+      <Container>
+        <ContentWrapper>
+          <AnnouncementAndSeminar>
+            <AnnouncementSection />
+            <SeminarSection />
+          </AnnouncementAndSeminar>
+          <ShortcutSection />
+        </ContentWrapper>
+        <PaperSection />
+        <NewsSection />
+      </Container>
     </>
   );
 }

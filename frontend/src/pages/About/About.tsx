@@ -12,6 +12,7 @@ import {
   MarkdownContainer,
 } from './AboutStyle';
 import remarkGfm from 'remark-gfm';
+import Container from '../../styles/Container';
 
 // 기존 Markdown 콘텐츠 정의
 const introContent = `
@@ -74,7 +75,7 @@ const careerContent = `
 
 const About = (): JSX.Element => {
   return (
-    <Wrapper>
+    <Container>
       <Content>
         <Title>바이오융합공학전공</Title>
         <Description>
@@ -114,7 +115,7 @@ const About = (): JSX.Element => {
           </InfoCard>
         </InfoSection>
       </Content>
-    </Wrapper>
+    </Container>
   );
 };
 
