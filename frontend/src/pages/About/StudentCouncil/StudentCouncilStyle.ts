@@ -1,52 +1,51 @@
 import styled from 'styled-components';
+import { media } from '../../../styles/media';
 
-export const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 0;
-  width: 80vw;
-  max-width: 900px;
-  margin: 0 auto;
-`;
+// Wrapper를 제거하고 전역 Container로 대체
 
 export const Content = styled.div`
   width: 100%;
   text-align: center;
-  padding: 20px;
+  padding: 20px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Logo = styled.img`
-  width: 35vw;
+  width: 200px;
   height: auto;
   margin: 0 0 50px;
 
-  @media (max-width: 768px) {
-    width: 200px;
+  ${media.mobile} {
+    width: 150px;
     margin: 0 0 30px;
   }
 `;
 
 export const Title = styled.h1`
-  font-size: 3.2rem;
+  font-size: 2.8rem;
   font-weight: 800;
   margin-bottom: 30px;
   color: #333;
+  width: 100%;
 
-  @media (max-width: 768px) {
-    font-size: 2.4rem;
+  ${media.mobile} {
+    font-size: 2rem;
     margin-bottom: 20px;
   }
 `;
 
 export const Description = styled.p`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   line-height: 1.6;
   margin-bottom: 60px;
   color: #666;
+  width: 100%;
 
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
+  ${media.mobile} {
+    font-size: 1.2rem;
     margin-bottom: 40px;
   }
 `;
@@ -56,36 +55,37 @@ export const InfoSection = styled.div`
   flex-direction: column;
   gap: 50px;
   width: 100%;
+  margin-bottom: 40px;
+
+  ${media.mobile} {
+    gap: 30px;
+  }
 `;
 
 export const InfoCard = styled.div`
-  background: #fff;
-  border-radius: 20px;
-  padding: 50px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  width: 100%;
+  padding: 30px 0;
+  box-sizing: border-box;
 
-  &:hover {
-    transform: translateY(-5px);
-  }
-
-  @media (max-width: 768px) {
-    padding: 30px;
+  ${media.mobile} {
+    padding: 20px 0;
   }
 `;
 
 export const InfoTitle = styled.h2`
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   color: #333;
-  border-bottom: 4px solid #ff69b4;
   padding-bottom: 15px;
   display: inline-block;
+  width: 100%;
+  text-align: left;
 
-  @media (max-width: 768px) {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
+  ${media.mobile} {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
   }
 `;
 
@@ -93,8 +93,6 @@ export const OrganizationImage = styled.img`
   width: 100%;
   height: auto;
   margin: 20px auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 `;
 
 export const SocialLink = styled.a`
@@ -104,17 +102,12 @@ export const SocialLink = styled.a`
   gap: 16px;
   color: #333;
   text-decoration: none;
-  margin-top: 70px;
-  padding: 16px 32px;
-  border-radius: 40px;
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  margin-top: 40px;
+  padding: 16px 0;
+  transition: color 0.3s ease;
 
   &:hover {
     color: #e1306c;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   span {
@@ -122,9 +115,9 @@ export const SocialLink = styled.a`
     font-weight: 500;
   }
 
-  @media (max-width: 768px) {
-    margin-top: 50px;
-    padding: 14px 28px;
+  ${media.mobile} {
+    margin-top: 30px;
+    padding: 14px 0;
 
     span {
       font-size: 1.2rem;
@@ -137,6 +130,7 @@ export const MarkdownContainer = styled.div`
   line-height: 2;
   color: #444;
   font-size: 1.2rem;
+  width: 100%;
 
   p {
     margin: 1.2em 0;
@@ -152,7 +146,7 @@ export const MarkdownContainer = styled.div`
     font-style: italic;
   }
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
     font-size: 1.1rem;
     line-height: 1.8;
   }
