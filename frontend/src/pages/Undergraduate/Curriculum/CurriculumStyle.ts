@@ -1,17 +1,10 @@
 import styled from 'styled-components';
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-};
+import { media } from '../../../styles/media';
 
 export const ImageWrapper = styled.div`
   width: 100%;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  box-sizing: border-box;
 `;
 
 export const ImageContainer = styled.div`
@@ -22,6 +15,7 @@ export const ImageContainer = styled.div`
   user-select: none;
   touch-action: none;
   min-height: 200px;
+  margin-bottom: 1rem;
 `;
 
 export const CurriculumImage = styled.img`
@@ -36,26 +30,24 @@ export const CurriculumImage = styled.img`
 `;
 
 export const ImageCaption = styled.div`
-  padding: 1rem;
   text-align: center;
   color: #4a5568;
-  font-size: 0.9rem;
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 
   ${media.mobile} {
-    padding: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 `;
 
 export const DownloadSection = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-bottom: 3rem;
 
   ${media.mobile} {
-    margin-top: 0.75rem;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -63,18 +55,15 @@ export const DownloadLink = styled.a`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: #2d3748;
   text-decoration: none;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: all 0.2s ease-in-out;
-  background: white;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e0;
+    color: #1a202c;
+    text-decoration: underline;
   }
 
   svg {
@@ -85,9 +74,11 @@ export const DownloadLink = styled.a`
   ${media.mobile} {
     width: 100%;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
   }
 `;
+
 export const ZoomControls = styled.div`
   position: absolute;
   top: 1rem;
@@ -130,6 +121,19 @@ export const ZoomButton = styled.button`
   }
 `;
 
+export const SectionTitle = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
+
+  ${media.mobile} {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
+  }
+`;
+
 export const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -155,7 +159,6 @@ export const ErrorContainer = styled.div`
   color: #c53030;
   border-radius: 8px;
   font-size: 1rem;
-  border: 1px solid #feb2b2;
   text-align: center;
   justify-content: center;
 
@@ -195,11 +198,12 @@ export const DragInstructions = styled.div`
 `;
 
 export const TouchInstructions = styled.div`
-  display: none;
   text-align: center;
   color: #4a5568;
   font-size: 0.85rem;
   margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  display: none;
 
   ${media.mobile} {
     display: block;
