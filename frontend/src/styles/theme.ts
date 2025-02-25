@@ -1,4 +1,5 @@
 import { DefaultTheme } from 'styled-components';
+import { media } from './media';
 
 export const theme: DefaultTheme = {
   colors: {
@@ -21,7 +22,7 @@ export const theme: DefaultTheme = {
     types: {
       default: {
         width: '85vw',
-        maxWidth: '1800px',
+        maxWidth: '1500px',
         padding: '40px 20px',
       },
       full: {
@@ -70,4 +71,8 @@ export const theme: DefaultTheme = {
     fast: '0.2s',
     base: '0.3s',
   },
+  media: media,
 };
+
+export type Theme = typeof theme;
+export default theme;

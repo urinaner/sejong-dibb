@@ -22,38 +22,6 @@ const PageContainer = styled.div`
   scroll-behavior: smooth;
 `;
 
-const layoutStyles = css<{ $type: LayoutType }>`
-  width: ${({ theme, $type }) => theme.layout.types[$type].width} !important;
-  max-width: ${({ theme, $type }) =>
-    theme.layout.types[$type].maxWidth} !important;
-  margin: 0 auto !important;
-  padding: ${({ theme, $type }) =>
-    theme.layout.types[$type].padding} !important;
-  position: relative !important;
-  z-index: ${({ theme }) => theme.layout.zIndexes.base} !important;
-
-  ${media.mobile} {
-    width: 100% !important;
-    padding: ${({ theme }) => theme.layout.mobilePadding} !important;
-  }
-
-  ${media.tablet} {
-    width: ${({ $type }) => ($type === 'full' ? '100%' : '90%')} !important;
-    padding: ${({ theme }) => theme.layout.tabletPadding} !important;
-  }
-
-  // 기존 페이지 컨테이너 스타일 오버라이드
-  & > div[class*='Container'],
-  & > div[class*='Wrapper'],
-  & > div[class*='Content'],
-  & > div[class*='Layout'] {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-`;
-
 const MainContent = styled(motion.main)<{ $isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
@@ -65,7 +33,24 @@ const MainContent = styled(motion.main)<{ $isAuthPage: boolean }>`
   padding: ${(props) => (props.$isAuthPage ? '0' : '20px')};
 `;
 
-const PageContentContainer = styled.div<{ $type: LayoutType }>``;
+const PageContentContainer = styled.div<{ $type: LayoutType }>`
+  width: ${({ theme, $type }) => theme.layout.types[$type].width};
+  max-width: ${({ theme, $type }) => theme.layout.types[$type].maxWidth};
+  margin: 0 auto;
+  padding: ${({ theme, $type }) => theme.layout.types[$type].padding};
+  position: relative;
+  z-index: ${({ theme }) => theme.layout.zIndexes.base};
+
+  ${media.mobile} {
+    width: 100%;
+    padding: ${({ theme }) => theme.layout.mobilePadding};
+  }
+
+  ${media.tablet} {
+    width: ${({ $type }) => ($type === 'full' ? '100%' : '90%')};
+    padding: ${({ theme }) => theme.layout.tabletPadding};
+  }
+`;
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,

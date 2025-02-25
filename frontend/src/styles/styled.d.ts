@@ -1,4 +1,5 @@
 import 'styled-components';
+import { media } from './media';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
@@ -43,6 +44,7 @@ declare module 'styled-components' {
         overlay: number;
       };
     };
+    media: typeof media;
     breakpoints: {
       mobile: string;
       tablet: string;
