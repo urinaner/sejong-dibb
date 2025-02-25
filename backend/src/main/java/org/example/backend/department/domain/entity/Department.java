@@ -1,12 +1,17 @@
 package org.example.backend.department.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 import org.example.backend.common.domain.BaseEntity;
+import org.example.backend.department.domain.dto.Department.DepartmentReqDto;
 
 @Entity
 @Getter
@@ -18,10 +23,10 @@ public class Department extends BaseEntity {
     @Column(name = "department_id", nullable = false)
     private Long id;
 
-    @Column(name = "koreanName", unique = true)
+    @Column(name = "korean_name", unique = true)
     private String koreanName;
 
-    @Column(name = "englishName", unique = true)
+    @Column(name = "english_name", unique = true)
     private String englishName;
 
     @Column(name = "intro")
@@ -33,10 +38,10 @@ public class Department extends BaseEntity {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "educationalObjective")
+    @Column(name = "educational_objective")
     private String educationalObjective;
 
-    @Column(name = "workHour")
+    @Column(name = "work_hour")
     private String workHour;
 
     @Column(name = "map")
