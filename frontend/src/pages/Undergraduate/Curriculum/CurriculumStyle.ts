@@ -5,27 +5,6 @@ const media = {
   tablet: '@media(max-width: 1024px)',
 };
 
-export const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
-  padding: 40px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-
-  ${media.mobile} {
-    width: 100%;
-    padding: 20px 16px;
-    gap: 2rem;
-  }
-
-  ${media.tablet} {
-    width: 90%;
-    padding: 30px 20px;
-  }
-`;
-
 export const ImageWrapper = styled.div`
   width: 100%;
   background: white;

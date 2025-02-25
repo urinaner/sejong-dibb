@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Download } from 'lucide-react';
 import * as S from './CurriculumStyle';
+import Container from '../../../styles/Container';
 
 interface Position {
   x: number;
@@ -300,59 +301,61 @@ const Curriculum: React.FC = () => {
   );
 
   return (
-    <S.Container>
-      <S.ImageWrapper>
-        {renderImage('curriculum', {
-          src: '/curriculum-2025.png',
-          alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
-          scale: scaleCur,
-          position: positionCur,
-          dragState: dragStateCur,
-          containerRef: curContainerRef,
-          setPosition: setPositionCur,
-        })}
-        <S.ImageCaption>
-          2025학년도 전공 교과과정표 (바이오융합공학전공)
-        </S.ImageCaption>
-      </S.ImageWrapper>
+    <>
+      <Container>
+        <S.ImageWrapper>
+          {renderImage('curriculum', {
+            src: '/curriculum-2025.png',
+            alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
+            scale: scaleCur,
+            position: positionCur,
+            dragState: dragStateCur,
+            containerRef: curContainerRef,
+            setPosition: setPositionCur,
+          })}
+          <S.ImageCaption>
+            2025학년도 전공 교과과정표 (바이오융합공학전공)
+          </S.ImageCaption>
+        </S.ImageWrapper>
 
-      <S.DownloadSection>
-        <S.DownloadLink
-          href="/curriculum-2025.jpeg"
-          download="세종대학교_바이오융합공학전공_교과과정표_2025.jpeg"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Download size={18} />
-          교과과정표 다운로드
-        </S.DownloadLink>
-      </S.DownloadSection>
+        <S.DownloadSection>
+          <S.DownloadLink
+            href="/curriculum-2025.jpeg"
+            download="세종대학교_바이오융합공학전공_교과과정표_2025.jpeg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Download size={18} />
+            교과과정표 다운로드
+          </S.DownloadLink>
+        </S.DownloadSection>
 
-      <S.ImageWrapper>
-        {renderImage('roadmap', {
-          src: '/roadmap-2025.png',
-          alt: '2025학년도 바이오융합공학전공 로드맵',
-          scale: scaleRoad,
-          position: positionRoad,
-          dragState: dragStateRoad,
-          containerRef: roadContainerRef,
-          setPosition: setPositionRoad,
-        })}
-        <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
-      </S.ImageWrapper>
+        <S.ImageWrapper>
+          {renderImage('roadmap', {
+            src: '/roadmap-2025.png',
+            alt: '2025학년도 바이오융합공학전공 로드맵',
+            scale: scaleRoad,
+            position: positionRoad,
+            dragState: dragStateRoad,
+            containerRef: roadContainerRef,
+            setPosition: setPositionRoad,
+          })}
+          <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
+        </S.ImageWrapper>
 
-      <S.DownloadSection>
-        <S.DownloadLink
-          href="/roadmap-2025.png"
-          download="세종대학교_바이오융합공학전공_로드맵_2025.jpeg"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Download size={18} />
-          로드맵 다운로드
-        </S.DownloadLink>
-      </S.DownloadSection>
-    </S.Container>
+        <S.DownloadSection>
+          <S.DownloadLink
+            href="/roadmap-2025.png"
+            download="세종대학교_바이오융합공학전공_로드맵_2025.jpeg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Download size={18} />
+            로드맵 다운로드
+          </S.DownloadLink>
+        </S.DownloadSection>
+      </Container>
+    </>
   );
 };
 
