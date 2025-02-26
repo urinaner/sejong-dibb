@@ -31,6 +31,11 @@ export const TopHeaderTitle = styled.div`
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    font-weight: 600;
+  }
 `;
 
 export const TopNavList = styled.ul`
@@ -76,6 +81,10 @@ export const TopNavItem = styled.li`
     &:hover {
       opacity: 0.8;
       text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.875rem;
     }
   }
 
