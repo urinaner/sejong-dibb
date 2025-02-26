@@ -61,7 +61,28 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm install --save-dev stream-browserify buffer util assert
+          # 필요한 모든 폴리필 설치
+          npm install --save-dev stream-browserify buffer util assert crypto-browserify
+          # craco.config.js 파일이 있는지 확인
+          if [ ! -f craco.config.js ]; then
+            echo "Creating craco.config.js file..."
+            echo "module.exports = {
+            webpack: {
+              configure: {
+                resolve: {
+                  fallback: {
+                    crypto: require.resolve('crypto-browserify'),
+                    stream: require.resolve('stream-browserify'),
+                    buffer: require.resolve('buffer/'),
+                    util: require.resolve('util/'),
+                    assert: require.resolve('assert/')
+                  }
+                }
+              }
+            }
+          };" > craco.config.js
+          fi
+          # npx를 통해 craco 직접 실행
           npx craco build
 
       # Docker 이미지 빌드 및 푸시
