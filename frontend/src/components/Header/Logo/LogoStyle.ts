@@ -55,20 +55,20 @@ export const LogoTitle = styled.div`
   flex-direction: column;
   gap: 4px;
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   opacity: 0.95;
 `;
 
 export const Department = styled.span`
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   text-transform: none;
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 700;
   }
 `;
 
@@ -78,7 +78,7 @@ export const MobileLogoTitle = styled.div`
   transform: translateX(-50%);
   white-space: nowrap;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 700;
   color: white;
   width: 100%;
   text-align: center;
