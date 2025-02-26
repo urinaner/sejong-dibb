@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to server & Deploy
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SJ_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SJ_PRIVATE_KEY }}
+          script: |
+            # 서버 디렉토리로 이동
+            mkdir -p ~/sejong-dibb
+            cd ~/sejong-dibb
+            
+            # GitHub Secrets에서 docker-compose.yml 생성
+            echo "DOCKER_COMPOSE_YML=${{ secrets.DOCKER_COMPOSE_YML }}" 
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            
+            # 기존 컨테이너 정리 및 새 배포 실행
+            docker-compose down || true
+            docker-compose pull
+            docker-compose up -d
