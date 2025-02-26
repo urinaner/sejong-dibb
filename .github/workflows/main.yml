@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: '22'
 
-      # 프론트엔드 빌드
+      # 프론트엔드 빌드 - 수정된 부분
       - name: Install and Build Frontend
         env:
           CI: false
@@ -61,7 +61,8 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build
+          npm install --save-dev stream-browserify buffer util assert
+          npx craco build
 
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
@@ -94,9 +95,8 @@ jobs:
             cd ~/sejong-dibb
             
             # GitHub Secrets에서 docker-compose.yml 생성
-            echo "DOCKER_COMPOSE_YML=${{ secrets.DOCKER_COMPOSE_YML }}"  # 추가된 디버깅 로그
             echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
-           
+            
             
             # 기존 컨테이너 정리 및 새 배포 실행
             docker-compose down || true
