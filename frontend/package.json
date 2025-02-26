@@ -59,7 +59,9 @@
     "start": "react-scripts start",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+    "prettier": "prettier --write 'src/**/*.{js,ts,tsx}'"
   },
   "eslintConfig": {
     "extends": [
