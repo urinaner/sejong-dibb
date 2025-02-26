@@ -34,9 +34,9 @@ export const GlobalStyle = createGlobalStyle`
         }
 
         /* 또는 필요한 경우 내부 콘텐츠에 패딩 추가 */
-        .your-content-class {
-            padding: 10px;
-        }
+        //.your-content-class {
+        //    padding: 10px;
+        //}
     }
 
 `;

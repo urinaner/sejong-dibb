@@ -10,6 +10,7 @@ import { AppRoutes } from './routes/AppRoutes';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import { AppLayout } from './components/layout/AppLayout';
 import { usePageTransition } from './hooks/usePageTransition';
+import { media } from './styles/media';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -50,7 +51,6 @@ const InnerContainer = styled.div`
   flex-direction: column;
   flex: 1;
 `;
-
 const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
@@ -59,12 +59,8 @@ const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   max-width: 100%;
   height: 100%;
   align-items: center;
-  padding: ${(props) => (props.isAuthPage ? '0' : '20px')};
-
-  /* 모바일에서 패딩 조정 */
-  @media (max-width: 768px) {
-    padding: ${(props) => (props.isAuthPage ? '0' : '0')};
-  }
+  padding: ${(props) =>
+    props.isAuthPage ? '0' : '20px 0'}; // 좌우 패딩을 0으로 변경
 `;
 
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`

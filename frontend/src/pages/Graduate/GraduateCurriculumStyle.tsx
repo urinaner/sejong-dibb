@@ -7,24 +7,6 @@ export const media = {
   desktop: '@media(min-width: 1025px)',
 };
 
-// Global container style matching the undergraduate curriculum page
-export const Container = styled.div`
-  max-width: 1200px; // Reduced max-width for better document rendering
-  width: 80vw;
-  margin: 0 auto;
-  padding: 40px 20px;
-
-  ${media.mobile} {
-    width: 100%;
-    padding: 20px 16px;
-  }
-
-  ${media.tablet} {
-    width: 90%;
-    padding: 30px 20px;
-  }
-`;
-
 export const SectionTitle = styled.h2`
   font-size: 1.75rem;
   font-weight: 700;

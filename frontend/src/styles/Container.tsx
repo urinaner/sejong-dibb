@@ -40,9 +40,9 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
       case 'full':
         return '0';
       case 'content':
-        return '0 10px';
+        return '0 5px';
       default:
-        return '40px 20px';
+        return '0 5px';
     }
   }};
 

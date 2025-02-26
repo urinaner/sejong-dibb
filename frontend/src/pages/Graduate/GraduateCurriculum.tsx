@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Download } from 'lucide-react';
 import * as S from './GraduateCurriculumStyle';
+import Container from '../../styles/Container';
 
 interface Position {
   x: number;
@@ -302,7 +303,7 @@ function GraduateCurriculum() {
   );
 
   return (
-    <S.Container>
+    <Container>
       <S.SectionTitle>대학원 교과과정</S.SectionTitle>
 
       <S.ImageWrapper>
@@ -360,7 +361,7 @@ function GraduateCurriculum() {
           교과과정표2 다운로드
         </S.DownloadLink>
       </S.DownloadSection>
-    </S.Container>
+    </Container>
   );
 }
 
