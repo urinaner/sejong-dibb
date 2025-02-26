@@ -85,10 +85,7 @@ const NewsDetail = () => {
         </NewsHeader>
         <NewsDivider />
         {newsItems.image && (
-          <NewsImage
-            src={`${API_BASE_URL}${newsItems.image}`}
-            alt={newsItems.title}
-          />
+          <NewsImage src={`${newsItems.image}`} alt={newsItems.title} />
         )}
         <NewsContent>{newsItems.content}</NewsContent>
         {newsItems.link && (

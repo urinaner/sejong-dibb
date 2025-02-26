@@ -164,7 +164,7 @@ const News = () => {
         {newsData.data.map((item) => (
           <S.NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <S.NewsImage
-              imageUrl={`${API_BASE_URL}${item.image}`}
+              imageUrl={`${item.image}`}
               onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
                 e.currentTarget.classList.add('error');
               }}
