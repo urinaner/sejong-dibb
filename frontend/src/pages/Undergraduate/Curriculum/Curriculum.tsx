@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Download } from 'lucide-react';
 import * as S from './CurriculumStyle';
+import Container from '../../../styles/Container';
 
 interface Position {
   x: number;
@@ -300,8 +301,13 @@ const Curriculum: React.FC = () => {
   );
 
   return (
-    <S.Container>
+    <Container type="content">
+      <S.SectionTitle>교과과정 및 로드맵</S.SectionTitle>
+
       <S.ImageWrapper>
+        <S.ImageCaption>
+          2025학년도 전공 교과과정표 (바이오융합공학전공)
+        </S.ImageCaption>
         {renderImage('curriculum', {
           src: '/curriculum-2025.png',
           alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
@@ -311,9 +317,9 @@ const Curriculum: React.FC = () => {
           containerRef: curContainerRef,
           setPosition: setPositionCur,
         })}
-        <S.ImageCaption>
-          2025학년도 전공 교과과정표 (바이오융합공학전공)
-        </S.ImageCaption>
+        <S.TouchInstructions>
+          두 손가락으로 확대/축소 및 이동이 가능합니다
+        </S.TouchInstructions>
       </S.ImageWrapper>
 
       <S.DownloadSection>
@@ -329,6 +335,7 @@ const Curriculum: React.FC = () => {
       </S.DownloadSection>
 
       <S.ImageWrapper>
+        <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
         {renderImage('roadmap', {
           src: '/roadmap-2025.png',
           alt: '2025학년도 바이오융합공학전공 로드맵',
@@ -338,7 +345,9 @@ const Curriculum: React.FC = () => {
           containerRef: roadContainerRef,
           setPosition: setPositionRoad,
         })}
-        <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
+        <S.TouchInstructions>
+          두 손가락으로 확대/축소 및 이동이 가능합니다
+        </S.TouchInstructions>
       </S.ImageWrapper>
 
       <S.DownloadSection>
@@ -352,7 +361,7 @@ const Curriculum: React.FC = () => {
           로드맵 다운로드
         </S.DownloadLink>
       </S.DownloadSection>
-    </S.Container>
+    </Container>
   );
 };
 

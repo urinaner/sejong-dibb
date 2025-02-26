@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  OverviewContainer,
-  Title,
-  Text,
-  InfoSection,
-  InfoCard,
-  InfoTitle,
-  MarkdownContainer,
-} from './GraduateOverviewStyle';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import * as S from './GraduateOverviewStyle';
 
 const overviewContent = `
 **신약 설계/개발, 제약, 보건, 환경, 바이오산업등의 발달**에 기여할 수 있도록 특화된 융합과 응용 관련된 커리큘럼을 수강합니다.
@@ -31,36 +23,37 @@ const goalContent = `
 
 function GraduateOverview() {
   return (
-    <OverviewContainer>
-      <Title>바이오융합공학과</Title>
-      <Text>
-        Sejong University
-        <br />
-        Department of Integrative Bioscience and Biotechnology
-      </Text>
+    <S.Container>
+      <S.HeaderContainer>
+        <S.Title>바이오융합공학과</S.Title>
+      </S.HeaderContainer>
 
-      <InfoSection>
+      <S.SubtitleContainer>
+        <S.Subtitle>
+          Sejong University
+          <br />
+          Department of Integrative Bioscience and Biotechnology
+        </S.Subtitle>
+      </S.SubtitleContainer>
+
+      <S.ContentContainer>
         {/* 학과 소개 구역 */}
-        <InfoCard>
-          <InfoTitle>대학원 소개</InfoTitle>
-          <MarkdownContainer>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {overviewContent}
-            </ReactMarkdown>
-          </MarkdownContainer>
-        </InfoCard>
+        <S.InfoTitle>대학원 소개</S.InfoTitle>
+        <S.MarkdownContainer>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {overviewContent}
+          </ReactMarkdown>
+        </S.MarkdownContainer>
 
         {/* 교육 목표 구역 */}
-        <InfoCard>
-          <InfoTitle>교육 목표</InfoTitle>
-          <MarkdownContainer>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {goalContent}
-            </ReactMarkdown>
-          </MarkdownContainer>
-        </InfoCard>
-      </InfoSection>
-    </OverviewContainer>
+        <S.InfoTitle>교육 목표</S.InfoTitle>
+        <S.MarkdownContainer>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {goalContent}
+          </ReactMarkdown>
+        </S.MarkdownContainer>
+      </S.ContentContainer>
+    </S.Container>
   );
 }
 

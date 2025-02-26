@@ -6,6 +6,7 @@ import useNotice from '../../../hooks/queries/useNotice';
 import Pagination from '../../../common/Pagination/Pagination';
 import type { NoticeQueryParams } from '../../../types/api/notice';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import Container from '../../../styles/Container';
 
 export const CATEGORY_MAP = {
   undergraduate: '학부',
@@ -67,8 +68,7 @@ const NoticeBoard: React.FC = () => {
   const currentPage = data.page || 0;
 
   return (
-    <S.Container>
-      <S.Title>공지사항</S.Title>
+    <Container>
       <S.HeaderContainer>
         <S.Navigation>
           <S.NavButtonGroup>
@@ -138,7 +138,7 @@ const NoticeBoard: React.FC = () => {
           onPageChange={handlePageChange}
         />
       )}
-    </S.Container>
+    </Container>
   );
 };
 

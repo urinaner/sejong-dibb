@@ -93,6 +93,7 @@ export const PaperCard = styled.article`
 export const PaperTitle = styled.h3`
   font-size: ${({ theme }) => theme.fontSizes.lg};
   font-weight: 700;
+  font-size: 30px;
   color: #5d5a88;
   margin-bottom: 8px;
   display: -webkit-box;
@@ -100,10 +101,6 @@ export const PaperTitle = styled.h3`
   -webkit-box-orient: vertical;
   overflow: hidden;
   height: 3em;
-
-  ${media.mobile} {
-    font-size: ${({ theme }) => theme.fontSizes.base};
-  }
 `;
 
 export const PaperAuthor = styled.p`

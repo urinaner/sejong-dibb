@@ -1,138 +1,154 @@
 import styled from 'styled-components';
+import { SEJONG_COLORS } from '../../constants/colors';
 
-export const OverviewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 15vh;
-`;
+export const media = {
+  mobile: '@media(max-width: 768px)',
+  tablet: '@media(max-width: 1024px)',
+  desktop: '@media(min-width: 1025px)',
+};
 
-export const Title = styled.h2`
-  font-size: 2.8rem;
-  font-weight: 800;
-  margin-bottom: 30px;
+// Global container style for consistency across pages
+export const Container = styled.div`
+  max-width: 1400px;
+  width: 80vw;
+  margin: 0 auto;
+  padding: 40px 20px;
 
-  @media (max-width: 768px) {
-    font-size: 2rem; /* 작은 화면에서 폰트 크기 조정 */
+  ${media.mobile} {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+  ${media.tablet} {
+    width: 90%;
+    padding: 30px 20px;
   }
 `;
 
-export const Text = styled.div`
+export const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid ${SEJONG_COLORS.CRIMSON_RED};
+
+  ${media.mobile} {
+    margin-bottom: 1rem;
+  }
+`;
+
+export const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: bold;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0;
+
+  ${media.mobile} {
+    font-size: 1.6rem;
+  }
+`;
+
+export const CenteredTitle = styled(Title)`
+  text-align: center;
+`;
+
+export const SubtitleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+
+  ${media.mobile} {
+    margin-bottom: 1.5rem;
+  }
+`;
+
+export const Subtitle = styled.div`
   text-align: center;
   font-size: 1.2rem;
-  margin-bottom: 50px;
+  margin-bottom: 2rem;
   line-height: 1.6;
-  max-width: 800px;
-  margin: 0 auto 50px;
+  color: ${(props) => props.theme.colors.grey[500]};
+  font-weight: 400;
 
-  @media (max-width: 768px) {
-    font-size: 1rem; /* 작은 화면에서 폰트 크기 조정 */
-    padding: 0 10px;
+  ${media.mobile} {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
-export const InfoSection = styled.div`
+export const ContentContainer = styled.div`
   display: flex;
-  flex-direction: column; /* 세로 방향으로 정렬 */
-  gap: 30px;
-  width: 100%;
-`;
+  flex-direction: column;
+  gap: 2rem;
 
-export const InfoCard = styled.div`
-  padding: 30px;
-  border: none;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-  transition:
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-  max-width: 900px;
-  margin: 0 auto;
-
-  &:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    transform: translateY(-4px);
-  }
-
-  @media (max-width: 768px) {
-    padding: 20px; /* 작은 화면에서 패딩 조정 */
-    margin: 0 10px;
+  ${media.mobile} {
+    gap: 1.5rem;
   }
 `;
 
-export const InfoTitle = styled.h3`
-  font-size: 1.8rem;
+export const ContentSection = styled.div`
+  padding: 2rem 0;
+  border-bottom: 1px solid ${(props) => props.theme.colors.grey[200]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  ${media.mobile} {
+    padding: 1.5rem 0;
+  }
+`;
+
+export const InfoTitle = styled.h2`
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 20px;
-  border-bottom: 3px solid currentColor;
-  padding-bottom: 12px;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
   text-align: center;
 
-  @media (max-width: 768px) {
-    font-size: 1.5rem; /* 작은 화면에서 폰트 크기 조정 */
+  ${media.mobile} {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
   }
 `;
 
 export const MarkdownContainer = styled.div`
   line-height: 1.6;
   font-size: 1rem;
-  text-align: left;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px;
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-  }
+  color: ${(props) => props.theme.colors.grey[500]};
 
   p {
-    margin: 0.8em 0;
+    margin: 0.8rem 0;
+  }
+
+  strong {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    font-weight: 600;
   }
 
   ul,
   ol {
-    margin: 1em 0;
-    padding-left: 1.2em;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
   }
 
   li {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.5rem;
+    position: relative;
   }
 
   blockquote {
-    margin: 1em 0;
-    padding-left: 1em;
-    border-left: 4px solid #ccc;
-    font-style: italic;
-    background-color: #f9f9f9;
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid ${SEJONG_COLORS.CRIMSON_RED};
+    background-color: ${(props) => props.theme.colors.grey[50]};
   }
 
-  code {
-    background-color: #f5f5f5;
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-  }
-
-  pre {
-    background-color: #f5f5f5;
-    padding: 1em;
-    border-radius: 4px;
-    overflow-x: auto;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem; /* 작은 화면에서 폰트 크기 조정 */
-    padding: 0 10px; /* 패딩 조정 */
+  ${media.mobile} {
+    font-size: 0.9rem;
   }
 `;

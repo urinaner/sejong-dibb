@@ -1,15 +1,10 @@
 import styled from 'styled-components';
 import { SEJONG_COLORS } from './../../../constants/colors';
+import { media } from '../../../styles/media';
 
 interface StyledButtonProps {
   isActive?: boolean;
 }
-
-const media = {
-  mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-};
-
 // 세종대학교 컬러 상수
 const colors = {
   primary: `${SEJONG_COLORS.CRIMSON_RED}`, // 세종대 메인 레드
@@ -17,17 +12,6 @@ const colors = {
   primaryLight: '#D32F2F', // 더 밝은 레드
   hover: '#F5F5F5', // 호버시 밝은 회색
 };
-
-export const Container = styled.div`
-  max-width: 900px;
-  width: 80vw;
-  margin: 0 auto;
-  padding: 40px 20px;
-
-  ${media.mobile} {
-    padding: 20px 10px;
-  }
-`;
 
 export const Title = styled.h1`
   margin: 0 0 2.5rem 0;
@@ -49,44 +33,39 @@ export const Navigation = styled.nav`
   align-items: center;
   border-bottom: 2px solid ${colors.primary};
 `;
-
 export const NavButtonGroup = styled.div`
   display: flex;
+  overflow-x: auto; // 가로 스크롤 허용
+  -webkit-overflow-scrolling: touch; // 부드러운 스크롤
+  width: 100%;
+
+  // 스크롤바 숨김
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  ${media.mobile} {
+    margin-bottom: 10px;
+  }
 `;
 
 export const NavButton = styled.button<StyledButtonProps>`
-  padding: 12px 32px;
-  font-size: 1.1rem;
+  padding: 12px 20px; // 패딩 조정
+  font-size: 1rem;
   border: none;
   background: ${(props) => (props.isActive ? colors.primary : 'transparent')};
   color: ${(props) => (props.isActive ? 'white' : '#333')};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
-
-  &:hover {
-    background-color: ${(props) =>
-      props.isActive ? colors.primaryDark : colors.hover};
-    color: ${(props) => (props.isActive ? 'white' : colors.primary)};
-  }
-
-  ${(props) =>
-    props.isActive &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: ${colors.primary};
-    }
-  `}
+  white-space: nowrap; // 텍스트 줄바꿈 방지
+  flex-shrink: 0; // 버튼 크기 축소 방지
 
   ${media.mobile} {
-    padding: 10px 20px;
-    font-size: 1rem;
+    padding: 10px 15px; // 모바일에서 더 작은 패딩
+    font-size: 0.9rem;
   }
 `;
 

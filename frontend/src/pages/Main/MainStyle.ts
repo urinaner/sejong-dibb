@@ -31,19 +31,6 @@ export const MainContainer = styled.div`
   align-items: center;
 `;
 
-export const PaperContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-
-  ${media.mobile} {
-    padding: 16px;
-  }
-`;
 export const NewsSection = styled.section`
   width: 100%;
   margin: 0 auto;

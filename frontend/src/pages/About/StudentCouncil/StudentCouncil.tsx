@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Instagram } from 'lucide-react';
 import {
-  Wrapper,
   Content,
   Logo,
   Title,
@@ -16,15 +15,18 @@ import {
   MarkdownContainer,
 } from './StudentCouncilStyle';
 import ActivitySlider from '../../../components/ActivityGallery';
+import Container from '../../../styles/Container'; // 전역 컨테이너 임포트
 
 const introContent = `
-제7대 바이오융합공학전공 학생회 “하루(Haru)”는 청춘을 살아가는 지금, 우리의 하루를 알차고 값지게 보내고, 또 빛낼 수 있도록 노력하는 학생회입니다. \n
+제7대 바이오융합공학전공 학생회 "하루(Haru)"는 청춘을 살아가는 지금, 우리의 하루를 알차고 값지게 보내고, 또 빛낼 수 있도록 노력하는 학생회입니다. \n
 학우분들의 의견에 귀 기울이며 학우분들의 의사를 대변하고 다양한 학과 행사를 기획하여 학우분들의 학교생활이 더욱 풍요로워지고, 학우분들의 단합력을 증진 시킬 수 있도록 노력하고 있습니다. 
 `;
 
 const StudentCouncil = (): JSX.Element => {
   return (
-    <Wrapper>
+    <Container type="content">
+      {' '}
+      {/* 전역 컨테이너 적용 */}
       <Content>
         <Logo src="/haru.png" alt="하루 학생회 로고" />
         <Title>제7대 바이오융합공학전공 학생회</Title>
@@ -50,12 +52,7 @@ const StudentCouncil = (): JSX.Element => {
               alt="학생회 조직도"
             />
           </InfoCard>
-          <>
-            {/* 또는 커스텀 이미지와 함께 사용 */}
-            <ActivitySlider
-              autoPlayInterval={3000} // 선택적으로 자동 재생 간격 조정 가능
-            />
-          </>
+          <ActivitySlider autoPlayInterval={3000} />
         </InfoSection>
         <SocialLink
           href="https://www.instagram.com/bio_ha_ru?igsh=MTd3M2gzdTZ6dHBrNg=="
@@ -66,7 +63,7 @@ const StudentCouncil = (): JSX.Element => {
           <span>@bio_ha_ru</span>
         </SocialLink>
       </Content>
-    </Wrapper>
+    </Container>
   );
 };
 

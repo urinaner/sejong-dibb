@@ -1,75 +1,30 @@
 import styled from 'styled-components';
-import { Wrapper, Content, Title, InfoCard } from '../AboutStyle';
+import { Content, InfoCard } from '../AboutStyle';
 import { media } from '../../../styles/media';
 
-export const OrgWrapper = styled(Wrapper)`
-  background-color: ${({ theme }) => theme.colors.white};
-  padding: 40px 20px;
-  max-width: 1400px;
-  width: 80vw;
-
-  ${media.mobile} {
-    padding: 20px 0;
-    width: 90vw;
-  }
-`;
+// OrgWrapper는 제거 (전역 Container로 대체)
 
 export const OrgContent = styled(Content)`
   background-color: ${({ theme }) => theme.colors.white};
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 
   ${media.mobile} {
     padding: 12px 0;
-    /* background-color: tomato; */
   }
 `;
 
-export const OrgTitle = styled(Title)`
-  font-size: ${({ theme }) => theme.fontSizes['2xl']};
-  color: #1a1a1a;
-  text-align: center;
-  margin-bottom: 50px;
-  position: relative;
-  padding-bottom: 20px;
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background-color: ${({ theme }) => theme.colors.primary.crimson};
-    border-radius: 2px;
-  }
-
-  ${({ theme }) => theme.media.tablet} {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-  }
-`;
-
-export const OrgCard = styled(InfoCard)`
-  padding: ${({ theme }) => theme.spacing['3xl']};
+export const OrgCard = styled.div`
+  padding: ${({ theme }) => theme.spacing['2xl']};
   margin: 0 auto 50px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all ${({ theme }) => theme.transitions.fast};
-  background: linear-gradient(
-    to bottom right,
-    ${({ theme }) => theme.colors.white},
-    #f8fafc
-  );
-  border: 1px solid ${({ theme }) => theme.colors.grey[200]};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  }
+  width: 100%;
+  box-sizing: border-box;
 
   ${media.mobile} {
-    padding: 32px;
+    padding: 20px 10px;
+    margin-bottom: 30px;
   }
 
   dl {
@@ -81,7 +36,6 @@ export const OrgCard = styled(InfoCard)`
     ${media.mobile} {
       display: flex;
       flex-direction: column;
-
       gap: 16px;
     }
 
@@ -180,15 +134,11 @@ export const OrgCard = styled(InfoCard)`
 export const MapContainer = styled.div`
   width: 100%;
   height: 450px;
-  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid ${({ theme }) => theme.colors.grey[200]};
-  transition: all ${({ theme }) => theme.transitions.fast};
+  box-sizing: border-box;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  ${media.mobile} {
+    height: 350px;
   }
 
   .map-placeholder {
