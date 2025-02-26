@@ -57,7 +57,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npx craco build",
+    "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -83,10 +83,14 @@
     "@craco/craco": "^7.1.0",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^22.7.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.36.1",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
   }
 }
