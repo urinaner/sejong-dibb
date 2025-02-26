@@ -1,0 +1,44 @@
+name: Build & Push Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'frontend/**'   # frontend 폴더가 변경된 경우만 트리거
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      # (옵션) Node Modules 캐싱
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Install and Build Frontend
+        env:
+          CI: false
+          NODE_ENV: production
+          DISABLE_ESLINT_PLUGIN: true
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Docker build & push (Frontend)
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          cd frontend
+          docker build \
+            --build-arg REACT_APP_GOOGLE_MAPS_API_KEY="${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}" \
+            --build-arg REACT_APP_VIDEO_BASE_URL="${{ secrets.REACT_APP_VIDEO_BASE_URL }}" \
+            -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
