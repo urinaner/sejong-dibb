@@ -3,16 +3,16 @@ import { useLocation } from 'react-router-dom';
 
 export const usePageTransition = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
+    console.log('Page transition started for:', pathname);
     setIsTransitioning(true);
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 300);
-
+    }, 500); // 500ms로 늘림
     return () => clearTimeout(timer);
-  }, [location]);
+  }, [pathname]);
 
   return isTransitioning;
 };

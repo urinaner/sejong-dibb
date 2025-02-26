@@ -1,12 +1,8 @@
 import React from 'react';
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-import {
-  OrgWrapper,
-  OrgContent,
-  OrgCard,
-  MapContainer,
-} from './OrganizationStyle';
+import { OrgContent, OrgCard, MapContainer } from './OrganizationStyle';
 import { Mail, Phone, Clock, MapPin } from 'lucide-react';
+import Container from '../../../styles/Container'; // 전역 컨테이너 임포트
 
 const center = {
   lat: 37.5509,
@@ -71,7 +67,9 @@ const GoogleMapComponent = () => {
 
 const Organization = () => {
   return (
-    <OrgWrapper>
+    <Container type="content">
+      {' '}
+      {/* 전역 컨테이너 적용 */}
       <OrgContent>
         <OrgCard>
           <dl>
@@ -119,7 +117,7 @@ const Organization = () => {
           <GoogleMapComponent />
         </MapContainer>
       </OrgContent>
-    </OrgWrapper>
+    </Container>
   );
 };
 

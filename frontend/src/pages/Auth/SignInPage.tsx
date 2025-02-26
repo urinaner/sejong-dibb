@@ -4,27 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { useModal } from '../../components/Modal';
 import { Modal } from '../../components/Modal';
 import { TermsModal } from '../../components/Modal/templates/TermsModal';
-import {
-  Container,
-  ContentWrapper,
-  LogoContainer,
-  Title,
-  SubTitle,
-  Form,
-  InputWrapper,
-  Label,
-  Input,
-  Button,
-  Footer,
-  HelpLinks,
-  HelpLink,
-  ErrorMessage,
-  Tabs,
-  Tab,
-  PrivacyLabel,
-  Checkbox,
-  PrivacyWrapper,
-} from './SignInPageStyle';
+import * as S from './SignInPageStyle';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -124,128 +104,133 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <Container>
-      <ContentWrapper>
-        <LogoContainer>
-          <img src="/sejong-icon.svg" alt="세종대학교 로고" />
-        </LogoContainer>
+    <S.PageWrapper>
+      <S.LoginContainer>
+        <S.ContentWrapper>
+          <S.LogoContainer>
+            <img src="/sejong-icon.svg" alt="세종대학교 로고" />
+          </S.LogoContainer>
 
-        <Title>
-          세종대학교 <br />
-          바이오융합공학전공
-        </Title>
-        <SubTitle>
-          세종대학교 포털과 동일한 학번 및 비밀번호를 사용하여 로그인
-        </SubTitle>
+          <S.Title>
+            세종대학교 <br />
+            바이오융합공학전공
+          </S.Title>
+          <S.SubTitle>
+            세종대학교 포털과 동일한 학번 및 비밀번호를 사용하여 로그인
+          </S.SubTitle>
 
-        <Form onSubmit={handleSubmit}>
-          <Tabs>
-            <Tab
-              type="button"
-              active={activeTab === 'student'}
-              onClick={() => setActiveTab('student')}
-            >
-              학생 로그인
-            </Tab>
-            <Tab
-              type="button"
-              active={activeTab === 'admin'}
-              onClick={() => setActiveTab('admin')}
-            >
-              관리자 로그인
-            </Tab>
-          </Tabs>
-
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-
-          <InputWrapper>
-            <Label>{activeTab === 'admin' ? '아이디' : '학번'}</Label>
-            <Input
-              type="text"
-              placeholder={activeTab === 'admin' ? '아이디' : '학번'}
-              value={loginId}
-              onChange={(e) => setLoginId(e.target.value)}
-              disabled={isSubmitting}
-            />
-          </InputWrapper>
-
-          <InputWrapper>
-            <Label>비밀번호</Label>
-            <Input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isSubmitting}
-            />
-          </InputWrapper>
-
-          <PrivacyWrapper>
-            <Checkbox
-              type="checkbox"
-              id="privacy-agreement"
-              checked={privacyAgreed}
-              onChange={(e) => setPrivacyAgreed(e.target.checked)}
-              disabled={isSubmitting}
-            />
-            <PrivacyLabel htmlFor="privacy-agreement">
-              <button
+          <S.Form onSubmit={handleSubmit}>
+            <S.Tabs>
+              <S.Tab
                 type="button"
-                onClick={() => handleOpenTerms('collection')}
+                active={activeTab === 'student'}
+                onClick={() => setActiveTab('student')}
               >
-                개인정보 수집 및 이용
-              </button>
-              에 동의합니다.
-              <br />
-              <button type="button" onClick={() => handleOpenTerms('terms')}>
-                이용약관
-              </button>{' '}
-              및{' '}
-              <button type="button" onClick={() => handleOpenTerms('privacy')}>
-                개인정보처리방침
-              </button>{' '}
-              보기
-            </PrivacyLabel>
-          </PrivacyWrapper>
-
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? '로그인 중...' : '로그인'}
-          </Button>
-
-          <HelpLinks>
-            {activeTab === 'student' ? (
-              <HelpLink
-                href="#"
-                onClick={() =>
-                  window.open(
-                    'https://portal.sejong.ac.kr/jsp/inquiry/nmconf.jsp',
-                  )
-                }
+                학생 로그인
+              </S.Tab>
+              <S.Tab
+                type="button"
+                active={activeTab === 'admin'}
+                onClick={() => setActiveTab('admin')}
               >
-                아이디/비밀번호 찾기
-              </HelpLink>
-            ) : (
-              <HelpLink
-                href="#"
-                onClick={() =>
-                  window.open('https://portal.sejong.ac.kr', '_blank')
-                }
-              >
-                포털 바로가기
-              </HelpLink>
-            )}
-          </HelpLinks>
-        </Form>
+                관리자 로그인
+              </S.Tab>
+            </S.Tabs>
 
-        <Footer>© Sejong University. All rights reserved.</Footer>
-      </ContentWrapper>
+            {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+
+            <S.InputWrapper>
+              <S.Label>{activeTab === 'admin' ? '아이디' : '학번'}</S.Label>
+              <S.Input
+                type="text"
+                placeholder={activeTab === 'admin' ? '아이디' : '학번'}
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </S.InputWrapper>
+
+            <S.InputWrapper>
+              <S.Label>비밀번호</S.Label>
+              <S.Input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </S.InputWrapper>
+
+            <S.PrivacyWrapper>
+              <S.Checkbox
+                type="checkbox"
+                id="privacy-agreement"
+                checked={privacyAgreed}
+                onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                disabled={isSubmitting}
+              />
+              <S.PrivacyLabel htmlFor="privacy-agreement">
+                <button
+                  type="button"
+                  onClick={() => handleOpenTerms('collection')}
+                >
+                  개인정보 수집 및 이용
+                </button>
+                에 동의합니다.
+                <br />
+                <button type="button" onClick={() => handleOpenTerms('terms')}>
+                  이용약관
+                </button>{' '}
+                및{' '}
+                <button
+                  type="button"
+                  onClick={() => handleOpenTerms('privacy')}
+                >
+                  개인정보처리방침
+                </button>{' '}
+                보기
+              </S.PrivacyLabel>
+            </S.PrivacyWrapper>
+
+            <S.Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? '로그인 중...' : '로그인'}
+            </S.Button>
+
+            <S.HelpLinks>
+              {activeTab === 'student' ? (
+                <S.HelpLink
+                  href="#"
+                  onClick={() =>
+                    window.open(
+                      'https://portal.sejong.ac.kr/jsp/inquiry/nmconf.jsp',
+                    )
+                  }
+                >
+                  아이디/비밀번호 찾기
+                </S.HelpLink>
+              ) : (
+                <S.HelpLink
+                  href="#"
+                  onClick={() =>
+                    window.open('https://portal.sejong.ac.kr', '_blank')
+                  }
+                >
+                  포털 바로가기
+                </S.HelpLink>
+              )}
+            </S.HelpLinks>
+          </S.Form>
+
+          <S.Footer>© Sejong University. All rights reserved.</S.Footer>
+        </S.ContentWrapper>
+      </S.LoginContainer>
 
       <TermsModal
         type={termsModal.type}
         isOpen={termsModal.isOpen}
         onClose={handleCloseTerms}
       />
-    </Container>
+    </S.PageWrapper>
   );
 };
 

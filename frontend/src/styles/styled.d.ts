@@ -1,4 +1,5 @@
 import 'styled-components';
+import { media } from './media';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
@@ -18,13 +19,33 @@ declare module 'styled-components' {
         500: string;
       };
     };
-    breakpoints: {
-      mobile: string;
-      tablet: string;
-      laptop: string;
-      desktop: string;
+    layout: {
+      types: {
+        default: {
+          width: string;
+          maxWidth: string;
+          padding: string;
+        };
+        full: {
+          width: string;
+          maxWidth: string;
+          padding: string;
+        };
+        auth: {
+          width: string;
+          maxWidth: string;
+          padding: string;
+        };
+      };
+      mobilePadding: string;
+      tabletPadding: string;
+      zIndexes: {
+        base: number;
+        overlay: number;
+      };
     };
-    media: {
+    media: typeof media;
+    breakpoints: {
       mobile: string;
       tablet: string;
       laptop: string;

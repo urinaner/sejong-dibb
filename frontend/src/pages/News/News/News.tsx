@@ -14,6 +14,7 @@ import { queryClient } from '../../../lib/react-query/queryClient';
 import * as S from './NewsStyle';
 import Pagination from '../../../common/Pagination/Pagination';
 import { AxiosError } from 'axios';
+import Container from '../../../styles/Container';
 
 const News = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -150,7 +151,7 @@ const News = () => {
   }
 
   return (
-    <S.Container>
+    <Container>
       {auth?.isAdmin && (
         <S.AdminButtonGroup>
           <S.CreateButton onClick={() => navigate('/news/create')}>
@@ -163,7 +164,7 @@ const News = () => {
         {newsData.data.map((item) => (
           <S.NewsCard key={item.id} onClick={() => handleNewsClick(item.id)}>
             <S.NewsImage
-              imageUrl={`${API_BASE_URL}${item.image}`}
+              imageUrl={`${item.image}`}
               onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
                 e.currentTarget.classList.add('error');
               }}
@@ -202,7 +203,7 @@ const News = () => {
           onPageChange={handlePageChange}
         />
       )}
-    </S.Container>
+    </Container>
   );
 };
 

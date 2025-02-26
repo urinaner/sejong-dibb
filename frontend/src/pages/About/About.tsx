@@ -2,9 +2,10 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
-  Wrapper,
   Content,
+  HeaderContainer,
   Title,
+  SubtitleContainer,
   Description,
   InfoSection,
   InfoCard,
@@ -12,6 +13,7 @@ import {
   MarkdownContainer,
 } from './AboutStyle';
 import remarkGfm from 'remark-gfm';
+import Container from '../../styles/Container';
 
 // 기존 Markdown 콘텐츠 정의
 const introContent = `
@@ -74,14 +76,20 @@ const careerContent = `
 
 const About = (): JSX.Element => {
   return (
-    <Wrapper>
+    <Container>
       <Content>
-        <Title>바이오융합공학전공</Title>
-        <Description>
-          Sejong University
-          <br />
-          Division of Integrative Bioscience and Biotechnology
-        </Description>
+        <HeaderContainer>
+          <Title>바이오융합공학전공</Title>
+        </HeaderContainer>
+
+        <SubtitleContainer>
+          <Description>
+            Sejong University
+            <br />
+            Division of Integrative Bioscience and Biotechnology
+          </Description>
+        </SubtitleContainer>
+
         <InfoSection>
           {/* 학과 소개 구역 */}
           <InfoCard>
@@ -114,7 +122,7 @@ const About = (): JSX.Element => {
           </InfoCard>
         </InfoSection>
       </Content>
-    </Wrapper>
+    </Container>
   );
 };
 

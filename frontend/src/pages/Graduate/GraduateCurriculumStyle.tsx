@@ -1,36 +1,31 @@
 import styled from 'styled-components';
+import { SEJONG_COLORS } from '../../constants/colors';
 
-const media = {
+export const media = {
   mobile: '@media(max-width: 768px)',
   tablet: '@media(max-width: 1024px)',
+  desktop: '@media(min-width: 1025px)',
 };
 
-export const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
-  padding: 40px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
+export const SectionTitle = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
 
   ${media.mobile} {
-    width: 100%;
-    padding: 20px 16px;
-    gap: 2rem;
-  }
-
-  ${media.tablet} {
-    width: 90%;
-    padding: 30px 20px;
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
   }
 `;
 
 export const ImageWrapper = styled.div`
   width: 100%;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
@@ -43,6 +38,7 @@ export const ImageContainer = styled.div`
   user-select: none;
   touch-action: none;
   min-height: 200px;
+  margin-bottom: 0;
 `;
 
 export const CurriculumImage = styled.img`
@@ -57,26 +53,27 @@ export const CurriculumImage = styled.img`
 `;
 
 export const ImageCaption = styled.div`
-  padding: 1rem;
   text-align: center;
   color: #4a5568;
-  font-size: 0.9rem;
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: ${(props) => props.theme.colors.grey[50]};
+  border-bottom: 1px solid ${(props) => props.theme.colors.grey[200]};
 
   ${media.mobile} {
-    padding: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 `;
 
 export const DownloadSection = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-bottom: 3rem;
 
   ${media.mobile} {
-    margin-top: 0.75rem;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -84,18 +81,18 @@ export const DownloadLink = styled.a`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: #2d3748;
   text-decoration: none;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: all 0.2s ease-in-out;
-  background: white;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
+  border-radius: 6px;
+  background-color: white;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e0;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    background-color: ${(props) => props.theme.colors.grey[50]};
   }
 
   svg {
@@ -106,9 +103,11 @@ export const DownloadLink = styled.a`
   ${media.mobile} {
     width: 100%;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
   }
 `;
+
 export const ZoomControls = styled.div`
   position: absolute;
   top: 1rem;
@@ -137,6 +136,7 @@ export const ZoomButton = styled.button`
 
   &:hover:not(:disabled) {
     background: #f8fafc;
+    color: ${SEJONG_COLORS.CRIMSON_RED};
     border-color: #cbd5e0;
   }
 
@@ -148,6 +148,22 @@ export const ZoomButton = styled.button`
   svg {
     width: 18px;
     height: 18px;
+  }
+`;
+
+export const TouchInstructions = styled.div`
+  text-align: center;
+  color: #4a5568;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: ${(props) => props.theme.colors.grey[50]};
+  border-top: 1px solid ${(props) => props.theme.colors.grey[200]};
+  display: none;
+
+  ${media.mobile} {
+    display: block;
   }
 `;
 
@@ -189,40 +205,5 @@ export const ErrorContainer = styled.div`
     padding: 0.75rem;
     font-size: 0.875rem;
     gap: 0.375rem;
-  }
-`;
-
-export const DragInstructions = styled.div`
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s;
-
-  ${ImageContainer}:hover & {
-    opacity: 1;
-  }
-
-  ${media.mobile} {
-    display: none;
-  }
-`;
-
-export const TouchInstructions = styled.div`
-  display: none;
-  text-align: center;
-  color: #4a5568;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-
-  ${media.mobile} {
-    display: block;
   }
 `;

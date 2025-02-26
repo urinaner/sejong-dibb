@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Download } from 'lucide-react';
 import * as S from './GraduateCurriculumStyle';
+import Container from '../../styles/Container';
 
 interface Position {
   x: number;
@@ -302,24 +303,29 @@ function GraduateCurriculum() {
   );
 
   return (
-    <S.Container>
+    <Container>
+      <S.SectionTitle>대학원 교과과정</S.SectionTitle>
+
       <S.ImageWrapper>
+        <S.ImageCaption>바이오융합공학 대학원 교과과정표 1</S.ImageCaption>
         {renderImage('curriculum', {
           src: '/graduate-curriculum1.png',
-          alt: '대학원 커리큘럼',
+          alt: '대학원 커리큘럼 1',
           scale: scaleCur,
           position: positionCur,
           dragState: dragStateCur,
           containerRef: curContainerRef,
           setPosition: setPositionCur,
         })}
-        <S.ImageCaption>바이오융합공학 교과과정표1</S.ImageCaption>
+        <S.TouchInstructions>
+          두 손가락으로 확대/축소 및 이동이 가능합니다
+        </S.TouchInstructions>
       </S.ImageWrapper>
 
       <S.DownloadSection>
         <S.DownloadLink
           href="/graduate-curriculum1.png"
-          download="세종대학교_바이오융합공학_교과과정표1.png"
+          download="세종대학교_바이오융합공학_대학원_교과과정표1.png"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -329,22 +335,25 @@ function GraduateCurriculum() {
       </S.DownloadSection>
 
       <S.ImageWrapper>
+        <S.ImageCaption>바이오융합공학 대학원 교과과정표 2</S.ImageCaption>
         {renderImage('roadmap', {
           src: '/graduate-curriculum2.png',
-          alt: '대학원 커리큘럼',
+          alt: '대학원 커리큘럼 2',
           scale: scaleRoad,
           position: positionRoad,
           dragState: dragStateRoad,
           containerRef: roadContainerRef,
           setPosition: setPositionRoad,
         })}
-        <S.ImageCaption>바이오융합공학 교과과정표2</S.ImageCaption>
+        <S.TouchInstructions>
+          두 손가락으로 확대/축소 및 이동이 가능합니다
+        </S.TouchInstructions>
       </S.ImageWrapper>
 
       <S.DownloadSection>
         <S.DownloadLink
           href="/graduate-curriculum2.png"
-          download="세종대학교_바이오융합공학_교과과정표2.png"
+          download="세종대학교_바이오융합공학_대학원_교과과정표2.png"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -352,7 +361,7 @@ function GraduateCurriculum() {
           교과과정표2 다운로드
         </S.DownloadLink>
       </S.DownloadSection>
-    </S.Container>
+    </Container>
   );
 }
 
