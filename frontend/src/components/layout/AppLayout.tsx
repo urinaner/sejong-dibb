@@ -31,11 +31,15 @@ const MainContent = styled(motion.main)<{ $isAuthPage: boolean }>`
   height: 100%;
   align-items: center;
   padding: ${(props) =>
-    props.$isAuthPage ? '0' : '150px 0'}; // 좌우 패딩 제거
+    props.$isAuthPage
+      ? '0'
+      : '20px 0 40px'}; // Default padding for non-auth pages
 
   ${media.mobile} {
     padding: ${(props) =>
-      props.$isAuthPage ? '0' : '150px 5px'}; // 모바일에서 좌우 패딩 5px 추가
+      props.$isAuthPage
+        ? '150px 5px'
+        : '20px 5px 40px'}; // Only auth pages get top padding on mobile
   }
 `;
 
@@ -46,7 +50,7 @@ const PageContentContainer = styled.div<{ $type: LayoutType }>`
   padding: ${({ theme, $type, $type: layoutType }) =>
     layoutType === 'full'
       ? '0'
-      : `${theme.layout.types[$type].padding.split(' ')[0]} 0`}; // 좌우 패딩 제거
+      : `${theme.layout.types[$type].padding.split(' ')[0]} 0`}; // Vertical padding only
   position: relative;
   z-index: ${({ theme }) => theme.layout.zIndexes.base};
 
@@ -55,7 +59,7 @@ const PageContentContainer = styled.div<{ $type: LayoutType }>`
     padding: ${({ theme }) => {
       const parts = theme.layout.mobilePadding.split(' ');
       return parts.length === 1 ? `${parts[0]} 5px` : `${parts[0]} 5px`;
-    }}; // 모바일에서 좌우 패딩 5px 추가
+    }}; // Small horizontal padding on mobile
   }
 
   ${media.tablet} {
@@ -63,7 +67,7 @@ const PageContentContainer = styled.div<{ $type: LayoutType }>`
     padding: ${({ theme }) => {
       const parts = theme.layout.tabletPadding.split(' ');
       return parts.length === 1 ? `${parts[0]} 0` : `${parts[0]} 0`;
-    }}; // 태블릿에서 좌우 패딩 제거
+    }}; // No horizontal padding on tablet
   }
 `;
 
