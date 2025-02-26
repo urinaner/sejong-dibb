@@ -210,7 +210,7 @@ export const ContentWrapper = styled.section`
 export const AnnouncementAndSeminar = styled.section`
   flex: 1;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   gap: 24px;
