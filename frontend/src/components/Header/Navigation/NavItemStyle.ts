@@ -11,9 +11,9 @@ export const NavItemLink = styled(Link)<{ isActive?: boolean }>`
   display: inline-flex;
   align-items: center;
   height: 100%;
-  padding: 0 1.125rem; // TopNavItem과 동일한 간격을 위해 조정
+  padding: 0 1.6rem; // TopNavItem과 동일한 간격을 위해 조정
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   font-weight: 600;
   white-space: nowrap;
   text-decoration: none;
@@ -52,8 +52,8 @@ export const SubMenuItem = styled(Link)`
   display: block;
   padding: 0.8rem 1.5rem;
   color: white;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
   text-decoration: none;
   transition: background-color 0.2s;
 

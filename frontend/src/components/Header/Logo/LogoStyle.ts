@@ -41,11 +41,11 @@ export const LogoImage = styled.div`
   margin-bottom: 0;
 
   svg {
-    width: 52px;
+    width: 72px;
     height: auto;
 
     @media (max-width: 768px) {
-      width: 42px;
+      width: 57px;
     }
   }
 `;
@@ -54,20 +54,21 @@ export const LogoTitle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   opacity: 0.95;
 `;
 
 export const Department = styled.span`
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-transform: none;
 
   @media (max-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
+    font-weight: 800;
   }
 `;
 
@@ -77,7 +78,7 @@ export const MobileLogoTitle = styled.div`
   transform: translateX(-50%);
   white-space: nowrap;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 800;
   color: white;
   width: 100%;
   text-align: center;
