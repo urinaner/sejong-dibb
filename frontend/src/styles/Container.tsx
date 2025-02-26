@@ -19,7 +19,7 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
       case 'content':
         return 'calc(100% - 0px)'; // 모바일에서는 패딩만 적용
       default:
-        return '85%';
+        return '100%';
     }
   }};
 
