@@ -28,8 +28,8 @@ export const TopHeaderInner = styled.div`
 
 export const TopHeaderTitle = styled.div`
   color: white;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   letter-spacing: 0.02em;
 `;
 
@@ -64,7 +64,7 @@ export const TopNavItem = styled.li`
   a {
     color: white;
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     padding: 0;
     white-space: nowrap;
