@@ -7,7 +7,6 @@ on:
       - 'backend/**'
       - 'frontend/**'
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -46,12 +45,11 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build -x test
 
-      # Node.js 설정 (프론트엔드 빌드를 위한 Node.js 설치)
+      # Node.js 설정 (프론트엔드 빌드를 위한 Node.js 설치) - 수정된 부분
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.19.0'  # LTS 버전으로 변경
-          cache: 'npm'
+          node-version: '18.19.0'  # 캐시 옵션 제거
 
       # 프론트엔드 빌드 - 수정된 부분
       - name: Install and Build Frontend
@@ -83,11 +81,9 @@ jobs:
               }
             }
           };" > craco.config.js
-          # package.json 수정하여 정확한 빌드 경로 지정
-          sed -i 's/"build": ".*"/"build": "NODE_ENV=production CI=false node_modules\\/.bin\\/craco build"/' package.json
           # 빌드 실행 (메모리 한도 증가)
           export NODE_OPTIONS=--max_old_space_size=4096
-          npm run build || npx craco build || node_modules/.bin/craco build || react-scripts build
+          npx craco build || react-scripts build
 
       # Docker 이미지 빌드 및 푸시
       - name: Docker build & push
