@@ -14,7 +14,7 @@ export const NavItemLink = styled(Link)<{ isActive?: boolean }>`
   padding: 0 1.6rem; // TopNavItem과 동일한 간격을 위해 조정
   color: white;
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   text-decoration: none;
   background-color: transparent;
