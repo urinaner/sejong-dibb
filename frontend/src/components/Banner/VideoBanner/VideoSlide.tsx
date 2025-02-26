@@ -27,7 +27,6 @@ const Title = styled.h1`
   margin: 0;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   line-height: 1.1;
-  text-transform: lowercase;
 
   @media (max-width: 768px) {
     font-size: 2.8rem;
