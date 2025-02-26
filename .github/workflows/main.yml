@@ -46,11 +46,11 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build -x test
 
-      # Node.js 설정 (프론트엔드 빌드를 위한 Node.js 22 설치)
+      # Node.js 설정 (프론트엔드 빌드를 위한 Node.js 설치)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '20'  # 더 안정적인 LTS 버전으로 변경
 
       # 프론트엔드 빌드 - 수정된 부분
       - name: Install and Build Frontend
