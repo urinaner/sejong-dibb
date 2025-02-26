@@ -55,47 +55,42 @@ jobs:
       - name: Install and Build Frontend
         env:
           CI: false
-          NODE_ENV: production
           DISABLE_ESLINT_PLUGIN: true
         run: |
           cd frontend
-          npm install
+          # devDependencies까지 설치하도록 옵션 추가
+          npm install --production=false
           
           # 폴리필 및 react-app-rewired 설치
           npm install --save-dev react-app-rewired crypto-browserify stream-browserify buffer assert util
           
           # config-overrides.js 파일 생성
           echo "const webpack = require('webpack');
-          
-          module.exports = function override(config) {
+  
+            module.exports = function override(config) {
             // 폴리필 설정
             config.resolve.fallback = {
-              ...config.resolve.fallback,
-              crypto: require.resolve('crypto-browserify'),
-              stream: require.resolve('stream-browserify'),
-              buffer: require.resolve('buffer'),
-              util: require.resolve('util'),
-              assert: require.resolve('assert')
-            };
+            ...config.resolve.fallback,
+          crypto: require.resolve('crypto-browserify'),
+          stream: require.resolve('stream-browserify'),
+          buffer: require.resolve('buffer'),
+          util: require.resolve('util'),
+          assert: require.resolve('assert')
+          };
           
             // Buffer 전역 객체 제공
             config.plugins = [
-              ...config.plugins,
-              new webpack.ProvidePlugin({
-                Buffer: ['buffer', 'Buffer'],
-              }),
+            ...config.plugins,
+            new webpack.ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+          }),
             ];
-          
+
             return config;
           };" > config-overrides.js
-          
-          # package.json 스크립트 수정
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.scripts.build = 'react-app-rewired build';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-          "
+  
+          # package.json 스크립트 수정: 빌드 스크립트를 react-app-rewired build 로 변경
+          node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.scripts.build = 'react-app-rewired build'; fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));"
           
           # 빌드 실행
           npx react-app-rewired build
@@ -112,10 +107,7 @@ jobs:
           
           # 프론트엔드 이미지 빌드 및 푸시
           cd ../frontend
-          docker build \
-            --build-arg REACT_APP_GOOGLE_MAPS_API_KEY="${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}" \
-            --build-arg REACT_APP_VIDEO_BASE_URL="${{ secrets.REACT_APP_VIDEO_BASE_URL }}" \
-            -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
+          docker build --build-arg REACT_APP_GOOGLE_MAPS_API_KEY="${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}" --build-arg REACT_APP_VIDEO_BASE_URL="${{ secrets.REACT_APP_VIDEO_BASE_URL }}" -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
       # 서버에 docker-compose.yml 생성 및 실행
@@ -132,7 +124,6 @@ jobs:
             
             # GitHub Secrets에서 docker-compose.yml 생성
             echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
-            
             
             # 기존 컨테이너 정리 및 새 배포 실행
             docker-compose down || true
