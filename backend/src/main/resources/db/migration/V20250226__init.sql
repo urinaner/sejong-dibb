@@ -152,11 +152,11 @@ CREATE TABLE IF NOT EXISTS request_response_log
     id             BIGINT NOT NULL AUTO_INCREMENT,
     method         VARCHAR(255),
     path           VARCHAR(255),
-    requestBody    VARCHAR(255),
-    responseStatus VARCHAR(255),
-    responseBody   VARCHAR(10000),
-    createdAt      DATETIME,
-    clientIp       VARCHAR(255),
+    request_body    VARCHAR(255),
+    response_status VARCHAR(255),
+    response_body   VARCHAR(10000),
+    created_at      DATETIME,
+    client_ip       VARCHAR(255),
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
