@@ -54,7 +54,7 @@ public class Professor {
     private String lab;
 
 
-    @Column(name = "profileImage", length = 1000)
+    @Column(name = "profile_image", length = 1000)
     private String profileImage;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -62,7 +62,8 @@ public class Professor {
 
     @Builder
     private Professor(String name, String major, String phoneN, String email,
-                      String position, AcademicBackground academicBackground, String homepage, String lab, String profileImage) {
+                      String position, AcademicBackground academicBackground, String homepage, String lab,
+                      String profileImage) {
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;

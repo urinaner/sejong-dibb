@@ -32,18 +32,18 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE professor
 (
-    professor_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name         VARCHAR(255) NOT NULL,
-    major        VARCHAR(255),
-    phone        VARCHAR(255) UNIQUE,
-    email        VARCHAR(255) UNIQUE,
-    position     VARCHAR(255),
-    bachelor     VARCHAR(255),
-    master       VARCHAR(255),
-    doctor       VARCHAR(255),
-    homepage     VARCHAR(255),
-    lab          VARCHAR(255),
-    profileImage VARCHAR(1000)
+    professor_id  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name          VARCHAR(255) NOT NULL,
+    major         VARCHAR(255),
+    phone         VARCHAR(255) UNIQUE,
+    email         VARCHAR(255) UNIQUE,
+    position      VARCHAR(255),
+    bachelor      VARCHAR(255),
+    master        VARCHAR(255),
+    doctor        VARCHAR(255),
+    homepage      VARCHAR(255),
+    lab           VARCHAR(255),
+    profile_image VARCHAR(1000)
 );
 
 CREATE TABLE IF NOT EXISTS news

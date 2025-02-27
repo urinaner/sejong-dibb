@@ -49,7 +49,7 @@ public class Reservation extends BaseEntity {
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private Users users;
 
 
