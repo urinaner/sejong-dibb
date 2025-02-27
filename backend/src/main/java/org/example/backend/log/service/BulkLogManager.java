@@ -29,10 +29,10 @@ public class BulkLogManager {
     /**
      * 생성자 예시
      *
-     * @param logService  DB 저장 로직을 담당하는 서비스/리포지토리
-     * @param dataSource  HikariCP 같은 커넥션 풀
-     * @param bulkSize    배치 처리 개수 (환경설정 or 기본값)
-     * @param timeoutMs   시간 기준 배치 처리 타임아웃 (환경설정 or 기본값)
+     * @param logService DB 저장 로직을 담당하는 서비스/리포지토리
+     * @param dataSource HikariCP 같은 커넥션 풀
+     * @param bulkSize   배치 처리 개수 (환경설정 or 기본값)
+     * @param timeoutMs  시간 기준 배치 처리 타임아웃 (환경설정 or 기본값)
      */
     public BulkLogManager(
             LogService logService,
@@ -46,10 +46,9 @@ public class BulkLogManager {
         this.leaderExecutor = Executors.newSingleThreadExecutor();
 
         // 예) HikariCP의 풀 크기를 구해서 워커 스레드풀 크기를 동적으로 조정
-        if (!(dataSource instanceof HikariDataSource)) {
+        if (!(dataSource instanceof HikariDataSource hikariDataSource)) {
             throw new IllegalArgumentException("DataSource must be HikariDataSource.");
         }
-        HikariDataSource hikariDataSource = (HikariDataSource) dataSource;
         int poolSize = hikariDataSource.getMaximumPoolSize();
 
         int workerThreads = Math.max(1, poolSize / 2);
@@ -110,8 +109,20 @@ public class BulkLogManager {
         log.info("[BulkLogManager] Shutting down...");
 
         leaderExecutor.shutdownNow();
-        workerExecutor.shutdown();
+        // 아직 큐에 남아 있는 로그들을 전부 꺼낸다.
+        List<RequestResponseLog> leftoverLogs = new ArrayList<>(logQueue.size());
+        logQueue.drainTo(leftoverLogs);
+        // 남은 로그가 있다면 동기적으로 DB 저장을 시도
+        if (!leftoverLogs.isEmpty()) {
+            try {
+                logService.saveAll(leftoverLogs);
+                log.info("[BulkLogManager] Saved {} leftover logs before shutdown.", leftoverLogs.size());
+            } catch (Exception e) {
+                log.error("[BulkLogManager] Failed to save leftover logs", e);
+            }
+        }
 
+        workerExecutor.shutdown();
         try {
             if (!workerExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
                 log.warn("[BulkLogManager] Forcing worker executor shutdown...");
