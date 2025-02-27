@@ -79,7 +79,7 @@ public class ReservationService {
     }
 
     private Room getSeminarRoomById(Long seminarRoomId) {
-        return roomRepository.findById(seminarRoomId)
+        return roomRepository.findRoomForUpdate(seminarRoomId)
                 .orElseThrow(() -> new RoomException(NOT_FOUND_SEMINAR_ROOM));
     }
 
@@ -97,13 +97,13 @@ public class ReservationService {
         }
     }
     private void validateReservation(ReservationCreateDto reqDto, Long seminarRoomId) {
-        boolean hasReservationConflict = reservationRepository.existsByTimePeriod(
+        boolean hasReservation = reservationRepository.existsByTimePeriod(
                 seminarRoomId,
                 reqDto.getStartTime(),
                 reqDto.getEndTime()
         );
 
-        if (hasReservationConflict) {
+        if (hasReservation) {
             throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
     }

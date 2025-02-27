@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
             "WHERE r.room.id = :seminarRoomId " +
-            "AND r.startTime < :endTime " +
-            "AND r.endTime > :startTime")
+            "AND r.startTime <= :endTime " +
+            "AND r.endTime >= :startTime")
     boolean existsByTimePeriod(
             @Param("seminarRoomId") Long seminarRoomId,
             @Param("startTime") LocalDateTime startTime,
@@ -24,11 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("roomId") Long roomId,
             @Param("date") String date
     );
-
-    @Query("SELECT r FROM Reservation r " +
-            "WHERE r.room.id = :seminarRoomId ")
-    List<Reservation> finaReservationsBySeminarRoom(
-            @Param("seminarRoomId")Long seminarRoomId);
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.room.id = :roomId " +
