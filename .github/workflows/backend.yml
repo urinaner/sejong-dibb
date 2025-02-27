@@ -29,7 +29,7 @@ jobs:
 
       # 4) Gradle 설정(캐시 포함)
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3.1.0
 
       # 4) Gradle 빌드 (테스트 제외)
       - name: Build Backend
