@@ -56,6 +56,8 @@ dependencies {
     // flyway
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
+    //jackson-datatpye
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0") 
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
