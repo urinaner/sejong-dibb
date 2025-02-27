@@ -48,7 +48,7 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @JoinColumn(name = "login_id")
+    @Column(name = "login_id")
     private String loginId;
 
 
