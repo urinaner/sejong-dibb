@@ -29,11 +29,7 @@ jobs:
 
       # 4) Gradle 설정(캐시 포함)
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-        with:
-          cache-enabled: true
-          build-root-directory: backend
+        uses: gradle/gradle-build-action@v2
 
       # 4) Gradle 빌드 (테스트 제외)
       - name: Build Backend
