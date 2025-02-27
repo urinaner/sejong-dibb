@@ -48,31 +48,30 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private Users users;
+    @Column(name = "login_id")
+    private String loginId;
 
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, Users users) {
+                        String etc, Room room, String loginId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.room = room;
-        this.users = users;
+        this.loginId = loginId;
 
     }
 
-    public static Reservation of(ReservationCreateDto dto, Room room, Users users) {
+    public static Reservation of(ReservationCreateDto dto, Room room, String loginId) {
         return Reservation.builder()
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
                 .etc(dto.getEtc())
                 .room(room)
-                .users(users)
+                .loginId(loginId)
                 .build();
     }
 

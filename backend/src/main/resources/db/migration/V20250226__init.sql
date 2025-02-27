@@ -131,10 +131,9 @@ CREATE TABLE IF NOT EXISTS reservation
     purpose        VARCHAR(50),
     etc            VARCHAR(255),
     room_id        BIGINT,
-    users_id       BIGINT,
+    login_id       VARCHAR(255),
     PRIMARY KEY (reservation_id),
-    FOREIGN KEY (room_id) REFERENCES room (room_id),
-    FOREIGN KEY (users_id) REFERENCES users (users_id)
+    FOREIGN KEY (room_id) REFERENCES room (room_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
