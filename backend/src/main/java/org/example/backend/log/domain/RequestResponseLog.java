@@ -19,7 +19,7 @@ public class RequestResponseLog {
     private String path;
     private String requestBody;
     private String responseStatus;
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(length = 10000)
     private String responseBody;
     private LocalDateTime createdAt;
     private String clientIp;
