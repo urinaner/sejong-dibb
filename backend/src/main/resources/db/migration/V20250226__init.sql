@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS users
     password   VARCHAR(255) NOT NULL,
     username   VARCHAR(255),
     email      VARCHAR(255),
-    phoneN     VARCHAR(255),
+    phone      VARCHAR(255),
     department VARCHAR(255),
     role       VARCHAR(50)  NOT NULL,
     PRIMARY KEY (users_id)
@@ -149,14 +149,14 @@ CREATE TABLE IF NOT EXISTS jwt_blacklist
 
 CREATE TABLE IF NOT EXISTS request_response_log
 (
-    id             BIGINT NOT NULL AUTO_INCREMENT,
-    method         VARCHAR(255),
-    path           VARCHAR(255),
-    requestBody    VARCHAR(255),
-    responseStatus VARCHAR(255),
-    responseBody   VARCHAR(10000),
-    createdAt      DATETIME,
-    clientIp       VARCHAR(255),
+    id              BIGINT NOT NULL AUTO_INCREMENT,
+    method          VARCHAR(255),
+    path            VARCHAR(255),
+    request_body    VARCHAR(255),
+    response_status VARCHAR(255),
+    response_body   VARCHAR(10000),
+    created_at      DATETIME,
+    client_ip       VARCHAR(255),
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -178,7 +178,7 @@ ALTER TABLE thesis
         WITH PARSER ngram;
 
 -- users 더미 데이터
-INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
+INSERT INTO users (users_id, login_id, password, username, email, phone, role)
 VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
         '010-1234-5678', 'ROLE_ADMIN');
 

@@ -12,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.users.exception.admin.AdminException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
@@ -36,6 +35,7 @@ public class Users {
 
     private String email;
 
+    @Column(name = "phone", unique = true)
     private String phoneN;
 
     private String department;

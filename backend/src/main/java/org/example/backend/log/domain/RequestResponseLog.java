@@ -16,12 +16,22 @@ public class RequestResponseLog {
     private Long id;
 
     private String method;
+
     private String path;
+
+    @Column(name = "request_body")
     private String requestBody;
+
+    @Column(name = "request_status")
     private String responseStatus;
-    @Column(length = 10000)
+
+    @Column(name = "response_body", length = 10000)
     private String responseBody;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "client_ip")
     private String clientIp;
 
 }
