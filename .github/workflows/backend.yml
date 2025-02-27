@@ -22,7 +22,7 @@ jobs:
 
       # 3) Gradle 세팅(캐시 포함)
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
         with:
           cache-enabled: true
           build-root-directory: backend
