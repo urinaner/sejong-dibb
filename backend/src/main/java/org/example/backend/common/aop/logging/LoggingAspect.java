@@ -2,6 +2,7 @@ package org.example.backend.common.aop.logging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class LoggingAspect {
 
     private static final List<String> EXCLUDE_NAMES = Arrays.asList("fileList", "request");
     private static final int MAX_RESPONSE_BODY_LENGTH = 65000;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final BulkLogManager bulkLogManager;
