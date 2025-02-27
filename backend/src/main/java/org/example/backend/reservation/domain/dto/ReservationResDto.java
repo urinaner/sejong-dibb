@@ -36,6 +36,7 @@ public class ReservationResDto {
                 .id(reservation.getId())
                 .startTime(reservation.getStartTime())
                 .endTime(reservation.getEndTime())
+                .purpose(reservation.getPurpose())
                 .etc(reservation.getEtc())
                 .build();
     }
