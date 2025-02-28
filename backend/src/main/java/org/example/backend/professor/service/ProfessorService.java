@@ -36,7 +36,7 @@ public class ProfessorService {
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
-            professorReqDto.setProfileImage(uploadImageUrl + serverUrl);
+            professorReqDto.setProfileImage(serverUrl + uploadImageUrl);
         }
 
         Professor professor = Professor.of(professorReqDto);
@@ -69,7 +69,7 @@ public class ProfessorService {
     public ProfessorResDto updateProfessor(Long professorId, ProfessorReqDto professorReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
-            professorReqDto.setProfileImage(uploadImageUrl);
+            professorReqDto.setProfileImage(serverUrl + uploadImageUrl);
         }
         Professor professor = findProfessorById(professorId);
         professor.update(professorReqDto);
