@@ -20,7 +20,6 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
   color: white;
   transition: opacity 0.2s ease;
-
   &:hover {
     opacity: 0.9;
   }
@@ -54,20 +53,20 @@ export const LogoTitle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   opacity: 0.95;
 `;
 
 export const Department = styled.span`
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   text-transform: none;
 
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
   }
 `;
