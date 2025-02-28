@@ -11,7 +11,7 @@ export const NavItemLink = styled(Link)<{ isActive?: boolean }>`
   display: inline-flex;
   align-items: center;
   height: 100%;
-  padding: 0 1.4rem; // TopNavItem과 동일한 간격을 위해 조정
+  padding: 0 1.6rem; // TopNavItem과 동일한 간격을 위해 조정
   color: white;
   font-size: 1.4rem;
   font-weight: 500;
