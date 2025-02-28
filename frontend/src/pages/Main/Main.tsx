@@ -11,8 +11,8 @@ import ButtonListSection from './components/ButtonListSection/ButtonListSection'
 function Main(): JSX.Element {
   return (
     <>
+      <ButtonListSection />
       <Container>
-        <ButtonListSection />
         <ContentWrapper>
           <AnnouncementAndSeminar>
             <AnnouncementSection />

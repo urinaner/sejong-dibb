@@ -31,9 +31,7 @@ const MainContent = styled(motion.main)<{ $isAuthPage: boolean }>`
   height: 100%;
   align-items: center;
   padding: ${(props) =>
-    props.$isAuthPage
-      ? '0'
-      : '20px 0 40px'}; // Default padding for non-auth pages
+    props.$isAuthPage ? '0' : '0 0 40px'}; // Default padding for non-auth pages
 
   ${media.mobile} {
     padding: ${(props) =>

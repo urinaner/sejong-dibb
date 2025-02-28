@@ -21,7 +21,7 @@ export const theme: DefaultTheme = {
   layout: {
     types: {
       default: {
-        width: '85vw',
+        width: '100vw',
         maxWidth: '1500px',
         padding: '40px 20px',
       },

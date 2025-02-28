@@ -1,66 +1,143 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ButtonListContainer = styled.section`
   width: 100%;
-  margin: 2rem 0;
+  margin: 0 auto;
 `;
 
 export const ButtonListList = styled.ul`
   display: flex;
   justify-content: space-between;
-  align-items: stretch; /* 아이템 높이를 맞추고 싶으면 stretch */
+  align-items: stretch;
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 
-  /* 화면이 좁아졌을 때 아이템들이 줄바꿈되어 2열 이상으로 배치되도록 */
   @media (max-width: 768px) {
     flex-wrap: wrap;
   }
 `;
 
-export const ButtonListItem = styled.li`
+interface ButtonListItemProps {
+  isSeminar?: boolean;
+}
+
+export const ButtonListItem = styled.li<ButtonListItemProps>`
   flex: 1;
-  margin: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-left: 1px solid #ddd;
 
   &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
+    border-left: none;
   }
 
+  ${({ isSeminar }) =>
+    isSeminar &&
+    css`
+      background-color: #a30027;
+      color: #fff;
+      position: relative;
+      flex: 1.5;
+      display: block;
+    `}
+
   a {
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1rem;
     display: flex;
-    flex-direction: column; /* 아이콘과 텍스트를 세로 배치 */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: inherit; /* 부모 컬러 상속 */
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 1rem;
+    color: inherit;
     transition: background-color 0.3s ease;
 
     img {
-      width: 40px;
-      height: 40px;
+      width: 64px;
+      height: 64px;
       margin-bottom: 0.5rem;
     }
 
     span {
-      font-size: 1rem;
-      font-weight: 500;
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 1rem 0;
+    }
+
+    svg {
+      width: 6rem;
+      height: 6rem;
     }
 
     &:hover {
       background-color: #f9f9f9;
+
+      span {
+        color: #a30027;
+      }
+
+      svg {
+        color: #a30027;
+      }
+    }
+
+    @media (max-width: 768px) {
+      svg {
+        width: 3rem;
+        height: 3rem;
+      }
     }
   }
 
-  /* 모바일 환경에서는 2개씩 배치 */
   @media (max-width: 768px) {
-    flex: 0 0 calc(50% - 1rem);
-    margin-bottom: 1rem;
+    flex: 0 0 calc(50% - 1px);
+
+    ${({ isSeminar }) =>
+      isSeminar &&
+      css`
+        flex: 0 0 100%;
+        margin-top: 1rem;
+      `}
+  }
+`;
+
+export const SeminarInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  height: 100%;
+`;
+
+export const SeminarInfoTitle = styled.h3`
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+`;
+
+export const SeminarInfoSubtitle = styled.p`
+  font-size: 1rem;
+  margin: 0.25rem 0;
+  line-height: 1.4;
+`;
+
+export const InfoIconWrapper = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    color: #fff;
+    font-weight: bold;
   }
 `;
