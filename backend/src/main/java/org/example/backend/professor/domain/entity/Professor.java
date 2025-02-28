@@ -22,7 +22,7 @@ import org.example.backend.thesis.domain.entity.Thesis;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "professor")
-public class Professor {
+public class ProfessorTypes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class Professor {
     private List<Thesis> theses = new ArrayList<>();
 
     @Builder
-    private Professor(String name, String major, String phoneN, String email,
+    private ProfessorTypes(String name, String major, String phoneN, String email,
                       String position, AcademicBackground academicBackground, String homepage, String lab, String profileImage) {
         this.name = name;
         this.major = major;
@@ -74,8 +74,8 @@ public class Professor {
         this.profileImage = profileImage;
     }
 
-    public static Professor of(ProfessorReqDto dto) {
-        return Professor.builder()
+    public static ProfessorTypes of(ProfessorReqDto dto) {
+        return ProfessorTypes.builder()
                 .name(dto.getName())
                 .major(dto.getMajor())
                 .phoneN(dto.getPhoneN())

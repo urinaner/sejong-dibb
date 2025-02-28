@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.professor.domain.dto.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.ProfessorResDto;
-import org.example.backend.professor.domain.entity.Professor;
+import org.example.backend.professor.domain.entity.ProfessorTypes;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
@@ -39,8 +39,8 @@ public class ProfessorService {
             professorReqDto.setProfileImage(uploadImageUrl + serverUrl);
         }
 
-        Professor professor = Professor.of(professorReqDto);
-        Professor savedProfessor = professorRepository.save(professor);
+        ProfessorTypes professor = ProfessorTypes.of(professorReqDto);
+        ProfessorTypes savedProfessor = professorRepository.save(professor);
 
         return savedProfessor.getId();
     }
@@ -56,7 +56,7 @@ public class ProfessorService {
     }
 
     public ProfessorResDto getProfessor(Long professorId) {
-        Professor professor = findProfessorById(professorId);
+        ProfessorTypes professor = findProfessorById(professorId);
         return ProfessorResDto.of(professor);
     }
 
@@ -71,18 +71,18 @@ public class ProfessorService {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
             professorReqDto.setProfileImage(uploadImageUrl);
         }
-        Professor professor = findProfessorById(professorId);
+        ProfessorTypes professor = findProfessorById(professorId);
         professor.update(professorReqDto);
         return ProfessorResDto.of(professor);
     }
 
     @Transactional
     public void deleteProfessor(Long professorId) {
-        Professor professor = findProfessorById(professorId);
+        ProfessorTypes professor = findProfessorById(professorId);
         professorRepository.delete(professor);
     }
 
-    private Professor findProfessorById(Long professorId) {
+    private ProfessorTypes findProfessorById(Long professorId) {
         return professorRepository.findById(professorId)
                 .orElseThrow(() -> new ProfessorException(NOT_FOUND_PROFESSOR));
     }

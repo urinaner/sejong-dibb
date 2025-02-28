@@ -1,48 +1,10 @@
-// ProfessorEditStyles.ts
 import styled from 'styled-components';
+import { SEJONG_COLORS } from '../../../../../constants/colors';
 
 export const media = {
   mobile: '@media(max-width: 768px)',
   tablet: '@media(max-width: 1024px)',
 };
-
-export const Container = styled.div`
-  max-width: 1400px;
-  width: 80vw;
-  margin: 0 auto;
-  padding: 40px 20px;
-
-  ${media.mobile} {
-    padding: 20px 16px;
-  }
-`;
-
-export const HeaderContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
-
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-`;
-
-export const Title = styled.h1`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #1a202c;
-  margin: 0;
-
-  ${media.mobile} {
-    font-size: 1.5rem;
-    width: 100%;
-  }
-`;
 
 export const Form = styled.form`
   display: flex;
@@ -54,10 +16,11 @@ export const FormSection = styled.div`
   position: relative;
   width: 100%;
   background: white;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -66,12 +29,19 @@ export const FormSection = styled.div`
 
 export const FormTitle = styled.h2`
   font-size: 1.2rem;
-  font-weight: 500;
-  color: #333333;
+  font-weight: 600;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   padding: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #eaeaea;
+  border-bottom: 2px solid ${(props) => props.theme.colors.grey[100]};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+  }
 `;
 
 export const FormContent = styled.div`
@@ -89,51 +59,81 @@ export const InputGroup = styled.div`
 export const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
-
   font-weight: 500;
-  font-size: 0.875rem;
-  color: #4a5568;
+  font-size: 0.95rem;
+  color: ${(props) => props.theme.colors.grey[500]};
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-
-  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
+  border-radius: 8px;
+  font-size: 0.95rem;
   transition: all 0.2s ease-in-out;
   background-color: white;
 
   &:focus {
-    border-color: #1a73e8;
+    border-color: ${SEJONG_COLORS.CRIMSON_RED};
     outline: none;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+    box-shadow: 0 0 0 3px ${SEJONG_COLORS.CRIMSON_RED}15;
   }
 
   &:disabled {
-    background-color: #f8f9fa;
+    background-color: ${(props) => props.theme.colors.grey[50]};
     cursor: not-allowed;
   }
 
   &::placeholder {
-    color: #a0aec0;
+    color: ${(props) => props.theme.colors.grey[400]};
   }
 
   ${media.mobile} {
-    padding: 0.625rem;
+    padding: 0.625rem 0.875rem;
+  }
+`;
+
+export const Textarea = styled.textarea`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease-in-out;
+  background-color: white;
+  resize: vertical;
+  min-height: 100px;
+
+  &:focus {
+    border-color: ${SEJONG_COLORS.CRIMSON_RED};
+    outline: none;
+    box-shadow: 0 0 0 3px ${SEJONG_COLORS.CRIMSON_RED}15;
+  }
+
+  &:disabled {
+    background-color: ${(props) => props.theme.colors.grey[50]};
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: ${(props) => props.theme.colors.grey[400]};
+  }
+
+  ${media.mobile} {
+    padding: 0.625rem 0.875rem;
   }
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-top: 1.5rem;
   padding: 1.5rem;
   background: white;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   ${media.mobile} {
     flex-direction: column;
@@ -145,40 +145,8 @@ export const ButtonGroup = styled.div`
   }
 `;
 
-export const ErrorMessage = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: #fff5f5;
-  color: #c53030;
-  border-radius: 12px;
-
-  font-size: 0.875rem;
-  border: 1px solid #feb2b2;
-
-  svg {
-    flex-shrink: 0;
-    min-width: 18px;
-  }
-`;
-
-export const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  color: #4a5568;
-  font-size: 1.1rem;
-
-  ${media.mobile} {
-    min-height: 200px;
-    font-size: 1rem;
-  }
-`;
-
 export const RequiredMark = styled.span`
-  color: #e53e3e;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   margin-left: 2px;
 `;
 
@@ -190,23 +158,31 @@ export const InputWithIcon = styled.div`
   svg {
     position: absolute;
     right: 12px;
-    color: #1a73e8;
-    min-width: 18px;
+    // 복잡한 조건부 스타일링 대신 단순화
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    opacity: 0.7;
   }
 
-  input {
+  textarea + svg {
+    top: 12px;
+    transform: none;
+  }
+
+  input,
+  textarea {
     padding-right: 2.5rem;
   }
 `;
 
 export const HelperText = styled.p`
-  margin-top: 0.25rem;
-
-  font-size: 0.75rem;
-  color: #718096;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: ${(props) => props.theme.colors.grey[500]};
 
   ${media.mobile} {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 `;
 
@@ -214,20 +190,24 @@ export const ImageUploadContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: flex-start;
 
   ${media.mobile} {
     gap: 0.75rem;
+    align-items: center;
   }
 `;
 
 export const ImagePreviewContainer = styled.div`
   width: 240px;
   height: 320px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${(props) => props.theme.colors.grey[200]};
   border-radius: 8px;
   overflow: hidden;
-  background-color: #f8fafc;
-  position: relative;
+  background-color: ${(props) => props.theme.colors.grey[50]};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
     width: 100%;
@@ -237,7 +217,7 @@ export const ImagePreviewContainer = styled.div`
   }
 
   ${media.mobile} {
-    width: 100%;
+    width: 200px;
     height: 280px;
   }
 `;
@@ -250,7 +230,7 @@ export const FallbackThumbnail = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  color: #94a3b8;
+  color: ${(props) => props.theme.colors.grey[400]};
 
   svg {
     opacity: 0.5;
@@ -258,6 +238,8 @@ export const FallbackThumbnail = styled.div`
 
   span {
     font-size: 0.875rem;
+    text-align: center;
+    padding: 0 1rem;
   }
 `;
 
@@ -268,16 +250,17 @@ export const ImageUploadButton = styled.label`
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1a73e8;
-  background-color: white;
-  border: 1px solid #1a73e8;
+  color: white;
+  background-color: ${SEJONG_COLORS.CRIMSON_RED};
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   width: fit-content;
+  box-shadow: 0 1px 3px rgba(163, 20, 50, 0.2);
 
   &:hover {
-    background-color: #f8fafc;
+    background-color: ${(props) => props.theme.colors.primary.crimsonDark};
   }
 
   input[type='file'] {
@@ -288,36 +271,4 @@ export const ImageUploadButton = styled.label`
     width: 100%;
     justify-content: center;
   }
-`;
-
-export const ImageContainer = styled.div`
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 200px;
-  background-color: #f8fafc;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  ${media.mobile} {
-    height: 160px;
-  }
-`;
-
-export const ImageError = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background-color: #fff5f5;
-  color: #c53030;
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.875rem;
 `;

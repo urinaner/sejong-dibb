@@ -15,7 +15,7 @@ INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
 VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
         '010-1234-5678', 'ROLE_ADMIN');
 
--- Professor 더미 데이터 (10개)
+-- ProfessorTypes 더미 데이터 (10개)
 INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profile_image, bachelor, master, doctor)
 VALUES (1, '권병호', '신경생물학', '010-3178-5629', 'kwonbh@sju.ac.kr', '교수', 'https://home.sejong.ac.kr/kwonbh', '충무관 1128호',
         'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/KakaoTalk_Photo_2024-12-05-14-44-55+001.png',
@@ -219,5 +219,3 @@ VALUES (1, '세종대학교 바이오융합공학과, 혁신 연구 성과 발�
         'https://example.com/news10',
         'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news/KakaoTalk_Photo_2025-01-16-16-19-07+001.png',
         NOW());
-
-
