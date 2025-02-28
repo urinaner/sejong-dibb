@@ -27,7 +27,6 @@ export const SliderContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   position: relative;
-  padding: 0 40px;
   z-index: 1;
 
   ${media.mobile} {
