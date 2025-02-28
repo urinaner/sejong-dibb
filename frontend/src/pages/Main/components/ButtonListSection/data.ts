@@ -7,14 +7,11 @@ import {
   FaChalkboardTeacher,
 } from 'react-icons/fa';
 
-// 아이콘을 "React.ComponentType<IconBaseProps>" 형태로 캐스팅
 const UniversityIcon = FaUniversity as React.ComponentType<IconBaseProps>;
 const ScholarshipIcon = FaGraduationCap as React.ComponentType<IconBaseProps>;
 const PortalIcon = FaGlobe as React.ComponentType<IconBaseProps>;
 const StudentIcon = FaUsers as React.ComponentType<IconBaseProps>;
 const SeminarIcon = FaChalkboardTeacher as React.ComponentType<IconBaseProps>;
-
-/** ButtonList에서 사용할 데이터 구조 */
 export interface ButtonItem {
   title: string;
   icon: React.ComponentType<IconBaseProps>;
@@ -22,7 +19,6 @@ export interface ButtonItem {
   isSeminar: boolean;
 }
 
-/** 실제 렌더링할 데이터 목록 */
 export const buttonItems: ButtonItem[] = [
   {
     title: '세종대학교',

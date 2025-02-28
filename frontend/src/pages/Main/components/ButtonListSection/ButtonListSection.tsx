@@ -9,7 +9,7 @@ import {
   InfoIconWrapper,
 } from './ButtonListSectionStyle';
 
-import { buttonItems } from './data'; // 데이터 임포트
+import { buttonItems } from './data'; 
 
 const ButtonListSection: React.FC = () => {
   return (
@@ -39,9 +39,9 @@ const ButtonListSection: React.FC = () => {
           // 일반 버튼 아이템
           return (
             <ButtonListItem key={index} isSeminar={item.isSeminar}>
-              <a href={item.link} target="_blank" rel="noopener noreferrer">
+              <a href={item.link} rel="noopener noreferrer">
                 {React.createElement(item.icon, {
-                  size: 0 /* 무시하거나 기본값 */,
+                  size: 0,
                 })}
                 <span>{item.title}</span>
               </a>
