@@ -6,11 +6,13 @@ import { ShortcutSection } from './components/ShortcutSection';
 import { PaperSection } from './components/PaperSection';
 import { NewsSection } from './components/NewsSection';
 import Container from '../../styles/Container';
+import ButtonListSection from './components/ButtonListSection/ButtonListSection';
 
 function Main(): JSX.Element {
   return (
     <>
       <Container>
+        <ButtonListSection />
         <ContentWrapper>
           <AnnouncementAndSeminar>
             <AnnouncementSection />
