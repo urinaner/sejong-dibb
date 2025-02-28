@@ -102,12 +102,43 @@ public class LoggingAspect {
 
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
-            if (!EXCLUDE_NAMES.contains(parameterNames[i])) {
-                params.put(parameterNames[i], args[i]);
+            String paramName = parameterNames[i];
+            Object paramValue = args[i];
+
+            if (EXCLUDE_NAMES.contains(paramName)) {
+                continue;
+            }
+
+            if (paramValue instanceof org.springframework.web.multipart.MultipartFile file) {
+                params.put(paramName, "[MultipartFile] " + file.getOriginalFilename());
+
+            } else if (paramValue instanceof org.springframework.web.multipart.MultipartFile[] fileArray) {
+                List<String> filenames = Arrays.stream(fileArray)
+                        .map(org.springframework.web.multipart.MultipartFile::getOriginalFilename)
+                        .toList();
+                params.put(paramName, "[MultipartFile[]] " + filenames);
+
+            } else if (paramValue instanceof java.io.InputStream) {
+                params.put(paramName, "[InputStream]");
+
+            } else if (paramValue instanceof java.util.Collection<?> collection) {
+                List<Object> mappedList = collection.stream()
+                        .map(item -> {
+                            if (item instanceof org.springframework.web.multipart.MultipartFile mf) {
+                                return "[MultipartFile] " + mf.getOriginalFilename();
+                            }
+                            return item;
+                        })
+                        .toList();
+                params.put(paramName, mappedList);
+
+            } else {
+                params.put(paramName, paramValue);
             }
         }
         return params;
     }
+
 
     private void printRequestLog(HttpServletRequest request, Map<String, Object> filteredParams) {
         try {
