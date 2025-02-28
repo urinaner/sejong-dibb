@@ -39,11 +39,12 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
   onNewsClick,
 }) => {
   const getItemsPerView = () => {
-    if (typeof window === 'undefined') return 4;
+    if (typeof window === 'undefined') return 5;
     if (window.innerWidth <= 480) return 1;
     if (window.innerWidth <= 768) return 2;
     if (window.innerWidth <= 1024) return 3;
-    return 4;
+    if (window.innerWidth <= 1366) return 4;
+    return 5;
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);

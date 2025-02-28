@@ -9,7 +9,7 @@ import {
   InfoIconWrapper,
 } from './ButtonListSectionStyle';
 
-import { buttonItems } from './data'; 
+import { buttonItems } from './data';
 
 const ButtonListSection: React.FC = () => {
   return (
