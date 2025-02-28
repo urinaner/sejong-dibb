@@ -14,7 +14,7 @@ function Main(): JSX.Element {
         <ContentWrapper>
           <AnnouncementAndSeminar>
             <AnnouncementSection />
-            <SeminarSection />
+            {/* <SeminarSection /> */}
           </AnnouncementAndSeminar>
           <ShortcutSection />
         </ContentWrapper>
