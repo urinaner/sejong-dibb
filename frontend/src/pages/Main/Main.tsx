@@ -18,7 +18,7 @@ function Main(): JSX.Element {
           </AnnouncementAndSeminar>
           <ShortcutSection />
         </ContentWrapper>
-        <PaperSection />
+        {/* <PaperSection /> */}
         <NewsSection />
       </Container>
     </>
