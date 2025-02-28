@@ -25,8 +25,9 @@ export const TopHeaderInner = styled.div`
   }
 `;
 
-export const TopHeaderTitle = styled.div`
+export const TopHeaderTitle = styled.a`
   color: white;
+  text-decoration: none;
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.02em;

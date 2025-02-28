@@ -20,7 +20,6 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
   color: white;
   transition: opacity 0.2s ease;
-
   &:hover {
     opacity: 0.9;
   }
