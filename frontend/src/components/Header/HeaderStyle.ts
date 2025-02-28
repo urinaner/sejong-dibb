@@ -15,7 +15,6 @@ export const TopHeaderContainer = styled.div`
 export const TopHeaderInner = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
   height: 100%;
   display: flex;
   align-items: center;
