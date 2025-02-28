@@ -31,4 +31,5 @@ export interface ProfessorRequest {
   lab: string;
   profileImage: string;
   departmentId: number;
+  academicBackground: string;
 }

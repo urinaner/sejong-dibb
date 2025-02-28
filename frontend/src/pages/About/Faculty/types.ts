@@ -20,8 +20,8 @@ export interface ProfessorFormData {
   position: string;
   homepage: string;
   lab: string;
-  profileImage: string | null;
-  academicBackground: string | null;
+  profileImage: string;
+  academicBackground: string;
   departmentId: number;
 }
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, AlertTriangle } from 'lucide-react';
 import { Modal, useModal } from '../../../../components/Modal';
 import PageContainer from '../components/common/PageContainer/PageContainer';
 import ProfessorForm from '../components/common/ProfessorFrom';
 import { ProfessorFormData } from '../types';
+import { ProfessorReqDto } from '../../../../config/apiConfig';
 import {
-  createProfessorFormData,
   getErrorMessage,
   useCreateProfessor,
 } from '../../../../hooks/queries/useProfessor';
@@ -26,8 +26,8 @@ const ProfessorCreate: React.FC = () => {
     position: '',
     homepage: '',
     lab: '',
-    profileImage: null,
-    academicBackground: null,
+    profileImage: '',
+    academicBackground: '',
     departmentId: 0,
   };
 
@@ -43,8 +43,28 @@ const ProfessorCreate: React.FC = () => {
   ) => {
     try {
       setIsSubmitting(true);
-      const formDataToSend = createProfessorFormData(formData, imageFile);
-      await createMutation.mutateAsync(formDataToSend);
+
+      // ProfessorReqDto 형식으로 데이터 준비
+      const professorData: ProfessorReqDto = {
+        name: formData.name,
+        major: formData.major,
+        phoneN: formData.phoneN,
+        email: formData.email,
+        position: formData.position,
+        homepage: formData.homepage,
+        lab: formData.lab,
+        profileImage: '', // API에서 필요한 빈 문자열
+        departmentId: formData.departmentId || 0,
+      };
+
+      // 학력 필드는 API 인터페이스에 없으므로 백엔드 저장 로직 필요시 별도 처리
+      console.log('Academic background to save:', formData.academicBackground);
+
+      // 데이터 및 이미지 전송
+      await createMutation.mutateAsync({
+        data: professorData,
+        imageFile: imageFile,
+      });
 
       // 성공 모달 표시
       openModal(
@@ -66,7 +86,10 @@ const ProfessorCreate: React.FC = () => {
       // 오류 모달 표시
       openModal(
         <>
-          <Modal.Header>등록 실패</Modal.Header>
+          <Modal.Header>
+            <AlertTriangle size={48} color="#E53E3E" />
+            등록 실패
+          </Modal.Header>
           <Modal.Content>
             <p>{getErrorMessage(error)}</p>
           </Modal.Content>

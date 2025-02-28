@@ -110,6 +110,7 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
     [],
   );
 
+  // ProfessorForm 컴포넌트 내부 - 이미지 변경 핸들러
   const handleImageChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -151,7 +152,11 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
         return;
       }
 
+      // 파일 객체 저장
       setImageFile(file);
+      console.log('Image file selected:', file.name, file.type, file.size);
+
+      // 미리보기 표시
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);

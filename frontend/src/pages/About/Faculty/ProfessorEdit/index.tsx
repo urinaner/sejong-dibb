@@ -5,8 +5,8 @@ import { Modal, useModal } from '../../../../components/Modal';
 import PageContainer from '../components/common/PageContainer/PageContainer';
 import ProfessorForm from '../components/common/ProfessorFrom';
 import { ProfessorFormData } from '../types';
+import { ProfessorReqDto } from '../../../../config/apiConfig';
 import {
-  createProfessorFormData,
   getErrorMessage,
   useProfessorDetail,
   useUpdateProfessor,
@@ -31,11 +31,13 @@ const ProfessorEdit: React.FC = () => {
     position: '',
     homepage: '',
     lab: '',
-    profileImage: null,
-    academicBackground: null,
+    profileImage: '',
+    academicBackground: '',
     departmentId: 0,
   });
 
+  // 데이터가 로드되면 폼 데이터 업데이트
+  // 데이터가 로드되면 폼 데이터 업데이트
   useEffect(() => {
     if (professor) {
       setInitialFormData({
@@ -46,9 +48,9 @@ const ProfessorEdit: React.FC = () => {
         position: professor.position,
         homepage: professor.homepage,
         lab: professor.lab,
-        profileImage: professor.profileImage,
-        // 타입 단언을 사용
-        academicBackground: (professor as any).academicBackground ?? null,
+        profileImage: professor.profileImage || '',
+        // academicBackground는 API 응답에 없으므로 기본값으로 빈 문자열 사용
+        academicBackground: '',
         departmentId: 0, // 기본값
       });
     }
@@ -68,10 +70,28 @@ const ProfessorEdit: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      const formDataToSend = createProfessorFormData(formData, imageFile);
+
+      // ProfessorReqDto 형식으로 데이터 준비
+      const professorData: ProfessorReqDto = {
+        name: formData.name,
+        major: formData.major,
+        phoneN: formData.phoneN,
+        email: formData.email,
+        position: formData.position,
+        homepage: formData.homepage,
+        lab: formData.lab,
+        profileImage: '',
+        departmentId: formData.departmentId || 0,
+      };
+
+      // 학력 필드는 콘솔에 기록
+      console.log('Academic background to save:', formData.academicBackground);
+
+      // 데이터 및 이미지 전송
       await updateMutation.mutateAsync({
         id: Number(id),
-        formData: formDataToSend,
+        data: professorData,
+        imageFile: imageFile,
       });
 
       // 성공 모달 표시
