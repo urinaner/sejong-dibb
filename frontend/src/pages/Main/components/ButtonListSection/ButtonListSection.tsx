@@ -9,53 +9,7 @@ import {
   InfoIconWrapper,
 } from './ButtonListSectionStyle';
 
-// react-icons에서 사용할 아이콘 불러오기
-import {
-  FaUniversity,
-  FaGraduationCap,
-  FaGlobe,
-  FaUsers,
-  FaChalkboardTeacher,
-} from 'react-icons/fa';
-import { IconBaseProps } from 'react-icons';
-
-const buttonItems: {
-  title: string;
-  icon: React.ComponentType<IconBaseProps>; // 아이콘 타입
-  link: string;
-  isSeminar: boolean;
-}[] = [
-  {
-    title: '세종대학교',
-    icon: FaUniversity as React.ComponentType<IconBaseProps>,
-    link: '/',
-    isSeminar: false,
-  },
-  {
-    title: '장학안내',
-    icon: FaGraduationCap as React.ComponentType<IconBaseProps>,
-    link: '/',
-    isSeminar: false,
-  },
-  {
-    title: '포털 시스템',
-    icon: FaGlobe as React.ComponentType<IconBaseProps>,
-    link: '/',
-    isSeminar: false,
-  },
-  {
-    title: '학생회 안내',
-    icon: FaUsers as React.ComponentType<IconBaseProps>,
-    link: '/',
-    isSeminar: false,
-  },
-  {
-    title: '세미나 정보',
-    icon: FaChalkboardTeacher as React.ComponentType<IconBaseProps>,
-    link: '/',
-    isSeminar: true,
-  },
-];
+import { buttonItems } from './data'; // 데이터 임포트
 
 const ButtonListSection: React.FC = () => {
   return (
