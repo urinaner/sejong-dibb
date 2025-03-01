@@ -108,12 +108,11 @@ public class SecurityConfig {
                         // 조회 관련 엔드포인트는 모두에게 허용
                         .requestMatchers(HttpMethod.GET, "/api/thesis/**").permitAll()
 
-                        .requestMatchers("/api/admin/login", "/api/member/login",
-                                "/", "/api/**", "/v3/api-docs/**", "/swagger-ui/**", // TODO: 배포 전에  "/api/**" 삭제 필요
-                                "/swagger-resources/**", "/swagger*/**", "/uploads/**")
-                        .permitAll()
+                        .requestMatchers("/api/admin/login", "/api/member/login", "/", "/uploads/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
+                        .requestMatchers("/api/room/**").hasRole("ADMIN")
+                        .requestMatchers("/api/room/**").hasRole("MEMBER")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil, jwtBlacklistService),
