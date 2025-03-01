@@ -96,34 +96,17 @@ public class BoardService {
     }
 
     @Transactional
-    public void incrementViewCount(Long boardId, HttpServletRequest request, HttpServletResponse response) {
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("postView")) {
-                    oldCookie = cookie;
-                    break;
-                }
-            }
-        }
-
-        if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + boardId + "]")) {
-                readCount(boardId);
-                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(60 * 60 * 24);
-                response.addCookie(oldCookie);
-            }
-        } else {
+    public String incrementViewCount(Long boardId, String postViewCookie) {
+        if (postViewCookie == null || !postViewCookie.contains("[" + boardId + "]")) {
             readCount(boardId);
-            Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(newCookie);
+
+            if (postViewCookie == null || postViewCookie.isEmpty()) {
+                return "[" + boardId + "]";
+            }
+            return postViewCookie + "_[" + boardId + "]";
         }
+
+        return postViewCookie;
     }
 
     @Transactional

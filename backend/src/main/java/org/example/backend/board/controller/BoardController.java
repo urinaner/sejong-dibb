@@ -15,8 +15,11 @@ import org.example.backend.board.service.BoardService;
 import org.example.backend.common.dto.PageRequestDto;
 import org.example.backend.common.dto.ResponseDto;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -65,12 +68,20 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResDto> getBoard(
             @PathVariable(name = "boardId") Long boardId,
-            HttpServletRequest request,
-            HttpServletResponse response
+            @CookieValue(value = "postView", defaultValue = "") String postViewCookie
     ) {
-        boardService.incrementViewCount(boardId, request, response);
+        String updatedCookieValue = boardService.incrementViewCount(boardId, postViewCookie);
+
         BoardResDto boardResDto = boardService.getBoard(boardId);
-        return new ResponseEntity<>(boardResDto, HttpStatus.OK);
+
+        ResponseCookie cookie = ResponseCookie.from("postView", updatedCookieValue)
+                .path("/")
+                .maxAge(60 * 60 * 24)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(boardResDto);
     }
 
     @Operation(summary = "게시판 정보 업데이트 API", description = "게시판 정보 업데이트")
