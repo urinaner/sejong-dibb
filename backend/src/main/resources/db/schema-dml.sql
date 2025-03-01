@@ -11,7 +11,7 @@ VALUES (1, '바이오융합공학과',
         'https://home.sejong.ac.kr/~bioscidpt/map/24Ex');
 
 -- users 더미 데이터
-INSERT INTO users (users_id, login_id, password, username, email, phoneN, role)
+INSERT INTO users (users_id, login_id, password, username, email, phone, role)
 VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
         '010-1234-5678', 'ROLE_ADMIN');
 
@@ -138,7 +138,7 @@ INSERT INTO room (room_id, name, person_capacity, place, image)
 VALUES (1, '충507C 세미나실', 20, '충무관 507', 'seminar1.jpg'),
        (2, '충506C 세미나실', 20, '충무관 506', 'seminar2.jpg');
 
-INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, user_id, created_date, updated_date)
+INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, login_id, created_date, updated_date)
 VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-01 13:00:00', '2024-12-01 15:00:00', 'MEETING', '김은희교수님 랩미팅', 1, 1, NOW(), NOW()),
        ('2024-12-02 10:00:00', '2024-12-02 12:00:00', 'MEETING', '김민수교수님 랩미팅', 1, 1, NOW(), NOW()),
