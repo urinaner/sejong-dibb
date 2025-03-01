@@ -27,7 +27,7 @@ public class RequestResponseLog {
     @Column(name = "request_status")
     private String responseStatus;
 
-    @Column(name = "response_body", length = 10000)
+    @Column(name = "response_body", length = 20000)
     private String responseBody;
 
     @Column(name = "created_at")

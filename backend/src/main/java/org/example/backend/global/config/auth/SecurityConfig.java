@@ -108,6 +108,14 @@ public class SecurityConfig {
                         // 조회 관련 엔드포인트는 모두에게 허용
                         .requestMatchers(HttpMethod.GET, "/api/thesis/**").permitAll()
 
+                        // 관리자 전용: 교수 생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/professor").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/professor/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/professor/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/professor/**").permitAll()
+
                         .requestMatchers("/api/admin/login", "/api/member/login", "/", "/uploads/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
