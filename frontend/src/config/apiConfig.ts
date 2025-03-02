@@ -104,6 +104,7 @@ export interface ProfessorReqDto {
   lab: string;
   profileImage: string;
   departmentId: number;
+  academicBackground: string;
 }
 
 interface ThesisEndpoint {
@@ -235,15 +236,17 @@ export const apiEndpoints = {
         imageFile?: File | null,
       ) => {
         const formData = new FormData();
-        formData.append(
-          'professorReqDto',
-          new Blob([JSON.stringify(professorReqDto)], {
-            type: 'application/json',
-          }),
-        );
+
+        // JSON 데이터를 문자열 그대로 추가
+        if (professorReqDto) {
+          formData.append('professorReqDto', JSON.stringify(professorReqDto));
+        }
+
+        // 이미지 파일 추가
         if (imageFile) {
           formData.append('profileImage', imageFile);
         }
+
         return formData;
       },
     },
@@ -254,15 +257,17 @@ export const apiEndpoints = {
         imageFile?: File | null,
       ) => {
         const formData = new FormData();
-        formData.append(
-          'professorReqDto',
-          new Blob([JSON.stringify(professorReqDto)], {
-            type: 'application/json',
-          }),
-        );
-        if (imageFile) {
-          formData.append('profile_image', imageFile);
+
+        // JSON 데이터를 문자열 그대로 추가
+        if (professorReqDto) {
+          formData.append('professorReqDto', JSON.stringify(professorReqDto));
         }
+
+        // 이미지 파일 추가 (이전 `profile_image` → `profileImage`로 통일)
+        if (imageFile) {
+          formData.append('profileImage', imageFile);
+        }
+
         return formData;
       },
     },

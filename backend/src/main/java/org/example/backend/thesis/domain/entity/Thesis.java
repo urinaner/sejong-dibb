@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.professor.domain.entity.Professor;
+import org.example.backend.professor.domain.entity.ProfessorTypes;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 
 @Entity
@@ -54,12 +54,12 @@ public class Thesis {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = true)
-    private Professor professor;
+    private ProfessorTypes professor;
 
     @Builder
     private Thesis(String title, String author, String journal, String content, String link,
                    String publicationDate, String thesisImage, String publicationCollection,
-                   String publicationIssue, String publicationPage, String issn, Professor professor) {
+                   String publicationIssue, String publicationPage, String issn, ProfessorTypes professor) {
         this.title = title;
         this.author = author;
         this.journal = journal;
@@ -74,7 +74,7 @@ public class Thesis {
         this.professor = professor;
     }
 
-    public static Thesis of(ThesisReqDto dto, Professor professor) {
+    public static Thesis of(ThesisReqDto dto, ProfessorTypes professor) {
         return Thesis.builder()
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
@@ -91,7 +91,7 @@ public class Thesis {
                 .build();
     }
 
-    public void update(ThesisReqDto dto, Professor professor) {
+    public void update(ThesisReqDto dto, ProfessorTypes professor) {
         this.title = dto.getTitle();
         this.author = dto.getAuthor();
         this.journal = dto.getJournal();

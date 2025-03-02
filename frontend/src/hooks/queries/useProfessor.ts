@@ -1,11 +1,13 @@
 // src/hooks/queries/useProfessor.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
+import {
+  apiEndpoints,
+  axiosInstance,
+  ProfessorReqDto,
+} from '../../config/apiConfig';
 import {
   Professor,
-  ProfessorDetail,
-  ProfessorRequest,
   ProfessorQueryParams,
   ProfessorListResponse,
   ProfessorDetailResponse,
@@ -52,49 +54,36 @@ export const useProfessorDetail = (id: number) => {
   });
 };
 
-// Utils
-export const createProfessorFormData = (
-  professorData: ProfessorRequest,
-  imageFile?: File | null,
-): FormData => {
-  const formData = new FormData();
-  formData.append(
-    'professorReqDto',
-    new Blob([JSON.stringify(professorData)], {
-      type: 'application/json',
-    }),
-  );
-
-  if (imageFile) {
-    formData.append('profileImage', imageFile);
-  }
-
-  return formData;
-};
+// 기존 helper 함수 제거하고 apiEndpoints의 getFormData 사용
 
 // Mutation Hooks
 export const useCreateProfessor = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<number, AxiosError, FormData>({
-    mutationFn: async (formData) => {
-      // Get XSRF token from cookie
-      const xsrfToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
+  return useMutation<
+    number,
+    AxiosError,
+    { data: ProfessorReqDto; imageFile?: File | null }
+  >({
+    mutationFn: async ({ data, imageFile }) => {
+      const formData = apiEndpoints.professor.create.getFormData(
+        data,
+        imageFile,
+      );
 
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      // 요청 전송
       const response = await axiosInstance.post<number>(
         apiEndpoints.professor.create.url,
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
-          },
-          withCredentials: true,
-        },
+        config,
       );
+
       return response.data;
     },
     onSuccess: () => {
@@ -108,24 +97,28 @@ export const useCreateProfessor = () => {
 export const useUpdateProfessor = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<number, AxiosError, { id: number; formData: FormData }>({
-    mutationFn: async ({ id, formData }) => {
-      const xsrfToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
+  return useMutation<
+    number,
+    AxiosError,
+    { id: number; data: ProfessorReqDto; imageFile?: File | null }
+  >({
+    mutationFn: async ({ id, data, imageFile }) => {
+      const formData = apiEndpoints.professor.update.getFormData(
+        data,
+        imageFile,
+      );
 
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
       const response = await axiosInstance.post<number>(
         apiEndpoints.professor.update.url(id),
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
-          },
-          withCredentials: true,
-        },
+        config,
       );
+
       return response.data;
     },
     onSuccess: (_, variables) => {
@@ -144,19 +137,8 @@ export const useDeleteProfessor = () => {
 
   return useMutation<number, AxiosError, number>({
     mutationFn: async (id) => {
-      const xsrfToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
-
       const response = await axiosInstance.delete<number>(
         apiEndpoints.professor.delete(id),
-        {
-          headers: {
-            ...(xsrfToken && { 'X-XSRF-TOKEN': xsrfToken }),
-          },
-          withCredentials: true,
-        },
       );
       return response.data;
     },
