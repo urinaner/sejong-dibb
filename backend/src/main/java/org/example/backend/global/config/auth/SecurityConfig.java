@@ -119,8 +119,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/login", "/api/member/login", "/", "/uploads/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
-                        .requestMatchers("/api/room/**").hasRole("ADMIN")
-                        .requestMatchers("/api/room/**").hasRole("MEMBER")
+
+                        //예약
+                        .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("MEMBER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("MEMBER")
+
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil, jwtBlacklistService),
