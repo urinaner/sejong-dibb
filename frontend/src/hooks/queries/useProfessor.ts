@@ -66,16 +66,14 @@ export const useCreateProfessor = () => {
     { data: ProfessorReqDto; imageFile?: File | null }
   >({
     mutationFn: async ({ data, imageFile }) => {
-      // apiConfig의 getFormData 함수 사용
       const formData = apiEndpoints.professor.create.getFormData(
         data,
         imageFile,
       );
 
-      // multipart/form-data를 위해 Content-Type 헤더 설정 제거
       const config = {
         headers: {
-          'Content-Type': undefined, // axios가 자동으로 올바른 Content-Type 설정
+          'Content-Type': 'multipart/form-data',
         },
       };
 
@@ -105,22 +103,16 @@ export const useUpdateProfessor = () => {
     { id: number; data: ProfessorReqDto; imageFile?: File | null }
   >({
     mutationFn: async ({ id, data, imageFile }) => {
-      // apiConfig의 getFormData 함수 사용
       const formData = apiEndpoints.professor.update.getFormData(
         data,
         imageFile,
       );
 
-      // multipart/form-data를 위해 Content-Type 헤더 설정 제거
       const config = {
         headers: {
-          'Content-Type': undefined, // axios가 자동으로 올바른 Content-Type 설정
+          'Content-Type': 'multipart/form-data',
         },
       };
-
-      // 요청 전송
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const response = await axiosInstance.post<number>(
         apiEndpoints.professor.update.url(id),
         formData,

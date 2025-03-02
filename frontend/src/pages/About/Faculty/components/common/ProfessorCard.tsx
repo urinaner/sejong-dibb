@@ -212,6 +212,49 @@ const Link = styled.a`
   }
 `;
 
+// 학력 정보 포맷팅 함수 수정 - Professor의 academicBackground 타입과 정확히 일치하도록 수정
+const formatAcademicBackground = (
+  academicBackground:
+    | string
+    | null
+    | {
+        bachelor?: string;
+        master?: string;
+        doctor?: string;
+        [key: string]: string | undefined;
+      }
+    | undefined,
+): string => {
+  if (!academicBackground) {
+    return '정보 없음';
+  }
+
+  if (typeof academicBackground === 'string') {
+    return academicBackground;
+  }
+
+  if (typeof academicBackground === 'object') {
+    // 학사, 석사, 박사 순으로 표시
+    const degrees = [];
+    if (academicBackground.bachelor)
+      degrees.push(`학사: ${academicBackground.bachelor}`);
+    if (academicBackground.master)
+      degrees.push(`석사: ${academicBackground.master}`);
+    if (academicBackground.doctor)
+      degrees.push(`박사: ${academicBackground.doctor}`);
+
+    // 다른 학위 정보도 추가
+    Object.entries(academicBackground)
+      .filter(([key]) => !['bachelor', 'master', 'doctor'].includes(key))
+      .forEach(([key, value]) => {
+        if (value) degrees.push(`${key}: ${value}`);
+      });
+
+    return degrees.length > 0 ? degrees.join(' / ') : '정보 없음';
+  }
+
+  return '정보 없음';
+};
 interface ProfessorCardProps {
   professor: Professor;
   onImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
@@ -292,12 +335,13 @@ const ProfessorCard: React.FC<ProfessorCardProps> = memo(
                   <span>연구실: {professor.lab}</span>
                 </InfoItem>
               )}
-              {professor.academicBackground && (
-                <InfoItem>
-                  <BookOpen />
-                  <span>학력: {professor.academicBackground}</span>
-                </InfoItem>
-              )}
+              {/* 학력 정보 표시 수정 */}
+              <InfoItem>
+                <BookOpen />
+                <span>
+                  학력: {formatAcademicBackground(professor.academicBackground)}
+                </span>
+              </InfoItem>
             </InfoList>
           </ContactInfo>
         </InfoSection>

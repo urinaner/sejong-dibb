@@ -272,3 +272,87 @@ export const ImageUploadButton = styled.label`
     justify-content: center;
   }
 `;
+
+// 학력 정보 관련 스타일 추가
+export const AcademicDegreesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const AcademicDegreeRow = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  position: relative;
+
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+`;
+
+export const AcademicDegreeTypeInput = styled(Input)`
+  flex: 1;
+  min-width: 150px;
+
+  ${media.mobile} {
+    width: 100%;
+  }
+`;
+
+export const AcademicDegreeSchoolInput = styled(Input)`
+  flex: 3;
+
+  ${media.mobile} {
+    width: 100%;
+  }
+`;
+
+export const RemoveButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: ${(props) => props.theme.colors.grey[400]};
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+    background: ${(props) => props.theme.colors.grey[100]};
+  }
+
+  &:active {
+    background: ${(props) => props.theme.colors.grey[200]};
+  }
+`;
+
+export const AddDegreeButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+  background-color: white;
+  border: 1px dashed ${SEJONG_COLORS.CRIMSON_RED};
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+
+  &:hover {
+    background-color: ${SEJONG_COLORS.CRIMSON_RED}10;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    justify-content: center;
+  }
+`;

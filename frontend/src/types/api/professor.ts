@@ -1,6 +1,6 @@
 import { PaginatedResponse } from './common';
 
-// 교수 기본 정보
+// 교수 기본 정보 - academicBackground 필드 추가
 export interface Professor {
   id: number;
   name: string;
@@ -10,7 +10,16 @@ export interface Professor {
   position: string;
   homepage: string;
   lab: string;
-  profileImage: string;
+  profileImage: string | null;
+  academicBackground?:
+    | string
+    | null
+    | {
+        bachelor?: string;
+        master?: string;
+        doctor?: string;
+        [key: string]: string | undefined;
+      };
 }
 
 // 교수 상세 정보
@@ -30,6 +39,7 @@ export interface ProfessorRequest {
   homepage: string;
   lab: string;
   departmentId: number;
+  academicBackground?: string; // 추가된 필드
 }
 
 // 교수 API 응답 타입
@@ -39,31 +49,30 @@ export interface ProfessorListResponse {
   totalPage: number; // totalPages가 아닌 totalPage
   data: Professor[]; // content가 아닌 data
 }
+
 export interface ProfessorResponse {
   data: Professor;
   message: string;
   status: number;
 }
-export interface ProfessorDetailResponse {
-  id: number;
-  name: string;
-  major: string;
-  phoneN: string;
-  email: string;
-  position: string;
-  homepage: string;
-  lab: string;
-  profileImage: string;
+
+export interface ProfessorDetailResponse extends Professor {
+  education: string[];
+  career: string[];
+  awards: string[];
 }
+
 export interface ProfessorCreateResponse {
   data: number;
   message: string;
   status: number;
 }
+
 export interface ProfessorUpdateResponse {
   message: string;
   status: number;
 }
+
 export interface ProfessorDeleteResponse {
   message: string;
   status: number;

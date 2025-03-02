@@ -9,7 +9,15 @@ export interface Professor {
   homepage: string;
   lab: string;
   profileImage: string | null;
-  academicBackground?: string | null;
+  academicBackground?:
+    | string
+    | null
+    | {
+        bachelor?: string;
+        master?: string;
+        doctor?: string;
+        [key: string]: string | undefined;
+      };
 }
 
 export interface ProfessorFormData {
@@ -30,12 +38,6 @@ export interface ProfessorListResponse {
   totalPage: number;
   page: number;
   data: Professor[];
-}
-
-export interface ProfessorDetailResponse extends Professor {
-  education: string[];
-  career: string[];
-  awards: string[];
 }
 
 export interface ThesisResponse {
@@ -65,13 +67,8 @@ export interface ProfessorQueryParams {
   sort?: string;
 }
 
-// ProfessorDetailResponse 타입도 수정
-// types.ts 파일 수정
-export interface ProfessorDetailResponse
-  extends Omit<Professor, 'academicBackground'> {
+export interface ProfessorDetailResponse extends Professor {
   education: string[];
   career: string[];
   awards: string[];
-  // academicBackground 속성 추가
-  academicBackground?: string | null;
 }

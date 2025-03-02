@@ -27,7 +27,11 @@ const ProfessorCreate: React.FC = () => {
     homepage: '',
     lab: '',
     profileImage: '',
-    academicBackground: '',
+    academicBackground: JSON.stringify({
+      bachelor: '',
+      master: '',
+      doctor: '',
+    }),
     departmentId: 0,
   };
 
@@ -37,12 +41,24 @@ const ProfessorCreate: React.FC = () => {
   };
 
   // 폼 제출 핸들러
+  // 폼 제출 핸들러
   const handleSubmit = async (
     formData: ProfessorFormData,
     imageFile: File | null,
   ) => {
     try {
       setIsSubmitting(true);
+
+      // academicBackground가 JSON 문자열인 경우 객체로 파싱
+      let academicBackground;
+      try {
+        academicBackground = formData.academicBackground
+          ? JSON.parse(formData.academicBackground)
+          : undefined;
+      } catch (e) {
+        // 파싱 실패 시 문자열 그대로 사용
+        academicBackground = formData.academicBackground;
+      }
 
       // ProfessorReqDto 형식으로 데이터 준비
       const professorData: ProfessorReqDto = {
@@ -53,12 +69,10 @@ const ProfessorCreate: React.FC = () => {
         position: formData.position,
         homepage: formData.homepage,
         lab: formData.lab,
-        profileImage: '', // API에서 필요한 빈 문자열
-        departmentId: formData.departmentId || 0,
+        profileImage: '',
+        departmentId: formData.departmentId,
+        academicBackground, // 객체 또는 문자열
       };
-
-      // 학력 필드는 API 인터페이스에 없으므로 백엔드 저장 로직 필요시 별도 처리
-      console.log('Academic background to save:', formData.academicBackground);
 
       // 데이터 및 이미지 전송
       await createMutation.mutateAsync({

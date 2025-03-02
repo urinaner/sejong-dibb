@@ -285,11 +285,53 @@ const AcademicInfo = styled.div`
   }
 `;
 
+const AcademicDegreeList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const AcademicDegreeItem = styled.li`
+  position: relative;
+  padding: 0.5rem 0;
+  color: ${(props) => props.theme.colors.grey[500]};
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: flex;
+  border-bottom: 1px dashed ${(props) => props.theme.colors.grey[200]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const DegreeLabel = styled.span`
+  font-weight: 500;
+  width: 90px;
+  flex-shrink: 0;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+`;
+
 interface ProfileSectionProps {
   professor: Professor;
   onImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   defaultImage: string;
 }
+
+// Helper type to handle different academicBackground formats
+type AcademicBackground =
+  | string
+  | null
+  | {
+      bachelor?: string;
+      master?: string;
+      doctor?: string;
+      [key: string]: string | undefined;
+    };
 
 const ProfileSection = memo(
   ({ professor, onImageError, defaultImage }: ProfileSectionProps) => {
@@ -324,6 +366,57 @@ const ProfileSection = memo(
     // 전공 태그 분리
     const majors = professor.major.split(',').map((major) => major.trim());
 
+    // 학력 정보 렌더링
+    const renderAcademicBackground = () => {
+      const academicBackground =
+        professor.academicBackground as AcademicBackground;
+
+      // 객체 형태의 학력 정보인 경우
+      if (academicBackground && typeof academicBackground === 'object') {
+        return (
+          <AcademicDegreeList>
+            {academicBackground.bachelor && (
+              <AcademicDegreeItem>
+                <DegreeLabel>학사</DegreeLabel>
+                <span>{academicBackground.bachelor}</span>
+              </AcademicDegreeItem>
+            )}
+            {academicBackground.master && (
+              <AcademicDegreeItem>
+                <DegreeLabel>석사</DegreeLabel>
+                <span>{academicBackground.master}</span>
+              </AcademicDegreeItem>
+            )}
+            {academicBackground.doctor && (
+              <AcademicDegreeItem>
+                <DegreeLabel>박사</DegreeLabel>
+                <span>{academicBackground.doctor}</span>
+              </AcademicDegreeItem>
+            )}
+            {/* 추가 학위 또는 기타 학력 정보를 위한 반복 */}
+            {Object.entries(academicBackground)
+              .filter(
+                ([key]) => !['bachelor', 'master', 'doctor'].includes(key),
+              )
+              .map(([key, value]) => (
+                <AcademicDegreeItem key={key}>
+                  <DegreeLabel>{key}</DegreeLabel>
+                  <span>{value}</span>
+                </AcademicDegreeItem>
+              ))}
+          </AcademicDegreeList>
+        );
+      }
+
+      // 문자열 형태인 경우
+      if (academicBackground && typeof academicBackground === 'string') {
+        return <p>{academicBackground}</p>;
+      }
+
+      // null 또는 undefined인 경우
+      return <p>등록된 학력 정보가 없습니다.</p>;
+    };
+
     return (
       <>
         <ProfileContainer>
@@ -351,16 +444,14 @@ const ProfileSection = memo(
               </MajorTags>
             </InfoGroup>
 
-            {professor.academicBackground && (
-              <InfoGroup>
-                <InfoTitle>
-                  <span>학력</span>
-                </InfoTitle>
-                <AcademicInfo>
-                  <p>{professor.academicBackground}</p>
-                </AcademicInfo>
-              </InfoGroup>
-            )}
+            {/* 학력 정보 섹션 - 항상 표시 */}
+            <InfoGroup>
+              <InfoTitle>
+                <BookOpen size={18} />
+                <span>학력</span>
+              </InfoTitle>
+              <AcademicInfo>{renderAcademicBackground()}</AcademicInfo>
+            </InfoGroup>
 
             <InfoGroup>
               <InfoTitle>
