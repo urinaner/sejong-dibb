@@ -125,6 +125,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/room/**").hasRole("MEMBER")
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("MEMBER")
+                        .requestMatchers(HttpMethod.GET, "/api/room/**").permitAll()
+
 
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
