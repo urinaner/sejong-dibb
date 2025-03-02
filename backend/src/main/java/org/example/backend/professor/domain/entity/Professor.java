@@ -22,7 +22,7 @@ import org.example.backend.thesis.domain.entity.Thesis;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "professor")
-public class ProfessorTypes {
+public class Professor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,15 +54,16 @@ public class ProfessorTypes {
     private String lab;
 
 
-    @Column(name = "profileImage", length = 1000)
+    @Column(name = "profile_image", length = 1000)
     private String profileImage;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Thesis> theses = new ArrayList<>();
 
     @Builder
-    private ProfessorTypes(String name, String major, String phoneN, String email,
-                      String position, AcademicBackground academicBackground, String homepage, String lab, String profileImage) {
+    private Professor(String name, String major, String phoneN, String email,
+                      String position, AcademicBackground academicBackground, String homepage, String lab,
+                      String profileImage) {
         this.name = name;
         this.major = major;
         this.phoneN = phoneN;
@@ -74,8 +75,8 @@ public class ProfessorTypes {
         this.profileImage = profileImage;
     }
 
-    public static ProfessorTypes of(ProfessorReqDto dto) {
-        return ProfessorTypes.builder()
+    public static Professor of(ProfessorReqDto dto) {
+        return Professor.builder()
                 .name(dto.getName())
                 .major(dto.getMajor())
                 .phoneN(dto.getPhoneN())

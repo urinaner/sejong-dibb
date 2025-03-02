@@ -1,19 +1,21 @@
 package org.example.backend.common.aop.logging;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
+import org.example.backend.log.domain.RequestResponseLog;
+import org.example.backend.log.service.BulkLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,70 +25,144 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class LoggingAspect {
 
-    private static final List<String> excludeNames = Arrays.asList("image", "images", "request");
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final List<String> EXCLUDE_NAMES = Arrays.asList("fileList", "request");
+    private static final int MAX_RESPONSE_BODY_LENGTH = 65000;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut("execution(public * org.example.backend.*.controller.*.*(..))")
-    private void allPresentation() {
-    }
+    private final BulkLogManager bulkLogManager;
 
-    @Pointcut("@annotation(org.example.backend.common.aop.logging.Logging)")
-    private void logging() {
-    }
+    @Around("execution(public * org.example.backend.*.controller.*.*(..))")
+    public Object logRequestResponse(ProceedingJoinPoint pjp) throws Throwable {
 
-    @Before("allPresentation() && logging()")
-    public void requestLogging(final JoinPoint joinPoint) {
-        final HttpServletRequest request = getRequest();
-        final Map<String, Object> args = getSpecificParameters(joinPoint);
+        HttpServletRequest request = getRequest();
+        Map<String, Object> requestParams = getFilteredParameters(pjp);
+        String clientIp = getClientIp(request);
 
-        printRequestLog(request, args);
+        printRequestLog(request, requestParams);
+
+        RequestResponseLog logEntry = new RequestResponseLog();
+        logEntry.setMethod(request.getMethod());
+        logEntry.setPath(request.getRequestURI());
+        logEntry.setClientIp(clientIp);
+        logEntry.setCreatedAt(LocalDateTime.now());
+        try {
+            logEntry.setRequestBody(objectMapper.writeValueAsString(requestParams));
+        } catch (JsonProcessingException e) {
+            logEntry.setRequestBody("null");
+        }
+
+        Object result = null;
+        try {
+            result = pjp.proceed();
+
+            if (result instanceof ResponseEntity<?> responseEntity) {
+                String status = responseEntity.getStatusCode().toString();
+                Object body = responseEntity.getBody();
+
+                String responseBodyRaw = objectMapper.writeValueAsString(body);
+                String truncated = limitStringLength(responseBodyRaw);
+
+                log.info("[RESPONSE {}] [IP {}] {}", status, logEntry.getClientIp(), truncated);
+
+                logEntry.setResponseStatus(status);
+                logEntry.setResponseBody(truncated);
+            } else {
+                logEntry.setResponseStatus("200 (non-ResponseEntity)");
+                String responseStr = objectMapper.writeValueAsString(result);
+                logEntry.setResponseBody(limitStringLength(responseStr));
+            }
+
+            return result;
+
+        } catch (Exception ex) {
+            log.error("[EXCEPTION] [IP {}] {}", logEntry.getClientIp(), ex.getMessage(), ex);
+
+            logEntry.setResponseStatus("ERROR");
+            logEntry.setResponseBody("Exception: " + ex.getMessage());
+
+            throw ex;
+        } finally {
+            bulkLogManager.addLog(logEntry);
+        }
     }
 
     private HttpServletRequest getRequest() {
-        final ServletRequestAttributes servletRequestAttributes
-                = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return servletRequestAttributes.getRequest();
+        return ((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    private Map<String, Object> getSpecificParameters(final JoinPoint joinPoint) {
-        final CodeSignature codeSignature = (CodeSignature) joinPoint.getSignature();
-        final String[] parameterNames = codeSignature.getParameterNames();
-        final Object[] args = joinPoint.getArgs();
+    private Map<String, Object> getFilteredParameters(ProceedingJoinPoint pjp) {
+        CodeSignature codeSignature = (CodeSignature) pjp.getSignature();
+        String[] parameterNames = codeSignature.getParameterNames();
+        Object[] args = pjp.getArgs();
 
-        final Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
-            if (!excludeNames.contains(parameterNames[i])) {
-                params.put(parameterNames[i], args[i]);
+            String paramName = parameterNames[i];
+            Object paramValue = args[i];
+
+            if (EXCLUDE_NAMES.contains(paramName)) {
+                continue;
+            }
+
+            if (paramValue instanceof org.springframework.web.multipart.MultipartFile file) {
+                params.put(paramName, "[MultipartFile] " + file.getOriginalFilename());
+
+            } else if (paramValue instanceof org.springframework.web.multipart.MultipartFile[] fileArray) {
+                List<String> filenames = Arrays.stream(fileArray)
+                        .map(org.springframework.web.multipart.MultipartFile::getOriginalFilename)
+                        .toList();
+                params.put(paramName, "[MultipartFile[]] " + filenames);
+
+            } else if (paramValue instanceof java.io.InputStream) {
+                params.put(paramName, "[InputStream]");
+
+            } else if (paramValue instanceof java.util.Collection<?> collection) {
+                List<Object> mappedList = collection.stream()
+                        .map(item -> {
+                            if (item instanceof org.springframework.web.multipart.MultipartFile mf) {
+                                return "[MultipartFile] " + mf.getOriginalFilename();
+                            }
+                            return item;
+                        })
+                        .toList();
+                params.put(paramName, mappedList);
+
+            } else {
+                params.put(paramName, paramValue);
             }
         }
-
         return params;
     }
 
-    private void printRequestLog(final HttpServletRequest request, final Object value) {
+
+    private void printRequestLog(HttpServletRequest request, Map<String, Object> filteredParams) {
         try {
             log.info("[REQUEST {}] [PATH {}] {}",
-                    request.getMethod(), request.getRequestURI(), objectMapper.writeValueAsString(value));
-        } catch (final JsonProcessingException e) {
-            log.warn("[LOGGING ERROR] Request 로깅에 실패했습니다");
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    objectMapper.writeValueAsString(filteredParams));
+        } catch (JsonProcessingException e) {
+            log.warn("[LOGGING ERROR] Request 로깅에 실패했습니다", e);
         }
     }
 
-    @AfterReturning(value = "allPresentation() && logging()", returning = "responseEntity")
-    public void requestLogging(final ResponseEntity<?> responseEntity) {
-        printResponseLog(responseEntity);
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 
-    private void printResponseLog(final ResponseEntity<?> responseEntity) {
-        try {
-            final String responseStatus = responseEntity.getStatusCode().toString();
-            log.info("[RESPONSE {}] {}", responseStatus, objectMapper.writeValueAsString(responseEntity.getBody()));
-        } catch (final JsonProcessingException e) {
-            log.warn("[LOGGING ERROR] Response 로깅에 실패했습니다");
+    private String limitStringLength(String str) {
+        if (str != null && str.length() > MAX_RESPONSE_BODY_LENGTH) {
+            return str.substring(0, MAX_RESPONSE_BODY_LENGTH - 3) + "...";
         }
+        return str;
     }
 }

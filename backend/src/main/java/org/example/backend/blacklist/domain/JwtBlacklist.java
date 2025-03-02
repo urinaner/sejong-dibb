@@ -26,7 +26,7 @@ public class JwtBlacklist {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @Column(nullable = false)
+    @Column(name = "expired_time", nullable = false)
     private Date expiredTime;
 
     @Builder

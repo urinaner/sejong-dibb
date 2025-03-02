@@ -11,8 +11,11 @@ import org.example.backend.news.domain.dto.NewsReqDto;
 import org.example.backend.news.domain.dto.NewsResDto;
 import org.example.backend.news.service.NewsService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,11 +52,24 @@ public class NewsController {
         return ResponseDto.ok(newsList.getNumber(), newsList.getTotalPages(), newsList.getContent());
     }
 
-    @Operation(summary = "단일 뉴스 조회 API", description = "단일 뉴스의 리스트 반환")
+    @Operation(summary = "단일 뉴스 조회 API", description = "단일 뉴스의 상세 정보 반환")
     @GetMapping("/{newsId}")
-    public ResponseEntity<NewsResDto> getNews(@PathVariable(name = "newsId") Long newsId) {
+    public ResponseEntity<NewsResDto> getNews(
+            @PathVariable(name = "newsId") Long newsId,
+            @CookieValue(value = "newsView", defaultValue = "") String newsViewCookie
+    ) {
+        String updatedCookieValue = newsService.incrementViewCount(newsId, newsViewCookie);
+
         NewsResDto newsResDto = newsService.getNews(newsId);
-        return new ResponseEntity<>(newsResDto, HttpStatus.OK);
+
+        ResponseCookie cookie = ResponseCookie.from("newsView", updatedCookieValue)
+                .path("/")
+                .maxAge(60 * 60 * 24)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(newsResDto);
     }
 
     @Operation(summary = "뉴스 정보 업데이트 API", description = "뉴스 정보 업데이트")

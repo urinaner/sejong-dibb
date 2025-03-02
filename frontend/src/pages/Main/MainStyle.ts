@@ -191,7 +191,7 @@ export const ContentWrapper = styled.section`
   margin: 48px auto;
   padding: 0 20px;
   max-width: 1200px;
-  gap: 24px;
+  gap: 30px;
 
   ${media.tablet} {
     margin: 32px auto;

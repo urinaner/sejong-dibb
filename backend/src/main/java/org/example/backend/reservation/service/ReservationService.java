@@ -36,11 +36,10 @@ public class ReservationService {
     public ReservationResDto createReservation(Long seminarRoomId, ReservationCreateDto reqDto, String loginId) {
         validateReservationRequest(reqDto);
         Room room = getSeminarRoomById(seminarRoomId);
-        Users user = getUserByLoginId(loginId);
 
         validateReservation(reqDto, seminarRoomId);
 
-        Reservation reservation = Reservation.of(reqDto, room, user);
+        Reservation reservation = Reservation.of(reqDto, room, loginId);
         reservationRepository.save(reservation);
         return ReservationResDto.of(reservation);
 
@@ -68,7 +67,7 @@ public class ReservationService {
     public void deleteReservation(Long id, String loginId) {
         Reservation reservation = getReservationById(id);
 
-        if (!reservation.getUsers().getLoginId().equals(loginId)) {
+        if (!reservation.getLoginId().equals(loginId)) {
             throw new ReservationException(FORBIDDEN_OPERATION);
         }
         reservationRepository.delete(reservation);
@@ -79,7 +78,7 @@ public class ReservationService {
     }
 
     private Room getSeminarRoomById(Long seminarRoomId) {
-        return roomRepository.findById(seminarRoomId)
+        return roomRepository.findRoomForUpdate(seminarRoomId)
                 .orElseThrow(() -> new RoomException(NOT_FOUND_SEMINAR_ROOM));
     }
 
@@ -97,13 +96,13 @@ public class ReservationService {
         }
     }
     private void validateReservation(ReservationCreateDto reqDto, Long seminarRoomId) {
-        boolean hasReservationConflict = reservationRepository.existsByTimePeriod(
+        boolean hasReservation = reservationRepository.existsByTimePeriod(
                 seminarRoomId,
                 reqDto.getStartTime(),
                 reqDto.getEndTime()
         );
 
-        if (hasReservationConflict) {
+        if (hasReservation) {
             throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
     }

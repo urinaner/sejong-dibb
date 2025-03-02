@@ -57,10 +57,16 @@ const TopHeader: React.FC = () => {
   return (
     <TopHeaderContainer>
       <TopHeaderInner>
-        <TopHeaderTitle>SEJONG UNIVERSITY</TopHeaderTitle>
+        <TopHeaderTitle
+          href="http://sejong.ac.kr/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          SEJONG UNIVERSITY
+        </TopHeaderTitle>
         <TopNavList>
           <TopNavItem>
-            <a href="http://sejong.ac.kr/">HOME</a>
+            <a href="/">HOME</a>
           </TopNavItem>
           <TopNavItem>
             <a href="/about/organization">CONTACT</a>

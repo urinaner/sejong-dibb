@@ -73,6 +73,24 @@ public class NewsService {
         return newsRepository.findAll(pageable)
                 .map(NewsResDto::of);
     }
+    @Transactional
+    public String incrementViewCount(Long newsId, String newsViewCookie) {
+        if (newsViewCookie == null || !newsViewCookie.contains("[" + newsId + "]")) {
+            readCount(newsId);
+
+            if (newsViewCookie == null || newsViewCookie.isEmpty()) {
+                return "[" + newsId + "]";
+            }
+            return newsViewCookie + "_[" + newsId + "]";
+        }
+
+        return newsViewCookie;
+    }
+
+    @Transactional
+    public void readCount(Long newsId) {
+        newsRepository.incrementViewCount(newsId);
+    }
 
     public Page<NewsResDto> searchNews(String keyword, Pageable pageable) {
         return newsRepository.searchByKeyword(keyword, pageable)

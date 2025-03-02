@@ -4,6 +4,7 @@ import org.example.backend.news.domain.entity.News;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,4 +26,8 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     """,
     nativeQuery = true)
     Page<News> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE News n SET n.view = n.view + 1 WHERE n.id = :newsId")
+    void incrementViewCount(@Param("newsId") Long newsId);
 }

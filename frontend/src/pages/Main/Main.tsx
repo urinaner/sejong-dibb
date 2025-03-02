@@ -6,19 +6,23 @@ import { ShortcutSection } from './components/ShortcutSection';
 import { PaperSection } from './components/PaperSection';
 import { NewsSection } from './components/NewsSection';
 import Container from '../../styles/Container';
+import ButtonListSection from './components/ButtonListSection/ButtonListSection';
+import VerticalButtonSection from './components/VerticalButtonSection/VerticalButtonSection';
 
 function Main(): JSX.Element {
   return (
     <>
+      <ButtonListSection />
       <Container>
         <ContentWrapper>
           <AnnouncementAndSeminar>
             <AnnouncementSection />
-            <SeminarSection />
+            {/* <SeminarSection /> */}
           </AnnouncementAndSeminar>
-          <ShortcutSection />
+          {/* <ShortcutSection /> */}
+          <VerticalButtonSection />
         </ContentWrapper>
-        <PaperSection />
+        {/* <PaperSection /> */}
         <NewsSection />
       </Container>
     </>

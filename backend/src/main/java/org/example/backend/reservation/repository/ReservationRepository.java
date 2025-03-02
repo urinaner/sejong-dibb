@@ -26,11 +26,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     );
 
     @Query("SELECT r FROM Reservation r " +
-            "WHERE r.room.id = :seminarRoomId ")
-    List<Reservation> finaReservationsBySeminarRoom(
-            @Param("seminarRoomId")Long seminarRoomId);
-
-    @Query("SELECT r FROM Reservation r " +
             "WHERE r.room.id = :roomId " +
             "AND DATE_FORMAT(r.startTime, '%Y-%m') = :yearMonth " +
             "ORDER BY r.startTime")
