@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
-import org.example.backend.professor.domain.entity.ProfessorTypes;
+import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.repository.ProfessorRepository;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 import org.example.backend.thesis.domain.dto.ThesisResDto;
@@ -35,7 +35,7 @@ public class ThesisService {
 
     @Transactional
     public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
-        ProfessorTypes professor = findProfessorById(thesisReqDto.getProfessorId());
+        Professor professor = findProfessorById(thesisReqDto.getProfessorId());
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
@@ -49,7 +49,7 @@ public class ThesisService {
     }
 
 
-    private ProfessorTypes findProfessorById(Long professorId) {
+    private Professor findProfessorById(Long professorId) {
         return professorRepository.findById(professorId).orElse(null);
     }
 
@@ -71,7 +71,7 @@ public class ThesisService {
         }
 
         Thesis thesis = findThesisById(thesisId);
-        ProfessorTypes professor = findProfessorById(thesisReqDto.getProfessorId());
+        Professor professor = findProfessorById(thesisReqDto.getProfessorId());
         thesis.update(thesisReqDto, professor);
         return ThesisResDto.of(thesis);
     }
@@ -101,7 +101,7 @@ public class ThesisService {
             return Page.empty(pageable);
         }
 
-        // Step2) Fetch Join으로 실제 Thesis + ProfessorTypes 로딩
+        // Step2) Fetch Join으로 실제 Thesis + Professor 로딩
         List<Thesis> thesisList = thesisRepository.findAllByIdInWithProfessor(idPage.getContent());
         List<ThesisResDto> dtoList = thesisList.stream()
                 .map(ThesisResDto::of)

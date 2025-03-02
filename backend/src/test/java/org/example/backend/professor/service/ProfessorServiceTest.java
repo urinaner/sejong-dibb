@@ -3,7 +3,7 @@ package org.example.backend.professor.service;
 import org.example.backend.IntegrationTestSupport;
 import org.example.backend.professor.domain.dto.ProfessorReqDto;
 import org.example.backend.professor.domain.dto.ProfessorResDto;
-import org.example.backend.professor.domain.entity.ProfessorTypes;
+import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.professor.exception.ProfessorException;
 import org.example.backend.professor.exception.ProfessorExceptionType;
 import org.example.backend.professor.repository.ProfessorRepository;
@@ -47,7 +47,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
         Long savedProfessorId = professorService.saveProfessor(dto, null);
 
         // then
-        Optional<ProfessorTypes> professor = professorRepository.findById(savedProfessorId);
+        Optional<Professor> professor = professorRepository.findById(savedProfessorId);
         assertTrue(professor.isPresent());
         assertThat(professor.get())
                 .extracting("name", "email")

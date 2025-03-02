@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.professor.domain.entity.AcademicBackground;
-import org.example.backend.professor.domain.entity.ProfessorTypes;
+import org.example.backend.professor.domain.entity.Professor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -55,7 +55,7 @@ public class ProfessorResDto {
         this.profileImage = profileImage;
     }
 
-    public static ProfessorResDto of(ProfessorTypes professor) {
+    public static ProfessorResDto of(Professor professor) {
         return ProfessorResDto.builder()
                 .id(professor.getId())
                 .name(professor.getName())

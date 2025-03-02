@@ -28,7 +28,7 @@ public interface ThesisRepository extends JpaRepository<Thesis, Long> {
             nativeQuery = true)
     Page<Long> searchThesisIdsByFulltext(@Param("keyword") String keyword, Pageable pageable);
 
-    // 2) Fetch Join으로 Thesis + ProfessorTypes (N + 1 문제 해결)
+    // 2) Fetch Join으로 Thesis + Professor (N + 1 문제 해결)
     @Query("""
         SELECT t
           FROM Thesis t
