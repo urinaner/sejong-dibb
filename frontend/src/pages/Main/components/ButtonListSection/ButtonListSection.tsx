@@ -1,3 +1,4 @@
+// ButtonListSection.tsx
 import React from 'react';
 import {
   ButtonListContainer,
@@ -7,27 +8,68 @@ import {
   SeminarInfoTitle,
   SeminarInfoSubtitle,
   InfoIconWrapper,
+  SeminarInfoTop,
 } from './ButtonListSectionStyle';
-
 import { buttonItems } from './data';
+import { useSeminarList } from '../../../../hooks/queries/useSeminar';
 
 const ButtonListSection: React.FC = () => {
+  const {
+    data: seminarData,
+    isLoading: isSeminarLoading,
+    error: seminarError,
+  } = useSeminarList({
+    page: 0,
+    size: 1,
+    sortDirection: 'DESC',
+  });
+
   return (
     <ButtonListContainer>
       <ButtonListList>
         {buttonItems.map((item, index) => {
           if (item.isSeminar) {
-            // 마지막 '세미나 정보' 아이템
             return (
               <ButtonListItem key={index} isSeminar>
                 <SeminarInfoWrapper>
-                  <SeminarInfoTitle>세미나</SeminarInfoTitle>
-                  <SeminarInfoSubtitle>최신 세미나 제목</SeminarInfoSubtitle>
-                  <SeminarInfoSubtitle>최신 세미나 일정</SeminarInfoSubtitle>
-                  <SeminarInfoSubtitle>최신 세미나 담당자</SeminarInfoSubtitle>
-                  <SeminarInfoSubtitle>
-                    최신 세미나 진행 장소
-                  </SeminarInfoSubtitle>
+                  <SeminarInfoTop>{'예정된 세미나'}</SeminarInfoTop>
+                  {isSeminarLoading ? (
+                    <div>세미나 로딩중...</div>
+                  ) : seminarError ? (
+                    <div>세미나 정보를 불러오지 못했습니다.</div>
+                  ) : seminarData &&
+                    seminarData.data &&
+                    seminarData.data.length > 0 ? (
+                    <>
+                      <SeminarInfoTitle>
+                        {seminarData.data[0].name}
+                      </SeminarInfoTitle>
+                      <SeminarInfoSubtitle>
+                        {'시간 : '}
+                        {seminarData.data[0].startTime}
+                        {' ~ '}
+                        {seminarData.data[0].endTime}
+                      </SeminarInfoSubtitle>
+                      {seminarData.data[0].writer && (
+                        <SeminarInfoSubtitle>
+                          {'예약자 : '}
+                          {seminarData.data[0].writer}
+                        </SeminarInfoSubtitle>
+                      )}
+                      {seminarData.data[0].place && (
+                        <SeminarInfoSubtitle>
+                          {'장소 : '}
+                          {seminarData.data[0].place}
+                        </SeminarInfoSubtitle>
+                      )}
+                      <SeminarInfoSubtitle>
+                        {'부서 : '}
+                        {seminarData.data[0].company}
+                      </SeminarInfoSubtitle>
+                    </>
+                  ) : (
+                    <div>세미나 정보가 없습니다.</div>
+                  )}
                   <InfoIconWrapper>
                     <span>i</span>
                   </InfoIconWrapper>
@@ -36,7 +78,7 @@ const ButtonListSection: React.FC = () => {
             );
           }
 
-          // 일반 버튼 아이템
+          // 일반 버튼 아이템인 경우
           return (
             <ButtonListItem key={index} isSeminar={item.isSeminar}>
               <a href={item.link} rel="noopener noreferrer">

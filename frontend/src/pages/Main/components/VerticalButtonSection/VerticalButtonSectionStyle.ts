@@ -5,6 +5,11 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
   flex: 0.6;
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 
 export const CardButton = styled.a`
@@ -13,7 +18,7 @@ export const CardButton = styled.a`
   background-color: #e9dfda;
   border-radius: 8px;
   padding: 1.5rem;
-  flex: 1;
+  height: 140px;
   text-decoration: none;
   color: #333;
   transition: background-color 0.2s ease;
@@ -23,7 +28,7 @@ export const CardButton = styled.a`
   }
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    height: 80px;
   }
 `;
 
@@ -57,7 +62,8 @@ export const SubText = styled.p`
   color: #555;
 
   @media (max-width: 768px) {
-    font-size: 0.85rem;
+    /* font-size: 0.85rem; */
+    display: none;
   }
 `;
 
@@ -67,6 +73,7 @@ export const ArrowWrapper = styled.div`
   color: #a30027;
 
   @media (max-width: 768px) {
-    font-size: 1.2rem;
+    /* font-size: 1.2rem; */
+    display: none;
   }
 `;
