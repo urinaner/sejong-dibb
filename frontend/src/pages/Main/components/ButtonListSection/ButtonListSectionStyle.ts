@@ -112,6 +112,10 @@ export const SeminarInfoWrapper = styled.div`
   padding: 2rem;
   height: 100%;
 `;
+export const SeminarInfoTop = styled.h3`
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+`;
 
 export const SeminarInfoTitle = styled.h3`
   font-size: 1.5rem;
