@@ -51,9 +51,6 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
 
-  const IMAGE_BASE_URL =
-    'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/news';
-
   useEffect(() => {
     const handleResize = () => {
       const newItemsPerView = getItemsPerView();
@@ -109,7 +106,6 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
                 createDate={item.createDate}
                 image={item.image}
                 view={item.view || 0}
-                imageBaseUrl={IMAGE_BASE_URL}
                 itemsPerView={itemsPerView}
                 onClick={onNewsClick}
               />
