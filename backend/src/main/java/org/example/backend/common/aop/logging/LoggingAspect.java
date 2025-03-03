@@ -29,7 +29,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class LoggingAspect {
 
     private static final List<String> EXCLUDE_NAMES = Arrays.asList("fileList", "request");
-    private static final int MAX_RESPONSE_BODY_LENGTH = 65000;
+    private static final int MAX_RESPONSE_BODY_LENGTH = 10000;
+    private static final int MAX_REQUEST_BODY_LENGTH = 255;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -50,7 +51,8 @@ public class LoggingAspect {
         logEntry.setClientIp(clientIp);
         logEntry.setCreatedAt(LocalDateTime.now());
         try {
-            logEntry.setRequestBody(objectMapper.writeValueAsString(requestParams));
+            String requestBodyRaw = objectMapper.writeValueAsString(requestParams);
+            logEntry.setRequestBody(limitStringLength(requestBodyRaw, MAX_REQUEST_BODY_LENGTH));
         } catch (JsonProcessingException e) {
             logEntry.setRequestBody("null");
         }
@@ -64,7 +66,7 @@ public class LoggingAspect {
                 Object body = responseEntity.getBody();
 
                 String responseBodyRaw = objectMapper.writeValueAsString(body);
-                String truncated = limitStringLength(responseBodyRaw);
+                String truncated = limitStringLength(responseBodyRaw, MAX_RESPONSE_BODY_LENGTH);
 
                 log.info("[RESPONSE {}] [IP {}] {}", status, logEntry.getClientIp(), truncated);
 
@@ -73,7 +75,7 @@ public class LoggingAspect {
             } else {
                 logEntry.setResponseStatus("200 (non-ResponseEntity)");
                 String responseStr = objectMapper.writeValueAsString(result);
-                logEntry.setResponseBody(limitStringLength(responseStr));
+                logEntry.setResponseBody(limitStringLength(responseStr, MAX_RESPONSE_BODY_LENGTH));
             }
 
             return result;
@@ -139,7 +141,6 @@ public class LoggingAspect {
         return params;
     }
 
-
     private void printRequestLog(HttpServletRequest request, Map<String, Object> filteredParams) {
         try {
             log.info("[REQUEST {}] [PATH {}] {}",
@@ -159,10 +160,11 @@ public class LoggingAspect {
         return ip;
     }
 
-    private String limitStringLength(String str) {
-        if (str != null && str.length() > MAX_RESPONSE_BODY_LENGTH) {
-            return str.substring(0, MAX_RESPONSE_BODY_LENGTH - 3) + "...";
+    private String limitStringLength(String str, int maxLength) {
+        if (str != null && str.length() > maxLength) {
+            return str.substring(0, maxLength - 3) + "...";
         }
         return str;
     }
+
 }
