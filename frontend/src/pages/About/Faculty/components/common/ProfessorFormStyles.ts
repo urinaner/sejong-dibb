@@ -185,19 +185,23 @@ export const HelperText = styled.p`
     font-size: 0.75rem;
   }
 `;
-
 export const ImageUploadContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: flex-start;
 
+  /* 태블릿 환경을 위한 미디어 쿼리 추가 */
+  ${media.tablet} {
+    gap: 0.85rem;
+    align-items: center;
+  }
+
   ${media.mobile} {
     gap: 0.75rem;
     align-items: center;
   }
 `;
-
 export const ImagePreviewContainer = styled.div`
   width: 240px;
   height: 320px;
@@ -212,8 +216,16 @@ export const ImagePreviewContainer = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    display: block;
+    object-fit: contain; /* cover에서 contain으로 변경 */
     transition: transform 0.2s ease-in-out;
+  }
+
+  /* 태블릿 환경을 위한 미디어 쿼리 추가 */
+  ${media.tablet} {
+    width: 220px;
+    height: 300px;
+    align-self: center;
   }
 
   ${media.mobile} {
@@ -242,7 +254,6 @@ export const FallbackThumbnail = styled.div`
     padding: 0 1rem;
   }
 `;
-
 export const ImageUploadButton = styled.label`
   display: inline-flex;
   align-items: center;
@@ -267,12 +278,17 @@ export const ImageUploadButton = styled.label`
     display: none;
   }
 
+  /* 태블릿 환경을 위한 미디어 쿼리 추가 */
+  ${media.tablet} {
+    width: 80%;
+    justify-content: center;
+  }
+
   ${media.mobile} {
     width: 100%;
     justify-content: center;
   }
 `;
-
 // 학력 정보 관련 스타일 추가
 export const AcademicDegreesContainer = styled.div`
   display: flex;

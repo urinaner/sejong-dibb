@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   AlertTriangle,
   Mail,
@@ -284,6 +284,10 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
       console.error('Form submission error:', error);
     }
   };
+
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
 
   return (
     <S.Form onSubmit={handleSubmit}>
