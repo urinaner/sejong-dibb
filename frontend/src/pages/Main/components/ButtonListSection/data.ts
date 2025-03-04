@@ -41,7 +41,7 @@ export const buttonItems: ButtonItem[] = [
   {
     title: '학생회 안내',
     icon: StudentIcon,
-    link: 'https://ibb.sejong.ac.kr/about/studentcouncil',
+    link: '/about/studentcouncil',
     isSeminar: false,
   },
   {

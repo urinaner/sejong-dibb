@@ -1,4 +1,3 @@
-// ButtonListSection.tsx
 import React from 'react';
 import {
   ButtonListContainer,
@@ -24,13 +23,24 @@ const ButtonListSection: React.FC = () => {
     sortDirection: 'DESC',
   });
 
+  const handleSeminarClick = () => {
+    if (seminarData && seminarData.data && seminarData.data.length > 0) {
+      window.location.href = `/news/seminar/${seminarData.data[0].id}`;
+    }
+  };
+
   return (
     <ButtonListContainer>
       <ButtonListList>
         {buttonItems.map((item, index) => {
           if (item.isSeminar) {
             return (
-              <ButtonListItem key={index} isSeminar>
+              <ButtonListItem
+                key={index}
+                isSeminar
+                onClick={handleSeminarClick}
+                style={{ cursor: 'pointer' }}
+              >
                 <SeminarInfoWrapper>
                   <SeminarInfoTop>{'예정된 세미나'}</SeminarInfoTop>
                   {isSeminarLoading ? (
@@ -46,8 +56,7 @@ const ButtonListSection: React.FC = () => {
                       </SeminarInfoTitle>
                       <SeminarInfoSubtitle>
                         {'시간 : '}
-                        {seminarData.data[0].startTime}
-                        {' ~ '}
+                        {seminarData.data[0].startTime} ~{' '}
                         {seminarData.data[0].endTime}
                       </SeminarInfoSubtitle>
                       {seminarData.data[0].writer && (
@@ -78,13 +87,10 @@ const ButtonListSection: React.FC = () => {
             );
           }
 
-          // 일반 버튼 아이템인 경우
           return (
             <ButtonListItem key={index} isSeminar={item.isSeminar}>
               <a href={item.link} rel="noopener noreferrer">
-                {React.createElement(item.icon, {
-                  size: 0,
-                })}
+                {React.createElement(item.icon, { size: 0 })}
                 <span>{item.title}</span>
               </a>
             </ButtonListItem>
