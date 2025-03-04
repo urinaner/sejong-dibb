@@ -57,7 +57,6 @@ export const NewsCard = styled.div`
 export const NewsImage = styled.div<{ imageUrl: string }>`
   width: 200px;
   min-width: 200px;
-  height: 150px;
   background-image: url(${(props) => props.imageUrl});
   background-size: contain;
   background-repeat: no-repeat;
