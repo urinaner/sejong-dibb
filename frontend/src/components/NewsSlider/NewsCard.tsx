@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 import { Eye } from 'lucide-react'; // 조회수 아이콘 추가
 import {
@@ -17,19 +17,18 @@ interface NewsCardProps {
   createDate: string;
   image: string;
   view: number;
-  imageBaseUrl: string;
   itemsPerView: number; // 추가
   onClick: (id: number) => void;
 }
 
-interface NewsCardProps {
-  id: number;
-  title: string;
-  createDate: string;
-  image: string;
-  view: number; // 조회수 추가
-  onClick: (id: number) => void;
-}
+// interface NewsCardProps {
+//   id: number;
+//   title: string;
+//   createDate: string;
+//   image: string;
+//   view: number; // 조회수 추가
+//   onClick: (id: number) => void;
+// }
 
 const NewsCard: React.FC<NewsCardProps> = ({
   id,
@@ -40,10 +39,16 @@ const NewsCard: React.FC<NewsCardProps> = ({
   onClick,
   itemsPerView,
 }) => {
+  const encodedImageUrl = encodeURI(image);
+
+  // useEffect(() => {
+  //   console.log('Encoded image URL:', encodedImageUrl);
+  // }, [encodedImageUrl]);
+
   return (
     <NewsCardWrapper itemsPerView={itemsPerView} onClick={() => onClick?.(id)}>
       <NewsImage
-        imageUrl={`${image}`}
+        imageUrl={encodedImageUrl}
         onError={(e: React.SyntheticEvent<HTMLDivElement>) => {
           e.currentTarget.style.backgroundColor = '#f1f1f1';
           e.currentTarget.innerHTML = '이미지를 불러올 수 없습니다';

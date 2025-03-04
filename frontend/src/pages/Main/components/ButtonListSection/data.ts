@@ -23,25 +23,25 @@ export const buttonItems: ButtonItem[] = [
   {
     title: '세종대학교',
     icon: UniversityIcon,
-    link: '/',
+    link: 'http://sejong.ac.kr/',
     isSeminar: false,
   },
   {
     title: '장학안내',
     icon: ScholarshipIcon,
-    link: '/',
+    link: 'http://www.sejong.ac.kr/unilife/newscholarship.html',
     isSeminar: false,
   },
   {
     title: '포털 시스템',
     icon: PortalIcon,
-    link: '/',
+    link: 'https://portal.sejong.ac.kr',
     isSeminar: false,
   },
   {
     title: '학생회 안내',
     icon: StudentIcon,
-    link: '/',
+    link: '/about/studentcouncil',
     isSeminar: false,
   },
   {

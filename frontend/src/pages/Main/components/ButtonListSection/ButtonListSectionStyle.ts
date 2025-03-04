@@ -42,6 +42,10 @@ export const ButtonListItem = styled.li<ButtonListItemProps>`
       position: relative;
       flex: 1.5;
       display: block;
+
+      &:hover {
+        background-color: #ae283f;
+      }
     `}
 
   a {
@@ -111,6 +115,10 @@ export const SeminarInfoWrapper = styled.div`
   justify-content: center;
   padding: 2rem;
   height: 100%;
+`;
+export const SeminarInfoTop = styled.h3`
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
 `;
 
 export const SeminarInfoTitle = styled.h3`
