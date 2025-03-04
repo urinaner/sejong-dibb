@@ -5,23 +5,6 @@ const media = {
   tablet: '@media(max-width: 1024px)',
 };
 
-export const Container = styled.div`
-  max-width: 900px;
-  width: 80vw;
-  margin: 0;
-  padding: 40px 20px;
-
-  ${media.tablet} {
-    width: 90%;
-    padding: 30px 15px;
-  }
-
-  ${media.mobile} {
-    width: 95%;
-    padding: 20px 10px;
-  }
-`;
-
 export const ContentContainer = styled.div`
   max-width: 1200px;
   width: 100%;

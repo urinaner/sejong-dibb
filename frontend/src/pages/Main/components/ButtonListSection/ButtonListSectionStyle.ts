@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-
+import { media } from '../../../../styles/media';
 export const ButtonListContainer = styled.section`
   width: 100%;
   margin: 0 auto;
@@ -11,10 +11,12 @@ export const ButtonListList = styled.ul`
   align-items: stretch;
   list-style: none;
   margin: 0;
-  padding: 0;
-
+  ${media.tablet} {
+    margin-top: 10px;
+  }
   @media (max-width: 768px) {
     flex-wrap: wrap;
+    padding-top: 10px;
   }
 `;
 

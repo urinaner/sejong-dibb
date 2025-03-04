@@ -11,6 +11,7 @@ import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import 'react-quill/dist/quill.snow.css';
 import useNotice from '../../../hooks/queries/useNotice';
+import Container from '../../../styles/Container';
 
 interface BoardDetail {
   id: number;
@@ -213,7 +214,7 @@ const NoticeDetail: React.FC = () => {
   }
 
   return (
-    <S.Container>
+    <Container>
       <S.ContentContainer>
         <S.Header>
           <S.Title>{post.title}</S.Title>
@@ -299,7 +300,7 @@ const NoticeDetail: React.FC = () => {
           )}
         </S.ButtonGroup>
       </S.ContentContainer>
-    </S.Container>
+    </Container>
   );
 };
 
