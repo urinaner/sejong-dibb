@@ -5,10 +5,12 @@ import styled from 'styled-components';
 import { SEJONG_COLORS } from '../../../../../constants/colors';
 import { Professor } from '../../types';
 
+// 미디어 쿼리 정의 - 태블릿 범위를 더 정확하게 지정
 const media = {
   mobile: '@media(max-width: 768px)',
-  tablet: '@media(max-width: 1024px)',
-  desktop: '@media(min-width: 1025px)',
+  tablet: '@media(min-width: 769px) and (max-width: 1024px)',
+  smallDesktop: '@media(min-width: 1025px) and (max-width: 1280px)',
+  desktop: '@media(min-width: 1281px)',
 };
 
 const Card = styled.div`
@@ -25,6 +27,12 @@ const Card = styled.div`
   &:hover {
     box-shadow: 0 4px 12px rgba(163, 20, 50, 0.1);
     transform: translateY(-2px);
+  }
+
+  // 태블릿에서의 레이아웃 조정
+  ${media.tablet} {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   ${media.mobile} {
@@ -45,16 +53,24 @@ const ImageSection = styled.div`
   border-right: 1px solid ${(props) => props.theme.colors.grey[200]};
   overflow: hidden;
 
-  ${media.mobile} {
-    width: 100%;
-    height: 400px;
-    border-right: none;
-    border-bottom: 1px solid ${(props) => props.theme.colors.grey[200]};
+  ${media.tablet} {
+    width: 220px;
+    height: auto;
+    min-height: 300px;
+    padding: 15px;
   }
 
-  ${media.tablet} {
-    width: 280px;
-    height: 360px;
+  ${media.smallDesktop} {
+    width: 240px;
+    padding: 18px;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-right: none;
+    border-bottom: 1px solid ${(props) => props.theme.colors.grey[200]};
   }
 `;
 
@@ -68,12 +84,17 @@ const ProfileImage = styled.img`
   transition: transform 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-  ${media.mobile} {
-    width: 300px;
-    height: 300px;
+  ${media.tablet} {
+    width: 180px;
+    height: 240px;
   }
 
-  ${media.tablet} {
+  ${media.smallDesktop} {
+    width: 200px;
+    height: 260px;
+  }
+
+  ${media.mobile} {
     width: 240px;
     height: 300px;
   }
@@ -88,6 +109,19 @@ const InfoSection = styled.div`
   padding: 28px;
   display: flex;
   background: white;
+  overflow: visible;
+  word-break: break-word;
+
+  ${media.tablet} {
+    padding: 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  ${media.smallDesktop} {
+    padding: 22px;
+    gap: 18px;
+  }
 
   ${media.mobile} {
     flex-direction: column;
@@ -99,7 +133,18 @@ const InfoSection = styled.div`
 const MainInfo = styled.div`
   flex: 1;
   margin-right: 32px;
-  min-width: 220px;
+  min-width: 200px;
+
+  ${media.tablet} {
+    margin-right: 0;
+    margin-bottom: 15px;
+    min-width: auto;
+  }
+
+  ${media.smallDesktop} {
+    margin-right: 20px;
+    min-width: 180px;
+  }
 
   ${media.mobile} {
     margin-right: 0;
@@ -114,6 +159,11 @@ const ProfessorName = styled.h2`
   color: ${(props) => props.theme.colors.grey[500]};
   margin: 0 0 12px 0;
 
+  ${media.tablet} {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
   ${media.mobile} {
     font-size: 22px;
     margin-bottom: 8px;
@@ -126,6 +176,11 @@ const Position = styled.p`
   margin: 0 0 6px 0;
   font-weight: 500;
 
+  ${media.tablet} {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
   ${media.mobile} {
     font-size: 15px;
   }
@@ -135,6 +190,11 @@ const Major = styled.p`
   font-size: 16px;
   color: ${(props) => props.theme.colors.grey[400]};
   margin: 0 0 20px 0;
+
+  ${media.tablet} {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
 
   ${media.mobile} {
     font-size: 14px;
@@ -148,6 +208,17 @@ const ContactInfo = styled.div`
   background: ${(props) => props.theme.colors.grey[50]};
   padding: 20px;
   border-radius: 8px;
+
+  ${media.tablet} {
+    min-width: auto;
+    width: 100%;
+    padding: 16px;
+  }
+
+  ${media.smallDesktop} {
+    min-width: 280px;
+    padding: 18px;
+  }
 
   ${media.mobile} {
     min-width: auto;
@@ -163,6 +234,12 @@ const InfoTitle = styled.h3`
   padding-bottom: 10px;
   border-bottom: 2px solid ${(props) => props.theme.colors.grey[200]};
 
+  ${media.tablet} {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
   ${media.mobile} {
     font-size: 16px;
     margin-bottom: 12px;
@@ -175,6 +252,10 @@ const InfoList = styled.div`
   flex-direction: column;
   gap: 12px;
 
+  ${media.tablet} {
+    gap: 10px;
+  }
+
   ${media.mobile} {
     gap: 10px;
   }
@@ -182,16 +263,29 @@ const InfoList = styled.div`
 
 const InfoItem = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
-
   font-size: 15px;
   color: ${(props) => props.theme.colors.grey[500]};
   padding: 4px 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 
   svg {
     color: ${SEJONG_COLORS.CRIMSON_RED};
     min-width: 20px;
+    margin-top: 2px;
+  }
+
+  ${media.tablet} {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  ${media.smallDesktop} {
+    font-size: 14px;
+    gap: 9px;
   }
 
   ${media.mobile} {
@@ -200,11 +294,19 @@ const InfoItem = styled.div`
   }
 `;
 
+const InfoText = styled.span`
+  flex: 1;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+`;
+
 const Link = styled.a`
   color: ${SEJONG_COLORS.CRIMSON_RED};
   text-decoration: none;
   transition: color 0.2s;
   font-weight: 500;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   &:hover {
     color: ${(props) => props.theme.colors.primary.crimsonDark};
@@ -212,7 +314,7 @@ const Link = styled.a`
   }
 `;
 
-// 학력 정보 포맷팅 함수 수정 - Professor의 academicBackground 타입과 정확히 일치하도록 수정
+// 학력 정보 포맷팅 함수는 수정하지 않아도 됩니다.
 const formatAcademicBackground = (
   academicBackground:
     | string
@@ -225,6 +327,7 @@ const formatAcademicBackground = (
       }
     | undefined,
 ): string => {
+  // 기존 코드 유지
   if (!academicBackground) {
     return '정보 없음';
   }
@@ -255,6 +358,7 @@ const formatAcademicBackground = (
 
   return '정보 없음';
 };
+
 interface ProfessorCardProps {
   professor: Professor;
   onImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
@@ -302,45 +406,49 @@ const ProfessorCard: React.FC<ProfessorCardProps> = memo(
               {professor.phoneN && (
                 <InfoItem>
                   <Phone />
-                  <span>전화번호: {professor.phoneN}</span>
+                  <InfoText>전화번호: {professor.phoneN}</InfoText>
                 </InfoItem>
               )}
               {professor.email && (
                 <InfoItem>
                   <Mail />
-                  <span>이메일: </span>
-                  <Link
-                    href={`mailto:${professor.email}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {professor.email}
-                  </Link>
+                  <InfoText>
+                    이메일:{' '}
+                    <Link
+                      href={`mailto:${professor.email}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {professor.email}
+                    </Link>
+                  </InfoText>
                 </InfoItem>
               )}
               {professor.homepage && (
                 <InfoItem>
                   <Globe />
-                  <span>홈페이지: </span>
-                  <Link
-                    href={professor.homepage}
-                    onClick={(e) => handleLinkClick(e, professor.homepage)}
-                  >
-                    {professor.homepage}
-                  </Link>
+                  <InfoText>
+                    홈페이지:{' '}
+                    <Link
+                      href={professor.homepage}
+                      onClick={(e) => handleLinkClick(e, professor.homepage)}
+                    >
+                      {professor.homepage}
+                    </Link>
+                  </InfoText>
                 </InfoItem>
               )}
               {professor.lab && (
                 <InfoItem>
                   <MapPin />
-                  <span>연구실: {professor.lab}</span>
+                  <InfoText>연구실: {professor.lab}</InfoText>
                 </InfoItem>
               )}
-              {/* 학력 정보 표시 수정 */}
+              {/* 학력 정보 표시 */}
               <InfoItem>
                 <BookOpen />
-                <span>
+                <InfoText>
                   학력: {formatAcademicBackground(professor.academicBackground)}
-                </span>
+                </InfoText>
               </InfoItem>
             </InfoList>
           </ContactInfo>

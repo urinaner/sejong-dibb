@@ -23,11 +23,11 @@ const ProfessorList = styled.div`
     gap: 1rem;
   }
 `;
-
 const ProfessorCardWrapper = styled.div`
   position: relative;
   width: 100%;
   transition: all 0.2s ease-in-out;
+  overflow: visible; /* 내용이 잘리지 않도록 설정 */
 
   &:hover {
     transform: translateY(-2px);
@@ -37,6 +37,45 @@ const ProfessorCardWrapper = styled.div`
         opacity: 1;
       }
     }
+  }
+
+  /* 태블릿 화면에서의 레이아웃 조정 */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const ProfileImageContainer = styled.div`
+  width: 180px;
+  height: 220px;
+  overflow: hidden;
+
+  /* 태블릿 화면에서 이미지 크기 조정 */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+  }
+
+  /* 모바일 화면에서 이미지 크기 조정 */
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+  }
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  /* 태블릿 화면에서 텍스트가 잘리지 않도록 조정 */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    width: 100%;
+    flex-wrap: wrap;
+    word-break: break-word;
   }
 `;
 
