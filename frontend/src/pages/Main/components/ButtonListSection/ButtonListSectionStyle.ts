@@ -42,6 +42,10 @@ export const ButtonListItem = styled.li<ButtonListItemProps>`
       position: relative;
       flex: 1.5;
       display: block;
+
+      &:hover {
+        background-color: #ae283f;
+      }
     `}
 
   a {
