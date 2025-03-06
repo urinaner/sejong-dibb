@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { SEJONG_COLORS } from '../../../constants/colors';
+import { media } from '../../../styles/media';
 
 export const Header = styled.div`
   display: flex;
@@ -16,13 +17,29 @@ export const Header = styled.div`
   }
 `;
 
-export const Title = styled.h1`
-  font-size: 2rem;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  margin: 0;
-  font-weight: 600;
+export const HeaderSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+  padding-bottom: 0.75rem;
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+`;
+
+export const Title = styled.h1`
+  margin: 0; // 마진 제거
+  font-size: 1.8rem;
+  padding-top: 10px;
+  font-weight: 600;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+
+  ${media.mobile} {
     font-size: 1.5rem;
   }
 `;

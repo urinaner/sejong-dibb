@@ -57,7 +57,7 @@ const ThesisSearchBoard: React.FC<ThesisSearchBoardProps> = ({
   return (
     <Container>
       {/* 헤더 섹션: 제목 및 검색 */}
-      <HeaderSection>
+      <S.HeaderSection>
         <S.Title>{title}</S.Title>
         <SearchContainer>
           <SearchComponent
@@ -68,7 +68,7 @@ const ThesisSearchBoard: React.FC<ThesisSearchBoardProps> = ({
             section="thesis"
           />
         </SearchContainer>
-      </HeaderSection>
+      </S.HeaderSection>
 
       {/* 액션 버튼 섹션 (글쓰기 등) */}
       {isAuthenticated && (
