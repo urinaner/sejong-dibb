@@ -94,7 +94,7 @@ export const PAGE_CONTENTS = {
       },
       seminar: {
         title: '세미나',
-        description: '바이오융합공학전공 세미나 조회',
+        description: '바이오융합공학전공에서 진행하는 세미나를 조회합니다.',
         image: newsImg,
         path: '/news/seminar',
       },

@@ -279,7 +279,7 @@ const News = () => {
   return (
     <Container>
       <HeaderSection>
-        <Title>세종대학교 소식</Title>
+        <Title>바융 뉴스</Title>
         <SearchComponent
           onSearch={handleSearch}
           placeholder="뉴스 제목이나 내용으로 검색"
