@@ -1,124 +1,209 @@
-import {
-  useQuery,
-  useMutation,
-  UseQueryResult,
-  UseMutationResult,
-  useQueryClient,
-} from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { newsApi, NewsFormRequest } from '../../api/news';
-import { apiEndpoints, axiosInstance } from '../../config/apiConfig';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { axiosInstance, apiEndpoints } from '../../config/apiConfig';
 
-export interface NewsItem {
+// 타입 정의
+export interface News {
   id: number;
   title: string;
   content: string;
-  view: number;
-  createDate: string;
-  link: string;
   image: string;
+  createDate: string;
+  view: number;
+  link?: string;
 }
 
 export interface NewsListResponse {
-  message: string;
+  message?: string;
   page: number;
   totalPage: number;
-  data: NewsItem[];
+  data: News[];
 }
 
+export interface NewsSearchParams {
+  keyword: string;
+  page?: number;
+  size?: number;
+}
+
+export interface NewsQueryParams {
+  page: number;
+  size: number;
+  sort?: string;
+  sortDirection?: string;
+}
+
+// Query Keys
 export const newsKeys = {
   all: ['news'] as const,
   lists: () => [...newsKeys.all, 'list'] as const,
-  list: (params: { page: number; size: number }) =>
-    [...newsKeys.lists(), params] as const,
+  list: (params: NewsQueryParams) => [...newsKeys.lists(), params] as const,
+  search: () => [...newsKeys.all, 'search'] as const,
+  searchResults: (params: NewsSearchParams) =>
+    [...newsKeys.search(), params] as const,
   details: () => [...newsKeys.all, 'detail'] as const,
   detail: (id: number) => [...newsKeys.details(), id] as const,
 };
 
-export const useGetNewsList = (params: {
-  page: number;
-  size: number;
-}): UseQueryResult<NewsListResponse, AxiosError> => {
+// API 함수
+const getNewsList = async (
+  params: NewsQueryParams,
+): Promise<NewsListResponse> => {
+  try {
+    const { page, size } = params;
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString(),
+    });
+
+    // 정렬 기능 임시 비활성화 (백엔드 지원 시 주석 해제)
+    // if (sort) queryParams.append('sort', sort);
+    // if (sortDirection) queryParams.append('sortDirection', sortDirection);
+
+    // apiEndpoints 사용
+    const response = await axiosInstance.get<NewsListResponse>(
+      `${apiEndpoints.news.listWithPage(page, size)}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching news list:', error);
+    throw error;
+  }
+};
+
+const searchNews = async (
+  params: NewsSearchParams,
+): Promise<NewsListResponse> => {
+  try {
+    const { keyword, page, size } = params;
+    const queryParams = new URLSearchParams({
+      keyword,
+      page: (page || 0).toString(),
+      size: (size || 10).toString(),
+    });
+
+    // apiEndpoints 사용
+    const response = await axiosInstance.get<NewsListResponse>(
+      `${apiEndpoints.news.search}?${queryParams.toString()}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error searching news:', error);
+    throw error;
+  }
+};
+
+const getNewsById = async (id: number): Promise<News> => {
+  try {
+    // apiEndpoints 사용
+    const response = await axiosInstance.get<News>(apiEndpoints.news.get(id));
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching news by ID:', error);
+    throw error;
+  }
+};
+
+const createNews = async (newsData: FormData): Promise<any> => {
+  try {
+    // apiEndpoints 사용
+    const response = await axiosInstance.post(
+      apiEndpoints.news.create.url,
+      newsData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error creating news:', error);
+    throw error;
+  }
+};
+
+const updateNews = async ({
+  id,
+  data,
+}: {
+  id: number;
+  data: FormData;
+}): Promise<any> => {
+  try {
+    // apiEndpoints 사용
+    const response = await axiosInstance.put(
+      apiEndpoints.news.update.url(id),
+      data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating news:', error);
+    throw error;
+  }
+};
+
+const deleteNews = async (id: number): Promise<any> => {
+  try {
+    // apiEndpoints 사용
+    const response = await axiosInstance.delete(apiEndpoints.news.delete(id));
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting news:', error);
+    throw error;
+  }
+};
+
+// Custom Hooks
+export const useGetNewsList = (params: NewsQueryParams) => {
   return useQuery({
     queryKey: newsKeys.list(params),
-    queryFn: async () => {
-      const response = await axiosInstance.get<NewsListResponse>(
-        apiEndpoints.news.listWithPage(params.page, params.size),
-      );
-      return response.data;
-    },
+    queryFn: () => getNewsList(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
-export const useGetNews = (
-  id: number,
-): UseQueryResult<NewsItem, AxiosError> => {
+export const useSearchNews = (params: NewsSearchParams, options = {}) => {
+  return useQuery({
+    queryKey: newsKeys.searchResults(params),
+    queryFn: () => searchNews(params),
+    staleTime: 1 * 60 * 1000, // 1 minute for search results
+    enabled: !!params.keyword,
+    ...options,
+  });
+};
+
+export const useGetNewsById = (id: number) => {
   return useQuery({
     queryKey: newsKeys.detail(id),
-    queryFn: async () => {
-      const response = await axiosInstance.get<NewsItem>(
-        apiEndpoints.news.get(id),
-      );
-      return response.data;
-    },
+    queryFn: () => getNewsById(id),
     enabled: !!id,
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
-export const useCreateNews = (): UseMutationResult<
-  number,
-  AxiosError<{ message: string }>,
-  {
-    newsFormData: NewsFormRequest;
-    imageFile?: File;
-  }
-> => {
+export const useCreateNews = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ newsFormData, imageFile }) => {
-      const formData = new FormData();
-      formData.append(
-        'newsReqDto',
-        new Blob([JSON.stringify(newsFormData)], {
-          type: 'application/json',
-        }),
-      );
-
-      if (imageFile) {
-        formData.append('newsImage', imageFile);
-      }
-
-      const response = await axiosInstance.post<number>(
-        apiEndpoints.news.create.url,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-
-      return response.data;
-    },
+    mutationFn: createNews,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
   });
 };
 
-export const useUpdateNews = (): UseMutationResult<
-  void,
-  AxiosError,
-  NewsFormRequest & { id: number }
-> => {
+export const useUpdateNews = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: newsApi.updateNews,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: newsKeys.detail(variables.id),
-      });
+    mutationFn: updateNews,
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: newsKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
   });
@@ -127,13 +212,19 @@ export const useUpdateNews = (): UseMutationResult<
 export const useDeleteNews = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, AxiosError, number>({
-    mutationFn: async (id: number) => {
-      const response = await axiosInstance.delete(apiEndpoints.news.delete(id));
-      return response.data;
-    },
+  return useMutation({
+    mutationFn: deleteNews,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsKeys.lists() });
     },
   });
+};
+
+export default {
+  useGetNewsList,
+  useSearchNews,
+  useGetNewsById,
+  useCreateNews,
+  useUpdateNews,
+  useDeleteNews,
 };

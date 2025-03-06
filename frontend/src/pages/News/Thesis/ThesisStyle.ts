@@ -1,22 +1,6 @@
 import styled from 'styled-components';
 import { SEJONG_COLORS } from '../../../constants/colors';
-
-export const Container = styled.div`
-  max-width: 1200px;
-  width: 80vw;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 0;
-    box-shadow: none;
-  }
-`;
+import { media } from '../../../styles/media';
 
 export const Header = styled.div`
   display: flex;
@@ -33,13 +17,29 @@ export const Header = styled.div`
   }
 `;
 
-export const Title = styled.h1`
-  font-size: 2rem;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  margin: 0;
-  font-weight: 600;
+export const HeaderSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
+  padding-bottom: 0.75rem;
 
-  @media (max-width: 768px) {
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+`;
+
+export const Title = styled.h1`
+  margin: 0; // 마진 제거
+  font-size: 1.8rem;
+  padding-top: 10px;
+  font-weight: 600;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
+
+  ${media.mobile} {
     font-size: 1.5rem;
   }
 `;
@@ -108,15 +108,15 @@ export const ThesisCard = styled.div`
 
 export const ThesisImageWrapper = styled.div`
   flex-shrink: 0;
-  width: 120px;
-  height: 160px;
-  border-radius: 8px;
+  width: 80px;
+  height: 110px;
+  border-radius: 4px;
   overflow: hidden;
   border: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
 
   @media (max-width: 768px) {
-    width: 100%;
-    height: 200px;
+    width: 60px;
+    height: 80px;
   }
 `;
 
@@ -133,13 +133,21 @@ export const ThesisContent = styled.div`
   gap: 1rem;
 `;
 
+export const ThesisContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+`;
+
 export const ThesisTitle = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
   margin: 0;
   cursor: pointer;
   transition: color 0.2s ease;
+  line-height: 1.4;
 
   &:hover {
     color: ${SEJONG_COLORS.CRIMSON_RED}ee;
@@ -148,7 +156,7 @@ export const ThesisTitle = styled.h2`
   }
 
   @media (max-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 `;
 
@@ -156,10 +164,9 @@ export const ThesisMetadata = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 
   @media (max-width: 768px) {
-    flex-direction: column;
     gap: 0.5rem;
   }
 `;
@@ -169,14 +176,16 @@ export const MetadataItem = styled.div`
   align-items: center;
   gap: 0.5rem;
   color: ${SEJONG_COLORS.GRAY};
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 
   svg {
     color: ${SEJONG_COLORS.COOL_GRAY};
+    width: 14px;
+    height: 14px;
   }
 
   @media (max-width: 768px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -217,5 +226,53 @@ export const ErrorMessage = styled.div`
   @media (max-width: 768px) {
     margin: 0.5rem;
     padding: 1.5rem;
+  }
+`;
+
+// SearchableBoard와 함께 사용하기 위한 추가 스타일
+export const TableRowContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+`;
+
+export const SearchContainer = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+export const SearchResultInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: ${SEJONG_COLORS.GRAY};
+
+  strong {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
+  }
+`;
+
+export const ClearSearchButton = styled.button`
+  background: none;
+  border: none;
+  color: ${SEJONG_COLORS.GRAY};
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+
+  &:hover {
+    color: ${SEJONG_COLORS.CRIMSON_RED};
   }
 `;

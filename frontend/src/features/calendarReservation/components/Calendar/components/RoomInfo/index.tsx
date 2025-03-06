@@ -29,7 +29,7 @@ function RoomInfo() {
 
             <RoomDetail>
               <RoomDetailLabel>위치:</RoomDetailLabel>
-              <span>충무관 501호</span>
+              <span>충무관 507C호</span>
             </RoomDetail>
 
             <RoomDetail>

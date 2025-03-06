@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  PlusCircle,
   Edit2,
   Trash2,
+  PlusCircle,
   AlertTriangle,
   CheckCircle,
 } from 'lucide-react';
@@ -12,14 +12,16 @@ import styled from 'styled-components';
 import { AuthContext } from '../../context/AuthContext';
 import {
   useSeminarList,
+  useSearchSeminars,
   useDeleteSeminar,
   seminarKeys,
+  SeminarSearchParams,
 } from '../../hooks/queries/useSeminar';
 import { queryClient } from '../../lib/react-query/queryClient';
 import { Modal, useModal } from '../../components/Modal';
 import { SEJONG_COLORS } from '../../constants/colors';
-import { media } from '../../styles/media';
-import Pagination from '../../common/Pagination/Pagination';
+import SearchableBoard from '../../common/SearchableBoard';
+import Container from '../../styles/Container';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -27,34 +29,89 @@ const SeminarList = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const { openModal } = useModal();
-  const [currentPage, setCurrentPage] = useState(1); // 1부터 시작하도록 수정
+  const [currentPage, setCurrentPage] = useState(1); // 1부터 시작
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
-  const [isMobile, setIsMobile] = useState(false); // 접속 기기가 모바일인지
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
+  // 기본 세미나 리스트 조회
   const {
-    data: seminarData,
-    isLoading,
-    isError,
-    error,
-  } = useSeminarList({
-    page: currentPage - 1, // API 요청시 0부터 시작하는 페이지로 변환
+    data: seminarListData,
+    isLoading: isListLoading,
+    isError: isListError,
+    error: listError,
+  } = useSeminarList(
+    {
+      page: currentPage - 1, // API 요청시 0부터 시작하는 페이지로 변환
+      size: ITEMS_PER_PAGE,
+      sortDirection,
+    },
+    {
+      enabled: !isSearching, // 검색 모드가 아닐 때만 기본 목록 로드
+    },
+  );
+
+  // 검색 파라미터
+  const searchParams: SeminarSearchParams = {
+    keyword: searchKeyword,
+    page: currentPage - 1, // 백엔드 페이징은 0부터 시작
     size: ITEMS_PER_PAGE,
-    sortDirection,
-  });
-
-  const deleteMutation = useDeleteSeminar();
-
-  const handleEdit = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation();
-    navigate(`/news/seminar/edit/${id}`);
   };
 
-  const handleDelete = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation();
+  // 검색 결과 조회
+  const {
+    data: searchResults,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+    error: searchError,
+  } = useSearchSeminars(searchParams, {
+    enabled: isSearching && !!searchKeyword,
+  });
+
+  // 삭제 Mutation
+  const deleteMutation = useDeleteSeminar();
+
+  // 실제 화면에 표시할 데이터
+  const displayData = isSearching ? searchResults : seminarListData;
+  const isLoading = isSearching ? isSearchLoading : isListLoading;
+  const isError = isSearching ? isSearchError : isListError;
+  const error = isSearching ? searchError : listError;
+
+  // 검색 처리 함수
+  const handleSearch = (keyword: string) => {
+    setSearchKeyword(keyword);
+    if (keyword) {
+      setIsSearching(true);
+      setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    } else {
+      handleClearSearch();
+    }
+  };
+
+  // 검색 초기화 함수
+  const handleClearSearch = () => {
+    setSearchKeyword('');
+    setIsSearching(false);
+    setCurrentPage(1);
+  };
+
+  // 정렬 처리 함수
+  const handleSort = () => {
+    setSortDirection((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
+  };
+
+  // 페이지 변경 처리
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 삭제 확인 모달
+  const confirmDelete = (id: number) => {
     openModal(
       <>
         <Modal.Header>
-          <AlertTriangle size={48} color="#E53E3E" />
+          <AlertTriangleIcon size={48} color="#E53E3E" />
           세미나 삭제
         </Modal.Header>
         <Modal.Content>
@@ -62,23 +119,27 @@ const SeminarList = () => {
         </Modal.Content>
         <Modal.Footer>
           <Modal.CloseButton />
-          <Modal.DeleteButton onClick={() => confirmDelete(id)}>
-            삭제
-          </Modal.DeleteButton>
+          <DeleteButton
+            onClick={() => handleDelete(id)}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+          </DeleteButton>
         </Modal.Footer>
       </>,
     );
   };
 
-  const confirmDelete = async (id: number) => {
+  // 삭제 처리 함수
+  const handleDelete = async (id: number) => {
     try {
       await deleteMutation.mutateAsync(id, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: seminarKeys.lists() });
+          queryClient.invalidateQueries({ queryKey: seminarKeys.all });
           openModal(
             <>
               <Modal.Header>
-                <CheckCircle size={48} color="#38A169" />
+                <CheckCircleIcon size={48} color="#38A169" />
                 삭제 완료
               </Modal.Header>
               <Modal.Content>
@@ -95,7 +156,7 @@ const SeminarList = () => {
       openModal(
         <>
           <Modal.Header>
-            <AlertTriangle size={48} color="#E53E3E" />
+            <AlertTriangleIcon size={48} color="#E53E3E" />
             삭제 실패
           </Modal.Header>
           <Modal.Content>
@@ -109,181 +170,105 @@ const SeminarList = () => {
     }
   };
 
+  // 날짜 포맷팅 함수
   const formatDateTime = (dateTime: string) => {
     return moment(dateTime).format('YYYY-MM-DD HH:mm');
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // 테이블 컬럼 정의
+  const columns = [
+    { key: 'id', label: '번호', width: '5%' },
+    { key: 'name', label: '세미나명', width: '25%' },
+    { key: 'speaker', label: '발표자', width: '10%' },
+    { key: 'company', label: '소속', width: '15%' },
+    { key: 'place', label: '장소', width: '10%' },
+    {
+      key: 'startTime',
+      label: '일시',
+      width: '25%',
+      sortable: true,
+      render: (value: string, item: any) => (
+        <DateTimeText>
+          <div>{formatDateTime(item.startTime)}</div>
+          <div>~ {formatDateTime(item.endTime)}</div>
+        </DateTimeText>
+      ),
+    },
+    ...(auth?.isAuthenticated
+      ? [
+          {
+            key: 'actions',
+            label: '관리',
+            width: '10%',
+            render: (_: any, item: any) => (
+              <ActionButtons>
+                <ActionButton
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    navigate(`/news/seminar/edit/${item.id}`);
+                  }}
+                  color="blue"
+                >
+                  <Edit2 size={16} />
+                </ActionButton>
+                <ActionButton
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    confirmDelete(item.id);
+                  }}
+                  color="red"
+                >
+                  <Trash2 size={16} />
+                </ActionButton>
+              </ActionButtons>
+            ),
+          },
+        ]
+      : []),
+  ];
+
+  // 액션 버튼 렌더 함수
+  const renderActions = () => {
+    if (auth?.isAuthenticated) {
+      return (
+        <CreateButton onClick={() => navigate('/news/seminar/create')}>
+          <PlusCircle size={20} />
+          세미나 등록
+        </CreateButton>
+      );
+    }
+    return null;
   };
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768); // 768px 이하를 모바일로 간주
-  };
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize); // 창 크기 변경 감지
-
-    return () => {
-      window.removeEventListener('resize', handleResize); // 이벤트 리스너 정리
-    };
-  }, []);
-
-  if (isLoading) return <LoadingSpinner>로딩 중...</LoadingSpinner>;
-  if (isError)
-    return (
-      <ErrorMessage>
-        {error instanceof Error
-          ? error.message
-          : '데이터를 불러오는데 실패했습니다.'}
-      </ErrorMessage>
-    );
 
   return (
     <Container>
-      <Header>
-        <Title>세미나 목록</Title>
-        {auth?.isAuthenticated && (
-          <CreateButton onClick={() => navigate('/news/seminar/create')}>
-            <PlusCircle size={20} />
-            세미나 등록
-          </CreateButton>
-        )}
-      </Header>
-
-      {isMobile ? (
-        <ListContainer>
-          {seminarData?.data.map((seminar) => (
-            <Seminar
-              key={seminar.id}
-              onClick={() => navigate(`/news/seminar/${seminar.id}`)}
-            >
-              <SeminarName>{seminar.name}</SeminarName>
-              <DateTimeText>
-                <div>{formatDateTime(seminar.startTime)}</div>
-                <div>~ {formatDateTime(seminar.endTime)}</div>
-              </DateTimeText>
-              <div>{seminar.speaker}</div>
-              <div>{seminar.company}</div>
-              <div>{seminar.place}</div>
-            </Seminar>
-          ))}
-        </ListContainer>
-      ) : (
-        <Table>
-          <thead>
-            <tr>
-              <Th width="5%">번호</Th>
-              <Th width="25%">세미나명</Th>
-              <Th width="10%">발표자</Th>
-              <Th width="15%">소속</Th>
-              <Th width="10%">장소</Th>
-              <SortableTh
-                width="25%"
-                onClick={() =>
-                  setSortDirection((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'))
-                }
-                isActive={true}
-                sortDirection={sortDirection.toLowerCase() as 'asc' | 'desc'}
-              >
-                일시
-              </SortableTh>
-              {auth?.isAuthenticated && <Th width="10%">관리</Th>}
-            </tr>
-          </thead>
-          <tbody>
-            {seminarData?.data.map((seminar) => (
-              <Tr
-                key={seminar.id}
-                onClick={() => navigate(`/news/seminar/${seminar.id}`)}
-              >
-                <Td>{seminar.id}</Td>
-                <TitleTd>{seminar.name}</TitleTd>
-                <Td>{seminar.speaker}</Td>
-                <Td>{seminar.company}</Td>
-                <Td>{seminar.place}</Td>
-                <DateTimeTd>
-                  <DateTimeText>
-                    <div>{formatDateTime(seminar.startTime)}</div>
-                    <div>~ {formatDateTime(seminar.endTime)}</div>
-                  </DateTimeText>
-                </DateTimeTd>
-                {auth?.isAuthenticated && (
-                  <ActionTd>
-                    <ActionButton
-                      onClick={(e) => handleEdit(e, seminar.id)}
-                      color="blue"
-                    >
-                      <Edit2 size={16} />
-                    </ActionButton>
-                    <ActionButton
-                      onClick={(e) => handleDelete(e, seminar.id)}
-                      color="red"
-                    >
-                      <Trash2 size={16} />
-                    </ActionButton>
-                  </ActionTd>
-                )}
-              </Tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-
-      {seminarData?.data.length === 0 && (
-        <EmptyMessage>등록된 세미나가 없습니다.</EmptyMessage>
-      )}
-
-      <Pagination
-        totalPages={seminarData?.totalPage ?? 0}
+      <SearchableBoard
+        title="세미나 목록"
+        section="seminar"
+        columns={columns}
+        items={displayData?.data || []}
+        isLoading={isLoading}
+        error={error}
+        totalPages={displayData?.totalPage || 0}
         currentPage={currentPage}
+        sortField="startTime"
+        sortDirection={sortDirection}
         onPageChange={handlePageChange}
+        onSort={handleSort}
+        onSearch={handleSearch}
+        searchKeyword={searchKeyword}
+        isSearching={isSearching}
+        onClearSearch={handleClearSearch}
+        emptyMessage="등록된 세미나가 없습니다."
+        renderActions={renderActions}
+        detailUrl={(id) => `/news/seminar/${id}`}
+        addActionUrl={
+          auth?.isAuthenticated ? '/news/seminar/create' : undefined
+        }
       />
     </Container>
   );
 };
-
-export default SeminarList;
-
-const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
-  margin: 3rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  ${media.mobile} {
-    width: 100vw;
-    margin: 1rem auto;
-    padding: 1rem;
-    border: none;
-    box-shadow: none;
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
-`;
-
-const Title = styled.h1`
-  font-size: 2rem;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  margin: 0;
-  font-weight: 600;
-
-  ${media.mobile} {
-    font-size: 1.75rem;
-  }
-`;
 
 const CreateButton = styled.button`
   display: flex;
@@ -303,137 +288,6 @@ const CreateButton = styled.button`
     background-color: #8b0000;
     box-shadow: 0 2px 4px rgba(139, 0, 0, 0.2);
   }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: none;
-  }
-
-  ${media.mobile} {
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    width: 8.25rem;
-    height: 2rem;
-    font-size: 0.9rem;
-  }
-`;
-
-const ListContainer = styled.div``;
-
-const Seminar = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: ${SEJONG_COLORS.COOL_GRAY}30;
-  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 20px;
-  color: #333;
-
-  div {
-    margin-bottom: 0.2rem;
-  }
-
-  div:nth-of-type(1) {
-    margin-bottom: 0.75rem;
-  }
-
-  span {
-    font-weight: bold;
-    color: ${SEJONG_COLORS.GRAY};
-  }
-
-  &:active {
-    background-color: ${SEJONG_COLORS.COOL_GRAY}60;
-  }
-`;
-
-const SeminarName = styled.div`
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  font-weight: 600;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-`;
-
-const Th = styled.th<{ width?: string }>`
-  width: ${(props) => props.width || 'auto'};
-  padding: 1.25rem 1rem;
-  background-color: ${SEJONG_COLORS.COOL_GRAY}20;
-  color: ${SEJONG_COLORS.GRAY};
-  font-weight: 600;
-  text-align: center;
-  border-bottom: 2px solid ${SEJONG_COLORS.COOL_GRAY};
-  white-space: nowrap;
-
-  &:first-child {
-    border-top-left-radius: 8px;
-  }
-
-  &:last-child {
-    border-top-right-radius: 8px;
-  }
-`;
-
-const SortableTh = styled(Th)<{
-  isActive?: boolean;
-  sortDirection?: 'asc' | 'desc';
-}>`
-  cursor: pointer;
-  position: relative;
-  padding-right: 25px;
-  transition: background-color 0.2s;
-
-  &:after {
-    content: '${(props) => (props.sortDirection === 'asc' ? '↑' : '↓')}';
-    position: absolute;
-    right: 8px;
-    color: ${SEJONG_COLORS.CRIMSON_RED};
-  }
-
-  &:hover {
-    background-color: ${SEJONG_COLORS.COOL_GRAY}30;
-  }
-`;
-
-const Tr = styled.tr`
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background-color: ${SEJONG_COLORS.COOL_GRAY}10;
-  }
-`;
-
-const Td = styled.td`
-  padding: 1.25rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
-  color: ${SEJONG_COLORS.GRAY};
-`;
-
-const TitleTd = styled(Td)`
-  text-align: left;
-  font-weight: 500;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-
-  &:hover {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-`;
-
-const DateTimeTd = styled(Td)`
-  padding: 0.75rem 1rem;
 `;
 
 const DateTimeText = styled.div`
@@ -445,26 +299,12 @@ const DateTimeText = styled.div`
   div {
     padding: 0.25rem 0;
   }
-
-  ${media.mobile} {
-    flex-direction: row;
-
-    div {
-      color: ${SEJONG_COLORS.GRAY};
-      /* margin: 0 !important; */
-      padding: 0;
-      height: min-content;
-    }
-  }
 `;
 
-const ActionTd = styled(Td)`
-  padding: 0.5rem;
+const ActionButtons = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
 `;
 
 const ActionButton = styled.button<{ color: 'blue' | 'red' }>`
@@ -487,77 +327,31 @@ const ActionButton = styled.button<{ color: 'blue' | 'red' }>`
       props.color === 'blue' ? '#3B82F6' : SEJONG_COLORS.CRIMSON_RED};
     color: white;
   }
-
-  &:active {
-    transform: translateY(1px);
-  }
 `;
 
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid ${SEJONG_COLORS.COOL_GRAY}20;
-`;
-
-const PageButton = styled.button<{ isActive?: boolean }>`
-  padding: 0.5rem 1rem;
-  border: 1px solid
-    ${(props) =>
-      props.isActive ? SEJONG_COLORS.CRIMSON_RED : SEJONG_COLORS.COOL_GRAY};
-  background-color: ${(props) =>
-    props.isActive ? SEJONG_COLORS.CRIMSON_RED : 'white'};
-  color: ${(props) => (props.isActive ? 'white' : SEJONG_COLORS.GRAY)};
+const DeleteButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED};
+  background-color: white;
+  color: ${SEJONG_COLORS.CRIMSON_RED};
   cursor: pointer;
-  min-width: 40px;
-  border-radius: 4px;
   transition: all 0.2s ease-in-out;
 
+  &:hover {
+    background-color: ${SEJONG_COLORS.CRIMSON_RED};
+    color: white;
+  }
+
   &:disabled {
+    opacity: 0.7;
     cursor: not-allowed;
-    opacity: 0.5;
-  }
-
-  &:hover:not(:disabled) {
-    background-color: ${(props) =>
-      props.isActive ? '#8b0000' : SEJONG_COLORS.COOL_GRAY}10;
-    border-color: ${(props) =>
-      props.isActive ? '#8b0000' : SEJONG_COLORS.CRIMSON_RED};
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(1px);
   }
 `;
 
-const LoadingSpinner = styled.div`
-  text-align: center;
-  padding: 3rem;
-  color: ${SEJONG_COLORS.GRAY};
-  font-size: 1.1rem;
-`;
+// 아이콘 컴포넌트
+const AlertTriangleIcon = styled(AlertTriangle)``;
+const CheckCircleIcon = styled(CheckCircle)``;
 
-const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  background-color: #fff5f5;
-  color: ${SEJONG_COLORS.CRIMSON_RED};
-  border-radius: 8px;
-  border: 1px solid ${SEJONG_COLORS.CRIMSON_RED}20;
-  font-weight: 500;
-`;
-
-const EmptyMessage = styled.div`
-  text-align: center;
-  padding: 3rem;
-  color: ${SEJONG_COLORS.GRAY};
-  background-color: ${SEJONG_COLORS.COOL_GRAY}10;
-  border: 1px solid ${SEJONG_COLORS.COOL_GRAY};
-  border-radius: 8px;
-  margin-top: 1.5rem;
-  font-size: 1.1rem;
-`;
+export default SeminarList;

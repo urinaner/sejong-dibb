@@ -1,4 +1,3 @@
-// hooks/useSeminar.ts
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import {
@@ -15,7 +14,17 @@ export const seminarKeys = {
   list: (filters: SeminarFilter) => [...seminarKeys.lists(), filters] as const,
   details: () => [...seminarKeys.all, 'detail'] as const,
   detail: (id: number) => [...seminarKeys.details(), id] as const,
+  search: () => [...seminarKeys.all, 'search'] as const,
+  searchResults: (keyword: string, page: number, size: number) =>
+    [...seminarKeys.search(), { keyword, page, size }] as const,
 };
+
+// 검색 파라미터 타입 정의
+export interface SeminarSearchParams {
+  keyword: string;
+  page: number;
+  size: number;
+}
 
 // GET - List Seminars with pagination
 export const useSeminarList = (
@@ -42,6 +51,41 @@ export const useSeminarList = (
       );
       return response.data;
     },
+    ...options,
+  });
+};
+
+// GET - Search Seminars
+export const useSearchSeminars = (
+  params: SeminarSearchParams,
+  options?: Omit<
+    UseQueryOptions<
+      SeminarResponse,
+      AxiosError,
+      SeminarResponse,
+      readonly unknown[]
+    >,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery<SeminarResponse, AxiosError>({
+    queryKey: seminarKeys.searchResults(
+      params.keyword,
+      params.page,
+      params.size,
+    ),
+    queryFn: async () => {
+      const queryParams = new URLSearchParams({
+        keyword: params.keyword,
+        page: params.page.toString(),
+        size: params.size.toString(),
+      });
+      const response = await axiosInstance.get(
+        `${apiEndpoints.seminar.search}?${queryParams.toString()}`,
+      );
+      return response.data;
+    },
+    enabled: !!params.keyword,
     ...options,
   });
 };

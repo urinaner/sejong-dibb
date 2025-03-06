@@ -130,6 +130,7 @@ const createEndpoint = (path: string) => {
 // API Endpoints
 export const apiEndpoints = {
   news: {
+    search: '/api/news/search',
     list: createEndpoint('/api/news'),
     listWithPage: (page: number, size: number) => {
       const params = new URLSearchParams({
@@ -175,6 +176,7 @@ export const apiEndpoints = {
   },
 
   thesis: {
+    search: '/api/thesis/search',
     list: createEndpoint('/api/thesis'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
@@ -216,8 +218,8 @@ export const apiEndpoints = {
     } as ThesisEndpoint,
     delete: (thesisId: string) => createEndpoint(`/api/thesis/${thesisId}`),
   },
-
   professor: {
+    search: '/api/professor/search',
     list: createEndpoint('/api/professor'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
@@ -257,17 +259,14 @@ export const apiEndpoints = {
         imageFile?: File | null,
       ) => {
         const formData = new FormData();
-
         // JSON 데이터를 문자열 그대로 추가
         if (professorReqDto) {
           formData.append('professorReqDto', JSON.stringify(professorReqDto));
         }
-
         // 이미지 파일 추가 (이전 `profile_image` → `profileImage`로 통일)
         if (imageFile) {
           formData.append('profileImage', imageFile);
         }
-
         return formData;
       },
     },
@@ -276,6 +275,7 @@ export const apiEndpoints = {
     delete: (professorId: number | string) =>
       createEndpoint(`/api/professor/${professorId}`),
     thesis: {
+      search: '/api/thesis/search',
       base: createEndpoint('/api/thesis'),
       list: createEndpoint('/api/thesis'),
       listWithPage: (page: number, size: number, sort?: string[]) => {
@@ -299,31 +299,28 @@ export const apiEndpoints = {
     detail: (professorId: number) =>
       createEndpoint(`/api/professor/${professorId}`),
   },
-
   admin: {
     login: createEndpoint('/api/admin/login'),
     signOut: createEndpoint('/api/admin/signOut'),
     register: createEndpoint('/api/admin/join'),
   },
-
   user: {
     login: createEndpoint('/api/user/login'),
     signOut: createEndpoint('/api/logout'),
     register: createEndpoint('/api/register'),
   },
-
   department: {
     get: (id: string) => createEndpoint(`/api/departments/${id}`),
     update: (id: string) => createEndpoint(`/api/departments/${id}`),
     delete: (id: string) => createEndpoint(`/api/departments/${id}`),
     create: createEndpoint('/api/departments'),
   },
-
   main: {
     get: createEndpoint('/api/'),
   },
 
   board: {
+    search: '/api/board/search', // 검색 API 경로 추가
     base: createEndpoint('/api/board'),
     download: createEndpoint('/api/board/download'),
     listWithPage: (page: number, size: number) =>
@@ -359,6 +356,7 @@ export const apiEndpoints = {
   },
 
   seminar: {
+    search: '/api/seminar/search', // 검색 API 경로 추가
     list: createEndpoint('/api/seminar'),
     listWithPage: (page: number, size: number, sortDirection?: string) => {
       const params = new URLSearchParams({

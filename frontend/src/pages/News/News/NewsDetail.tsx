@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Eye, ArrowLeft } from 'lucide-react';
 import moment from 'moment';
-import { useGetNews } from '../../../hooks/queries/useNews';
+import useNews, { useGetNewsById } from '../../../hooks/queries/useNews';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
 import {
   Container,
@@ -30,7 +30,7 @@ const NewsDetail = () => {
     isLoading,
     isError,
     error,
-  } = useGetNews(parseInt(newsId || '0'));
+  } = useGetNewsById(parseInt(newsId || '0'));
 
   const handleBack = () => {
     navigate(-1);
