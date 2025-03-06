@@ -130,7 +130,7 @@ const createEndpoint = (path: string) => {
 // API Endpoints
 export const apiEndpoints = {
   news: {
-    search: '/news/search',
+    search: '/api/news/search',
     list: createEndpoint('/api/news'),
     listWithPage: (page: number, size: number) => {
       const params = new URLSearchParams({
@@ -176,7 +176,7 @@ export const apiEndpoints = {
   },
 
   thesis: {
-    search: '/thesis/search',
+    search: '/api/thesis/search',
     list: createEndpoint('/api/thesis'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
@@ -219,7 +219,7 @@ export const apiEndpoints = {
     delete: (thesisId: string) => createEndpoint(`/api/thesis/${thesisId}`),
   },
   professor: {
-    search: '/professor/search',
+    search: '/api/professor/search',
     list: createEndpoint('/api/professor'),
     listWithPage: (page: number, size: number, sort?: string[]) => {
       const params = new URLSearchParams({
@@ -275,7 +275,7 @@ export const apiEndpoints = {
     delete: (professorId: number | string) =>
       createEndpoint(`/api/professor/${professorId}`),
     thesis: {
-      search: '/thesis/search',
+      search: '/api/thesis/search',
       base: createEndpoint('/api/thesis'),
       list: createEndpoint('/api/thesis'),
       listWithPage: (page: number, size: number, sort?: string[]) => {
@@ -320,7 +320,7 @@ export const apiEndpoints = {
   },
 
   board: {
-    search: '/board/search', // 검색 API 경로 추가
+    search: '/api/board/search', // 검색 API 경로 추가
     base: createEndpoint('/api/board'),
     download: createEndpoint('/api/board/download'),
     listWithPage: (page: number, size: number) =>
@@ -356,6 +356,7 @@ export const apiEndpoints = {
   },
 
   seminar: {
+    search: '/api/seminar/search', // 검색 API 경로 추가
     list: createEndpoint('/api/seminar'),
     listWithPage: (page: number, size: number, sortDirection?: string) => {
       const params = new URLSearchParams({
