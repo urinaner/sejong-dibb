@@ -54,27 +54,27 @@ const ButtonListSection: React.FC = () => {
                       <SeminarInfoTitle>
                         {seminarData.data[0].name}
                       </SeminarInfoTitle>
-                      <SeminarInfoSubtitle>
-                        {'시간 : '}
-                        {seminarData.data[0].startTime} ~{' '}
-                        {seminarData.data[0].endTime}
-                      </SeminarInfoSubtitle>
                       {seminarData.data[0].writer && (
                         <SeminarInfoSubtitle>
-                          {'예약자 : '}
+                          {'연사 : '}
                           {seminarData.data[0].writer}
                         </SeminarInfoSubtitle>
                       )}
+                      <SeminarInfoSubtitle>
+                        {'소속 : '}
+                        {seminarData.data[0].company}
+                      </SeminarInfoSubtitle>
+                      <SeminarInfoSubtitle>
+                        {'일시 : '}
+                        {seminarData.data[0].startTime} ~{' '}
+                        {seminarData.data[0].endTime}
+                      </SeminarInfoSubtitle>
                       {seminarData.data[0].place && (
                         <SeminarInfoSubtitle>
                           {'장소 : '}
                           {seminarData.data[0].place}
                         </SeminarInfoSubtitle>
                       )}
-                      <SeminarInfoSubtitle>
-                        {'부서 : '}
-                        {seminarData.data[0].company}
-                      </SeminarInfoSubtitle>
                     </>
                   ) : (
                     <div>세미나 정보가 없습니다.</div>

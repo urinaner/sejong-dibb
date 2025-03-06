@@ -149,13 +149,13 @@ const SeminarCreate = () => {
           </FormGroup>
 
           <FormGroup>
-            <Label>발표자</Label>
+            <Label>연사</Label>
             <Input
               type="text"
               name="speaker"
               value={formData.speaker}
               onChange={handleChange}
-              placeholder="발표자 이름을 입력하세요"
+              placeholder="연사 이름을 입력하세요"
             />
           </FormGroup>
 

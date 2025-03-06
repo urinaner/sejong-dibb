@@ -71,8 +71,8 @@ function Footer() {
         titleLink: '/about',
         contents: [
           { type: 'link', name: '학과소개', link: '/about' },
-          { type: 'link', name: '조직도', link: '/about/organization' },
           { type: 'link', name: '교수소개', link: '/about/faculty' },
+          { type: 'link', name: '조직도', link: '/about/organization' },
           { type: 'link', name: '학생회', link: '/about/studentcouncil' },
         ],
       },
@@ -80,7 +80,6 @@ function Footer() {
         title: '대학',
         titleLink: '/undergraduate/curriculum',
         contents: [
-          { type: 'link', name: '학사안내', link: '/college/guide' },
           {
             type: 'link',
             name: '학부교과과정',
@@ -176,7 +175,7 @@ function Footer() {
         </S.FooterContainer>
         <S.Copyright>
           <span>
-            Copyright©2025 . 세종대학교 바이오융합공학전공 All rights reserved
+            Copyright©2025. 세종대학교 바이오융합공학전공 All rights reserved
           </span>
         </S.Copyright>
       </S.FooterInner>

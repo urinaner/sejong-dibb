@@ -179,7 +179,7 @@ const SeminarList = () => {
   const columns = [
     { key: 'id', label: '번호', width: '5%' },
     { key: 'name', label: '세미나명', width: '25%' },
-    { key: 'speaker', label: '발표자', width: '10%' },
+    { key: 'speaker', label: '연사', width: '10%' },
     { key: 'company', label: '소속', width: '15%' },
     { key: 'place', label: '장소', width: '10%' },
     {
