@@ -134,10 +134,18 @@ const NewsCreate: React.FC = () => {
         link: link.trim() || undefined,
       };
 
-      const newsId = await createNewsMutation.mutateAsync({
-        newsFormData,
-        imageFile: imageFile || undefined,
-      });
+      const formData = new FormData();
+      // 객체는 JSON 문자열로 변환하여 추가
+      formData.append(
+        'newsData',
+        new Blob([JSON.stringify(newsFormData)], { type: 'application/json' }),
+      );
+      // 이미지 파일이 있으면 추가
+      if (imageFile) {
+        formData.append('imageFile', imageFile);
+      }
+
+      const newsId = await createNewsMutation.mutateAsync(formData);
 
       showSuccessModal(newsId);
     } catch (error) {

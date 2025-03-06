@@ -2,21 +2,6 @@ import styled from 'styled-components';
 import { media } from '../../../styles/media';
 import { SEJONG_COLORS } from '../../../constants/colors';
 
-export const Container = styled.div`
-  max-width: 900px;
-  width: 80vw;
-  margin: 0 auto;
-  padding: 2.5rem 0.5rem;
-  flex-direction: column;
-  align-items: center;
-  display: flex;
-
-  ${media.mobile} {
-    width: 95%;
-    padding: 2rem 0.5rem;
-  }
-`;
-
 export const NewsGrid = styled.div`
   display: flex;
   flex-direction: column;

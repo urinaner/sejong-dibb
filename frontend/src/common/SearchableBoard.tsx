@@ -211,6 +211,7 @@ const HeaderSection = styled.div`
 const BoardTitle = styled.h1`
   margin: 0; // 마진 제거
   font-size: 1.8rem;
+  padding-top: 10px;
   font-weight: 600;
   color: ${SEJONG_COLORS.CRIMSON_RED};
 
