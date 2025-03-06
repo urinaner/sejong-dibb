@@ -9,6 +9,7 @@ import type {
   NoticeCreateResponse,
   NoticeUpdateResponse,
   NoticeDeleteResponse,
+  NoticeSearchParams,
 } from '../../types/api/notice';
 
 // Query Keys
@@ -16,6 +17,9 @@ export const noticeKeys = {
   all: ['notices'] as const,
   lists: () => [...noticeKeys.all, 'list'] as const,
   list: (params: NoticeQueryParams) => [...noticeKeys.lists(), params] as const,
+  search: () => [...noticeKeys.all, 'search'] as const,
+  searchResults: (params: NoticeSearchParams) =>
+    [...noticeKeys.search(), params] as const,
   details: () => [...noticeKeys.all, 'detail'] as const,
   detail: (id: number) => [...noticeKeys.details(), id] as const,
 };
@@ -39,6 +43,25 @@ const noticeApi = {
 
     const response = await axiosInstance.get<NoticeListResponse>(url);
     return response.data;
+  },
+
+  search: async (params: NoticeSearchParams): Promise<NoticeListResponse> => {
+    try {
+      const { keyword, page, size } = params;
+      const queryParams = new URLSearchParams({
+        keyword,
+        page: (page || 0).toString(),
+        size: (size || 10).toString(),
+      });
+
+      const response = await axiosInstance.get<NoticeListResponse>(
+        `${apiEndpoints.board.search}?${queryParams.toString()}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error searching notices:', error);
+      throw error;
+    }
   },
 
   getById: async (id: number): Promise<NoticeSingleResponse> => {
@@ -150,6 +173,16 @@ export const useGetNoticeList = (params: NoticeQueryParams) => {
   });
 };
 
+export const useSearchNotice = (params: NoticeSearchParams, options = {}) => {
+  return useQuery({
+    queryKey: noticeKeys.searchResults(params),
+    queryFn: () => noticeApi.search(params),
+    staleTime: 1 * 60 * 1000, // 1 minute for search results
+    enabled: !!params.keyword,
+    ...options,
+  });
+};
+
 export const useGetNotice = (id: number) => {
   return useQuery({
     queryKey: noticeKeys.detail(id),
@@ -205,6 +238,7 @@ export const useDeleteNotice = () => {
 // Hook exports
 const useNotice = {
   useGetNoticeList,
+  useSearchNotice,
   useGetNotice,
   useCreateNotice,
   useUpdateNotice,

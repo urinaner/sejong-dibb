@@ -15,6 +15,9 @@ export const CATEGORY_MAP = {
   scholarship: '장학',
 };
 
+type SortField = 'createdDate' | 'viewCount' | 'title';
+type SortDirection = 'ASC' | 'DESC';
+
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return dateString;
@@ -50,6 +53,22 @@ const NoticeBoard: React.FC = () => {
   const handlePageChange = useCallback(
     (newPage: number) => {
       setQueryParams((prev) => ({ ...prev, page: newPage - 1 }));
+      refetch();
+    },
+    [refetch],
+  );
+
+  const handleSort = useCallback(
+    (sortField: SortField) => {
+      setQueryParams((prev) => ({
+        ...prev,
+        sort: sortField,
+        sortDirection:
+          prev.sort === sortField && prev.sortDirection === 'DESC'
+            ? 'ASC'
+            : 'DESC',
+        page: 0,
+      }));
       refetch();
     },
     [refetch],
@@ -100,11 +119,35 @@ const NoticeBoard: React.FC = () => {
         <thead>
           <tr>
             <S.Th>번호</S.Th>
-            <S.Th>제목</S.Th>
+            <S.SortableTh
+              isActive={queryParams.sort === 'title'}
+              sortDirection={
+                queryParams.sortDirection === 'ASC' ? 'asc' : 'desc'
+              }
+              onClick={() => handleSort('title')}
+            >
+              제목
+            </S.SortableTh>
             <S.Th>작성자</S.Th>
-            <S.Th>등록일</S.Th>
+            <S.SortableTh
+              isActive={queryParams.sort === 'createdDate'}
+              sortDirection={
+                queryParams.sortDirection === 'ASC' ? 'asc' : 'desc'
+              }
+              onClick={() => handleSort('createdDate')}
+            >
+              등록일
+            </S.SortableTh>
             <S.Th>카테고리</S.Th>
-            <S.Th>조회수</S.Th>
+            <S.SortableTh
+              isActive={queryParams.sort === 'viewCount'}
+              sortDirection={
+                queryParams.sortDirection === 'ASC' ? 'asc' : 'desc'
+              }
+              onClick={() => handleSort('viewCount')}
+            >
+              조회수
+            </S.SortableTh>
           </tr>
         </thead>
         <tbody>

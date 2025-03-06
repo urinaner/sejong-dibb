@@ -1,6 +1,4 @@
-// types/api/notice.ts
-import { ApiResponse, PaginationParams } from './common';
-import { BoardReqDto } from '../../config/apiConfig';
+// 기존 타입들은 유지하면서 NoticeSearchParams 타입 추가
 
 export interface NoticeItem {
   id: number;
@@ -14,56 +12,48 @@ export interface NoticeItem {
 }
 
 export interface NoticeListResponse {
-  message: string;
+  message?: string;
   page: number;
   totalPage: number;
   data: NoticeItem[];
 }
-
-export interface NoticeResponse {
-  message: string;
-  page: number;
-  totalPage: number;
-  data: NoticeItem[];
-}
-
-export type NoticeRequest = Omit<BoardReqDto, 'departmentId'> & {
-  departmentId: 1;
-  title: string;
-  content: string;
-  category: string;
-  writer: string;
-  createDate: string;
-};
 
 export type NoticeSingleResponse = NoticeItem;
 
-export interface NoticeFormData extends Omit<NoticeRequest, 'fileList'> {
-  files?: File[];
+export interface NoticeRequest {
+  title: string;
+  content: string;
+  writer: string;
+  createDate: string;
+  category: string;
+  departmentId: number;
 }
 
-export interface PaginatedNoticeResponse {
-  content: NoticeItem[];
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
+export interface NoticeCreateResponse {
+  message: string;
+  id: number;
 }
 
-export type NoticeCreateResponse = ApiResponse<number>;
-export type NoticeUpdateResponse = ApiResponse<void>;
-export type NoticeDeleteResponse = ApiResponse<void>;
+export interface NoticeUpdateResponse {
+  message: string;
+  id: number;
+}
 
-export interface NoticeQueryParams extends PaginationParams {
+export interface NoticeDeleteResponse {
+  message: string;
+}
+
+export interface NoticeQueryParams {
   category?: string;
+  page: number;
+  size: number;
   sort?: string;
   sortDirection?: 'ASC' | 'DESC';
 }
 
-export const noticeKeys = {
-  all: ['notices'] as const,
-  lists: () => [...noticeKeys.all, 'list'] as const,
-  list: (params: NoticeQueryParams) => [...noticeKeys.lists(), params] as const,
-  details: () => [...noticeKeys.all, 'detail'] as const,
-  detail: (id: number) => [...noticeKeys.details(), id] as const,
-};
+// 검색을 위한 새로운 타입 정의
+export interface NoticeSearchParams {
+  keyword: string;
+  page?: number;
+  size?: number;
+}
