@@ -1,10 +1,19 @@
 package org.example.backend.thesis.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.common.domain.BaseEntity;
 import org.example.backend.professor.domain.entity.Professor;
 import org.example.backend.thesis.domain.dto.ThesisReqDto;
 
@@ -12,7 +21,7 @@ import org.example.backend.thesis.domain.dto.ThesisReqDto;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "thesis")
-public class Thesis {
+public class Thesis extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

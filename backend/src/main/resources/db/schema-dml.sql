@@ -10,10 +10,6 @@ VALUES (1, '바이오융합공학과',
         '9:00 - 18:00',
         'https://home.sejong.ac.kr/~bioscidpt/map/24Ex');
 
--- users 더미 데이터
-INSERT INTO users (users_id, login_id, password, username, email, phone, role)
-VALUES (1, 'admin', '$2a$10$FKHTTHcEkAZZGW9XqGtPfOx.apKljbCLvYESM05YbLWzDynnacLPO', '관리자', 'admin@example.com',
-        '010-1234-5678', 'ROLE_ADMIN');
 
 -- Professor 더미 데이터 (10개)
 INSERT INTO professor (professor_id, name, major, phone, email, position, homepage, lab, profile_image, bachelor,
@@ -29,66 +25,66 @@ VALUES (1, '권병호', '신경생물학', '010-3178-5629', 'kwonbh@sju.ac.kr', 
         '연세대학교 생물학과', '서울대학교 분자세포생물학과', '서울대학교 분자생물학과');
 
 -- Seminar 더미 데이터 (10개)
-INSERT INTO seminar (seminar_id, name, writer, place, start_time, end_time, speaker, company)
+INSERT INTO seminar (seminar_id, name, writer, place, start_time, end_time, speaker, company, created_date)
 VALUES (1,
         'Genome-wide association study to identify QTL for fruit-related traits in a core collection of 287 tomato accessions',
-        '이건', '충무관101A', '2024-11-29 09:00:00', '2024-11-29 10:00:00', '심성철', '세종대학교 바이오산업자원공학'),
+        '이건', '충무관101A', '2024-11-29 09:00:00', '2024-11-29 10:00:00', '심성철', '세종대학교 바이오산업자원공학', '2024-12-05 10:00:00'),
        (2, 'HOW AL PREDICTS SEISMIC SHAKING', '이건', '충무관702', '2024-12-04 09:00:00', '2024-12-04 10:00:00', '이재홍',
-        'NIHON UNIVERSITY'),
+        'NIHON UNIVERSITY', '2024-12-05 10:00:00'),
        (3, 'CRISPR/Cas9-mediated genome editing for crop improvement', '이건', '충무관101A', '2024-11-30 09:00:00',
         '2024-11-30 10:00:00', '정다은',
-        '서울대학교 농생명과학대학'),
+        '서울대학교 농생명과학대학', '2024-12-05 10:00:00'),
        (4, 'Metabolomics in precision medicine: Current trends and applications', '이건', '충무관702', '2024-12-01 09:00:00',
-        '2024-12-01 10:00:00', '김현지', '한국생명공학연구원'),
+        '2024-12-01 10:00:00', '김현지', '한국생명공학연구원', '2024-12-05 10:00:00'),
        (5, 'Advanced tissue engineering for regenerative medicine', '이건', '충무관101A', '2024-12-02 09:00:00',
         '2024-12-02 10:00:00', '박진우',
-        'KAIST 바이오융합센터'),
+        'KAIST 바이오융합센터', '2024-12-05 10:00:00'),
        (6, 'Bioplastics: Sustainable solutions for the future', '이건', '충무관702', '2024-12-03 09:00:00',
         '2024-12-03 10:00:00', '이민아',
-        'SK 바이오텍'),
+        'SK 바이오텍', '2024-12-05 10:00:00'),
        (7, 'Bioinformatics approaches to microbiome analysis', '이건', '충무관101A', '2024-12-04 09:00:00',
         '2024-12-04 10:00:00', '최영훈',
-        '연세대학교 시스템생물학과'),
+        '연세대학교 시스템생물학과', '2024-12-05 10:00:00'),
        (8, 'Nanotechnology for drug delivery in cancer treatment', '이건', '충무관702', '2024-12-05 09:00:00',
         '2024-12-05 10:00:00', '한지수',
-        '삼성바이오로직스'),
+        '삼성바이오로직스', '2024-12-05 10:00:00'),
        (9, 'Synthetic biology for biofuel production', '이건', '충무관101A', '2024-12-06 09:00:00', '2024-12-06 10:00:00',
         '김성민',
-        'POSTECH 생명공학부'),
+        'POSTECH 생명공학부', '2024-12-05 10:00:00'),
        (10, 'Next-generation sequencing in personalized medicine', '이건', '충무관702', '2024-12-07', '2024-12-07', '류정한',
-        '이화여자대학교 바이오융합학과');
+        '이화여자대학교 바이오융합학과', '2024-12-05 10:00:00');
 
 -- Thesis 더미 데이터 (총 50개)
 INSERT INTO thesis (thesis_id, title, author, journal, content, link, publication_date, thesis_image,
                     publication_collection,
-                    publication_issue, publication_page, issn, professor_id)
+                    publication_issue, publication_page, issn, professor_id, created_date)
 VALUES
     -- 권병호 관련 논문
     (1, 'A Proposal for a New Classification of Neurotransmitters', '권병호', 'Journal of Neurobiology',
      '신경 전달 물질의 새로운 분류를 제안한 논문입니다.', 'https://example.com/thesis1', '2024-01-15',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-20+026.png', '12',
      '1', '15-22',
-     '1223-5671', 1),
+     '1223-5671', 1, '2024-12-05 10:00:00'),
     (2, 'Research on Neural Regeneration Mechanisms for Brain Function Recovery', '권병호', 'Neurobiology and Beyond',
      '뇌 기능 회복을 위한 신경 재생 메커니즘 연구 논문입니다.', 'https://example.com/thesis11', '2024-11-01',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-20+027.png', '14',
      '5', '23-31',
-     '1111-2233', 1),
+     '1111-2233', 1, '2024-12-05 10:00:00'),
     (3, 'Study on the Correlation Between Neural Circuits and Brain Disorders', '권병호', 'Neurobiology Insights',
      '신경 회로와 뇌질환 상관 연구를 다룬 논문입니다.', 'https://example.com/thesis21', '2024-05-10',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-20+028.png', '17',
      '9', '45-52',
-     '1011-1211', 1),
+     '1011-1211', 1, '2024-12-05 10:00:00'),
     (4, 'Research on Neural Plasticity and Behavioral Changes', '권병호', 'Advanced Neural Studies',
      '신경 플라스틱성과 행동 변화를 연구한 논문입니다.', 'https://example.com/thesis31', '2024-08-12',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-21+029.png', '23',
      '4', '33-40',
-     '1212-1345', 1),
+     '1212-1345', 1, '2024-12-05 10:00:00'),
     (5, 'Study on the Potential for Neural Network Recovery in Alzheimer’s Models', '권병호', 'Journal of Brain Research',
      '알츠하이머 모델의 신경망 회복 가능성을 연구한 논문입니다.', 'https://example.com/thesis41', '2024-02-14',
      'https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/thesis/KakaoTalk_Photo_2024-12-08-00-07-21+029.png', '28',
      '6', '75-85',
-     '1432-9876', 1);
+     '1432-9876', 1, '2024-12-05 10:00:00');
 
 -- Board 더미 데이터 (10개)
 INSERT INTO board (board_id, title, content, view_count, writer, file_list, category, created_date)
@@ -131,12 +127,6 @@ VALUES (1, '2024-1학기 연계융합전공 신청 및 포기 안내', '연계�
        (10, '학부생 연구 지원 프로그램 안내', '연구 지원 프로그램에 대한 세부 정보는 아래 링크를 참고하세요.', 78, '이건',
         '["https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/%5B%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4%E1%84%82%E1%85%A9%E1%84%90%E1%85%B3%5D+%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A6%E1%84%92%E1%85%A1%E1%86%A8_07%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1(01%E1%84%8E%E1%85%A1%E1%84%89%E1%85%B5).pdf", "https://dibb-bucket.s3.ap-northeast-2.amazonaws.com/dummy/%5B%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4%E1%84%82%E1%85%A9%E1%84%90%E1%85%B3%5D+%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A6%E1%84%92%E1%85%A1%E1%86%A8_07%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1(02%E1%84%8E%E1%85%A1%E1%84%89%E1%85%B5).pdf"]',
         'undergraduate', '2024-06-01 16:00:00');
-
-
--- 세미나실 더미데이터
-INSERT INTO room (room_id, name, person_capacity, place, image)
-VALUES (1, '충507C 세미나실', 20, '충무관 507', 'seminar1.jpg'),
-       (2, '충506C 세미나실', 20, '충무관 506', 'seminar2.jpg');
 
 INSERT INTO reservation (start_time, end_time, purpose, etc, room_id, login_id, created_date, updated_date)
 VALUES ('2024-12-01 09:00:00', '2024-12-01 11:00:00', 'MEETING', '홍성무교수님 랩미팅', 1, 1, NOW(), NOW()),
