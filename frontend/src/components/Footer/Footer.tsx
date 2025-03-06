@@ -71,8 +71,8 @@ function Footer() {
         titleLink: '/about',
         contents: [
           { type: 'link', name: '학과소개', link: '/about' },
-          { type: 'link', name: '조직도', link: '/about/organization' },
           { type: 'link', name: '교수소개', link: '/about/faculty' },
+          { type: 'link', name: '조직도', link: '/about/organization' },
           { type: 'link', name: '학생회', link: '/about/studentcouncil' },
         ],
       },
