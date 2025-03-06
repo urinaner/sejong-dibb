@@ -1,42 +1,82 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useCallback } from 'react';
 import useAuth from '../../../hooks/useAuth';
-import { Plus, Calendar, Book, User, Hash } from 'lucide-react';
-import * as S from './ThesisStyle';
-import { useThesisList } from '../../../hooks/queries/useThesis';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import Pagination from '../../../common/Pagination/Pagination';
+import {
+  useThesisList,
+  useSearchThesis,
+  ThesisSearchParams,
+} from '../../../hooks/queries/useThesis';
+import ThesisSearchBoard from './ThesisSearchBoard';
+import Container from '../../../styles/Container';
 
 const ThesisList: React.FC = () => {
-  const navigate = useNavigate();
   const auth = useAuth();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // 1부터 시작
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const pageSize = 10;
 
+  // 일반 논문 목록 조회
   const {
     data: thesesData,
-    isLoading,
-    error,
+    isLoading: isListLoading,
+    error: listError,
   } = useThesisList(
     {
-      page: currentPage,
+      page: currentPage - 1, // API 요청시 0부터 시작하는 페이지로 변환
       size: pageSize,
     },
     {
-      placeholderData: (keepPreviousData) => keepPreviousData,
-      refetchInterval: 5 * 60 * 1000,
+      enabled: !isSearching,
     },
   );
 
-  const handlePageChange = (newPage: number) => {
-    const zeroBasedPage = newPage - 1;
-    if (zeroBasedPage >= 0 && zeroBasedPage < (thesesData?.totalPage ?? 0)) {
-      setCurrentPage(zeroBasedPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  // 검색 파라미터
+  const searchParams: ThesisSearchParams = {
+    keyword: searchKeyword,
+    page: currentPage - 1, // 백엔드 페이징은 0부터 시작
+    size: pageSize,
   };
 
-  const formatDate = (dateString: string) => {
+  // 검색 결과 조회
+  const {
+    data: searchResults,
+    isLoading: isSearchLoading,
+    error: searchError,
+  } = useSearchThesis(searchParams, {
+    enabled: isSearching && !!searchKeyword,
+  });
+
+  // 실제 화면에 표시할 데이터
+  const displayData = isSearching ? searchResults : thesesData;
+  const isLoading = isSearching ? isSearchLoading : isListLoading;
+  const error = isSearching ? searchError : listError;
+
+  // 검색 처리 함수
+  const handleSearch = useCallback((keyword: string) => {
+    setSearchKeyword(keyword);
+    if (keyword) {
+      setIsSearching(true);
+      setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    } else {
+      handleClearSearch();
+    }
+  }, []);
+
+  // 검색 초기화 함수
+  const handleClearSearch = useCallback(() => {
+    setSearchKeyword('');
+    setIsSearching(false);
+    setCurrentPage(1);
+  }, []);
+
+  // 페이지 변경 처리
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // 날짜 포맷팅 함수
+  const formatDate = useCallback((dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
@@ -44,110 +84,27 @@ const ThesisList: React.FC = () => {
       month: '2-digit',
       day: '2-digit',
     });
-  };
-
-  if (isLoading) {
-    return (
-      <S.Container>
-        <LoadingSpinner text="논문 목록을 불러오는 중입니다..." />
-      </S.Container>
-    );
-  }
-
-  if (error) {
-    return <S.ErrorMessage>{error.message}</S.ErrorMessage>;
-  }
-
-  const theses = thesesData?.data ?? [];
-  const totalPages = thesesData?.totalPage ?? 0;
+  }, []);
 
   return (
-    <S.Container>
-      <S.Header>
-        <S.Title>논문</S.Title>
-        {auth?.isAuthenticated && (
-          <S.ActionButtons>
-            <S.CreateButton onClick={() => navigate('/news/thesis/create')}>
-              <Plus size={18} />
-              논문 등록
-            </S.CreateButton>
-          </S.ActionButtons>
-        )}
-      </S.Header>
-
-      <S.ThesisList>
-        {theses.length > 0 ? (
-          theses.map((thesis) => (
-            <S.ThesisCard key={thesis.id}>
-              <S.ThesisImageWrapper>
-                <S.ThesisThumbnail
-                  src={thesis.thesisImage || '/paperImage.png'}
-                  alt="논문 썸네일"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/paperImage.png';
-                  }}
-                />
-              </S.ThesisImageWrapper>
-
-              <S.ThesisContent>
-                <S.ThesisTitle
-                  onClick={() => navigate(`/news/thesis/${thesis.id}`)}
-                >
-                  {thesis.title}
-                </S.ThesisTitle>
-
-                <S.ThesisMetadata>
-                  <S.MetadataItem>
-                    <User size={16} />
-                    <span>{thesis.author}</span>
-                  </S.MetadataItem>
-
-                  <S.MetadataItem>
-                    <Book size={16} />
-                    <span>{thesis.journal}</span>
-                  </S.MetadataItem>
-
-                  <S.MetadataItem>
-                    <Calendar size={16} />
-                    <span>{formatDate(thesis.publicationDate)}</span>
-                  </S.MetadataItem>
-
-                  {thesis.publicationCollection && (
-                    <S.MetadataItem>
-                      <Hash size={16} />
-                      <span>
-                        {`${thesis.publicationCollection}${
-                          thesis.publicationIssue
-                            ? `, No. ${thesis.publicationIssue}`
-                            : ''
-                        }${
-                          thesis.publicationPage
-                            ? `, pp. ${thesis.publicationPage}`
-                            : ''
-                        }`}
-                      </span>
-                    </S.MetadataItem>
-                  )}
-                </S.ThesisMetadata>
-              </S.ThesisContent>
-            </S.ThesisCard>
-          ))
-        ) : (
-          <S.EmptyMessage>등록된 논문이 없습니다.</S.EmptyMessage>
-        )}
-      </S.ThesisList>
-
-      {totalPages > 1 && (
-        <S.PaginationWrapper>
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage + 1}
-            onPageChange={handlePageChange}
-          />
-        </S.PaginationWrapper>
-      )}
-    </S.Container>
+    <Container>
+      <ThesisSearchBoard
+        title="논문"
+        items={displayData?.data || []}
+        isLoading={isLoading}
+        error={error}
+        totalPages={displayData?.totalPage || 0}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        onSearch={handleSearch}
+        searchKeyword={searchKeyword}
+        isSearching={isSearching}
+        onClearSearch={handleClearSearch}
+        emptyMessage="등록된 논문이 없습니다."
+        isAuthenticated={auth?.isAuthenticated}
+        formatDate={formatDate}
+      />
+    </Container>
   );
 };
 

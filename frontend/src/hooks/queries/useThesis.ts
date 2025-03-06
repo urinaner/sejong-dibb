@@ -13,6 +13,9 @@ export const thesisKeys = {
     [...thesisKeys.lists(), filters] as const,
   details: () => [...thesisKeys.all, 'detail'] as const,
   detail: (id: string) => [...thesisKeys.details(), id] as const,
+  search: () => [...thesisKeys.all, 'search'] as const,
+  searchResults: (params: ThesisSearchParams) =>
+    [...thesisKeys.search(), params] as const,
 };
 
 // Types
@@ -45,6 +48,12 @@ export interface ThesisFilter {
   sort?: string[];
 }
 
+export interface ThesisSearchParams {
+  keyword: string;
+  page: number;
+  size: number;
+}
+
 // GET - List Thesis with pagination
 export const useThesisList = (
   filter: ThesisFilter,
@@ -66,6 +75,37 @@ export const useThesisList = (
       );
       return response.data;
     },
+    ...options,
+  });
+};
+
+// GET - Search Thesis
+export const useSearchThesis = (
+  params: ThesisSearchParams,
+  options?: Omit<
+    UseQueryOptions<
+      ThesisResponse,
+      AxiosError,
+      ThesisResponse,
+      readonly unknown[]
+    >,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery<ThesisResponse, AxiosError>({
+    queryKey: thesisKeys.searchResults(params),
+    queryFn: async () => {
+      const queryParams = new URLSearchParams({
+        keyword: params.keyword,
+        page: params.page.toString(),
+        size: params.size.toString(),
+      });
+      const response = await axiosInstance.get(
+        `${apiEndpoints.thesis.search}?${queryParams.toString()}`,
+      );
+      return response.data;
+    },
+    enabled: !!params.keyword,
     ...options,
   });
 };
