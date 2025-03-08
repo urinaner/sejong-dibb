@@ -11,6 +11,7 @@ import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.exception.NewsException;
 import org.example.backend.news.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class NewsService {
     private String serverUrl;
 
     @Transactional
+    @CacheEvict(value = "news", allEntries = true)
     public Long saveNews(NewsReqDto newsReqDto, MultipartFile multipartFile) {
         PersonalInfoFilterUtil.validatePersonalInfo(newsReqDto.getContent());
 
@@ -48,6 +50,7 @@ public class NewsService {
     }
 
     @Transactional
+    @CacheEvict(value = "news", allEntries = true)
     public NewsResDto updateNews(Long newsId, NewsReqDto newsReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
@@ -60,6 +63,7 @@ public class NewsService {
     }
 
     @Transactional
+    @CacheEvict(value = "news", allEntries = true)
     public void deleteNews(Long newsId) {
         News news = findNewsById(newsId);
         newsRepository.delete(news);

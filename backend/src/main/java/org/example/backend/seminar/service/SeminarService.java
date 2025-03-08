@@ -8,6 +8,7 @@ import org.example.backend.seminar.domain.dto.SeminarResDto;
 import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.exception.SeminarException;
 import org.example.backend.seminar.repository.SeminarRepository;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ public class SeminarService {
     private final SeminarRepository seminarRepository;
 
     @Transactional
+    @CacheEvict(value = "seminars", allEntries = true)
     public Long saveSeminar(SeminarReqDto seminarReqDto) {
         Seminar seminar = Seminar.of(seminarReqDto);
         Seminar savedSeminar = seminarRepository.save(seminar);
@@ -33,6 +35,7 @@ public class SeminarService {
     }
 
     @Transactional
+    @CacheEvict(value = "seminars", allEntries = true)
     public SeminarResDto updateSeminar(Long seminarId, SeminarReqDto seminarReqDto) {
         Seminar seminar = findSeminarById(seminarId);
         seminar.update(seminarReqDto);
@@ -40,6 +43,7 @@ public class SeminarService {
     }
 
     @Transactional
+    @CacheEvict(value = "seminars", allEntries = true)
     public void deleteSeminar(Long seminarId) {
         Seminar seminar = findSeminarById(seminarId);
         seminarRepository.delete(seminar);

@@ -18,6 +18,7 @@ import org.example.backend.board.repository.BoardRepository;
 import org.example.backend.common.utils.PersonalInfoFilterUtil;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class BoardService {
     private String serverUrl;
 
     @Transactional
+    @CacheEvict(value = "boards", allEntries = true)
     public Long saveBoard(BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
         PersonalInfoFilterUtil.validatePersonalInfo(boardReqDto.getContent());
 
@@ -64,6 +66,7 @@ public class BoardService {
     }
 
     @Transactional
+    @CacheEvict(value = "boards", allEntries = true)
     public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto, List<MultipartFile> multipartFileList) {
         fileUpload(boardReqDto, multipartFileList);
 
@@ -73,6 +76,7 @@ public class BoardService {
     }
 
     @Transactional
+    @CacheEvict(value = "boards", allEntries = true)
     public void deleteBoard(Long boardId) {
         Board board = findBoardById(boardId);
         boardRepository.delete(board);
