@@ -11,6 +11,7 @@ import org.example.backend.news.domain.entity.News;
 import org.example.backend.news.exception.NewsException;
 import org.example.backend.news.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,7 @@ public class NewsService {
                 .orElseThrow(() -> new NewsException(NOT_FOUND_NEWS));
     }
 
+    @Cacheable(value = "news", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<NewsResDto> getAllNews(Pageable pageable) {
         return newsRepository.findAll(pageable)
                 .map(NewsResDto::of);

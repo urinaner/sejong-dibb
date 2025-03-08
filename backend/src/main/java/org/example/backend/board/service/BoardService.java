@@ -18,6 +18,7 @@ import org.example.backend.board.repository.BoardRepository;
 import org.example.backend.common.utils.PersonalInfoFilterUtil;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ public class BoardService {
         return BoardResDto.of(board);
     }
 
+    @Cacheable(value = "boards", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<BoardResDto> getAllBoards(Pageable pageable) {
         return boardRepository.findAll(pageable)
                 .map(BoardResDto::of);

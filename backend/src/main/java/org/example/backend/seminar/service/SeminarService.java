@@ -8,6 +8,7 @@ import org.example.backend.seminar.domain.dto.SeminarResDto;
 import org.example.backend.seminar.domain.entity.Seminar;
 import org.example.backend.seminar.exception.SeminarException;
 import org.example.backend.seminar.repository.SeminarRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class SeminarService {
                 .orElseThrow(() -> new SeminarException(NOT_FOUND_SEMINAR));
     }
 
+    @Cacheable(value = "seminars", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<SeminarResDto> getAllSeminars(Pageable pageable) {
         return seminarRepository.findAll(pageable)
                 .map(SeminarResDto::of);
