@@ -1,4 +1,4 @@
-package org.example.backend.global.config.cashe;
+package org.example.backend.global.config.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
