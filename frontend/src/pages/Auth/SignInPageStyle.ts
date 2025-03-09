@@ -26,6 +26,7 @@ export const PageWrapper = styled.div`
 // 로그인 컨테이너 (전역 컨테이너 적용)
 export const LoginContainer = styled.div`
   max-width: 500px;
+  padding-top: 180px;
   width: 100%;
   display: flex;
   flex-direction: column;
