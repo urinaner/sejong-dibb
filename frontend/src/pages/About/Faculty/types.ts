@@ -1,4 +1,4 @@
-// src/pages/about/faculty/types.ts
+// Updated professor.ts types file
 export interface Professor {
   id: number;
   name: string;
@@ -18,6 +18,7 @@ export interface Professor {
         doctor?: string;
         [key: string]: string | undefined;
       };
+  departmentId?: number;
 }
 
 export interface ProfessorFormData {
@@ -38,6 +39,12 @@ export interface ProfessorListResponse {
   totalPage: number;
   page: number;
   data: Professor[];
+}
+
+export interface ProfessorDetailResponse extends Professor {
+  education: string[];
+  career: string[];
+  awards: string[];
 }
 
 export interface ThesisResponse {
@@ -65,10 +72,4 @@ export interface ProfessorQueryParams {
   page: number;
   size: number;
   sort?: string;
-}
-
-export interface ProfessorDetailResponse extends Professor {
-  education: string[];
-  career: string[];
-  awards: string[];
 }

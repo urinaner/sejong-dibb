@@ -1,3 +1,4 @@
+// Updated portions of the ProfessorForm component
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   AlertTriangle,
@@ -6,8 +7,7 @@ import {
   Globe,
   MapPin,
   Image as ImageIcon,
-  PlusCircle,
-  MinusCircle,
+  BookOpen,
 } from 'lucide-react';
 import Button from '../common/Button/Button';
 import { Modal, useModal } from '../../../../../components/Modal';
@@ -25,17 +25,6 @@ interface ProfessorFormProps {
   onCancel: () => void;
 }
 
-interface AcademicDegree {
-  type: string;
-  school: string;
-}
-
-const defaultDegrees: AcademicDegree[] = [
-  { type: 'bachelor', school: '' },
-  { type: 'master', school: '' },
-  { type: 'doctor', school: '' },
-];
-
 const ProfessorForm: React.FC<ProfessorFormProps> = ({
   initialData,
   onSubmit,
@@ -50,36 +39,11 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
     initialData.profileImage || null,
   );
 
-  // 학력 정보를 별도로 관리
-  const [academicDegrees, setAcademicDegrees] = useState<AcademicDegree[]>(
-    () => {
-      // 초기 학력 정보가 있는 경우 파싱
-      if (initialData.academicBackground) {
-        try {
-          // JSON 형태로 저장된 경우 파싱 시도
-          const parsedData = JSON.parse(initialData.academicBackground);
-
-          if (typeof parsedData === 'object') {
-            return Object.entries(parsedData).map(([type, school]) => ({
-              type,
-              school: school as string,
-            }));
-          }
-        } catch (e) {
-          // JSON 파싱 실패 시, 일반 문자열로 간주하고 파싱 시도
-          // 형식: "type1: value1 / type2: value2" 형태로 가정
-          const parts = initialData.academicBackground.split(' / ');
-          return parts.map((part) => {
-            const [type, school] = part.split(': ');
-            return { type, school: school || '' };
-          });
-        }
-      }
-
-      // 기본 학력 필드 설정
-      return defaultDegrees;
-    },
-  );
+  // 초기 데이터가 변경될 때 폼 데이터 업데이트
+  useEffect(() => {
+    setFormData(initialData);
+    setImagePreview(initialData.profileImage || null);
+  }, [initialData]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -153,51 +117,7 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
     [],
   );
 
-  // 학력 정보 입력 필드 변경 핸들러
-  const handleDegreeChange = (
-    index: number,
-    field: 'type' | 'school',
-    value: string,
-  ) => {
-    const newDegrees = [...academicDegrees];
-    newDegrees[index][field] = value;
-    setAcademicDegrees(newDegrees);
-
-    // academicBackground 필드 업데이트 (문자열 형태로 변환)
-    updateAcademicBackgroundField(newDegrees);
-  };
-
-  // 학력 정보 필드 추가
-  const addDegreeField = () => {
-    setAcademicDegrees([...academicDegrees, { type: '', school: '' }]);
-  };
-
-  // 학력 정보 필드 제거
-  const removeDegreeField = (index: number) => {
-    if (academicDegrees.length <= 1) return;
-
-    const newDegrees = academicDegrees.filter((_, i) => i !== index);
-    setAcademicDegrees(newDegrees);
-    updateAcademicBackgroundField(newDegrees);
-  };
-
-  const updateAcademicBackgroundField = (degrees: AcademicDegree[]) => {
-    const academicObj: Record<string, string> = {};
-
-    degrees.forEach((degree) => {
-      if (degree.type && degree.school) {
-        academicObj[degree.type] = degree.school;
-      }
-    });
-
-    // JSON 문자열로 변환하여 저장 (ProfessorFormData.academicBackground는 string 타입)
-    setFormData((prev) => ({
-      ...prev,
-      academicBackground: JSON.stringify(academicObj),
-    }));
-  };
-
-  // ProfessorForm 컴포넌트 내부 - 이미지 변경 핸들러
+  // 이미지 변경 핸들러
   const handleImageChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -285,10 +205,6 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
     }
   };
 
-  useEffect(() => {
-    setFormData(initialData);
-  }, [initialData]);
-
   return (
     <S.Form onSubmit={handleSubmit}>
       <S.FormSection>
@@ -297,7 +213,18 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
           <S.ImageUploadContainer>
             <S.ImagePreviewContainer>
               {imagePreview ? (
-                <img src={imagePreview} alt="프로필 미리보기" />
+                <img
+                  src={imagePreview}
+                  alt="프로필 미리보기"
+                  onError={(e) => {
+                    // Handle image loading errors by falling back to the default image
+                    console.error(
+                      'Failed to load image preview:',
+                      imagePreview,
+                    );
+                    e.currentTarget.src = '/professor_example.jpg';
+                  }}
+                />
               ) : (
                 <S.FallbackThumbnail>
                   <ImageIcon size={48} />
@@ -320,6 +247,7 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
         </S.FormContent>
       </S.FormSection>
 
+      {/* Rest of the form remains unchanged */}
       <S.FormSection>
         <S.FormTitle>기본 정보</S.FormTitle>
         <S.FormContent>
@@ -365,63 +293,21 @@ const ProfessorForm: React.FC<ProfessorFormProps> = ({
             />
           </S.InputGroup>
 
-          {/* 학력 정보 입력 섹션 (새로 추가) */}
           <S.InputGroup>
-            <S.Label htmlFor="academicBackground">
-              학력
-              <Button
-                type="button"
-                variant="ghost"
-                size="small"
-                onClick={addDegreeField}
-                style={{ marginLeft: '8px', padding: '2px 8px' }}
-              >
-                <PlusCircle size={16} style={{ marginRight: '4px' }} />
-                추가
-              </Button>
-            </S.Label>
-
-            {academicDegrees.map((degree, index) => (
-              <div
-                key={index}
-                style={{ marginBottom: '16px', position: 'relative' }}
-              >
-                <div
-                  style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}
-                >
-                  <S.Input
-                    placeholder="학위 유형 (예: 학사, 석사, 박사)"
-                    value={degree.type}
-                    onChange={(e) =>
-                      handleDegreeChange(index, 'type', e.target.value)
-                    }
-                    style={{ flex: '1' }}
-                  />
-                  {academicDegrees.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="danger"
-                      size="small"
-                      onClick={() => removeDegreeField(index)}
-                      style={{ padding: '4px 8px' }}
-                    >
-                      <MinusCircle size={16} />
-                    </Button>
-                  )}
-                </div>
-                <S.Input
-                  placeholder="학력 정보 (예: 서울대학교 전자공학과)"
-                  value={degree.school}
-                  onChange={(e) =>
-                    handleDegreeChange(index, 'school', e.target.value)
-                  }
-                />
-              </div>
-            ))}
-
+            <S.Label htmlFor="academicBackground">학력</S.Label>
+            <S.InputWithIcon>
+              <S.Textarea
+                id="academicBackground"
+                name="academicBackground"
+                value={formData.academicBackground || ''}
+                onChange={handleInputChange}
+                placeholder="학력 정보를 입력하세요 (예: 서울대학교 전자공학과 박사)"
+                rows={4}
+              />
+              <BookOpen size={18} />
+            </S.InputWithIcon>
             <S.HelperText>
-              학위 유형과 학력 정보를 입력하세요. 추가 버튼으로 학력을 더 입력할
-              수 있습니다.
+              여러 학력은 줄바꿈으로 구분하여 입력해주세요.
             </S.HelperText>
           </S.InputGroup>
         </S.FormContent>
