@@ -10,18 +10,18 @@ import org.springframework.data.repository.query.Param;
 public interface SeminarRepository extends JpaRepository<Seminar, Long> {
     // name, speaker, company, place에서 키워드를 포함하는 데이터 검색
     @Query(value = """
-        SELECT s.*
-          FROM seminar s
-         WHERE MATCH(s.name, s.speaker, s.company, s.place)
-               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-        ORDER BY s.seminar_id
-        """,
+            SELECT s.*
+              FROM seminar s
+             WHERE MATCH(s.name, s.speaker, s.company, s.place)
+                   AGAINST(:keyword IN BOOLEAN MODE)
+            ORDER BY s.seminar_id
+            """,
             countQuery = """
-        SELECT COUNT(*)
-          FROM seminar s
-         WHERE MATCH(s.name, s.speaker, s.company, s.place)
-               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-        """,
+                    SELECT COUNT(*)
+                      FROM seminar s
+                     WHERE MATCH(s.name, s.speaker, s.company, s.place)
+                           AGAINST(:keyword IN BOOLEAN MODE)
+                    """,
             nativeQuery = true)
     Page<Seminar> searchByKeywordFulltext(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -17,18 +17,18 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     void incrementViewCount(@Param("boardId") Long boardId);
 
     @Query(value = """
-        SELECT b.*
-        FROM board b
-        WHERE MATCH(b. title, b.content)
-              AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-        ORDER BY b.board_id
-        """,
+            SELECT b.*
+            FROM board b
+            WHERE MATCH(b. title, b.content)
+                  AGAINST(:keyword IN BOOLEAN MODE)
+            ORDER BY b.board_id
+            """,
             countQuery = """
-        SELECT COUNT(*)
-        FROM board b
-        WHERE MATCH(b. title, b.content)
-              AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-        """,
-        nativeQuery = true)
+                    SELECT COUNT(*)
+                    FROM board b
+                    WHERE MATCH(b. title, b.content)
+                          AGAINST(:keyword IN BOOLEAN MODE)
+                    """,
+            nativeQuery = true)
     Page<Board> searchByKeywordFulltext(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -13,27 +13,27 @@ public interface ThesisRepository extends JpaRepository<Thesis, Long> {
 
     // 1) thesis_id만 조회 (Native Query Using Ngram, Fulltext)
     @Query(value = """
-        SELECT t.thesis_id
-          FROM thesis t
-         WHERE MATCH(t.title, t.author, t.journal, t.content)
-               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-        ORDER BY t.thesis_id
-        """,
-                countQuery = """
-        SELECT COUNT(*)
-          FROM thesis t
-         WHERE MATCH(t.title, t.author, t.journal, t.content)
-               AGAINST(:keyword IN NATURAL LANGUAGE MODE)
-    """,
+            SELECT t.thesis_id
+              FROM thesis t
+             WHERE MATCH(t.title, t.author, t.journal, t.content)
+                   AGAINST(:keyword IN BOOLEAN MODE)
+            ORDER BY t.thesis_id
+            """,
+            countQuery = """
+                        SELECT COUNT(*)
+                          FROM thesis t
+                         WHERE MATCH(t.title, t.author, t.journal, t.content)
+                               AGAINST(:keyword IN BOOLEAN MODE)
+                    """,
             nativeQuery = true)
     Page<Long> searchThesisIdsByFulltext(@Param("keyword") String keyword, Pageable pageable);
 
     // 2) Fetch Join으로 Thesis + Professor (N + 1 문제 해결)
     @Query("""
-        SELECT t
-          FROM Thesis t
-          JOIN FETCH t.professor
-         WHERE t.id IN :ids
-    """)
+                SELECT t
+                  FROM Thesis t
+                  JOIN FETCH t.professor
+                 WHERE t.id IN :ids
+            """)
     List<Thesis> findAllByIdInWithProfessor(@Param("ids") List<Long> ids);
 }
