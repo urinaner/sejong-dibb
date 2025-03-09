@@ -171,7 +171,7 @@ const SeminarDetail: React.FC = () => {
             <InfoSection>
               <InfoGrid>
                 <InfoRow>
-                  <InfoLabel>발표자</InfoLabel>
+                  <InfoLabel>연사</InfoLabel>
                   <InfoValue>{seminar.speaker}</InfoValue>
                 </InfoRow>
                 <InfoRow>

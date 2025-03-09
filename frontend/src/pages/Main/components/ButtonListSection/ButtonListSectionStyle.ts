@@ -122,7 +122,7 @@ export const SeminarInfoTop = styled.h3`
 `;
 
 export const SeminarInfoTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin: 0 0 1rem 0;
 `;
 
