@@ -21,17 +21,8 @@ import {
   FileList,
   FileItem,
 } from './NewsCreateStyle';
-import { useCreateNews } from '../../../hooks/queries/useNews';
-import { NewsFormRequest } from '../../../api/news';
-import axios, { AxiosError } from 'axios';
-
-interface NewsFormData {
-  title: string;
-  content: string;
-  link?: string;
-  createDate: string;
-  newsImage?: File;
-}
+import { useCreateNews, NewsReqDto } from '../../../hooks/queries/useNews';
+import axios from 'axios';
 
 const NewsCreate: React.FC = () => {
   const navigate = useNavigate();
@@ -127,7 +118,7 @@ const NewsCreate: React.FC = () => {
       tempDiv.innerHTML = content;
       const cleanContent = tempDiv.textContent || tempDiv.innerText || '';
 
-      const newsFormData: NewsFormRequest = {
+      const newsReqDto: NewsReqDto = {
         title: title.trim(),
         content: cleanContent.trim(),
         createDate: new Date().toISOString().split('T')[0],
@@ -137,16 +128,18 @@ const NewsCreate: React.FC = () => {
       const formData = new FormData();
       // 객체는 JSON 문자열로 변환하여 추가
       formData.append(
-        'newsData',
-        new Blob([JSON.stringify(newsFormData)], { type: 'application/json' }),
+        'newsReqDto',
+        new Blob([JSON.stringify(newsReqDto)], {
+          type: 'application/json',
+        }),
       );
       // 이미지 파일이 있으면 추가
       if (imageFile) {
-        formData.append('imageFile', imageFile);
+        formData.append('news_image', imageFile);
       }
 
+      // useCreateNews 훅을 사용하여 뉴스 생성
       const newsId = await createNewsMutation.mutateAsync(formData);
-
       showSuccessModal(newsId);
     } catch (error) {
       console.error('Error creating news:', error);

@@ -10,7 +10,6 @@ import { AppRoutes } from './routes/AppRoutes';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import { AppLayout } from './components/layout/AppLayout';
 import { usePageTransition } from './hooks/usePageTransition';
-import { media } from './styles/media';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -44,13 +43,6 @@ const PageContainer = styled.div`
   scroll-behavior: smooth;
 `;
 
-const InnerContainer = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
 const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   flex-grow: 1;
   display: flex;
@@ -78,7 +70,6 @@ function AppContent() {
   const isAuthPage =
     location.pathname === '/signin' || location.pathname === '/signup';
 
-  // 이전 방식: containerRef를 사용해 스크롤이 발생하는 요소에 대해 scrollIntoView를 호출
   useEffect(() => {
     const scrollToTop = () => {
       if (containerRef.current) {
@@ -146,7 +137,6 @@ function AppContent() {
           </PageTransition>
         </AppLayout>
       </ContentWrapper>
-      {/* 전환 상태가 true일 때 로딩 스피너 표시 */}
       {isTransitioning && <LoadingSpinner />}
     </PageContainer>
   );

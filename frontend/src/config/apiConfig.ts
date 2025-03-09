@@ -146,7 +146,7 @@ export const apiEndpoints = {
         formData.append(
           'newsReqDto',
           new Blob([JSON.stringify(newsReqDto)], {
-            type: 'application/json',
+            type: 'multipart/form-data',
           }),
         );
         if (imageFile) {
@@ -163,7 +163,7 @@ export const apiEndpoints = {
         formData.append(
           'newsReqDto',
           new Blob([JSON.stringify(newsReqDto)], {
-            type: 'application/json',
+            type: 'multipart/form-data',
           }),
         );
         if (imageFile) {
@@ -207,7 +207,7 @@ export const apiEndpoints = {
         formData.append(
           'thesisReqDto',
           new Blob([JSON.stringify(thesisReqDto)], {
-            type: 'application/json',
+            type: 'multipart/form-data',
           }),
         );
         if (file) {
