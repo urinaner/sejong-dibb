@@ -32,6 +32,13 @@ export interface NewsQueryParams {
   sortDirection?: string;
 }
 
+export interface NewsReqDto {
+  title: string;
+  content: string;
+  createDate: string;
+  link?: string;
+}
+
 // Query Keys
 export const newsKeys = {
   all: ['news'] as const,
@@ -103,12 +110,12 @@ const getNewsById = async (id: number): Promise<News> => {
   }
 };
 
-const createNews = async (newsData: FormData): Promise<any> => {
+const createNews = async (formData: FormData): Promise<any> => {
   try {
     // apiEndpoints 사용
     const response = await axiosInstance.post(
       apiEndpoints.news.create.url,
-      newsData,
+      formData,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
