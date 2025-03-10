@@ -127,8 +127,12 @@ export const Copyright = styled.div`
   span {
     font-size: 14px;
     text-align: center;
+  }
 
-    ${media.mobile} {
+  ${media.mobile} {
+    margin-top: 0px;
+    padding-top: 0px;
+    span {
       font-size: 12px;
       line-height: 1.4;
     }
