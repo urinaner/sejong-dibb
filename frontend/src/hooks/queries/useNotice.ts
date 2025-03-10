@@ -38,8 +38,8 @@ const noticeApi = {
 
     const url =
       category && category !== 'all'
-        ? `${apiEndpoints.board.getByCategory(category, page, size)}`
-        : `${apiEndpoints.board.base}?${queryParams.toString()}`;
+        ? `${apiEndpoints.board.getByCategory(category, page, size, sort ?? 'DESC')}`
+        : `${apiEndpoints.board.base}?${queryParams.toString()}&sortDirection=${sort}`;
 
     const response = await axiosInstance.get<NoticeListResponse>(url);
     return response.data;

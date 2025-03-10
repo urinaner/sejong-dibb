@@ -12,6 +12,7 @@ export const ButtonListList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+  border-bottom: 1px solid #ddd;
 
   @media (max-width: 768px) {
     flex-wrap: wrap;

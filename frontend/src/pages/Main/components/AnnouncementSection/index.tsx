@@ -14,6 +14,7 @@ export const AnnouncementSection = () => {
     category: CATEGORY_MAP[activeTab as keyof typeof CATEGORY_MAP],
     page: 0,
     size: 5,
+    sort: 'DESC',
   });
 
   const handleTabChange = (tab: string) => {

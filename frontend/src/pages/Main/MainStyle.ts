@@ -34,7 +34,7 @@ export const MainContainer = styled.div`
 export const NewsSection = styled.section`
   width: 100%;
   margin: 0 auto;
-  padding: 40px 0; // 좌우 패딩 제거
+  padding: 2rem 0; // 좌우 패딩 제거
   position: relative; // 추가
   z-index: 2; // 추가
 
@@ -188,10 +188,10 @@ export const Paper = styled.article`
 export const ContentWrapper = styled.section`
   display: flex;
   justify-content: space-around;
-  margin: 48px auto;
+  margin: 4rem auto;
   padding: 0 20px;
-  max-width: 1200px;
-  gap: 30px;
+  max-width: 80vw;
+  gap: 4rem;
 
   ${media.tablet} {
     margin: 32px auto;
@@ -210,7 +210,7 @@ export const ContentWrapper = styled.section`
 export const AnnouncementAndSeminar = styled.section`
   flex: 1;
   width: 100%;
-  max-width: 800px;
+  max-width: 50vw;
   display: flex;
   flex-direction: column;
   gap: 24px;

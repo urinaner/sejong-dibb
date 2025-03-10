@@ -28,7 +28,7 @@ export const AnnouncementList = ({
 
   return (
     <ContentContainer>
-      {announcements.map((announcement) => (
+      {announcements.slice(0, 5).map((announcement) => (
         <AnnouncementItem
           key={announcement.id}
           onClick={() => onAnnouncementClick(announcement.id)}

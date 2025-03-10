@@ -28,9 +28,9 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
       case 'full':
         return '100%';
       case 'content':
-        return '1300px';
+        return '100vw';
       default:
-        return '1300px';
+        return '100vw';
     }
   }};
 
