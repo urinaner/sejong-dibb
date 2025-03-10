@@ -14,7 +14,7 @@ const Container = styled.div`
   background-color: #000;
 
   @media (max-width: 768px) {
-    height: 60vh;
+    height: 40vh;
   }
 `;
 

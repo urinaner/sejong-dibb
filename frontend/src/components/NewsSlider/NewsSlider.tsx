@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   OuterContainer,
   SliderContainer,
@@ -38,6 +38,9 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
   autoPlayInterval = 5000,
   onNewsClick,
 }) => {
+  const sliderContainerRef = useRef<HTMLDivElement>(null);
+  const gap = 20;
+
   const getItemsPerView = () => {
     if (typeof window === 'undefined') return 5;
     if (window.innerWidth <= 480) return 1;
@@ -50,11 +53,28 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
+  const [contentWidth, setContentWidth] = useState(0);
+
+  const measureContentWidth = () => {
+    if (sliderContainerRef.current) {
+      let width = sliderContainerRef.current.offsetWidth;
+      if (window.innerWidth <= 768) {
+        width = width - 60;
+      }
+      return width;
+    }
+    return 0;
+  };
+
+  useEffect(() => {
+    setContentWidth(measureContentWidth());
+  }, [sliderContainerRef, itemsPerView]);
 
   useEffect(() => {
     const handleResize = () => {
       const newItemsPerView = getItemsPerView();
       setItemsPerView(newItemsPerView);
+      setContentWidth(measureContentWidth());
       const newMaxIndex = Math.max(0, news.length - newItemsPerView);
       setCurrentIndex((prev) => Math.min(prev, newMaxIndex));
     };
@@ -62,6 +82,11 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [news.length]);
+
+  const cardWidth = contentWidth
+    ? (contentWidth - (itemsPerView - 1) * gap) / itemsPerView
+    : 0;
+  const moveDistance = cardWidth + gap;
 
   const maxIndex = Math.max(0, news.length - itemsPerView);
 
@@ -82,7 +107,6 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
           handleNext();
         }
       }, autoPlayInterval);
-
       return () => clearInterval(interval);
     }
   }, [currentIndex, maxIndex, handleNext, isPaused, autoPlayInterval]);
@@ -90,13 +114,14 @@ const NewsSlider: React.FC<NewsSliderProps> = ({
   return (
     <OuterContainer>
       <SliderContainer
+        ref={sliderContainerRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
         <SliderWrapper>
           <SliderTrack
-            transform={`translateX(-${currentIndex * (100 / itemsPerView)}%)`}
-            gap={20}
+            transform={`translateX(-${currentIndex * moveDistance}px)`}
+            gap={gap}
           >
             {news.map((item) => (
               <NewsCard

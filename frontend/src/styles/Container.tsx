@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { media } from './media';
 
-type ContainerType = 'default' | 'full' | 'content';
+type ContainerType = 'default' | 'full' | 'content' | 'main';
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -18,6 +18,8 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
         return '100%';
       case 'content':
         return 'calc(100% - 0px)'; // 모바일에서는 패딩만 적용
+      case 'main':
+        return 'calc(100% - 0px)';
       default:
         return '100%';
     }
@@ -29,6 +31,8 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
         return '100%';
       case 'content':
         return '1300px';
+      case 'main':
+        return '100vw';
       default:
         return '1300px';
     }
@@ -40,6 +44,8 @@ const StyledContainer = styled.div<{ $type: ContainerType }>`
       case 'full':
         return '0';
       case 'content':
+        return '0 5px';
+      case 'main':
         return '0 5px';
       default:
         return '0 5px';

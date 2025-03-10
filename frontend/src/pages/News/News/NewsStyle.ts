@@ -46,7 +46,6 @@ export const NewsImage = styled.div<{ imageUrl: string }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: ${SEJONG_COLORS.COOL_GRAY};
 
   &.error {
     background-image: none;

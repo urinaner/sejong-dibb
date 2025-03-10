@@ -34,7 +34,7 @@ export const MainContainer = styled.div`
 export const NewsSection = styled.section`
   width: 100%;
   margin: 0 auto;
-  padding: 40px 0; // 좌우 패딩 제거
+  padding: 2rem 0; // 좌우 패딩 제거
   position: relative; // 추가
   z-index: 2; // 추가
 
@@ -188,10 +188,10 @@ export const Paper = styled.article`
 export const ContentWrapper = styled.section`
   display: flex;
   justify-content: space-around;
-  margin: 48px auto;
+  margin: 4rem auto;
   padding: 0 20px;
-  max-width: 1200px;
-  gap: 30px;
+  max-width: 80vw;
+  gap: 4rem;
 
   ${media.tablet} {
     margin: 32px auto;
@@ -210,7 +210,7 @@ export const ContentWrapper = styled.section`
 export const AnnouncementAndSeminar = styled.section`
   flex: 1;
   width: 100%;
-  max-width: 800px;
+  max-width: 50vw;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -228,19 +228,25 @@ export const AnnouncementContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
+  ${media.mobile} {
+    padding: 16px;
+  }
+`;
+
+export const AnnouncementHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+
   > p {
-    font-size: 20px;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 16px 0;
 
     ${media.mobile} {
-      font-size: 18px;
       margin: 0 0 12px 0;
     }
-  }
-
-  ${media.mobile} {
-    padding: 16px;
   }
 `;
 
@@ -284,6 +290,14 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+
+export const NoAnnouncements = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  font-weight: 600;
 `;
 
 export const AnnouncementItem = styled.div`

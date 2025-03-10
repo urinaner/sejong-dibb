@@ -13,7 +13,7 @@ function Main(): JSX.Element {
   return (
     <>
       <ButtonListSection />
-      <Container>
+      <Container type="main">
         <ContentWrapper>
           <AnnouncementAndSeminar>
             <AnnouncementSection />

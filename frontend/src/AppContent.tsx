@@ -51,8 +51,6 @@ const ContentWrapper = styled(motion.main)<{ isAuthPage: boolean }>`
   max-width: 100%;
   height: 100%;
   align-items: center;
-  padding: ${(props) =>
-    props.isAuthPage ? '0' : '20px 0'}; // 좌우 패딩을 0으로 변경
 `;
 
 const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
@@ -60,7 +58,6 @@ const BannerWrapper = styled(motion.div)<{ isAuthPage: boolean }>`
   width: 100vw;
   z-index: 0;
   margin-top: ${(props) => (props.isAuthPage ? '0' : '125px')};
-  margin-bottom: ${(props) => (props.isAuthPage ? '0' : '-60px')};
 `;
 
 function AppContent() {
