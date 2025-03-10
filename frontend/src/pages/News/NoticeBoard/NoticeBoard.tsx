@@ -41,8 +41,7 @@ const NoticeBoard: React.FC = () => {
     category: 'all',
     page: 0,
     size: 10,
-    sort: 'createdDate',
-    sortDirection: 'DESC',
+    sort: 'DESC',
   });
 
   // 검색 관련 상태 관리

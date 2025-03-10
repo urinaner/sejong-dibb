@@ -33,9 +33,6 @@ const noticeApi = {
       size: size.toString(),
     });
 
-    if (sort) queryParams.append('sort', sort);
-    if (sortDirection) queryParams.append('sortDirection', sortDirection);
-
     const url =
       category && category !== 'all'
         ? `${apiEndpoints.board.getByCategory(category, page, size, sort ?? 'DESC')}`
