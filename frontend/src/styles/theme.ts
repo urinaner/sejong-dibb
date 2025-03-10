@@ -36,7 +36,7 @@ export const theme: DefaultTheme = {
         padding: '0',
       },
     },
-    mobilePadding: '20px 16px',
+    mobilePadding: '0px 16px',
     tabletPadding: '0px 20px',
     zIndexes: {
       base: 1,
