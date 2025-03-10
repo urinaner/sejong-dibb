@@ -1,10 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AnnouncementContainer } from '../../MainStyle';
+import { AnnouncementContainer, AnnouncementHeader } from '../../MainStyle';
 import { AnnouncementTab } from './AnnouncementTab';
 import { AnnouncementList } from './AnnouncementList';
 import { useGetNoticeList } from '../../../../hooks/queries/useNotice';
 import { CATEGORY_MAP } from '../../constants';
+import styled from 'styled-components';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { IconBaseProps } from 'react-icons';
+
+const ArrowIcon = styled(
+  AiOutlineArrowRight as React.ComponentType<IconBaseProps>,
+)`
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+  font-size: 1.5rem;
+
+  &:hover {
+    transform: translateX(5px);
+    color: #a30027;
+  }
+`;
 
 export const AnnouncementSection = () => {
   const navigate = useNavigate();
@@ -25,9 +43,16 @@ export const AnnouncementSection = () => {
     navigate(`/news/noticeboard/${id}`);
   };
 
+  const handleArrowClick = () => {
+    navigate('/news/noticeboard');
+  };
+
   return (
     <AnnouncementContainer>
-      <p>공지사항</p>
+      <AnnouncementHeader>
+        <p>공지사항</p>
+        <ArrowIcon onClick={handleArrowClick} />
+      </AnnouncementHeader>
       <AnnouncementTab activeTab={activeTab} onTabChange={handleTabChange} />
       <AnnouncementList
         announcements={data?.data || []}

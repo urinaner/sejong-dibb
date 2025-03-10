@@ -228,19 +228,25 @@ export const AnnouncementContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
+  ${media.mobile} {
+    padding: 16px;
+  }
+`;
+
+export const AnnouncementHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+
   > p {
-    font-size: 20px;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 16px 0;
 
     ${media.mobile} {
-      font-size: 18px;
       margin: 0 0 12px 0;
     }
-  }
-
-  ${media.mobile} {
-    padding: 16px;
   }
 `;
 
@@ -284,6 +290,14 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+
+export const NoAnnouncements = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  font-weight: 600;
 `;
 
 export const AnnouncementItem = styled.div`
