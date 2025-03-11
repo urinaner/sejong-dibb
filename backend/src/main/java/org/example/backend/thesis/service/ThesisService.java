@@ -3,7 +3,6 @@ package org.example.backend.thesis.service;
 import static org.example.backend.thesis.exception.ThesisExceptionType.NOT_FOUND_THESIS;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.global.config.file.LocalFileUploader;
 import org.example.backend.professor.domain.entity.Professor;
@@ -14,6 +13,8 @@ import org.example.backend.thesis.domain.entity.Thesis;
 import org.example.backend.thesis.exception.ThesisException;
 import org.example.backend.thesis.repository.ThesisRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,7 @@ public class ThesisService {
     private String serverUrl;
 
     @Transactional
+    @CacheEvict(value = "theses", allEntries = true) // 재구성하는 이유: 페이징 형태로 캐시가 사용되고 있음.
     public Long saveThesis(ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         Professor professor = findProfessorById(thesisReqDto.getProfessorId());
 
@@ -58,12 +60,14 @@ public class ThesisService {
         return ThesisResDto.of(thesis);
     }
 
+    @Cacheable(value = "boards", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<ThesisResDto> getAllTheses(Pageable pageable) {
         return thesisRepository.findAll(pageable)
                 .map(ThesisResDto::of);
     }
 
     @Transactional
+    @CacheEvict(value = "theses", allEntries = true)
     public ThesisResDto updateThesis(Long thesisId, ThesisReqDto thesisReqDto, MultipartFile multipartFile) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadImageUrl = localFileUploader.upload(multipartFile, dirName);
@@ -82,6 +86,7 @@ public class ThesisService {
     }
 
     @Transactional
+    @CacheEvict(value = "theses", allEntries = true)
     public void deleteThesis(Long thesisId) {
         Thesis thesis = findThesisById(thesisId);
         thesisRepository.delete(thesis);
