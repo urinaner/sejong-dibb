@@ -1,16 +1,61 @@
+// index.tsx for ProfessorEdit
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { Modal, useModal } from '../../../../components/Modal';
 import PageContainer from '../components/common/PageContainer/PageContainer';
 import ProfessorForm from '../components/common/ProfessorFrom';
-import { Professor, ProfessorFormData } from '../types';
+import { ProfessorFormData } from '../types';
 import { ProfessorReqDto } from '../../../../config/apiConfig';
 import {
   getErrorMessage,
   useProfessorDetail,
   useUpdateProfessor,
 } from '../../../../hooks/queries/useProfessor';
+
+// Helper function to handle different academicBackground data structures
+const formatAcademicBackground = (
+  academicBackground:
+    | string
+    | null
+    | {
+        bachelor?: string;
+        master?: string;
+        doctor?: string;
+        [key: string]: string | undefined;
+      }
+    | undefined,
+): string => {
+  if (!academicBackground) {
+    return '';
+  }
+
+  if (typeof academicBackground === 'string') {
+    return academicBackground;
+  }
+
+  if (typeof academicBackground === 'object') {
+    // 학사, 석사, 박사 순으로 표시
+    const degrees = [];
+    if (academicBackground.bachelor)
+      degrees.push(`학사: ${academicBackground.bachelor}`);
+    if (academicBackground.master)
+      degrees.push(`석사: ${academicBackground.master}`);
+    if (academicBackground.doctor)
+      degrees.push(`박사: ${academicBackground.doctor}`);
+
+    // 다른 학위 정보도 추가
+    Object.entries(academicBackground)
+      .filter(([key]) => !['bachelor', 'master', 'doctor'].includes(key))
+      .forEach(([key, value]) => {
+        if (value) degrees.push(`${key}: ${value}`);
+      });
+
+    return degrees.length > 0 ? degrees.join('\n') : '';
+  }
+
+  return '';
+};
 
 const ProfessorEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,57 +77,13 @@ const ProfessorEdit: React.FC = () => {
     homepage: '',
     lab: '',
     profileImage: '',
-    academicBackground: JSON.stringify({
-      bachelor: '',
-      master: '',
-      doctor: '',
-    }),
+    academicBackground: '',
     departmentId: 0,
   });
 
   // 데이터가 로드되면 폼 데이터 업데이트
-  // ProfessorEdit/index.tsx 내의 useEffect 부분 수정
   useEffect(() => {
     if (professor) {
-      // 타입 단언을 사용하여 academicBackground 속성에 접근
-      const prof = professor as unknown as Professor;
-
-      // academicBackground 처리
-      let formattedAcademicBackground = '';
-
-      if (prof.academicBackground !== undefined) {
-        if (typeof prof.academicBackground === 'string') {
-          // 이미 문자열인 경우 그대로 사용
-          formattedAcademicBackground = prof.academicBackground;
-        } else if (
-          prof.academicBackground &&
-          typeof prof.academicBackground === 'object'
-        ) {
-          // 객체인 경우 문자열로 변환 (Type: School 형식으로)
-          const parts = [];
-          if (prof.academicBackground.bachelor) {
-            parts.push(`학사: ${prof.academicBackground.bachelor}`);
-          }
-          if (prof.academicBackground.master) {
-            parts.push(`석사: ${prof.academicBackground.master}`);
-          }
-          if (prof.academicBackground.doctor) {
-            parts.push(`박사: ${prof.academicBackground.doctor}`);
-          }
-
-          // 추가 학위 정보도 포함
-          Object.entries(prof.academicBackground)
-            .filter(([key]) => !['bachelor', 'master', 'doctor'].includes(key))
-            .forEach(([key, value]) => {
-              if (value) {
-                parts.push(`${key}: ${value}`);
-              }
-            });
-
-          formattedAcademicBackground = parts.join(' / ');
-        }
-      }
-
       setInitialFormData({
         name: professor.name,
         major: professor.major,
@@ -92,8 +93,11 @@ const ProfessorEdit: React.FC = () => {
         homepage: professor.homepage || '',
         lab: professor.lab || '',
         profileImage: professor.profileImage || '',
-        academicBackground: formattedAcademicBackground,
-        departmentId: 0, // 기본값
+        // Convert academicBackground properly based on its type
+        academicBackground: formatAcademicBackground(
+          professor.academicBackground,
+        ),
+        departmentId: professor.departmentId || 0,
       });
     }
   }, [professor]);
@@ -104,7 +108,6 @@ const ProfessorEdit: React.FC = () => {
   };
 
   // 폼 제출 핸들러
-  // 폼 제출 핸들러
   const handleSubmit = async (
     formData: ProfessorFormData,
     imageFile: File | null,
@@ -113,17 +116,6 @@ const ProfessorEdit: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-
-      // academicBackground가 JSON 문자열인 경우 객체로 파싱
-      let academicBackground;
-      try {
-        academicBackground = formData.academicBackground
-          ? JSON.parse(formData.academicBackground)
-          : undefined;
-      } catch (e) {
-        // 파싱 실패 시 문자열 그대로 사용
-        academicBackground = formData.academicBackground;
-      }
 
       // ProfessorReqDto 형식으로 데이터 준비
       const professorData: ProfessorReqDto = {
@@ -136,7 +128,7 @@ const ProfessorEdit: React.FC = () => {
         lab: formData.lab,
         profileImage: '',
         departmentId: formData.departmentId || 0,
-        academicBackground, // 객체 또는 문자열
+        academicBackground: formData.academicBackground,
       };
 
       // 데이터 및 이미지 전송

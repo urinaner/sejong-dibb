@@ -57,6 +57,7 @@ export interface ProfessorResponse {
 }
 
 export interface ProfessorDetailResponse extends Professor {
+  departmentId: number;
   education: string[];
   career: string[];
   awards: string[];
