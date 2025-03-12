@@ -2,9 +2,6 @@ package org.example.backend.board.service;
 
 import static org.example.backend.board.exception.BoardExceptionType.NOT_FOUND_BOARD;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +53,12 @@ public class BoardService {
 
     @Cacheable(value = "boards", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<BoardResDto> getAllBoards(Pageable pageable) {
-        return boardRepository.findAll(pageable)
-                .map(BoardResDto::of);
+        Page<BoardResDto> boardResDtos = boardRepository.findAll(pageable).map(BoardResDto::of);
+        List<BoardResDto> content = boardResDtos.getContent();
+        for (long i = 0; i < content.size(); i++) {
+            content.get((int) i).setId((long) pageable.getPageNumber() * pageable.getPageSize() + i);
+        }
+        return boardResDtos;
     }
 
     public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {
