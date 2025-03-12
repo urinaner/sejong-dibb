@@ -349,9 +349,14 @@ export const apiEndpoints = {
     get: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
     update: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
     delete: (boardId: string) => createEndpoint(`/api/board/${boardId}`),
-    getByCategory: (category: string, page: number, size: number) =>
+    getByCategory: (
+      category: string,
+      page: number,
+      size: number,
+      sort: string,
+    ) =>
       createEndpoint(
-        `/api/board/category/${category}?page=${page}&size=${size}`,
+        `/api/board/category/${category}?page=${page}&size=${size}&sortDirection=${sort}`,
       ),
   },
 

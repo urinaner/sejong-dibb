@@ -18,10 +18,10 @@ export const CardButton = styled.a`
   background-color: #e9dfda;
   border-radius: 8px;
   padding: 1.5rem;
-  height: 140px;
   text-decoration: none;
   color: #333;
   transition: background-color 0.2s ease;
+  flex: 1;
 
   &:hover {
     background-color: #d8cdc6;

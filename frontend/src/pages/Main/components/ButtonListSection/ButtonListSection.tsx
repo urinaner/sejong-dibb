@@ -54,10 +54,10 @@ const ButtonListSection: React.FC = () => {
                       <SeminarInfoTitle>
                         {seminarData.data[0].name}
                       </SeminarInfoTitle>
-                      {seminarData.data[0].writer && (
+                      {seminarData.data[0].speaker && (
                         <SeminarInfoSubtitle>
                           {'연사 : '}
-                          {seminarData.data[0].writer}
+                          {seminarData.data[0].speaker}
                         </SeminarInfoSubtitle>
                       )}
                       <SeminarInfoSubtitle>

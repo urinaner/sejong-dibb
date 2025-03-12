@@ -13,7 +13,7 @@ export const TopHeaderContainer = styled.div`
 `;
 
 export const TopHeaderInner = styled.div`
-  max-width: 1400px;
+  max-width: 90vw;
   margin: 0 auto;
   height: 100%;
   display: flex;
@@ -122,7 +122,7 @@ export const HeaderContainer = styled(motion.header)<{
 `;
 
 export const HeaderInner = styled.div`
-  max-width: 1400px;
+  max-width: 90vw;
   margin: 0 auto;
   height: 100%;
   display: flex;

@@ -12,9 +12,11 @@ export const ButtonListList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+  border-bottom: 1px solid #ddd;
 
   @media (max-width: 768px) {
     flex-wrap: wrap;
+    border-bottom: 0px;
   }
 `;
 
@@ -99,6 +101,7 @@ export const ButtonListItem = styled.li<ButtonListItemProps>`
 
   @media (max-width: 768px) {
     flex: 0 0 calc(50% - 1px);
+    border: 0px;
 
     ${({ isSeminar }) =>
       isSeminar &&
@@ -106,6 +109,10 @@ export const ButtonListItem = styled.li<ButtonListItemProps>`
         flex: 0 0 100%;
         margin-top: 1rem;
       `}
+
+    a {
+      padding: 1rem 0.5rem;
+    }
   }
 `;
 

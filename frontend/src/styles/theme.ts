@@ -22,13 +22,13 @@ export const theme: DefaultTheme = {
     types: {
       default: {
         width: '100vw',
-        maxWidth: '1500px',
-        padding: '40px 20px',
+        maxWidth: '100vw',
+        padding: '0px 20px',
       },
       full: {
         width: '100%',
         maxWidth: '100%',
-        padding: '40px 0',
+        padding: '0',
       },
       auth: {
         width: '100%',
@@ -36,8 +36,8 @@ export const theme: DefaultTheme = {
         padding: '0',
       },
     },
-    mobilePadding: '20px 16px',
-    tabletPadding: '30px 20px',
+    mobilePadding: '0px 16px',
+    tabletPadding: '0px 20px',
     zIndexes: {
       base: 1,
       overlay: 100,
