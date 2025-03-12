@@ -47,4 +47,8 @@ public class SeminarResDto {
                 .company(seminar.getCompany())
                 .build();
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

@@ -2,6 +2,7 @@ package org.example.backend.seminar.service;
 
 import static org.example.backend.seminar.exception.SeminarExceptionType.NOT_FOUND_SEMINAR;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.seminar.domain.dto.SeminarReqDto;
 import org.example.backend.seminar.domain.dto.SeminarResDto;
@@ -56,8 +57,12 @@ public class SeminarService {
 
     @Cacheable(value = "seminars", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<SeminarResDto> getAllSeminars(Pageable pageable) {
-        return seminarRepository.findAll(pageable)
-                .map(SeminarResDto::of);
+        Page<SeminarResDto> seminarResDtos = seminarRepository.findAll(pageable).map(SeminarResDto::of);
+        List<SeminarResDto> content = seminarResDtos.getContent();
+        for (int i = 0; i < content.size(); i++) {
+            content.get(i).setId((long) pageable.getPageNumber() * pageable.getPageSize() + i);
+        }
+        return seminarResDtos;
     }
 
     public Page<SeminarResDto> searchSeminar(String keyword, Pageable pageable) {
