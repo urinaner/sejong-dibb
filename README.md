@@ -1,6 +1,6 @@
-# **🚀 세종대학교 바이오융합공학전공 웹사이트**  
+# **🚀 세종대학교 바이오융합공학전공 홈페이지**  
 <p align="center">
-  <img src="src/assets/images/logo.png" alt="세종대학교 바이오융합공학전공 로고" width="200">
+  <img src="https://i.namu.wiki/i/rl9I96qi24PeIr4GIPjgN_l0Wv1IvxFBpFTnDpsBrjFnNDEVNboPf00htpycOlrlilpk1iJMbVWsn5VyAkF8Mss1XSWV9DGyIPBE2ttkrCNF8zowi94BEEHyXDbOkd6q72PEucaRPi6KQ_ZmqM058g.svg" alt="세종대학교 바이오융합공학전공 로고" width="200">
 </p>
 
 <p align="center">
@@ -14,27 +14,27 @@
 📢 주요 기능을 직접 확인해보세요!
 
 <p align="center">
-  <img src="docs/assets/main-page-demo.gif" alt="메인 페이지 시연" width="700">
+  <img src="https://github.com/user-attachments/assets/56b41765-1f3c-4dbf-98ee-697fc7cb8376" alt="DBD_시연_메인">
   <br>
   <em>🖥️ 메인 페이지 및 뉴스 섹션</em>
 </p>
 
 <p align="center">
-  ![DBD_시연_학과 (1)](https://github.com/user-attachments/assets/39a1e23a-4bd5-413c-92e8-23ac81e75033)
+  <img src="https://github.com/user-attachments/assets/c850f8ad-9da0-4223-9ad9-1f9aa3fde23a" alt="DBD_시연_학과">
   <br>
-  <em>👨‍🏫 학과 섹션 </em>
+  <em>👨‍🏫 학과 섹션</em>
 </p>
 
 <p align="center">
-  ![DBD_시연_대학](https://github.com/user-attachments/assets/e85b6102-051c-40f0-90ce-946b1e10af3d)
+  <img src="https://github.com/user-attachments/assets/896985b2-02b1-498d-abd3-24d89a5d7650" alt="DBD_시연_대학">
   <br>
-  <em>👨‍🏫 대학 섹션 </em>
+  <em>👨‍🏫 대학 섹션</em>
 </p>
 
 <p align="center">
-  ![DBD_시연_바융소식](https://github.com/user-attachments/assets/864d1f46-9602-4294-8ccf-3b9bbfd87087)
+  <img src="https://github.com/user-attachments/assets/ba7cba19-9332-4e72-946f-8250cd4d6ba1" alt="DBD_시연_바융소식">
   <br>
-  <em>📅 바융 소식 섹션 </em>
+  <em>📅 바융 소식 섹션</em>
 </p>
 
 ---
@@ -129,10 +129,6 @@ src/
 🔹 **CDN 활용**: CloudFront로 정적 자원 로드 속도 향상  
 
 ---
-
-## **📜 라이선스**
-📌 본 프로젝트는 **MIT 라이선스** 하에 배포됩니다.  
-🔗 [LICENSE](LICENSE) 파일을 확인하세요.
 
 ---
 
