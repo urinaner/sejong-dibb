@@ -36,7 +36,7 @@
 
 ---
 
-## **📌 추가할 4개의 이미지 (한 줄에 정렬)**
+## **📌 프로젝트 이미지 **
 <p align="center">
   <img src="https://github.com/user-attachments/assets/d35acfeb-6402-454a-8e5d-9298376c23ae" alt="추가 이미지 1" width="20.5%" hspace="10">
   <img src="https://github.com/user-attachments/assets/9e4fc9dc-8811-44fa-a831-66c63291a582" alt="추가 이미지 2" width="20%" hspace="8">
