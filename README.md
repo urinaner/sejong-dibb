@@ -13,34 +13,39 @@
 
 
 ---
-
 ## **🎬 프로젝트 시연 영상**
 📢 주요 기능을 직접 확인해보세요!
 
+### **🖥️ 주요 페이지**
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/56b41765-1f3c-4dbf-98ee-697fc7cb8376" alt="DBD_시연_메인">
-  <br>
-  <em>🖥️ 메인 페이지 및 뉴스 섹션</em>
+  <img src="https://github.com/user-attachments/assets/56b41765-1f3c-4dbf-98ee-697fc7cb8376" alt="DBD_시연_메인" width="45%">
+  <img src="https://github.com/user-attachments/assets/c850f8ad-9da0-4223-9ad9-1f9aa3fde23a" alt="DBD_시연_학과" width="45%">
+</p>
+<p align="center">
+  <em>🖥️ 메인 페이지 및 뉴스 섹션</em> | <em>👨‍🏫 학과 섹션</em>
 </p>
 
+### **🏛️ 대학 및 소식 섹션**
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c850f8ad-9da0-4223-9ad9-1f9aa3fde23a" alt="DBD_시연_학과">
-  <br>
-  <em>👨‍🏫 학과 섹션</em>
+  <img src="https://github.com/user-attachments/assets/896985b2-02b1-498d-abd3-24d89a5d7650" alt="DBD_시연_대학" width="45%">
+  <img src="https://github.com/user-attachments/assets/ba7cba19-9332-4e72-946f-8250cd4d6ba1" alt="DBD_시연_바융소식" width="45%">
+</p>
+<p align="center">
+  <em>🏛️ 대학 섹션</em> | <em>📅 바융 소식 섹션</em>
 </p>
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/896985b2-02b1-498d-abd3-24d89a5d7650" alt="DBD_시연_대학">
-  <br>
-  <em>👨‍🏫 대학 섹션</em>
-</p>
+---
 
+## **📌 추가할 4개의 이미지 (한 줄에 정렬)**
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ba7cba19-9332-4e72-946f-8250cd4d6ba1" alt="DBD_시연_바융소식">
-  <br>
-  <em>📅 바융 소식 섹션</em>
+  <img src="https://github.com/user-attachments/assets/d35acfeb-6402-454a-8e5d-9298376c23ae" alt="추가 이미지 1" width="20.5%" hspace="10">
+  <img src="https://github.com/user-attachments/assets/9e4fc9dc-8811-44fa-a831-66c63291a582" alt="추가 이미지 2" width="20%" hspace="8">
+  <img src="https://github.com/user-attachments/assets/6171efba-ef71-44c2-959a-8d95136beb60" alt="추가 이미지 4" width="20%" hspace="10">
+  <img src="https://github.com/user-attachments/assets/8ff697e8-4f72-4a97-9599-c23d19aefaec" alt="추가 이미지 3" width="20%" hspace="10">
 </p>
-
+<p align="center">
+  <em>📌 데스크탑 메인</em> | <em>📌 데스트탑 뉴스 </em> | <em>📌 모바일 메인 </em> | <em>📌 모바일 뉴스 </em>
+</p>
 ---
 
 ## **📌 프로젝트 소개**
