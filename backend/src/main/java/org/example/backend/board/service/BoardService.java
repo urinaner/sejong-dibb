@@ -53,12 +53,8 @@ public class BoardService {
 
     @Cacheable(value = "boards", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<BoardResDto> getAllBoards(Pageable pageable) {
-        Page<BoardResDto> boardResDtos = boardRepository.findAll(pageable).map(BoardResDto::of);
-        List<BoardResDto> content = boardResDtos.getContent();
-        for (long i = 0; i < content.size(); i++) {
-            content.get((int) i).setId((long) pageable.getPageNumber() * pageable.getPageSize() + i);
-        }
-        return boardResDtos;
+        return boardRepository.findAll(pageable)
+                .map(BoardResDto::of);
     }
 
     public Page<BoardResDto> getBoardsByCategory(Category category, Pageable pageable) {

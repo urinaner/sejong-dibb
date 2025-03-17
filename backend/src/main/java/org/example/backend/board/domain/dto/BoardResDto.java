@@ -45,8 +45,4 @@ public class BoardResDto {
                 .category(board.getCategory().name())
                 .build();
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }
