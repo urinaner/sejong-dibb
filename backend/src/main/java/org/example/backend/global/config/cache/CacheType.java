@@ -16,7 +16,7 @@ public enum CacheType {
     SEMINARS("seminars", 60, 1000),
 
     // 논문 목록 캐시 (60분, 최대 1,000개)
-    THESES("thesis", 60, 1000);
+    THESES("theses", 60, 1000);
 
     private final String cacheName;
     private final int expiredAfterWrite;

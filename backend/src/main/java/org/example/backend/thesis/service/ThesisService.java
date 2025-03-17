@@ -60,7 +60,7 @@ public class ThesisService {
         return ThesisResDto.of(thesis);
     }
 
-    @Cacheable(value = "boards", key = "{#pageable.pageNumber, #pageable.pageSize}")
+    @Cacheable(value = "theses", key = "{#pageable.pageNumber, #pageable.pageSize}")
     public Page<ThesisResDto> getAllTheses(Pageable pageable) {
         return thesisRepository.findAll(pageable)
                 .map(ThesisResDto::of);
