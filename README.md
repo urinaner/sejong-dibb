@@ -44,7 +44,7 @@
   <img src="https://github.com/user-attachments/assets/8ff697e8-4f72-4a97-9599-c23d19aefaec" alt="추가 이미지 3" width="20%" hspace="10">
 </p>
 <p align="center">
-  <em>📌 데스크탑 메인</em> | <em>📌 데스트탑 뉴스 </em> | <em>📌 모바일 메인 </em> | <em>📌 모바일 뉴스 </em>
+  <em>📌 데스크탑 메인</em> | <em>📌 데스크탑 뉴스 </em> | <em>📌 모바일 메인 </em> | <em>📌 모바일 뉴스 </em>
 </p>
 
 
