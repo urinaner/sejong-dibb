@@ -60,7 +60,7 @@ public class Users {
         this.password = newEncodedPassword;
     }
 
-    public boolean isEqualEmail(String email) {
+    public boolean has(String email) {
         return this.email.equals(email);
     }
 
