@@ -3,20 +3,17 @@ package org.example.backend.users.service;
 import static org.example.backend.users.exception.admin.AdminExceptionType.ALREADY_EXIST_LOGIN_ID;
 import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_ACCESS_TOKEN;
 import static org.example.backend.users.exception.admin.AdminExceptionType.INVALID_PASSWORD_PATTERN;
-import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_VALID_PASSWORD;
-
-import java.util.regex.Pattern;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_FOUND_ADMIN;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_FOUND_MAIL_RECEIVER;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_MATCH_EMAIL;
 import static org.example.backend.users.exception.admin.AdminExceptionType.NOT_VALID_PASSWORD;
 
 import java.security.SecureRandom;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.domain.dto.admin.AccessTokenReq;
-import org.example.backend.users.domain.dto.admin.AdminReqDto;
 import org.example.backend.users.domain.dto.admin.AdminResDto;
 import org.example.backend.users.domain.dto.admin.mail.MailReqDto;
 import org.example.backend.users.domain.dto.admin.mail.MailResDto;
@@ -24,8 +21,10 @@ import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
 import org.example.backend.users.exception.admin.AdminException;
 import org.example.backend.users.repository.UsersRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +37,10 @@ public class AdminService {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
-    private static final String BEARER_TYPE = "Bearer";
-    private static final String DEFAULT_FROM_EMAIL = "zkffl0@naver.com";
+    private final String BEARER_TYPE = "Bearer";
+
+    @Value("${spring.mail.username}")
+    private String DEFAULT_FROM_EMAIL;
     private final JavaMailSender mailSender;
 
     @Transactional(readOnly = false)
@@ -105,6 +106,7 @@ public class AdminService {
             throw new AdminException(INVALID_PASSWORD_PATTERN);
         }
     }
+
     public Users getAdminById(Long id) {
         return usersRepository.findById(id)
                 .orElseThrow(() -> new AdminException(INVALID_ACCESS_TOKEN));
@@ -114,7 +116,7 @@ public class AdminService {
     public MailResDto createTmpPasswordMail(MailReqDto mailReqDto) {
         Users admin = findAdminByLoginId(mailReqDto.getLoginId());
 
-        if (!admin.isEqualEmail(mailReqDto.getEmail())) {
+        if (!admin.has(mailReqDto.getEmail())) {
             throw new AdminException(NOT_MATCH_EMAIL);
         }
 
@@ -152,6 +154,7 @@ public class AdminService {
         usersRepository.save(admin);
     }
 
+    @Async
     public void mailSend(MailResDto dto) {
         if (dto.getAddress() == null || dto.getAddress().isBlank()) {
             log.error("메일 발송 실패: 이메일 주소가 비어 있습니다.");
