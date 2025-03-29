@@ -41,7 +41,8 @@ const NoticeBoard: React.FC = () => {
     category: 'all',
     page: 0,
     size: 10,
-    sort: 'DESC',
+    sort: 'createdDate', // 정렬 필드
+    sortDirection: 'DESC', // 정렬 방향
   });
 
   // 검색 관련 상태 관리
@@ -99,11 +100,11 @@ const NoticeBoard: React.FC = () => {
       ) {
         setQueryParams((prev) => ({
           ...prev,
-          sort: field,
+          sort: field, // 정렬 필드 설정
           sortDirection:
             prev.sort === field && prev.sortDirection === 'DESC'
               ? 'ASC'
-              : 'DESC',
+              : 'DESC', // 정렬 방향 설정
           page: 0,
         }));
 

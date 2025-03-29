@@ -33,10 +33,19 @@ const noticeApi = {
       size: size.toString(),
     });
 
+    // sort와 sortDirection이 모두 있는 경우에만 추가
+    if (sort) {
+      queryParams.append('sort', sort);
+    }
+
+    if (sortDirection) {
+      queryParams.append('sortDirection', sortDirection);
+    }
+
     const url =
       category && category !== 'all'
-        ? `${apiEndpoints.board.getByCategory(category, page, size, sort ?? 'DESC')}`
-        : `${apiEndpoints.board.base}?${queryParams.toString()}&sortDirection=${sort}`;
+        ? `${apiEndpoints.board.getByCategory(category, page, size, sortDirection ?? 'DESC')}`
+        : `${apiEndpoints.board.base}?${queryParams.toString()}`;
 
     const response = await axiosInstance.get<NoticeListResponse>(url);
     return response.data;

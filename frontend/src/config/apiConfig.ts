@@ -353,10 +353,10 @@ export const apiEndpoints = {
       category: string,
       page: number,
       size: number,
-      sort: string,
+      sortDirection: string,
     ) =>
       createEndpoint(
-        `/api/board/category/${category}?page=${page}&size=${size}&sortDirection=${sort}`,
+        `/api/board/category/${category}?page=${page}&size=${size}&sortDirection=${sortDirection}`,
       ),
   },
 
