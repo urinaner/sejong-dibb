@@ -154,7 +154,14 @@ const NoticeBoard: React.FC = () => {
   }, [auth?.isAuthenticated, navigate]);
 
   // 검색 중이면 검색 결과를, 아니면 일반 목록을 표시
-  const notices = isSearching ? searchData?.data || [] : data?.data || [];
+  let notices = isSearching ? searchData?.data || [] : data?.data || [];
+
+  // 데이터에 표시용 순차 번호 속성 추가
+  notices = notices.map((notice, index) => ({
+    ...notice,
+    _displayNumber: (queryParams.page + 1) * queryParams.size - index, // 역순 번호 계산
+  }));
+
   const totalPages = isSearching
     ? searchData?.totalPage || 0
     : data?.totalPage || 0;
@@ -164,7 +171,11 @@ const NoticeBoard: React.FC = () => {
 
   // 테이블 컬럼 정의
   const columns = [
-    { key: 'id', label: '번호', width: '7%' },
+    {
+      key: '_displayNumber', // 미리 계산된 표시용 번호 속성 사용
+      label: '번호',
+      width: '7%',
+    },
     {
       key: 'title',
       label: '제목',
