@@ -55,7 +55,7 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{courseType}")
+    @GetMapping("/type/{courseType}")
     public ResponseEntity<List<CourseResDto>> getCoursesByType(@PathVariable String courseType) {
         CourseType type = CourseType.valueOf(courseType.toUpperCase());
         return ResponseEntity.ok(courseService.getCoursesByType(type));
