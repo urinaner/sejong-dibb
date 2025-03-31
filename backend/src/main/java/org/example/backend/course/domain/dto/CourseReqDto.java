@@ -11,55 +11,44 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseReqDto {
 
-    @NotBlank(message = "학년/학기 정보는 필수 입력값입니다.")
-    @Size(max = 10, message = "학년/학기 정보는 최대 10자까지 입력 가능합니다.")
-    private String academicYearSemester;
+    @NotBlank(message = "courseType은 필수 입력입니다.")
+    private String courseType;
 
-    @Size(max = 50, message = "이수구분은 최대 50자까지 입력 가능합니다.")
+    private String academicYearSemester;
     private String classification;
 
-    @NotBlank(message = "학수번호는 필수 입력값입니다.")
-    @Size(max = 20, message = "학수번호는 최대 20자까지 입력 가능합니다.")
+    @NotBlank
     private String courseNumber;
 
-    @NotBlank(message = "과목명은 필수 입력값입니다.")
-    @Size(max = 100, message = "과목명은 최대 100자까지 입력 가능합니다.")
+    @NotBlank
     private String courseName;
-
-    @Size(max = 100, message = "영문 과목명은 최대 100자까지 입력 가능합니다.")
     private String courseNameEn;
-
-    @Size(max = 20, message = "학점(시간)은 최대 20자까지 입력 가능합니다.")
     private String creditTime;
 
+    private String courseDescription;
+    private String courseDescriptionEn;
+    private String targetProgram;
+
     @Builder
-    private CourseReqDto(String academicYearSemester,
-                         String classification,
-                         String courseNumber,
-                         String courseName,
-                         String courseNameEn,
-                         String creditTime) {
+    public CourseReqDto(String courseType,
+                        String academicYearSemester,
+                        String classification,
+                        String courseNumber,
+                        String courseName,
+                        String courseNameEn,
+                        String creditTime,
+                        String courseDescription,
+                        String courseDescriptionEn,
+                        String targetProgram) {
+        this.courseType = courseType;
         this.academicYearSemester = academicYearSemester;
         this.classification = classification;
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;
         this.creditTime = creditTime;
-    }
-
-    public static CourseReqDto of(String academicYearSemester,
-                                  String classification,
-                                  String courseNumber,
-                                  String courseName,
-                                  String courseNameEn,
-                                  String creditTime) {
-        return CourseReqDto.builder()
-                .academicYearSemester(academicYearSemester)
-                .classification(classification)
-                .courseNumber(courseNumber)
-                .courseName(courseName)
-                .courseNameEn(courseNameEn)
-                .creditTime(creditTime)
-                .build();
+        this.courseDescription = courseDescription;
+        this.courseDescriptionEn = courseDescriptionEn;
+        this.targetProgram = targetProgram;
     }
 }
