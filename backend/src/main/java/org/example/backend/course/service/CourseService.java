@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.course.domain.dto.CourseReqDto;
 import org.example.backend.course.domain.dto.CourseResDto;
 import org.example.backend.course.domain.entity.Course;
+import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.exception.CourseException;
 import org.example.backend.course.exception.CourseExceptionType;
 import org.example.backend.course.repository.CourseRepository;
@@ -51,6 +52,12 @@ public class CourseService {
     public List<CourseResDto> getAllCourses() {
         return courseRepository.findAll()
                 .stream()
+                .map(CourseResDto::of)
+                .toList();
+    }
+
+    public List<CourseResDto> getCoursesByType(CourseType courseType) {
+        return courseRepository.findByCourseType(courseType).stream()
                 .map(CourseResDto::of)
                 .toList();
     }

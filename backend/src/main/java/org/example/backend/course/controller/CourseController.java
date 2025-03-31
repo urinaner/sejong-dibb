@@ -1,12 +1,12 @@
 package org.example.backend.course.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.course.domain.dto.CourseReqDto;
 import org.example.backend.course.domain.dto.CourseResDto;
+import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +53,11 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourse(@PathVariable(name = "courseId") Long courseId) {
         courseService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{courseType}")
+    public ResponseEntity<List<CourseResDto>> getCoursesByType(@PathVariable String courseType) {
+        CourseType type = CourseType.valueOf(courseType.toUpperCase());
+        return ResponseEntity.ok(courseService.getCoursesByType(type));
     }
 }
