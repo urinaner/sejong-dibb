@@ -163,6 +163,11 @@ export const AppRoutes: React.FC = ({}) => {
         }
       />
 
+      <Route
+        path="/google7b8b29cb66f52214.html"
+        element={<div>구글 인증 파일 </div>}
+      />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
