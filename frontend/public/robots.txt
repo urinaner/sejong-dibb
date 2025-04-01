@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ibb.sejong.ac.kr/sitemap.xml
