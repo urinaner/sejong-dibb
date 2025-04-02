@@ -3,7 +3,9 @@ package org.example.backend.course.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.course.domain.dto.CourseReqDto;
-import org.example.backend.course.domain.dto.CourseResDto;
+import org.example.backend.course.domain.dto.res.CourseResDto;
+import org.example.backend.course.domain.dto.res.CourseResDtoFactory;
+import org.example.backend.course.domain.entity.BaseCourse;
 import org.example.backend.course.domain.entity.Course;
 import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.exception.CourseException;
@@ -27,24 +29,24 @@ public class CourseService {
     }
 
     public CourseResDto getCourse(Long courseId) {
-        Course course = findCourseById(courseId);
-        return CourseResDto.of(course);
+        BaseCourse course = findCourseById(courseId);
+        return CourseResDtoFactory.of(course);
     }
 
     @Transactional
     public CourseResDto updateCourse(Long courseId, CourseReqDto courseReqDto) {
-        Course course = findCourseById(courseId);
+        BaseCourse course = findCourseById(courseId);
         course.update(courseReqDto);
         return CourseResDto.of(course);
     }
 
     @Transactional
     public void deleteCourse(Long courseId) {
-        Course course = findCourseById(courseId);
+        BaseCourse course = findCourseById(courseId);
         courseRepository.delete(course);
     }
 
-    private Course findCourseById(Long courseId) {
+    private BaseCourse findCourseById(Long courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseException(CourseExceptionType.NOT_FOUND_COURSE));
     }
@@ -52,13 +54,13 @@ public class CourseService {
     public List<CourseResDto> getAllCourses() {
         return courseRepository.findAll()
                 .stream()
-                .map(CourseResDto::of)
+                .map(CourseResDtoFactory::of)
                 .toList();
     }
 
     public List<CourseResDto> getCoursesByType(CourseType courseType) {
         return courseRepository.findByCourseType(courseType).stream()
-                .map(CourseResDto::of)
+                .map(CourseResDtoFactory::of)
                 .toList();
     }
 }
