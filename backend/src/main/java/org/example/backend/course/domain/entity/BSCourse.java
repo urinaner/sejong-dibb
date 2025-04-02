@@ -15,7 +15,7 @@ import org.example.backend.course.domain.dto.CourseReqDto;
 @DiscriminatorValue("UNDERGRADUATE")
 @Table(name = "undergraduate_courses")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UndergraduateCourse extends BaseCourse {
+public class BSCourse extends Course {
 
     // 학부 전용
     @Column(name = "academic_year_semester")
@@ -32,14 +32,14 @@ public class UndergraduateCourse extends BaseCourse {
 
 
     @Builder
-    private UndergraduateCourse(String academicYearSemester, String classification,
-                                String courseNumber,
-                                String courseName,
-                                String courseNameEn,
-                                String creditTime,
-                                String courseDescription,
-                                String courseDescriptionEn,
-                                String targetProgram) {
+    private BSCourse(String academicYearSemester, String classification,
+                     String courseNumber,
+                     String courseName,
+                     String courseNameEn,
+                     String creditTime,
+                     String courseDescription,
+                     String courseDescriptionEn,
+                     String targetProgram) {
         super(courseNumber, courseName, courseNameEn, creditTime);
         this.academicYearSemester = academicYearSemester;
         this.classification = classification;
@@ -47,8 +47,8 @@ public class UndergraduateCourse extends BaseCourse {
         this.courseDescriptionEn = courseDescriptionEn;
     }
 
-    public static UndergraduateCourse of(CourseReqDto dto) {
-        return UndergraduateCourse.builder()
+    public static BSCourse of(CourseReqDto dto) {
+        return BSCourse.builder()
                 .academicYearSemester(dto.getAcademicYearSemester())
                 .classification(dto.getClassification())
                 .courseNumber(dto.getCourseNumber())

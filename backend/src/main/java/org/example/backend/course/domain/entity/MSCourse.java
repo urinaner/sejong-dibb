@@ -15,21 +15,21 @@ import org.example.backend.course.domain.dto.CourseReqDto;
 @Table(name = "graduate_courses")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GraduateCourse extends BaseCourse {
+public class MSCourse extends Course {
 
     // 대학원 전용 필드
     @Column(name = "target_program")
     private String targetProgram;
 
     @Builder
-    private GraduateCourse(String courseNumber, String courseName, String courseNameEn, String creditTime,
-                           String targetProgram) {
+    private MSCourse(String courseNumber, String courseName, String courseNameEn, String creditTime,
+                     String targetProgram) {
         super(courseNumber, courseName, courseNameEn, creditTime);
         this.targetProgram = targetProgram;
     }
 
-    public static GraduateCourse of(CourseReqDto dto) {
-        return GraduateCourse.builder()
+    public static MSCourse of(CourseReqDto dto) {
+        return MSCourse.builder()
                 .courseNumber(dto.getCourseNumber())
                 .courseName(dto.getCourseName())
                 .courseNameEn(dto.getCourseNameEn())

@@ -4,24 +4,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.course.domain.entity.CourseType;
-import org.example.backend.course.domain.entity.GraduateCourse;
+import org.example.backend.course.domain.entity.MSCourse;
 
 @Getter
 @NoArgsConstructor
-public class GCourseResDto extends CourseResDto {
+public class MSCourseResDto extends CourseResDto {
 
     private String targetProgram;
 
     @Builder
-    public GCourseResDto(Long id, CourseType courseType, String courseNumber,
-                         String courseName, String courseNameEn,
-                         String creditTime, String targetProgram) {
+    public MSCourseResDto(Long id, CourseType courseType, String courseNumber,
+                          String courseName, String courseNameEn,
+                          String creditTime, String targetProgram) {
         super(id, courseType, courseNumber, courseName, courseNameEn, creditTime);
         this.targetProgram = targetProgram;
     }
 
-    public static GCourseResDto of(GraduateCourse course) {
-        return GCourseResDto.builder()
+    public static MSCourseResDto of(MSCourse course) {
+        return MSCourseResDto.builder()
                 .id(course.getId())
                 .courseNumber(course.getCourseNumber())
                 .courseName(course.getCourseName())

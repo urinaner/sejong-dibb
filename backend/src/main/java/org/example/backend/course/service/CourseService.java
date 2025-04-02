@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.course.domain.dto.CourseReqDto;
 import org.example.backend.course.domain.dto.res.CourseResDto;
 import org.example.backend.course.domain.dto.res.CourseResDtoFactory;
-import org.example.backend.course.domain.entity.BaseCourse;
 import org.example.backend.course.domain.entity.Course;
 import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.exception.CourseException;
@@ -29,24 +28,24 @@ public class CourseService {
     }
 
     public CourseResDto getCourse(Long courseId) {
-        BaseCourse course = findCourseById(courseId);
+        Course course = findCourseById(courseId);
         return CourseResDtoFactory.of(course);
     }
 
     @Transactional
     public CourseResDto updateCourse(Long courseId, CourseReqDto courseReqDto) {
-        BaseCourse course = findCourseById(courseId);
+        Course course = findCourseById(courseId);
         course.update(courseReqDto);
         return CourseResDto.of(course);
     }
 
     @Transactional
     public void deleteCourse(Long courseId) {
-        BaseCourse course = findCourseById(courseId);
+        Course course = findCourseById(courseId);
         courseRepository.delete(course);
     }
 
-    private BaseCourse findCourseById(Long courseId) {
+    private Course findCourseById(Long courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseException(CourseExceptionType.NOT_FOUND_COURSE));
     }

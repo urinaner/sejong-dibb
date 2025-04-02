@@ -3,19 +3,19 @@ package org.example.backend.course.domain.dto.res;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.backend.course.domain.entity.BSCourse;
 import org.example.backend.course.domain.entity.CourseType;
-import org.example.backend.course.domain.entity.UndergraduateCourse;
 
 @Getter
 @NoArgsConstructor
-public class UGCourseResDto extends CourseResDto {
+public class BSCourseResDto extends CourseResDto {
     private String academicYearSemester;
     private String classification;
     private String courseDescription;
     private String courseDescriptionEn;
 
     @Builder
-    public UGCourseResDto(Long id, CourseType courseType, String academicYearSemester,
+    public BSCourseResDto(Long id, CourseType courseType, String academicYearSemester,
                           String classification, String courseNumber,
                           String courseName, String courseNameEn,
                           String creditTime, String courseDescription,
@@ -27,8 +27,8 @@ public class UGCourseResDto extends CourseResDto {
         this.courseDescriptionEn = courseDescriptionEn;
     }
 
-    public static UGCourseResDto of(UndergraduateCourse course) {
-        return UGCourseResDto.builder()
+    public static BSCourseResDto of(BSCourse course) {
+        return BSCourseResDto.builder()
                 .id(course.getId())
                 .academicYearSemester(course.getAcademicYearSemester())
                 .classification(course.getClassification())

@@ -19,7 +19,7 @@ import org.example.backend.common.domain.BaseEntity;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "course_type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class BaseCourse extends BaseEntity {
+public abstract class Course extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public abstract class BaseCourse extends BaseEntity {
     @Column(name = "credit_time")
     protected String creditTime;
 
-    protected BaseCourse(String courseNumber, String courseName, String courseNameEn, String creditTime) {
+    protected Course(String courseNumber, String courseName, String courseNameEn, String creditTime) {
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;
