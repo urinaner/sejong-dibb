@@ -1,12 +1,18 @@
 package org.example.backend.course.service;
 
+import static org.example.backend.course.exception.CourseExceptionType.INVALID_COURSE_DTO_TYPE;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.course.domain.dto.CourseReqDto;
+import org.example.backend.course.domain.dto.req.BSCourseReqDto;
+import org.example.backend.course.domain.dto.req.CourseReqDto;
+import org.example.backend.course.domain.dto.req.MSCourseReqDto;
 import org.example.backend.course.domain.dto.res.CourseResDto;
 import org.example.backend.course.domain.dto.res.CourseResDtoFactory;
+import org.example.backend.course.domain.entity.BSCourse;
 import org.example.backend.course.domain.entity.Course;
 import org.example.backend.course.domain.entity.CourseType;
+import org.example.backend.course.domain.entity.MSCourse;
 import org.example.backend.course.exception.CourseException;
 import org.example.backend.course.exception.CourseExceptionType;
 import org.example.backend.course.repository.CourseRepository;
@@ -21,8 +27,15 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public Long saveCourse(CourseReqDto courseReqDto) {
-        Course course = Course.of(courseReqDto);
+    public Long saveCourse(CourseReqDto dto) {
+        Course course = null;
+        if (dto instanceof BSCourseReqDto bsDto) {
+            course = BSCourse.of(bsDto);
+        } else if (dto instanceof MSCourseReqDto msDto) {
+            course = MSCourse.of(msDto);
+        } else {
+            throw new CourseException(INVALID_COURSE_DTO_TYPE);
+        }
         Course savedCourse = courseRepository.save(course);
         return savedCourse.getId();
     }
@@ -36,7 +49,7 @@ public class CourseService {
     public CourseResDto updateCourse(Long courseId, CourseReqDto courseReqDto) {
         Course course = findCourseById(courseId);
         course.update(courseReqDto);
-        return CourseResDto.of(course);
+        return CourseResDtoFactory.of(course);
     }
 
     @Transactional

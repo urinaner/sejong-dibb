@@ -1,5 +1,7 @@
 package org.example.backend.course.domain.entity;
 
+import static org.example.backend.course.exception.CourseExceptionType.NOT_BS_COURSE_REQUEST_DTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -8,7 +10,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.course.domain.dto.CourseReqDto;
+import org.example.backend.course.domain.dto.req.BSCourseReqDto;
+import org.example.backend.course.domain.dto.req.CourseReqDto;
+import org.example.backend.course.exception.CourseException;
 
 @Entity
 @Getter
@@ -17,7 +21,7 @@ import org.example.backend.course.domain.dto.CourseReqDto;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BSCourse extends Course {
 
-    // 학부 전용
+    // 학부 전용 필드
     @Column(name = "academic_year_semester")
     private String academicYearSemester;
 
@@ -38,8 +42,7 @@ public class BSCourse extends Course {
                      String courseNameEn,
                      String creditTime,
                      String courseDescription,
-                     String courseDescriptionEn,
-                     String targetProgram) {
+                     String courseDescriptionEn) {
         super(courseNumber, courseName, courseNameEn, creditTime);
         this.academicYearSemester = academicYearSemester;
         this.classification = classification;
@@ -47,7 +50,7 @@ public class BSCourse extends Course {
         this.courseDescriptionEn = courseDescriptionEn;
     }
 
-    public static BSCourse of(CourseReqDto dto) {
+    public static BSCourse of(BSCourseReqDto dto) {
         return BSCourse.builder()
                 .academicYearSemester(dto.getAcademicYearSemester())
                 .classification(dto.getClassification())
@@ -57,18 +60,21 @@ public class BSCourse extends Course {
                 .creditTime(dto.getCreditTime())
                 .courseDescription(dto.getCourseDescription())
                 .courseDescriptionEn(dto.getCourseDescriptionEn())
-                .targetProgram(dto.getTargetProgram())
                 .build();
     }
 
+    @Override
     public void update(CourseReqDto dto) {
-        this.academicYearSemester = dto.getAcademicYearSemester();
-        this.classification = dto.getClassification();
-        super.courseNumber = dto.getCourseNumber();
-        super.courseName = dto.getCourseName();
-        super.courseNameEn = dto.getCourseNameEn();
-        super.creditTime = dto.getCreditTime();
-        this.courseDescription = dto.getCourseDescription();
-        this.courseDescriptionEn = dto.getCourseDescriptionEn();
+        if (!(dto instanceof BSCourseReqDto bsDto)) {
+            throw new CourseException(NOT_BS_COURSE_REQUEST_DTO);
+        }
+        super.courseNumber = bsDto.getCourseNumber();
+        super.courseName = bsDto.getCourseName();
+        super.courseNameEn = bsDto.getCourseNameEn();
+        super.creditTime = bsDto.getCreditTime();
+        this.academicYearSemester = bsDto.getAcademicYearSemester();
+        this.classification = bsDto.getClassification();
+        this.courseDescription = bsDto.getCourseDescription();
+        this.courseDescriptionEn = bsDto.getCourseDescriptionEn();
     }
 }

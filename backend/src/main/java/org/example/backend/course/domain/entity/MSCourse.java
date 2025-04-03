@@ -1,5 +1,7 @@
 package org.example.backend.course.domain.entity;
 
+import static org.example.backend.course.exception.CourseExceptionType.NOT_MS_COURSE_REQUEST_DTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -8,7 +10,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.course.domain.dto.CourseReqDto;
+import org.example.backend.course.domain.dto.req.CourseReqDto;
+import org.example.backend.course.domain.dto.req.MSCourseReqDto;
+import org.example.backend.course.exception.CourseException;
 
 @Entity
 @DiscriminatorValue("GRADUATE")
@@ -28,7 +32,7 @@ public class MSCourse extends Course {
         this.targetProgram = targetProgram;
     }
 
-    public static MSCourse of(CourseReqDto dto) {
+    public static MSCourse of(MSCourseReqDto dto) {
         return MSCourse.builder()
                 .courseNumber(dto.getCourseNumber())
                 .courseName(dto.getCourseName())
@@ -36,6 +40,18 @@ public class MSCourse extends Course {
                 .creditTime(dto.getCreditTime())
                 .targetProgram(dto.getTargetProgram())
                 .build();
+    }
+
+    @Override
+    public void update(CourseReqDto dto) {
+        if (!(dto instanceof MSCourseReqDto bsDto)) {
+            throw new CourseException(NOT_MS_COURSE_REQUEST_DTO);
+        }
+        super.courseNumber = bsDto.getCourseNumber();
+        super.courseName = bsDto.getCourseName();
+        super.courseNameEn = bsDto.getCourseNameEn();
+        super.creditTime = bsDto.getCreditTime();
+        this.targetProgram = bsDto.getTargetProgram();
     }
 }
 

@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
+import org.example.backend.course.domain.dto.req.CourseReqDto;
 
 @Entity
 @Getter
@@ -44,4 +45,6 @@ public abstract class Course extends BaseEntity {
         this.courseNameEn = courseNameEn;
         this.creditTime = creditTime;
     }
+
+    public abstract void update(CourseReqDto dto);
 }

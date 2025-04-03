@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.course.domain.dto.CourseReqDto;
+import org.example.backend.course.domain.dto.req.CourseReqDto;
 import org.example.backend.course.domain.dto.res.CourseResDto;
 import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.service.CourseService;
