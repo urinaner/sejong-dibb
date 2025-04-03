@@ -127,6 +127,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/room/**").hasRole("MEMBER")
                         .requestMatchers(HttpMethod.GET, "/api/room/**").permitAll()
 
+                        // 관리자 전용:  생성, 수정, 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/course").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/course/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/course/*").hasRole("ADMIN")
+
+                        // 조회 관련 엔드포인트는 모두에게 허용
+                        .requestMatchers(HttpMethod.GET, "/api/course/**").permitAll()
+
 
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
