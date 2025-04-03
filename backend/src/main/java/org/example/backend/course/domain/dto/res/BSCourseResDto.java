@@ -19,7 +19,7 @@ public class BSCourseResDto extends CourseResDto {
                           String classification, String courseNumber,
                           String courseName, String courseNameEn,
                           String creditTime, String courseDescription,
-                          String courseDescriptionEn, String targetProgram) {
+                          String courseDescriptionEn) {
         super(id, courseType, courseNumber, courseName, courseNameEn, creditTime);
         this.academicYearSemester = academicYearSemester;
         this.classification = classification;
