@@ -8,7 +8,7 @@ import org.example.backend.course.domain.entity.CourseType;
 @NoArgsConstructor
 public abstract class CourseResDto {
     protected Long id;
-    protected CourseType courseType;
+    protected String courseType;
     protected String courseNumber;
     protected String courseName;
     protected String courseNameEn;
@@ -18,7 +18,7 @@ public abstract class CourseResDto {
                            String courseName, String courseNameEn,
                            String creditTime) {
         this.id = id;
-        this.courseType = courseType;
+        this.courseType = courseType.name();
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;

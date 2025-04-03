@@ -3,7 +3,6 @@ package org.example.backend.course.domain.entity;
 import static org.example.backend.course.exception.CourseExceptionType.NOT_BS_COURSE_REQUEST_DTO;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -16,7 +15,6 @@ import org.example.backend.course.exception.CourseException;
 
 @Entity
 @Getter
-@DiscriminatorValue("UNDERGRADUATE")
 @Table(name = "undergraduate_courses")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BSCourse extends Course {
@@ -36,14 +34,14 @@ public class BSCourse extends Course {
 
 
     @Builder
-    private BSCourse(String academicYearSemester, String classification,
+    private BSCourse(CourseType courseType, String academicYearSemester, String classification,
                      String courseNumber,
                      String courseName,
                      String courseNameEn,
                      String creditTime,
                      String courseDescription,
                      String courseDescriptionEn) {
-        super(courseNumber, courseName, courseNameEn, creditTime);
+        super(courseType, courseNumber, courseName, courseNameEn, creditTime);
         this.academicYearSemester = academicYearSemester;
         this.classification = classification;
         this.courseDescription = courseDescription;
@@ -52,6 +50,7 @@ public class BSCourse extends Course {
 
     public static BSCourse of(BSCourseReqDto dto) {
         return BSCourse.builder()
+                .courseType(CourseType.valueOf(dto.getCourseType().toUpperCase()))
                 .academicYearSemester(dto.getAcademicYearSemester())
                 .classification(dto.getClassification())
                 .courseNumber(dto.getCourseNumber())

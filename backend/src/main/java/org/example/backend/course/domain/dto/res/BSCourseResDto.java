@@ -30,12 +30,13 @@ public class BSCourseResDto extends CourseResDto {
     public static BSCourseResDto of(BSCourse course) {
         return BSCourseResDto.builder()
                 .id(course.getId())
-                .academicYearSemester(course.getAcademicYearSemester())
-                .classification(course.getClassification())
+                .courseType(course.getCourseType())
                 .courseNumber(course.getCourseNumber())
                 .courseName(course.getCourseName())
                 .courseNameEn(course.getCourseNameEn())
                 .creditTime(course.getCreditTime())
+                .academicYearSemester(course.getAcademicYearSemester())
+                .classification(course.getClassification())
                 .courseDescription(course.getCourseDescription())
                 .courseDescriptionEn(course.getCourseDescriptionEn())
                 .build();

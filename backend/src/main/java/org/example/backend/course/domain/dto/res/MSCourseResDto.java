@@ -23,6 +23,7 @@ public class MSCourseResDto extends CourseResDto {
     public static MSCourseResDto of(MSCourse course) {
         return MSCourseResDto.builder()
                 .id(course.getId())
+                .courseType(course.getCourseType())
                 .courseNumber(course.getCourseNumber())
                 .courseName(course.getCourseName())
                 .courseNameEn(course.getCourseNameEn())

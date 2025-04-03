@@ -1,8 +1,6 @@
 package org.example.backend.course.domain.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,7 +18,6 @@ import org.example.backend.course.domain.dto.req.CourseReqDto;
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "course_type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Course extends BaseEntity {
 
@@ -30,7 +27,7 @@ public abstract class Course extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "course_type", insertable = false, updatable = false)
+    @Column(name = "course_type", nullable = false)
     protected CourseType courseType;
 
     @Column(name = "course_number", nullable = false)
@@ -45,7 +42,9 @@ public abstract class Course extends BaseEntity {
     @Column(name = "credit_time")
     protected String creditTime;
 
-    protected Course(String courseNumber, String courseName, String courseNameEn, String creditTime) {
+    protected Course(CourseType courseType, String courseNumber, String courseName, String courseNameEn,
+                     String creditTime) {
+        this.courseType = courseType;
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;

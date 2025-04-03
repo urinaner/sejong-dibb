@@ -3,7 +3,6 @@ package org.example.backend.course.domain.entity;
 import static org.example.backend.course.exception.CourseExceptionType.NOT_MS_COURSE_REQUEST_DTO;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -15,7 +14,6 @@ import org.example.backend.course.domain.dto.req.MSCourseReqDto;
 import org.example.backend.course.exception.CourseException;
 
 @Entity
-@DiscriminatorValue("GRADUATE")
 @Table(name = "graduate_courses")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,14 +24,16 @@ public class MSCourse extends Course {
     private String targetProgram;
 
     @Builder
-    private MSCourse(String courseNumber, String courseName, String courseNameEn, String creditTime,
+    private MSCourse(CourseType courseType, String courseNumber, String courseName, String courseNameEn,
+                     String creditTime,
                      String targetProgram) {
-        super(courseNumber, courseName, courseNameEn, creditTime);
+        super(courseType, courseNumber, courseName, courseNameEn, creditTime);
         this.targetProgram = targetProgram;
     }
 
     public static MSCourse of(MSCourseReqDto dto) {
         return MSCourse.builder()
+                .courseType(CourseType.valueOf(dto.getCourseType().toUpperCase()))
                 .courseNumber(dto.getCourseNumber())
                 .courseName(dto.getCourseName())
                 .courseNameEn(dto.getCourseNameEn())
