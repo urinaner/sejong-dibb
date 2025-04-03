@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,10 @@ public abstract class Course extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id", nullable = false)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "course_type", insertable = false, updatable = false)
+    protected CourseType courseType;
 
     @Column(name = "course_number", nullable = false)
     protected String courseNumber;
