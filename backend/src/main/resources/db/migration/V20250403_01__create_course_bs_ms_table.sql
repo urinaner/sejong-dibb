@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS courses;
 -- 1) 부모 테이블: course
 CREATE TABLE course (
                         course_id BIGINT AUTO_INCREMENT PRIMARY KEY,
