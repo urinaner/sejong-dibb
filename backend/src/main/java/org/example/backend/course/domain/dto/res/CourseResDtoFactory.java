@@ -1,8 +1,11 @@
 package org.example.backend.course.domain.dto.res;
 
+import static org.example.backend.course.exception.CourseExceptionType.COURSE_UNSUPPORTED_TYPE;
+
 import org.example.backend.course.domain.entity.BSCourse;
 import org.example.backend.course.domain.entity.Course;
 import org.example.backend.course.domain.entity.MSCourse;
+import org.example.backend.course.exception.CourseException;
 
 public class CourseResDtoFactory {
     public static CourseResDto of(Course course) {
@@ -11,7 +14,6 @@ public class CourseResDtoFactory {
         } else if (course instanceof MSCourse) {
             return MSCourseResDto.of((MSCourse) course);
         }
-        // TODO: 예외 타입 정의하기
-        throw new IllegalArgumentException("Unsupported course type: " + course.getClass().getName());
+        throw new CourseException(COURSE_UNSUPPORTED_TYPE);
     }
 }

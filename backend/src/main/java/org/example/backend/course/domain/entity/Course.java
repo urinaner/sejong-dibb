@@ -40,15 +40,23 @@ public abstract class Course extends BaseEntity {
     protected String courseNameEn;
 
     @Column(name = "credit_time")
-    protected String creditTime;
+    protected int creditTime;
+
+    @Column(name = "year")
+    protected int year;
+
+    @Column(name = "semester")
+    protected int semester;
 
     protected Course(CourseType courseType, String courseNumber, String courseName, String courseNameEn,
-                     String creditTime) {
+                     int creditTime, int year, int semester) {
         this.courseType = courseType;
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;
         this.creditTime = creditTime;
+        this.year = year;
+        this.semester = semester;
     }
 
     public abstract void update(CourseReqDto dto);

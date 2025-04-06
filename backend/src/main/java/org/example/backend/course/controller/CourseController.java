@@ -39,13 +39,6 @@ public class CourseController {
         return new ResponseEntity<>(courseList, HttpStatus.OK);
     }
 
-    @Operation(summary = "단일 강의 조회 API", description = "단일 강의 상세 정보 반환")
-    @GetMapping("/{courseId}")
-    public ResponseEntity<CourseResDto> getCourse(@PathVariable(name = "courseId") Long courseId) {
-        CourseResDto courseResDto = courseService.getCourse(courseId);
-        return new ResponseEntity<>(courseResDto, HttpStatus.OK);
-    }
-
     @Operation(summary = "강의 정보 업데이트 API", description = "강의 정보 업데이트")
     @PostMapping("/{courseId}")
     public ResponseEntity<CourseResDto> updateCourse(@PathVariable(name = "courseId") Long courseId,
@@ -64,6 +57,21 @@ public class CourseController {
     @GetMapping("/type/{courseType}")
     public ResponseEntity<List<CourseResDto>> getCoursesByType(@PathVariable String courseType) {
         CourseType type = CourseType.valueOf(courseType.toUpperCase());
-        return ResponseEntity.ok(courseService.getCoursesByType(type));
+        return ResponseEntity.ok(courseService.getCoursesBy(type));
+    }
+
+    @GetMapping("/type/{courseType}/{year}/{grade}")
+    public ResponseEntity<List<CourseResDto>> getCoursesByType(@PathVariable String courseType,
+                                                               @PathVariable int year,
+                                                               @PathVariable int grade) {
+        CourseType type = CourseType.valueOf(courseType.toUpperCase());
+        return ResponseEntity.ok(courseService.getCoursesBy(type, year, grade));
+    }
+
+    @GetMapping("/type/{courseType}/{year}")
+    public ResponseEntity<List<CourseResDto>> getCoursesByType(@PathVariable String courseType,
+                                                               @PathVariable int year) {
+        CourseType type = CourseType.valueOf(courseType.toUpperCase());
+        return ResponseEntity.ok(courseService.getCoursesBy(type, year));
     }
 }

@@ -15,6 +15,7 @@ import org.example.backend.course.domain.entity.CourseType;
 import org.example.backend.course.domain.entity.MSCourse;
 import org.example.backend.course.exception.CourseException;
 import org.example.backend.course.exception.CourseExceptionType;
+import org.example.backend.course.repository.BSCourseRepository;
 import org.example.backend.course.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final BSCourseRepository bsCourseRepository;
 
     @Transactional
     public Long saveCourse(CourseReqDto dto) {
@@ -70,8 +72,20 @@ public class CourseService {
                 .toList();
     }
 
-    public List<CourseResDto> getCoursesByType(CourseType courseType) {
+    public List<CourseResDto> getCoursesBy(CourseType courseType) {
         return courseRepository.findByCourseType(courseType).stream()
+                .map(CourseResDtoFactory::of)
+                .toList();
+    }
+
+    public List<CourseResDto> getCoursesBy(CourseType courseType, int year, int grade) {
+        return bsCourseRepository.findByCourseTypeAndYearAndGrade(courseType, year, grade).stream()
+                .map(CourseResDtoFactory::of)
+                .toList();
+    }
+
+    public List<CourseResDto> getCoursesBy(CourseType courseType, int year) {
+        return courseRepository.findByCourseTypeAndYear(courseType, year).stream()
                 .map(CourseResDtoFactory::of)
                 .toList();
     }

@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "courseType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = BSCourseReqDto.class, name = "UNDERGRADUATE"),
-        @JsonSubTypes.Type(value = MSCourseReqDto.class, name = "GRADUATE")
+        @JsonSubTypes.Type(value = BSCourseReqDto.class, name = "BS"),
+        @JsonSubTypes.Type(value = MSCourseReqDto.class, name = "MS")
 })
 public abstract class CourseReqDto {
 
     @NotBlank(message = "courseType은 필수 입력입니다.")
-    protected String courseType; // "UNDERGRADUATE" or "GRADUATE"
+    protected String courseType;
 
     @NotBlank
     protected String courseNumber;
@@ -27,15 +27,21 @@ public abstract class CourseReqDto {
 
     protected String courseNameEn;
 
-    protected String creditTime;
+    protected int creditTime;
+
+    protected int year;
+
+    protected int semester;
 
     protected CourseReqDto(String courseType, String courseNumber,
                            String courseName, String courseNameEn,
-                           String creditTime) {
+                           int creditTime, int year, int semester) {
         this.courseType = courseType;
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;
         this.creditTime = creditTime;
+        this.year = year;
+        this.semester = semester;
     }
 }
