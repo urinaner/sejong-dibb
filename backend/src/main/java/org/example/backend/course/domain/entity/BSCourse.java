@@ -15,7 +15,7 @@ import org.example.backend.course.exception.CourseException;
 
 @Entity
 @Getter
-@Table(name = "undergraduate_courses")
+@Table(name = "bs_courses")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BSCourse extends Course {
 

@@ -14,7 +14,7 @@ import org.example.backend.course.domain.dto.req.MSCourseReqDto;
 import org.example.backend.course.exception.CourseException;
 
 @Entity
-@Table(name = "graduate_courses")
+@Table(name = "ms_courses")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MSCourse extends Course {
