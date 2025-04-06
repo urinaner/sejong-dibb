@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS graduate_courses;
-DROP TABLE IF EXISTS undergraduate_courses;
+DROP TABLE IF EXISTS ms_courses;
+DROP TABLE IF EXISTS bs_courses;
 DROP TABLE IF EXISTS course;
 
 -- 부모 테이블: course
