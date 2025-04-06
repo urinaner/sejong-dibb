@@ -12,16 +12,20 @@ public abstract class CourseResDto {
     protected String courseNumber;
     protected String courseName;
     protected String courseNameEn;
-    protected String creditTime;
+    protected int creditTime;
+    protected int year;
+    protected int semester;
 
     protected CourseResDto(Long id, CourseType courseType, String courseNumber,
                            String courseName, String courseNameEn,
-                           String creditTime) {
+                           int creditTime, int year, int semester) {
         this.id = id;
         this.courseType = courseType.name();
         this.courseNumber = courseNumber;
         this.courseName = courseName;
         this.courseNameEn = courseNameEn;
         this.creditTime = creditTime;
+        this.year = year;
+        this.semester = semester;
     }
 }

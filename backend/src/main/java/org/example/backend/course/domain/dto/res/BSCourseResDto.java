@@ -9,19 +9,20 @@ import org.example.backend.course.domain.entity.CourseType;
 @Getter
 @NoArgsConstructor
 public class BSCourseResDto extends CourseResDto {
-    private String academicYearSemester;
+    private int grade;
     private String classification;
     private String courseDescription;
     private String courseDescriptionEn;
 
     @Builder
-    public BSCourseResDto(Long id, CourseType courseType, String academicYearSemester,
-                          String classification, String courseNumber,
-                          String courseName, String courseNameEn,
-                          String creditTime, String courseDescription,
-                          String courseDescriptionEn) {
-        super(id, courseType, courseNumber, courseName, courseNameEn, creditTime);
-        this.academicYearSemester = academicYearSemester;
+    public BSCourseResDto(Long id, CourseType courseType,
+                          String courseNumber, String courseName, String courseNameEn,
+                          int creditTime, int year, int semester,
+                          int grade,
+                          String courseDescription,
+                          String courseDescriptionEn, String classification) {
+        super(id, courseType, courseNumber, courseName, courseNameEn, creditTime, year, semester);
+        this.grade = grade;
         this.classification = classification;
         this.courseDescription = courseDescription;
         this.courseDescriptionEn = courseDescriptionEn;
@@ -35,7 +36,9 @@ public class BSCourseResDto extends CourseResDto {
                 .courseName(course.getCourseName())
                 .courseNameEn(course.getCourseNameEn())
                 .creditTime(course.getCreditTime())
-                .academicYearSemester(course.getAcademicYearSemester())
+                .year(course.getYear())
+                .semester(course.getSemester())
+                .grade(course.getGrade())
                 .classification(course.getClassification())
                 .courseDescription(course.getCourseDescription())
                 .courseDescriptionEn(course.getCourseDescriptionEn())

@@ -10,8 +10,9 @@ public class MSCourseReqDto extends CourseReqDto {
     @Builder
     public MSCourseReqDto(String courseType, String courseNumber,
                           String courseName, String courseNameEn,
-                          String creditTime, String targetProgram) {
-        super(courseType, courseNumber, courseName, courseNameEn, creditTime);
+                          int creditTime, int year, int semester,
+                          String targetProgram) {
+        super(courseType, courseNumber, courseName, courseNameEn, creditTime, year, semester);
         this.targetProgram = targetProgram;
     }
 }

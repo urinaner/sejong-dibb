@@ -15,8 +15,9 @@ public class MSCourseResDto extends CourseResDto {
     @Builder
     public MSCourseResDto(Long id, CourseType courseType, String courseNumber,
                           String courseName, String courseNameEn,
-                          String creditTime, String targetProgram) {
-        super(id, courseType, courseNumber, courseName, courseNameEn, creditTime);
+                          int creditTime, int year, int semester,
+                          String targetProgram) {
+        super(id, courseType, courseNumber, courseName, courseNameEn, creditTime, year, semester);
         this.targetProgram = targetProgram;
     }
 
@@ -28,6 +29,8 @@ public class MSCourseResDto extends CourseResDto {
                 .courseName(course.getCourseName())
                 .courseNameEn(course.getCourseNameEn())
                 .creditTime(course.getCreditTime())
+                .year(course.getYear())
+                .semester(course.getSemester())
                 .targetProgram(course.getTargetProgram())
                 .build();
     }

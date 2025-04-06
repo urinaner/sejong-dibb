@@ -25,9 +25,9 @@ public class MSCourse extends Course {
 
     @Builder
     private MSCourse(CourseType courseType, String courseNumber, String courseName, String courseNameEn,
-                     String creditTime,
+                     int creditTime, int year, int semester,
                      String targetProgram) {
-        super(courseType, courseNumber, courseName, courseNameEn, creditTime);
+        super(courseType, courseNumber, courseName, courseNameEn, creditTime, year, semester);
         this.targetProgram = targetProgram;
     }
 
@@ -38,6 +38,8 @@ public class MSCourse extends Course {
                 .courseName(dto.getCourseName())
                 .courseNameEn(dto.getCourseNameEn())
                 .creditTime(dto.getCreditTime())
+                .year(dto.getYear())
+                .semester(dto.getSemester())
                 .targetProgram(dto.getTargetProgram())
                 .build();
     }
@@ -50,6 +52,8 @@ public class MSCourse extends Course {
         super.courseNumber = bsDto.getCourseNumber();
         super.courseName = bsDto.getCourseName();
         super.courseNameEn = bsDto.getCourseNameEn();
+        super.year = bsDto.getYear();
+        super.semester = bsDto.getSemester();
         super.creditTime = bsDto.getCreditTime();
         this.targetProgram = bsDto.getTargetProgram();
     }

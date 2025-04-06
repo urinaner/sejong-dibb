@@ -14,6 +14,7 @@ public enum CourseExceptionType implements BaseExceptionType {
     INVALID_COURSE_DTO_TYPE(BAD_REQUEST, "지원하지 않는 강의 DTO 타입입니다."),
     NOT_BS_COURSE_REQUEST_DTO(BAD_REQUEST, "학부과정 교과과목 데이터가 아닙니다."),
     NOT_MS_COURSE_REQUEST_DTO(BAD_REQUEST, "대학원 교과과목 데이터가 아닙니다."),
+    COURSE_UNSUPPORTED_TYPE(BAD_REQUEST, "지원되지 않는 교과과정 타입입니다."),
     ;
 
     private final HttpStatus httpStatus;

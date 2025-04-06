@@ -20,8 +20,8 @@ import org.example.backend.course.exception.CourseException;
 public class BSCourse extends Course {
 
     // 학부 전용 필드
-    @Column(name = "academic_year_semester")
-    private String academicYearSemester;
+    @Column(name = "grade")
+    private int grade;
 
     @Column(name = "classification")
     private String classification;
@@ -34,15 +34,12 @@ public class BSCourse extends Course {
 
 
     @Builder
-    private BSCourse(CourseType courseType, String academicYearSemester, String classification,
-                     String courseNumber,
-                     String courseName,
-                     String courseNameEn,
-                     String creditTime,
-                     String courseDescription,
-                     String courseDescriptionEn) {
-        super(courseType, courseNumber, courseName, courseNameEn, creditTime);
-        this.academicYearSemester = academicYearSemester;
+    private BSCourse(CourseType courseType, String courseNumber, String courseName,
+                     String courseNameEn, int creditTime, int year, int semester,
+                     int grade, String classification,
+                     String courseDescription, String courseDescriptionEn) {
+        super(courseType, courseNumber, courseName, courseNameEn, creditTime, year, semester);
+        this.grade = grade;
         this.classification = classification;
         this.courseDescription = courseDescription;
         this.courseDescriptionEn = courseDescriptionEn;
@@ -51,12 +48,14 @@ public class BSCourse extends Course {
     public static BSCourse of(BSCourseReqDto dto) {
         return BSCourse.builder()
                 .courseType(CourseType.valueOf(dto.getCourseType().toUpperCase()))
-                .academicYearSemester(dto.getAcademicYearSemester())
-                .classification(dto.getClassification())
                 .courseNumber(dto.getCourseNumber())
                 .courseName(dto.getCourseName())
                 .courseNameEn(dto.getCourseNameEn())
                 .creditTime(dto.getCreditTime())
+                .year(dto.getYear())
+                .semester(dto.getSemester())
+                .grade(dto.getGrade())
+                .classification(dto.getClassification())
                 .courseDescription(dto.getCourseDescription())
                 .courseDescriptionEn(dto.getCourseDescriptionEn())
                 .build();
@@ -71,7 +70,9 @@ public class BSCourse extends Course {
         super.courseName = bsDto.getCourseName();
         super.courseNameEn = bsDto.getCourseNameEn();
         super.creditTime = bsDto.getCreditTime();
-        this.academicYearSemester = bsDto.getAcademicYearSemester();
+        super.year = bsDto.getYear();
+        super.semester = bsDto.getSemester();
+        this.grade = bsDto.getGrade();
         this.classification = bsDto.getClassification();
         this.courseDescription = bsDto.getCourseDescription();
         this.courseDescriptionEn = bsDto.getCourseDescriptionEn();
