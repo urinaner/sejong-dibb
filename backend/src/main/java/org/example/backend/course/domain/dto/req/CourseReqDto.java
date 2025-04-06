@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "courseType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = BSCourseReqDto.class, name = "UNDERGRADUATE"),
-        @JsonSubTypes.Type(value = MSCourseReqDto.class, name = "GRADUATE")
+        @JsonSubTypes.Type(value = BSCourseReqDto.class, name = "BS"),
+        @JsonSubTypes.Type(value = MSCourseReqDto.class, name = "MS")
 })
 public abstract class CourseReqDto {
 
     @NotBlank(message = "courseType은 필수 입력입니다.")
-    protected String courseType; // "UNDERGRADUATE" or "GRADUATE"
+    protected String courseType;
 
     @NotBlank
     protected String courseNumber;
