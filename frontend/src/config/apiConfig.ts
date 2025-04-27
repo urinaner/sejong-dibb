@@ -403,6 +403,37 @@ export const apiEndpoints = {
     delete: (roomId: number, reservationId: number) =>
       createEndpoint(`/api/room/${roomId}/reservation/${reservationId}`),
   },
+  course: {
+    // 과정 유형별 목록 조회 (BS 또는 MS)
+    listByType: (type: string) => {
+      return createEndpoint(`/api/course/type/${type}`);
+    },
+
+    // 과정 유형 + 연도별 목록 조회
+    listByTypeAndYear: (type: string, year: number) => {
+      return createEndpoint(`/api/course/type/${type}/${year}`);
+    },
+
+    // 과정 유형 + 연도 + 학년별 목록 조회 (BS만 해당)
+    listByTypeYearAndGrade: (type: string, year: number, grade: number) => {
+      return createEndpoint(`/api/course/type/${type}/${year}/${grade}`);
+    },
+
+    // 단일 과목 조회
+    get: (courseId: number | string) =>
+      createEndpoint(`/api/course/${courseId}`),
+
+    // 과목 생성
+    create: createEndpoint('/api/course'),
+
+    // 과목 삭제
+    delete: (courseId: number | string) =>
+      createEndpoint(`/api/course/${courseId}`),
+
+    // 과목 수정
+    update: (courseId: number | string) =>
+      createEndpoint(`/api/course/${courseId}`),
+  },
 };
 
 export default BASE_URL;

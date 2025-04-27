@@ -1,368 +1,156 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ZoomIn, ZoomOut, Download } from 'lucide-react';
-import * as S from './CurriculumStyle';
-import Container from '../../../styles/Container';
+import React, { useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import styled from 'styled-components';
+import CourseTable from '../../../components/Course/components/CourseTable';
+import {
+  CourseType,
+  Course,
+} from '../../../components/Course/types/course.types';
+import CourseForm from '../../../components/Course/components/CourseForm';
 
-interface Position {
-  x: number;
-  y: number;
-}
+const SectionContainer = styled(Box)`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+`;
 
-interface DragState {
-  isDragging: boolean;
-  startX: number;
-  startY: number;
-  scrollLeft: number;
-  scrollTop: number;
-  lastTouch?: { x: number; y: number };
-}
+const InfoPanel = styled(Box)`
+  border: 1px solid #e0e0e0;
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  position: relative;
+`;
 
-const Curriculum: React.FC = () => {
-  const [scaleCur, setScaleCur] = useState(0.8);
-  const [scaleRoad, setScaleRoad] = useState(0.8);
-  const [positionCur, setPositionCur] = useState<Position>({ x: 0, y: 0 });
-  const [positionRoad, setPositionRoad] = useState<Position>({ x: 0, y: 0 });
+const PanelNavigation = styled(Box)`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+`;
 
-  const dragStateCur = useRef<DragState>({
-    isDragging: false,
-    startX: 0,
-    startY: 0,
-    scrollLeft: 0,
-    scrollTop: 0,
-  });
+const NavButton = styled.button`
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  const dragStateRoad = useRef<DragState>({
-    isDragging: false,
-    startX: 0,
-    startY: 0,
-    scrollLeft: 0,
-    scrollTop: 0,
-  });
+// 불릿 리스트 스타일링
+const BulletList = styled.ul`
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+`;
 
-  const curContainerRef = useRef<HTMLDivElement>(null);
-  const roadContainerRef = useRef<HTMLDivElement>(null);
+// 불릿 아이템 스타일링
+const BulletItem = styled.li`
+  margin: 0.5rem 0;
+`;
 
-  const MIN_SCALE = 0.5;
-  const MAX_SCALE = 2;
-  const SCALE_STEP = 0.2;
-
-  const handleMouseDown = useCallback(
-    (
-      e: React.MouseEvent,
-      dragState: React.RefObject<DragState>,
-      containerRef: React.RefObject<HTMLDivElement>,
-    ) => {
-      if (!containerRef.current || !dragState.current) return;
-
-      dragState.current.isDragging = true;
-      dragState.current.startX = e.pageX - containerRef.current.offsetLeft;
-      dragState.current.startY = e.pageY - containerRef.current.offsetTop;
-      containerRef.current.style.cursor = 'grabbing';
-    },
-    [],
+const AdmissionSection: React.FC = () => {
+  // 선택된 과정 유형 상태 관리 (BS로 변경)
+  const [courseType, setCourseType] = useState<CourseType>('BS');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [selectedCourse, setSelectedCourse] = useState<Course | undefined>(
+    undefined,
   );
 
-  const handleMouseMove = useCallback(
-    (
-      e: React.MouseEvent,
-      dragState: React.RefObject<DragState>,
-      containerRef: React.RefObject<HTMLDivElement>,
-      setPosition: React.Dispatch<React.SetStateAction<Position>>,
-      currentScale: number,
-    ) => {
-      if (!dragState.current?.isDragging || !containerRef.current) return;
+  // 과목 추가 버튼 클릭 시, 해당 경로로 이동
+  const handleOpenForm = () => {
+    setFormMode('create');
+    setSelectedCourse(undefined);
+    setIsFormOpen(true);
+  };
 
-      e.preventDefault();
+  // 과목 수정 모달 열기 핸들러
+  const handleEditCourse = (course: Course) => {
+    setFormMode('edit');
+    setSelectedCourse(course);
+    setIsFormOpen(true);
+  };
 
-      const x = e.pageX - containerRef.current.offsetLeft;
-      const y = e.pageY - containerRef.current.offsetTop;
-
-      const walkX = (x - dragState.current.startX) / currentScale;
-      const walkY = (y - dragState.current.startY) / currentScale;
-
-      setPosition((prev: Position) => ({
-        x: prev.x + walkX,
-        y: prev.y + walkY,
-      }));
-
-      dragState.current.startX = x;
-      dragState.current.startY = y;
-    },
-    [],
-  );
-
-  const handleMouseUp = useCallback(
-    (
-      dragState: React.RefObject<DragState>,
-      containerRef: React.RefObject<HTMLDivElement>,
-    ) => {
-      if (!dragState.current || !containerRef.current) return;
-
-      dragState.current.isDragging = false;
-      containerRef.current.style.cursor = 'grab';
-    },
-    [],
-  );
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent, dragState: React.RefObject<DragState>) => {
-      if (!dragState.current) return;
-
-      const touch = e.touches[0];
-      dragState.current.isDragging = true;
-      dragState.current.lastTouch = {
-        x: touch.clientX,
-        y: touch.clientY,
-      };
-    },
-    [],
-  );
-
-  const handleTouchMove = useCallback(
-    (
-      e: React.TouchEvent,
-      dragState: React.RefObject<DragState>,
-      setPosition: React.Dispatch<React.SetStateAction<Position>>,
-      currentScale: number,
-    ) => {
-      if (!dragState.current?.isDragging || !dragState.current.lastTouch)
-        return;
-
-      e.preventDefault();
-
-      const touch = e.touches[0];
-      const walkX =
-        (touch.clientX - dragState.current.lastTouch.x) / currentScale;
-      const walkY =
-        (touch.clientY - dragState.current.lastTouch.y) / currentScale;
-
-      setPosition((prev: Position) => ({
-        x: prev.x + walkX,
-        y: prev.y + walkY,
-      }));
-
-      dragState.current.lastTouch = {
-        x: touch.clientX,
-        y: touch.clientY,
-      };
-    },
-    [],
-  );
-
-  const handleTouchEnd = useCallback(
-    (dragState: React.RefObject<DragState>) => {
-      if (!dragState.current) return;
-      dragState.current.isDragging = false;
-      dragState.current.lastTouch = undefined;
-    },
-    [],
-  );
-
-  const handleZoom = useCallback(
-    (
-      type: 'in' | 'out',
-      currentScale: number,
-      setScale: React.Dispatch<React.SetStateAction<number>>,
-      setPosition: React.Dispatch<React.SetStateAction<Position>>,
-    ) => {
-      if (type === 'in') {
-        setScale((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
-      } else {
-        setScale((prev) => {
-          const newScale = Math.max(prev - SCALE_STEP, MIN_SCALE);
-          if (newScale === MIN_SCALE) {
-            setPosition({ x: 0, y: 0 });
-          }
-          return newScale;
-        });
-      }
-    },
-    [MIN_SCALE, MAX_SCALE, SCALE_STEP],
-  );
-
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      if (curContainerRef.current) {
-        curContainerRef.current.style.cursor = 'grab';
-        dragStateCur.current.isDragging = false;
-      }
-      if (roadContainerRef.current) {
-        roadContainerRef.current.style.cursor = 'grab';
-        dragStateRoad.current.isDragging = false;
-      }
-    };
-
-    document.addEventListener('mouseup', handleGlobalMouseUp);
-    document.addEventListener('touchend', () => {
-      handleTouchEnd(dragStateCur);
-      handleTouchEnd(dragStateRoad);
-    });
-
-    return () => {
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
-      document.removeEventListener('touchend', () => {
-        handleTouchEnd(dragStateCur);
-        handleTouchEnd(dragStateRoad);
-      });
-    };
-  }, []);
-
-  const renderImage = useCallback(
-    (
-      type: 'curriculum' | 'roadmap',
-      {
-        src,
-        alt,
-        scale,
-        position,
-        dragState,
-        containerRef,
-        setPosition,
-      }: {
-        src: string;
-        alt: string;
-        scale: number;
-        position: Position;
-        dragState: React.RefObject<DragState>;
-        containerRef: React.RefObject<HTMLDivElement>;
-        setPosition: React.Dispatch<React.SetStateAction<Position>>;
-      },
-    ) => (
-      <S.ImageContainer
-        key={type}
-        ref={containerRef}
-        onMouseDown={(e) => handleMouseDown(e, dragState, containerRef)}
-        onMouseMove={(e) =>
-          handleMouseMove(e, dragState, containerRef, setPosition, scale)
-        }
-        onMouseLeave={() => handleMouseUp(dragState, containerRef)}
-        onTouchStart={(e) => handleTouchStart(e, dragState)}
-        onTouchMove={(e) => handleTouchMove(e, dragState, setPosition, scale)}
-        onTouchEnd={() => handleTouchEnd(dragState)}
-        style={{ cursor: scale > MIN_SCALE ? 'grab' : 'default' }}
-      >
-        <S.CurriculumImage
-          src={src}
-          alt={alt}
-          style={{
-            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-            transition: dragState.current?.isDragging
-              ? 'none'
-              : 'transform 0.3s ease',
-            pointerEvents: scale > MIN_SCALE ? 'none' : 'auto',
-          }}
-          onError={(e) => {
-            e.currentTarget.src = src;
-            e.currentTarget.onerror = null;
-          }}
-          draggable="false"
-        />
-
-        <S.ZoomControls>
-          <S.ZoomButton
-            onClick={() =>
-              handleZoom(
-                'out',
-                scale,
-                type === 'curriculum' ? setScaleCur : setScaleRoad,
-                setPosition,
-              )
-            }
-            disabled={scale <= MIN_SCALE}
-            aria-label={`${type} 축소`}
-          >
-            <ZoomOut />
-          </S.ZoomButton>
-          <S.ZoomButton
-            onClick={() =>
-              handleZoom(
-                'in',
-                scale,
-                type === 'curriculum' ? setScaleCur : setScaleRoad,
-                setPosition,
-              )
-            }
-            disabled={scale >= MAX_SCALE}
-            aria-label={`${type} 확대`}
-          >
-            <ZoomIn />
-          </S.ZoomButton>
-        </S.ZoomControls>
-      </S.ImageContainer>
-    ),
-    [
-      handleMouseDown,
-      handleMouseMove,
-      handleMouseUp,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-    ],
-  );
+  // 과목 추가/수정 모달 닫기 핸들러
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
 
   return (
-    <Container type="content">
-      <S.SectionTitle>교과과정 및 로드맵</S.SectionTitle>
+    <SectionContainer>
+      {/* 과목 추가 버튼 */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          marginBottom: '1rem',
+        }}
+      ></Box>
 
-      <S.ImageWrapper>
-        <S.ImageCaption>
-          2025학년도 전공 교과과정표 (바이오융합공학전공)
-        </S.ImageCaption>
-        {renderImage('curriculum', {
-          src: '/curriculum-2025.png',
-          alt: '2025학년도 전공 교과과정표 (바이오융합공학전공)',
-          scale: scaleCur,
-          position: positionCur,
-          dragState: dragStateCur,
-          containerRef: curContainerRef,
-          setPosition: setPositionCur,
-        })}
-        <S.TouchInstructions>
-          두 손가락으로 확대/축소 및 이동이 가능합니다
-        </S.TouchInstructions>
-      </S.ImageWrapper>
+      {/* 정보 패널 컨테이너 */}
+      <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        {/* 주전공 패널 */}
+        <InfoPanel sx={{ flex: '1 1 45%', minWidth: '300px' }}>
+          <PanelNavigation>
+            <NavButton aria-label="previous">&#x3C;</NavButton>
+            <NavButton aria-label="next">&#x3E;</NavButton>
+          </PanelNavigation>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            주전공
+          </Typography>
+          <BulletList>
+            <BulletItem>총 학점 : 60학점 이상</BulletItem>
+            <BulletItem>전공필수과목 : 21학점</BulletItem>
+            <BulletItem>전공선택과목 : 39학점 이상 이수해야 함.</BulletItem>
+          </BulletList>
+        </InfoPanel>
 
-      <S.DownloadSection>
-        <S.DownloadLink
-          href="/curriculum-2025.jpeg"
-          download="세종대학교_바이오융합공학전공_교과과정표_2025.jpeg"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Download size={18} />
-          교과과정표 다운로드
-        </S.DownloadLink>
-      </S.DownloadSection>
+        {/* 복수전공/부전공 패널 */}
+        <InfoPanel sx={{ flex: '1 1 45%', minWidth: '300px' }}>
+          <PanelNavigation>
+            <NavButton aria-label="previous">&#x3C;</NavButton>
+            <NavButton aria-label="next">&#x3E;</NavButton>
+          </PanelNavigation>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            복수전공
+          </Typography>
+          <BulletList>
+            <BulletItem>총 학점 : 39학점 이상</BulletItem>
+            <BulletItem>전공필수과목 : 15학점</BulletItem>
+            <BulletItem>전공선택과목 : 24학점 이상 이수해야 함.</BulletItem>
+          </BulletList>
+          <br />
+          <Typography variant="h6" component="h2" sx={{ mt: 3, mb: 2 }}>
+            부전공
+          </Typography>
+          <BulletList>
+            <BulletItem>
+              총 학점 : 양자원자력공학과로부터 전공 중 21학점 이상 이수
+            </BulletItem>
+          </BulletList>
+        </InfoPanel>
+      </Box>
 
-      <S.ImageWrapper>
-        <S.ImageCaption>2025학년도 바이오융합공학전공 로드맵</S.ImageCaption>
-        {renderImage('roadmap', {
-          src: '/roadmap-2025.png',
-          alt: '2025학년도 바이오융합공학전공 로드맵',
-          scale: scaleRoad,
-          position: positionRoad,
-          dragState: dragStateRoad,
-          containerRef: roadContainerRef,
-          setPosition: setPositionRoad,
-        })}
-        <S.TouchInstructions>
-          두 손가락으로 확대/축소 및 이동이 가능합니다
-        </S.TouchInstructions>
-      </S.ImageWrapper>
+      {/* 교육과정 테이블 - CourseTable 컴포넌트로 교체 (BS 타입으로 변경) */}
+      <CourseTable type="BS" onAdd={handleOpenForm} onEdit={handleEditCourse} />
 
-      <S.DownloadSection>
-        <S.DownloadLink
-          href="/roadmap-2025.png"
-          download="세종대학교_바이오융합공학전공_로드맵_2025.jpeg"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Download size={18} />
-          로드맵 다운로드
-        </S.DownloadLink>
-      </S.DownloadSection>
-    </Container>
+      {/* 과목 추가/수정 모달 */}
+      <CourseForm
+        open={isFormOpen}
+        onClose={handleCloseForm}
+        defaultType={courseType}
+        course={selectedCourse}
+        mode={formMode}
+      />
+    </SectionContainer>
   );
 };
 
-export default Curriculum;
+export default AdmissionSection;
