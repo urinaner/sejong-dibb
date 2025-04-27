@@ -1,5 +1,5 @@
 // types/course.types.ts
-export type CourseType = "BS" | "MS"; // 기존 UNDERGRADUATE, GRADUATE에서 변경
+export type CourseType = 'BS' | 'MS'; // 기존 UNDERGRADUATE, GRADUATE에서 변경
 
 export interface Course {
   id?: number;
