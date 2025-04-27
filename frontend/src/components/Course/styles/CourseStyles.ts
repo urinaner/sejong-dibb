@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Box, TableCell, TableContainer, TableRow, Paper } from "@mui/material";
+import styled from 'styled-components';
+import { Box, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 
 // 테이블 컨테이너 스타일링
 export const CourseTableContainer = styled(TableContainer)`
@@ -11,7 +11,7 @@ const TableHeadCell = styled(TableCell)`
   background-color: #f5f5f5;
   font-weight: 600;
   text-align: center;
-  width: ${(props) => props.width || "auto"}; // 너비 속성 추가
+  width: ${(props) => props.width || 'auto'}; // 너비 속성 추가
 `;
 
 const CourseTable = styled(TableContainer)`
