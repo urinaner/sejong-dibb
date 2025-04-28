@@ -1,9 +1,9 @@
 // src/theme/styled.d.ts
-import "styled-components";
-import { media } from "../styles/media";
-import { typography } from "../styles/typography";
+import 'styled-components';
+import { media } from '../styles/media';
+import { typography } from '../styles/typography';
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
       white: string;
@@ -63,8 +63,8 @@ declare module "styled-components" {
       base: string;
       lg: string;
       xl: string;
-      "2xl": string;
-      "3xl": string;
+      '2xl': string;
+      '3xl': string;
     };
     spacing: {
       xs: string;
@@ -72,8 +72,8 @@ declare module "styled-components" {
       base: string;
       lg: string;
       xl: string;
-      "2xl": string;
-      "3xl": string;
+      '2xl': string;
+      '3xl': string;
     };
     transitions: {
       fast: string;
