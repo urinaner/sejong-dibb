@@ -132,7 +132,7 @@ const AdmissionSection: React.FC = () => {
           </Typography>
           <BulletList>
             <BulletItem>
-              총 학점 : 양자원자력공학과로부터 전공 중 21학점 이상 이수
+              총 학점 : 바이오융합공학전공으로부터 전공 중 21학점 이상 이수
             </BulletItem>
           </BulletList>
         </InfoPanel>

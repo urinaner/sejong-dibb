@@ -1,14 +1,13 @@
-import 'styled-components';
-import { media } from './media';
-import { typography } from './typography';
+// src/theme/styled.d.ts
+import "styled-components";
+import { media } from "../styles/media";
+import { typography } from "../styles/typography";
 
-declare module 'styled-components' {
+declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
       white: string;
       black: string;
-      headerGrey: string;
-      headerHoverGrey: string;
       primary: {
         crimson: string;
         crimsonDark: string;
@@ -22,6 +21,8 @@ declare module 'styled-components' {
         400: string;
         500: string;
       };
+      headerGrey: string;
+      headerHoverGrey: string;
     };
     layout: {
       types: {
@@ -49,21 +50,21 @@ declare module 'styled-components' {
       };
     };
     media: typeof media;
+    typography: typeof typography;
     breakpoints: {
       mobile: string;
       tablet: string;
       laptop: string;
       desktop: string;
     };
-    typography: typeof typography;
     fontSizes: {
       xs: string;
       sm: string;
       base: string;
       lg: string;
       xl: string;
-      '2xl': string;
-      '3xl': string;
+      "2xl": string;
+      "3xl": string;
     };
     spacing: {
       xs: string;
@@ -71,8 +72,8 @@ declare module 'styled-components' {
       base: string;
       lg: string;
       xl: string;
-      '2xl': string;
-      '3xl': string;
+      "2xl": string;
+      "3xl": string;
     };
     transitions: {
       fast: string;

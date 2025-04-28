@@ -1,14 +1,12 @@
-// src/styles/theme.ts
+// src/theme/theme.ts
 import { DefaultTheme } from 'styled-components';
-import { media } from './media';
-import { typography } from './typography';
+import { media } from '../styles/media';
+import { typography } from '../styles/typography';
 
 export const theme: DefaultTheme = {
   colors: {
     white: '#FFFFFF',
     black: '#000000',
-    headerGrey: '#555555',
-    headerHoverGrey: '#666666',
     primary: {
       crimson: '#a31432',
       crimsonDark: '#8a1029',
@@ -22,6 +20,8 @@ export const theme: DefaultTheme = {
       400: '#837259',
       500: '#51626F',
     },
+    headerGrey: '#555555',
+    headerHoverGrey: '#666666',
   },
   layout: {
     types: {
