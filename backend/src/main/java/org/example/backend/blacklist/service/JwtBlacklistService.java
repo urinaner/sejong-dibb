@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class JwtBlacklistService {
+public class JwtBlacklistService implements BlacklistService{
     private final JwtBlacklistRepository blacklistRepository;
 
     // JWT를 블랙리스트에 추가하는 메서드
+    @Override
     public void addToBlacklist(BlackListTokenDto blackListTokenDto) {
         if (!blacklistRepository.existsByToken(blackListTokenDto.getToken())) {
             blacklistRepository.save(JwtBlacklist.of(blackListTokenDto));
@@ -25,6 +26,7 @@ public class JwtBlacklistService {
     }
 
     // 블랙리스트에 있는지 확인하는 메서드
+    @Override
     public boolean isBlacklisted(String token) {
         return blacklistRepository.existsByToken(token);
     }

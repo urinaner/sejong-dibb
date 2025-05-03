@@ -3,6 +3,7 @@ package org.example.backend.global.config.auth;
 import java.util.Arrays;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.blacklist.service.BlacklistService;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTFilter;
 import org.example.backend.jwt.JWTUtil;
@@ -28,14 +29,14 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final JwtBlacklistService jwtBlacklistService;
+    private final BlacklistService blacklistService;
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
-                          JwtBlacklistService jwtBlacklistService) {
+                          BlacklistService blacklistService) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
-        this.jwtBlacklistService = jwtBlacklistService;
+        this.blacklistService = blacklistService;
     }
 
     @Bean
@@ -138,7 +139,7 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtil, jwtBlacklistService),
+                .addFilterBefore(new JWTFilter(jwtUtil, blacklistService),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

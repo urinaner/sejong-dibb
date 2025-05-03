@@ -9,6 +9,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.blacklist.dto.BlackListTokenDto;
+import org.example.backend.blacklist.service.BlacklistService;
 import org.example.backend.blacklist.service.JwtBlacklistService;
 import org.example.backend.jwt.JWTUtil;
 import org.example.backend.users.domain.dto.LoginReqDto;
@@ -34,7 +35,7 @@ public class MemberService {
     private final String USER_INFO_MISSING = "사용자 정보를 찾을 수 없습니다.";
 
     private final JWTUtil jwtUtil;
-    private final JwtBlacklistService jwtBlacklistService;
+    private final BlacklistService blacklistService;
 
     public ResponseEntity<?> authenticateAndGenerateToken(LoginReqDto dto) {
         try {
@@ -118,7 +119,7 @@ public class MemberService {
             return;
         }
 
-        jwtBlacklistService.addToBlacklist(new BlackListTokenDto(token, jwtUtil.getExpiredTime(token)));
+        blacklistService.addToBlacklist(new BlackListTokenDto(token, jwtUtil.getExpiredTime(token)));
     }
 }
 

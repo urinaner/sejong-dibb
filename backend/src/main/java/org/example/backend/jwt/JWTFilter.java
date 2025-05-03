@@ -9,9 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.blacklist.service.JwtBlacklistService;
+import org.example.backend.blacklist.service.BlacklistService;
 import org.example.backend.users.domain.entity.CustomUserDetails;
 import org.example.backend.users.domain.entity.Role;
 import org.example.backend.users.domain.entity.Users;
@@ -25,13 +24,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-    private final JwtBlacklistService jwtBlacklistService;
+    private final BlacklistService blacklistService;
 
     private static final String REFRESH_TOKEN_PATH = "/api/refresh";
 
-    public JWTFilter(JWTUtil jwtUtil, JwtBlacklistService jwtBlacklistService) {
+    public JWTFilter(JWTUtil jwtUtil, BlacklistService blacklistService) {
         this.jwtUtil = jwtUtil;
-        this.jwtBlacklistService = jwtBlacklistService;
+        this.blacklistService = blacklistService;
     }
 
     @Override
@@ -71,7 +70,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String accessToken = authorization.split(" ")[1];
         if (!jwtUtil.isExpired(accessToken)) {
 
-            if (jwtBlacklistService.isBlacklisted(accessToken)) {
+            if (blacklistService.isBlacklisted(accessToken)) {
                 log.error("Access token is expired");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("{\"error\": \"Access token in Jwt blacklist\"}");
@@ -123,7 +122,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (jwtBlacklistService.isBlacklisted(refreshToken)) {
+        if (blacklistService.isBlacklisted(refreshToken)) {
             log.error("Refresh token is expired");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Refresh token in Jwt blacklist\"}");
