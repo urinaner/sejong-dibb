@@ -1,4 +1,4 @@
-package org.example.backend.reservation.domain;
+package org.example.backend.reservationslot.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,15 +17,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
 import org.example.backend.room.domain.Room;
-import org.example.backend.users.domain.entity.Users;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "reservation")
-public class Reservation extends BaseEntity {
+@Table(name = "reservation_slot")
+public class ReservationSlot extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
@@ -51,28 +50,36 @@ public class Reservation extends BaseEntity {
     @Column(name = "login_id")
     private String loginId;
 
+    @Column(name = "reserved")
+    private boolean reserved;
+
 
     @Builder
-    private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, String loginId) {
+    private ReservationSlot(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
+                        String etc, Room room, String loginId, boolean reserved) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.room = room;
         this.loginId = loginId;
-
+        this.reserved = reserved;
     }
 
-    public static Reservation of(ReservationCreateDto dto, Room room, String loginId) {
-        return Reservation.builder()
+    public static ReservationSlot of(ReservationCreateDto dto, Room room, String loginId) {
+        return ReservationSlot.builder()
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
                 .etc(dto.getEtc())
                 .room(room)
                 .loginId(loginId)
+                .reserved(false)
                 .build();
     }
 
+    public void reserve(String loginId) {
+        this.reserved = true;
+        this.loginId = loginId;
+    }
 }
