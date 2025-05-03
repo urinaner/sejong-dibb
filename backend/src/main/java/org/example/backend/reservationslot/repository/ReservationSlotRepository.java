@@ -19,6 +19,7 @@ public interface ReservationSlotRepository extends JpaRepository<ReservationSlot
 
     @Query("SELECT r FROM ReservationSlot r " +
             "WHERE r.room.id = :roomId " +
+            "AND r.reserved = true " +
             "AND DATE_FORMAT(r.startTime, '%Y-%m-%d') = :date")
     List<ReservationSlot> findAllByDateAndStatus(
             @Param("roomId") Long roomId,
@@ -27,6 +28,7 @@ public interface ReservationSlotRepository extends JpaRepository<ReservationSlot
 
     @Query("SELECT r FROM ReservationSlot r " +
             "WHERE r.room.id = :roomId " +
+            "AND r.reserved = true " +
             "AND DATE_FORMAT(r.startTime, '%Y-%m') = :yearMonth " +
             "ORDER BY r.startTime")
     List<ReservationSlot> findAllByRoomAndYearMonth(
