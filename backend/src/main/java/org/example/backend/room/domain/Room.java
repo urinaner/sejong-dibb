@@ -14,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.reservationslot.domain.Reservation;
 import org.example.backend.room.domain.dto.RoomReqDto;
 
 @Entity

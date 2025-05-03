@@ -1,6 +1,6 @@
-package org.example.backend.reservation.service;
+package org.example.backend.reservationslot.service;
 
-import static org.example.backend.reservation.exception.ReservationExceptionType.*;
+import static org.example.backend.reservationslot.exception.ReservationExceptionType.*;
 import static org.example.backend.room.exception.RoomExceptionType.*;
 import static org.example.backend.users.exception.member.MemberExceptionType.*;
 
@@ -10,11 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
-import org.example.backend.reservation.domain.dto.ReservationResDto;
-import org.example.backend.reservation.exception.ReservationException;
-import org.example.backend.reservation.repository.ReservationRepository;
+import org.example.backend.reservationslot.domain.Reservation;
+import org.example.backend.reservationslot.domain.ReservationSlot;
+import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationResDto;
+import org.example.backend.reservationslot.exception.ReservationException;
+import org.example.backend.reservationslot.repository.ReservationSlotRepository;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReservationService {
-    private final ReservationRepository reservationRepository;
+    private final ReservationSlotRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final UsersRepository usersRepository;
 
@@ -39,7 +40,7 @@ public class ReservationService {
 
         validateReservation(reqDto, seminarRoomId);
 
-        Reservation reservation = Reservation.of(reqDto, room, loginId);
+        ReservationSlot reservation = ReservationSlot.of(reqDto, room, loginId);
         reservationRepository.save(reservation);
         return ReservationResDto.of(reservation);
 

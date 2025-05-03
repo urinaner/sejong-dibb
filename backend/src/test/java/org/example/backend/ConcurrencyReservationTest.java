@@ -2,18 +2,16 @@ package org.example.backend;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.example.backend.reservation.domain.Reservation;
-import org.example.backend.reservation.domain.ReservationPurpose;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
-import org.example.backend.reservation.domain.dto.ReservationResDto;
-import org.example.backend.reservation.repository.ReservationRepository;
-import org.example.backend.reservation.service.ReservationService;
+import org.example.backend.reservationslot.domain.Reservation;
+import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationResDto;
+import org.example.backend.reservationslot.repository.ReservationSlotRepository;
+import org.example.backend.reservationslot.service.ReservationService;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.repository.RoomRepository;
 import org.example.backend.users.domain.entity.Role;
@@ -36,7 +34,7 @@ public class ConcurrencyReservationTest {
     private ReservationService reservationService;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservationSlotRepository reservationRepository;
 
     @Autowired
     private UsersRepository usersRepository;

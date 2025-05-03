@@ -1,13 +1,13 @@
-package org.example.backend.reservation.controller;
+package org.example.backend.reservationslot.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.common.aop.auth.LoginUser;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
-import org.example.backend.reservation.domain.dto.ReservationResDto;
-import org.example.backend.reservation.service.ReservationService;
+import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationResDto;
+import org.example.backend.reservationslot.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/room")
-public class ReservationController {
+public class ReservationSlotController {
     private final ReservationService reservationService;
 
     @PostMapping("/{roomId}/reservation")

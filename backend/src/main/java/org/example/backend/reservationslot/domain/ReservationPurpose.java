@@ -1,4 +1,4 @@
-package org.example.backend.reservation.domain;
+package org.example.backend.reservationslot.domain;
 
 public enum ReservationPurpose {
     SEMINAR("세미나"),

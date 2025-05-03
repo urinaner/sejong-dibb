@@ -1,4 +1,4 @@
-package org.example.backend.reservation.domain.dto;
+package org.example.backend.reservationslot.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
