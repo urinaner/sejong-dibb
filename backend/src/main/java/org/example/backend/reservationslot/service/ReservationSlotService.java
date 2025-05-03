@@ -39,7 +39,7 @@ public class ReservationSlotService {
 
         validateReservation(reqDto, seminarRoomId);
 
-        ReservationSlot reservation = ReservationSlot.of(reqDto, room, loginId);
+        ReservationSlot reservation = ReservationSlot.of(reqDto, room, loginId, true);
         reservationRepository.save(reservation);
         return ReservationResDto.of(reservation);
 
