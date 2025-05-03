@@ -1,8 +1,10 @@
 package org.example.backend.global.config.redis;
 
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -10,9 +12,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        // host/port 등은 application.yml 설정이 자동 매핑됨
-        return new LettuceConnectionFactory();
+    public LettuceConnectionFactory redisConnectionFactory(
+            RedisProperties redisProperties) {
+        RedisStandaloneConfiguration cfg =
+                new RedisStandaloneConfiguration(
+                        redisProperties.getHost(),
+                        redisProperties.getPort()
+                );
+        return new LettuceConnectionFactory(cfg);
     }
 
     @Bean
