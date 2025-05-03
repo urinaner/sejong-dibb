@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.reservationslot.domain.Reservation;
 import org.example.backend.reservationslot.domain.ReservationSlot;
 import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
 import org.example.backend.reservationslot.domain.dto.ReservationResDto;
@@ -28,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ReservationService {
+public class ReservationSlotService {
     private final ReservationSlotRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final UsersRepository usersRepository;
@@ -66,14 +65,14 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(Long id, String loginId) {
-        Reservation reservation = getReservationById(id);
+        ReservationSlot reservation = getReservationById(id);
 
         if (!reservation.getLoginId().equals(loginId)) {
             throw new ReservationException(FORBIDDEN_OPERATION);
         }
         reservationRepository.delete(reservation);
     }
-    private Reservation getReservationById(Long id) {
+    private ReservationSlot getReservationById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
