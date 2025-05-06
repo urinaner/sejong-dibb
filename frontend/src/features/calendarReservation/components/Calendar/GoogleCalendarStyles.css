@@ -261,6 +261,9 @@
   display: block;
   width: 80%;
 }
+.fc .fc-scroller-harness {
+  padding-bottom: 0 !important;
+}
 
 .fc-daygrid-more-link:hover {
   background-color: #ffebee;

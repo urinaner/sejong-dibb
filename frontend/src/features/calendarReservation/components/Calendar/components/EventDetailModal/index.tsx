@@ -1,98 +1,82 @@
+// src/features/calendarReservation/components/Calendar/components/EventDetailModal/index.tsx
 import React from 'react';
-import styled from 'styled-components';
 import { format } from 'date-fns';
-import { Modal } from '../../../../../../components/Modal';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Box,
+  Chip,
+  Divider,
+  Paper,
+  IconButton,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import RoomIcon from '@mui/icons-material/Room';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
+import NotesIcon from '@mui/icons-material/Notes';
+import CloseIcon from '@mui/icons-material/Close';
 import { useReservationQuery } from '../../../../hooks/useReservationQuery';
 import { Reservation } from '../../../../types/reservation.types';
 
-const EventContent = styled.div`
-  padding: 0 24px 24px;
-`;
+// 스타일드 컴포넌트
+const ColorBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'color',
+})<{ color: string }>(({ color }) => ({
+  width: 14,
+  height: 14,
+  borderRadius: 7,
+  backgroundColor: color,
+  marginRight: 12,
+}));
 
-const EventHeader = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
+const DetailCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  boxShadow: theme.shadows[1],
+}));
 
-const ColorIndicator = styled.div<{ color: string }>`
-  width: 14px;
-  height: 14px;
-  border-radius: 7px;
-  background-color: ${(props) => props.color};
-  margin-right: 12px;
-`;
+const DetailItem = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'flex-start',
+  marginBottom: theme.spacing(2),
+  '&:last-child': {
+    marginBottom: 0,
+  },
+}));
 
-const EventTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 500;
-  color: #202124;
-  margin: 0;
-`;
-
-const EventDetail = styled.div`
-  margin-bottom: 16px;
-`;
-
-const DetailLabel = styled.div`
-  font-size: 12px;
-  color: #5f6368;
-  margin-bottom: 4px;
-`;
-
-const DetailValue = styled.div`
-  font-size: 14px;
-  color: #202124;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-`;
-
-const Button = styled.button`
-  padding: 8px 24px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-`;
-
-const DeleteButton = styled(Button)`
-  background-color: white;
-  color: #ea4335;
-  border: 1px solid #dadce0;
-
-  &:hover {
-    background-color: #fef7f7;
-    border-color: #ea4335;
-  }
-`;
-
-const EditButton = styled(Button)`
-  background-color: #1a73e8;
-  color: white;
-  border: none;
-
-  &:hover {
-    background-color: #1766ca;
-    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
-  }
-`;
+const DetailIcon = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  marginRight: theme.spacing(2),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 interface EventDetailModalProps {
+  open: boolean;
+  onClose: () => void;
   reservation: Reservation;
   onDelete: (id: number) => void;
   onEdit?: () => void;
+  isAdmin: boolean;
+  hasPermission: (action: 'create' | 'read' | 'update' | 'delete') => boolean;
 }
 
 const EventDetailModal: React.FC<EventDetailModalProps> = ({
+  open,
+  onClose,
   reservation,
   onDelete,
   onEdit,
+  isAdmin,
+  hasPermission,
 }) => {
   const { useDeleteReservation } = useReservationQuery(reservation.roomId || 1);
   const deleteReservation = useDeleteReservation();
@@ -122,6 +106,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
       try {
         await deleteReservation.mutateAsync(reservation.id);
         onDelete(reservation.id);
+        onClose();
       } catch (error) {
         console.error('Failed to delete reservation:', error);
         alert('예약 삭제 중 오류가 발생했습니다.');
@@ -129,44 +114,167 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
     }
   };
 
+  // 예약 상태에 따른 칩 색상 및 라벨
+  const getStatusChip = (status: Reservation['status']) => {
+    const statusConfig = {
+      PENDING: { color: 'warning', label: '승인 대기' },
+      CONFIRMED: { color: 'success', label: '승인됨' },
+      CANCELLED: { color: 'error', label: '취소됨' },
+    };
+
+    const config = statusConfig[status] || statusConfig.PENDING;
+
+    return (
+      <Chip
+        size="small"
+        color={config.color as 'warning' | 'success' | 'error'}
+        label={config.label}
+        sx={{ ml: 1 }}
+      />
+    );
+  };
+
+  // 현재 사용자가 이 예약의 소유자인지 확인
+  const isOwner = () => {
+    const userId = localStorage.getItem('userId');
+    return userId && Number(userId) === reservation.userId;
+  };
+
+  // 수정 및 삭제 권한 확인
+  const canEdit = hasPermission('update') && (isAdmin || isOwner());
+  const canDelete = hasPermission('delete') && (isAdmin || isOwner());
+
   return (
-    <>
-      <Modal.Header>예약 상세 정보</Modal.Header>
-      <EventContent>
-        <EventHeader>
-          <ColorIndicator color={getPurposeColor(reservation.purpose)} />
-          <EventTitle>{getPurposeTitle(reservation.purpose)}</EventTitle>
-        </EventHeader>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+      aria-labelledby="event-detail-dialog-title"
+    >
+      <DialogTitle id="event-detail-dialog-title" sx={{ m: 0, p: 2 }}>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h6">예약 상세 정보</Typography>
+        </Box>
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        <EventDetail>
-          <DetailLabel>일시</DetailLabel>
-          <DetailValue>
-            {format(
-              new Date(reservation.startTime),
-              'yyyy년 M월 d일 (EEE) HH:mm',
-            )}{' '}
-            -{format(new Date(reservation.endTime), 'HH:mm')}
-          </DetailValue>
-        </EventDetail>
+      <DialogContent dividers>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <ColorBox color={getPurposeColor(reservation.purpose)} />
+          <Typography variant="h5" component="h2" sx={{ fontWeight: 500 }}>
+            {getPurposeTitle(reservation.purpose)}
+          </Typography>
+          {getStatusChip(reservation.status)}
+        </Box>
 
-        <EventDetail>
-          <DetailLabel>장소</DetailLabel>
-          <DetailValue>세미나실 {reservation.roomId || 1}</DetailValue>
-        </EventDetail>
+        <DetailCard>
+          <DetailItem>
+            <DetailIcon>
+              <AccessTimeIcon />
+            </DetailIcon>
+            <Box>
+              <Typography variant="caption" color="textSecondary">
+                일시
+              </Typography>
+              <Typography variant="body1">
+                {format(
+                  new Date(reservation.startTime),
+                  'yyyy년 M월 d일 (EEE) HH:mm',
+                )}{' '}
+                -{format(new Date(reservation.endTime), 'HH:mm')}
+              </Typography>
+            </Box>
+          </DetailItem>
 
-        {reservation.etc && (
-          <EventDetail>
-            <DetailLabel>비고</DetailLabel>
-            <DetailValue>{reservation.etc}</DetailValue>
-          </EventDetail>
+          <DetailItem>
+            <DetailIcon>
+              <RoomIcon />
+            </DetailIcon>
+            <Box>
+              <Typography variant="caption" color="textSecondary">
+                장소
+              </Typography>
+              <Typography variant="body1">
+                세미나실 {reservation.roomId || 1}
+              </Typography>
+            </Box>
+          </DetailItem>
+
+          <DetailItem>
+            <DetailIcon>
+              <PersonIcon />
+            </DetailIcon>
+            <Box>
+              <Typography variant="caption" color="textSecondary">
+                예약자
+              </Typography>
+              <Typography variant="body1">
+                사용자 ID: {reservation.userId}
+              </Typography>
+            </Box>
+          </DetailItem>
+
+          {reservation.etc && (
+            <>
+              <Divider sx={{ my: 2 }} />
+              <DetailItem>
+                <DetailIcon>
+                  <NotesIcon />
+                </DetailIcon>
+                <Box>
+                  <Typography variant="caption" color="textSecondary">
+                    비고
+                  </Typography>
+                  <Typography variant="body1">{reservation.etc}</Typography>
+                </Box>
+              </DetailItem>
+            </>
+          )}
+        </DetailCard>
+      </DialogContent>
+
+      <DialogActions sx={{ px: 3, py: 2 }}>
+        {/* 권한에 따른 버튼 표시 제어 */}
+        {canDelete && (
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDelete}
+          >
+            삭제
+          </Button>
         )}
 
-        <ButtonGroup>
-          <DeleteButton onClick={handleDelete}>삭제</DeleteButton>
-          {onEdit && <EditButton onClick={onEdit}>수정</EditButton>}
-        </ButtonGroup>
-      </EventContent>
-    </>
+        {canEdit && onEdit && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<EditIcon />}
+            onClick={onEdit}
+            sx={{ ml: 1 }}
+          >
+            수정
+          </Button>
+        )}
+
+        <Button onClick={onClose} color="inherit" sx={{ ml: 1 }}>
+          닫기
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

@@ -11,7 +11,6 @@ import {
   EmptyMessage,
   ButtonGroup,
   SubmitButton,
-  CancelButton,
 } from '../../CalendarStyle';
 import { ClipboardList, Clock, Tag, Info, Plus } from 'lucide-react';
 import ReservationForm from '../ReservationForm';
@@ -24,14 +23,14 @@ interface DailyReservationModalProps {
 function DailyReservationModal({ date, roomId }: DailyReservationModalProps) {
   const { closeModal, openModal } = useModal();
   const { useDailyReservations } = useReservationQuery(roomId);
-  const { data: reservations, isLoading } = useDailyReservations(date);
+  const { data: reservations, isLoading, refetch } = useDailyReservations(date);
 
   const getColorByPurpose = (purpose: Reservation['purpose']) => {
     const colors = {
-      SEMINAR: '#1a73e8', // 파란색
-      CLASS: '#0b8043', // 초록색
-      MEETING: '#f6bf26', // 노란색
-      OTHER: '#616161', // 회색
+      SEMINAR: '#1a73e8',
+      CLASS: '#0b8043',
+      MEETING: '#f6bf26',
+      OTHER: '#616161',
     };
     return colors[purpose] || colors.OTHER;
   };
@@ -43,6 +42,12 @@ function DailyReservationModal({ date, roomId }: DailyReservationModalProps) {
         <ReservationForm
           roomId={roomId}
           preselectedDate={parse(date, 'yyyy-MM-dd', new Date())}
+          onSave={(newReservation) => {
+            console.log('새 예약 완료됨:', newReservation);
+            refetch(); // 예약 목록 새로고침
+            closeModal();
+          }}
+          onClose={closeModal}
         />,
       );
     }, 200);
