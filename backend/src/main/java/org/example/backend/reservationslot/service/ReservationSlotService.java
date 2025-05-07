@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.reservationslot.domain.ReservationSlot;
-import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
 import org.example.backend.reservationslot.domain.dto.ReservationResDto;
 import org.example.backend.reservationslot.exception.ReservationException;
 import org.example.backend.reservationslot.repository.ReservationSlotRepository;
@@ -34,7 +34,7 @@ public class ReservationSlotService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long roomId, ReservationCreateDto reqDto, String loginId) {
+    public List<ReservationResDto> createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
         validateReservationRequest(reqDto);
         List<ReservationSlot> slots = reservationSlotRepository.findSlotsForUpdate(
                 roomId, reqDto.getStartTime(), reqDto.getEndTime());
@@ -93,7 +93,7 @@ public class ReservationSlotService {
     }
 
     // TODO: 예약 시간 검증 로직을 ReservationReqDto 도메인으로 이동
-    private void validateReservationRequest(ReservationCreateDto reqDto) {
+    private void validateReservationRequest(ReservationReqDto reqDto) {
         if (reqDto.getStartTime().isAfter(reqDto.getEndTime())) {
             throw new ReservationException(INVALID_TIME_ORDER);
         }

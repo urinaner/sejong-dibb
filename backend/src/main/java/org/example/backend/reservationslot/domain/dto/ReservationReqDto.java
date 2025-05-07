@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationCreateDto {
+public class ReservationReqDto {
 
     @NotNull(message = "시작 시간은 필수 입력값입니다.")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -29,17 +29,17 @@ public class ReservationCreateDto {
     private String etc;
 
     @Builder
-    private ReservationCreateDto(LocalDateTime startTime, LocalDateTime endTime,
-                                 String purpose, String etc) {
+    private ReservationReqDto(LocalDateTime startTime, LocalDateTime endTime,
+                              String purpose, String etc) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
     }
 
-    public static ReservationCreateDto of(LocalDateTime startTime, LocalDateTime endTime,
-                                          String purpose, String etc) {
-        return ReservationCreateDto.builder()
+    public static ReservationReqDto of(LocalDateTime startTime, LocalDateTime endTime,
+                                       String purpose, String etc) {
+        return ReservationReqDto.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .purpose(purpose)

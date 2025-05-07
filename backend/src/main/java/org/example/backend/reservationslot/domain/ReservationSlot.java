@@ -17,7 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
-import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
 import org.example.backend.room.domain.Room;
 
 @Entity
@@ -66,7 +66,7 @@ public class ReservationSlot extends BaseEntity {
         this.reserved = reserved;
     }
 
-    public void reserve(ReservationCreateDto dto, String loginId) {
+    public void reserve(ReservationReqDto dto, String loginId) {
         this.purpose = ReservationPurpose.valueOf(dto.getPurpose());
         this.etc = dto.getEtc();
         this.loginId = loginId;

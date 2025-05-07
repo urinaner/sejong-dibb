@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.example.backend.reservationslot.domain.ReservationSlot;
-import org.example.backend.reservationslot.domain.dto.ReservationCreateDto;
+import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
 import org.example.backend.reservationslot.domain.dto.ReservationResDto;
 import org.example.backend.reservationslot.repository.ReservationSlotRepository;
 import org.example.backend.reservationslot.service.ReservationSlotService;
@@ -75,7 +75,7 @@ public class ConcurrencyReservationTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    ReservationCreateDto request = ReservationCreateDto.of(startTime, endTime, "CLASS", "기타 내용");
+                    ReservationReqDto request = ReservationReqDto.of(startTime, endTime, "CLASS", "기타 내용");
                     ReservationResDto response = reservationSlotService.createReservation(testRoomId, request, "20003210");
                     System.out.println("예약 완료: " + response);
                 } catch (Exception e) {
