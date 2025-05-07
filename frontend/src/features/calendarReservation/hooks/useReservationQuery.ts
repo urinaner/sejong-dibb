@@ -1,7 +1,7 @@
 // src/features/calendarReservation/hooks/useReservationQuery.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Reservation } from '../types/reservation.types';
+import { Reservation, ReservationCreateDto } from '../types/reservation.types';
 import { apiEndpoints, axiosInstance } from '../../../config/apiConfig';
 
 export const reservationKeys = {
@@ -30,7 +30,7 @@ const reservationApi = {
     return response.data;
   },
 
-  createReservation: async (roomId: number, data: Omit<Reservation, 'id'>) => {
+  createReservation: async (roomId: number, data: ReservationCreateDto) => {
     const formattedData = {
       ...data,
       startTime: format(new Date(data.startTime), 'yyyy-MM-dd HH:mm'),
@@ -93,10 +93,10 @@ export const useReservationQuery = (roomId: number) => {
 
   const useCreateReservation = () =>
     useMutation({
-      mutationFn: (data: Omit<Reservation, 'id'>) =>
+      mutationFn: (data: ReservationCreateDto) =>
         reservationApi.createReservation(roomId, data),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: reservationKeys.all }); // ✅ 수정됨
+        queryClient.invalidateQueries({ queryKey: reservationKeys.all });
       },
     });
 

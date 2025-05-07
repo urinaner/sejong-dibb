@@ -20,11 +20,11 @@ function App() {
           <MuiThemeProvider theme={muiTheme}>
             <GlobalStyle />
             <BrowserRouter>
-              <ModalProvider>
-                <AuthProvider>
+              <AuthProvider>
+                <ModalProvider>
                   <AppContent />
-                </AuthProvider>
-              </ModalProvider>
+                </ModalProvider>
+              </AuthProvider>
             </BrowserRouter>
           </MuiThemeProvider>
         </ThemeProvider>

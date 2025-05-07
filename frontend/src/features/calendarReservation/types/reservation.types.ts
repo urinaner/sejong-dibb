@@ -14,3 +14,11 @@ export interface Reservation {
   createdAt: string; // 필수 필드로 변경
   updatedAt: string; // 필수 필드로 변경
 }
+export interface ReservationCreateDto {
+  startTime: string;
+  endTime: string;
+  purpose: ReservationPurpose;
+  etc?: string;
+  status: ReservationStatus;
+  userId: number;
+}

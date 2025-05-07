@@ -1,5 +1,6 @@
 import { axiosInstance } from '../../../config/apiConfig';
 import { Reservation } from '../types/reservation.types';
+import { ReservationCreateDto } from '../../calendarReservation/types/reservation.types';
 
 class ReservationApi {
   private BASE_PATH = '/api/room';
@@ -28,7 +29,7 @@ class ReservationApi {
 
   async createReservation(
     roomId: number,
-    data: Omit<Reservation, 'id'>,
+    data: ReservationCreateDto,
   ): Promise<Reservation> {
     const response = await axiosInstance.post(
       `${this.BASE_PATH}/${roomId}/reservation`,

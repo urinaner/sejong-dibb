@@ -71,8 +71,14 @@ export const AppRoutes: React.FC = ({}) => {
       <Route path="/news/:newsId" element={<NewsDetail />} />
 
       {/* Calendar */}
-      <Route path="/seminar-rooms/reservation" element={<Calendar />} />
-
+      <Route
+        path="/seminar-rooms/reservation"
+        element={
+          <ProtectedRoute requireAuth>
+            <Calendar />
+          </ProtectedRoute>
+        }
+      />
       {/* Protected Routes */}
       <Route
         path="/about/faculty/edit/:id"

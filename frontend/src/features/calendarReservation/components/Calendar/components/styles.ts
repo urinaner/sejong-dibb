@@ -154,5 +154,6 @@ export const Spinner = styled.div`
 
 export const CalendarContainer = styled.div`
   position: relative;
+  height: calc(100vh); /* 예: 하단 네비게이션 60px */
   width: 100%;
 `;
