@@ -2,18 +2,25 @@ package org.example.backend.reservationslot.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.LockModeType;
 import org.example.backend.reservationslot.domain.ReservationSlot;
+import org.example.backend.room.domain.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReservationSlotRepository extends JpaRepository<ReservationSlot, Long> {
-    @Query("SELECT COUNT(r) > 0 FROM ReservationSlot r " +
-            "WHERE r.room.id = :seminarRoomId " +
-            "AND r.startTime < :endTime " +
-            "AND r.endTime > :startTime")
-    boolean existsByTimePeriod( // TODO: 엔티티 가져와서 캐시에 두기
-            @Param("seminarRoomId") Long seminarRoomId,
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT s FROM ReservationSlot s " +
+            "WHERE s.room.id = :roomId " +
+            "AND s.startTime >= :startTime " +
+            "AND s.endTime <= :endTime " +
+            "AND s.reserved = false " +
+            "ORDER BY s.startTime")
+    List<ReservationSlot> findSlotsForUpdate(
+            @Param("roomId") Long roomId,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
 
@@ -35,4 +42,6 @@ public interface ReservationSlotRepository extends JpaRepository<ReservationSlot
             @Param("roomId") Long roomId,
             @Param("yearMonth") String yearMonth
     );
+
+    boolean existsByRoomAndStartTime(Room room, LocalDateTime startTime);
 }
