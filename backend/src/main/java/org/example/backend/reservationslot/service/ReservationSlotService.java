@@ -91,15 +91,4 @@ public class ReservationSlotService {
     private Users getUserByLoginId(String loginId) {
         return usersRepository.findByLoginId(loginId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
     }
-
-    // TODO: 예약 시간 검증 로직을 ReservationReqDto 도메인으로 이동
-    private void validateReservationRequest(ReservationReqDto reqDto) {
-        if (reqDto.getStartTime().isAfter(reqDto.getEndTime())) {
-            throw new ReservationException(INVALID_TIME_ORDER);
-        }
-
-        if (reqDto.getStartTime().isBefore(LocalDateTime.now())) {
-            throw new ReservationException(INVALID_TIME_ORDER);
-        }
-    }
 }
