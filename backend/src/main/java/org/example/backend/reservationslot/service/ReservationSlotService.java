@@ -4,6 +4,7 @@ import static org.example.backend.reservationslot.exception.ReservationException
 import static org.example.backend.room.exception.RoomExceptionType.*;
 import static org.example.backend.users.exception.member.MemberExceptionType.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,20 +29,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReservationSlotService {
-    private final ReservationSlotRepository reservationRepository;
+    private final ReservationSlotRepository reservationSlotRepository;
     private final RoomRepository roomRepository;
     private final UsersRepository usersRepository;
 
     @Transactional
-    public ReservationResDto createReservation(Long seminarRoomId, ReservationCreateDto reqDto, String loginId) {
+    public List<ReservationResDto> createReservation(Long roomId, ReservationCreateDto reqDto, String loginId) {
         validateReservationRequest(reqDto);
-        Room room = getSeminarRoomById(seminarRoomId);
+        List<ReservationSlot> slots = reservationSlotRepository.findSlotsForUpdate(
+                roomId, reqDto.getStartTime(), reqDto.getEndTime());
 
-        validateReservation(reqDto, seminarRoomId);
+        // 검증: 슬롯 개수가 부족하거나 하나라도 이미 예약된 경우
+        int expectedSlotCount = (int) (Duration.between(reqDto.getStartTime(), reqDto.getEndTime()).toMinutes() / 30);
+        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(ReservationSlot::isReserved)) {
+            throw new ReservationException(EXIST_ALREADY_RESERVATION);
+        }
 
-        ReservationSlot reservation = ReservationSlot.of(reqDto, room, loginId, true);
-        reservationRepository.save(reservation);
-        return ReservationResDto.of(reservation);
+        // 예약 처리
+        slots.forEach(slot -> slot.reserve(reqDto, loginId));
+        return ReservationResDto.of(slots); // 필요시 시작~종료만 담은 DTO로 만들어도 됨
 
     }
 
@@ -51,14 +57,14 @@ public class ReservationSlotService {
     }
 
     public List<ReservationResDto> getMonthReservations(Long roomId, String yearMonth) {
-        return reservationRepository.findAllByRoomAndYearMonth(roomId, yearMonth).stream()
+        return reservationSlotRepository.findAllByRoomAndYearMonth(roomId, yearMonth).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
 
     public List<ReservationResDto> getReservationsByRoomAndDate(Long seminarRoomId, String date) {
         getReservationById(seminarRoomId);
-        return reservationRepository.findAllByDateAndStatus(seminarRoomId, date).stream()
+        return reservationSlotRepository.findAllByDateAndStatus(seminarRoomId, date).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
@@ -70,10 +76,10 @@ public class ReservationSlotService {
         if (!reservation.getLoginId().equals(loginId)) {
             throw new ReservationException(FORBIDDEN_OPERATION);
         }
-        reservationRepository.delete(reservation);
+        reservationSlotRepository.delete(reservation);
     }
     private ReservationSlot getReservationById(Long id) {
-        return reservationRepository.findById(id)
+        return reservationSlotRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
 
@@ -86,6 +92,7 @@ public class ReservationSlotService {
         return usersRepository.findByLoginId(loginId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
     }
 
+    // TODO: 예약 시간 검증 로직을 ReservationReqDto 도메인으로 이동
     private void validateReservationRequest(ReservationCreateDto reqDto) {
         if (reqDto.getStartTime().isAfter(reqDto.getEndTime())) {
             throw new ReservationException(INVALID_TIME_ORDER);
@@ -93,17 +100,6 @@ public class ReservationSlotService {
 
         if (reqDto.getStartTime().isBefore(LocalDateTime.now())) {
             throw new ReservationException(INVALID_TIME_ORDER);
-        }
-    }
-    private void validateReservation(ReservationCreateDto reqDto, Long seminarRoomId) {
-        boolean hasReservation = reservationRepository.existsByTimePeriod(
-                seminarRoomId,
-                reqDto.getStartTime(),
-                reqDto.getEndTime()
-        );
-
-        if (hasReservation) {
-            throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
     }
 }

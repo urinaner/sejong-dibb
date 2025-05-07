@@ -66,17 +66,11 @@ public class ReservationSlot extends BaseEntity {
         this.reserved = reserved;
     }
 
-    // TODO: update 로 바꾸기
-    public static ReservationSlot of(ReservationCreateDto dto, Room room, String loginId, boolean reserved) {
-        return ReservationSlot.builder()
-                .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
-                .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
-                .etc(dto.getEtc())
-                .room(room)
-                .loginId(loginId)
-                .reserved(reserved)
-                .build();
+    public void reserve(ReservationCreateDto dto, String loginId) {
+        this.purpose = ReservationPurpose.valueOf(dto.getPurpose());
+        this.etc = dto.getEtc();
+        this.loginId = loginId;
+        this.reserved = true;
     }
 
     public static ReservationSlot of(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
@@ -90,10 +84,5 @@ public class ReservationSlot extends BaseEntity {
                 .loginId(loginId)
                 .reserved(reserved)
                 .build();
-    }
-
-    public void reserve(String loginId) {
-        this.reserved = true;
-        this.loginId = loginId;
     }
 }

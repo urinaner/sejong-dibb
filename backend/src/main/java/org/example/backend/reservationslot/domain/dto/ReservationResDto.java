@@ -2,6 +2,8 @@ package org.example.backend.reservationslot.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,5 +41,11 @@ public class ReservationResDto {
                 .purpose(reservation.getPurpose())
                 .etc(reservation.getEtc())
                 .build();
+    }
+
+    public static List<ReservationResDto> of (List<ReservationSlot> reservations) {
+        return reservations.stream()
+                .map(ReservationResDto::of)
+                .toList();
     }
 }
