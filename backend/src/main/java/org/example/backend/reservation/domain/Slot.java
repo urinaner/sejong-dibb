@@ -51,4 +51,12 @@ public class Slot extends BaseEntity {
                 .reservation(reservation)
                 .build();
     }
+
+    public boolean isAvailable() {
+        return reservation == null;
+    }
+
+    public void reserve(Reservation reservation) {
+        this.reservation = reservation;
+    }
 }

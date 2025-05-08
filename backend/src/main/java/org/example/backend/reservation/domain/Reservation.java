@@ -41,32 +41,27 @@ public class Reservation extends BaseEntity {
     private String loginId;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<Slot> slots = new ArrayList<>();
+    private List<Slot> slots;
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, String loginId) {
+                        String etc, String loginId, List<Slot> slots) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.loginId = loginId;
+        this.slots = slots;
     }
 
-    public void reserve(ReservationReqDto dto, String loginId) {
-        this.purpose = ReservationPurpose.valueOf(dto.getPurpose());
-        this.etc = dto.getEtc();
-        this.loginId = loginId;
-    }
-
-    public static Reservation of(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                                 String etc, String loginId){
+    public static Reservation of(ReservationReqDto reqDto, String loginId, List<Slot> slots){
         return Reservation.builder()
-                .startTime(startTime)
-                .endTime(endTime)
-                .purpose(purpose)
-                .etc(etc)
+                .startTime(reqDto.getStartTime())
+                .endTime(reqDto.getEndTime())
+                .purpose(ReservationPurpose.valueOf(reqDto.getPurpose()))
+                .etc(reqDto.getEtc())
                 .loginId(loginId)
+                .slots(slots)
                 .build();
     }
 }

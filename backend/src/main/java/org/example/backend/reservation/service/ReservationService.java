@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.reservation.domain.Slot;
 import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.exception.ReservationException;
-import org.example.backend.reservation.repository.ReservationSlotRepository;
+import org.example.backend.reservation.repository.ReservationRepository;
+import org.example.backend.reservation.repository.SlotRepository;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
@@ -28,25 +30,26 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReservationService {
-    private final ReservationSlotRepository reservationSlotRepository;
+    private final SlotRepository slotRepository;
+    private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final UsersRepository usersRepository;
 
     @Transactional
-    public List<ReservationResDto> createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
-        validateReservationRequest(reqDto);
-        List<Reservation> slots = reservationSlotRepository.findSlotsForUpdate(
+    public ReservationResDto createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
+        List<Slot> slots = slotRepository.findSlotsForUpdate(
                 roomId, reqDto.getStartTime(), reqDto.getEndTime());
 
         // 검증: 슬롯 개수가 부족하거나 하나라도 이미 예약된 경우
         int expectedSlotCount = (int) (Duration.between(reqDto.getStartTime(), reqDto.getEndTime()).toMinutes() / 30);
-        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(Reservation::isReserved)) {
+        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(slot -> !slot.isAvailable())) {
             throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
 
         // 예약 처리
-        slots.forEach(slot -> slot.reserve(reqDto, loginId));
-        return ReservationResDto.of(slots); // 필요시 시작~종료만 담은 DTO로 만들어도 됨
+        Reservation reservation = reservationRepository.save(Reservation.of(reqDto, loginId, slots));
+        slots.forEach(slot -> slot.reserve(reservation));
+        return ReservationResDto.of(reservation);
 
     }
 

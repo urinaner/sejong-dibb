@@ -27,12 +27,12 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/{roomId}/reservation")
-    public ResponseEntity<List<ReservationResDto>> createReservation(
+    public ResponseEntity<ReservationResDto> createReservation(
             @PathVariable(value = "roomId") Long roomId,
             @RequestBody @Valid ReservationReqDto reqDto,
             @LoginUser String loginId) {
-        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, loginId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resDtos);
+        ReservationResDto resDto = reservationService.createReservation(roomId, reqDto, loginId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
 
