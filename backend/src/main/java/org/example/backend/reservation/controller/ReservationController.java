@@ -58,7 +58,6 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    // TODO: id 여러개 받아서 삭제하는 API 추가 or 그대로?
     @DeleteMapping("/{roomId}/reservation/{reservationId}")
     public ResponseEntity<Void> deleteReservation(
             @PathVariable(value = "roomId") Long roomId,
