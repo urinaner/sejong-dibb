@@ -39,6 +39,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("roomId") Long roomId,
             @Param("yearMonth") String yearMonth
     );
-
-    boolean existsByRoomAndStartTime(Room room, LocalDateTime startTime);
 }
