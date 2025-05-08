@@ -25,15 +25,15 @@ public class Slot extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation; // 예약이 없으면 null
+
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation; // 예약이 붙어 있지 않으면 null
 
     @Builder
     private Slot(Room room, LocalDateTime startTime, LocalDateTime endTime, Reservation reservation) {
