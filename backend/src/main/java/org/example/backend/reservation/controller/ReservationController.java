@@ -1,13 +1,13 @@
-package org.example.backend.reservationslot.controller;
+package org.example.backend.reservation.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.common.aop.auth.LoginUser;
-import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
-import org.example.backend.reservationslot.domain.dto.ReservationResDto;
-import org.example.backend.reservationslot.service.ReservationSlotService;
+import org.example.backend.reservation.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationResDto;
+import org.example.backend.reservation.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,15 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/room")
-public class ReservationSlotController {
-    private final ReservationSlotService reservationSlotService;
+public class ReservationController {
+    private final ReservationService reservationService;
 
     @PostMapping("/{roomId}/reservation")
     public ResponseEntity<List<ReservationResDto>> createReservation(
             @PathVariable(value = "roomId") Long roomId,
             @RequestBody @Valid ReservationReqDto reqDto,
             @LoginUser String loginId) {
-        List<ReservationResDto> resDtos = reservationSlotService.createReservation(roomId, reqDto, loginId);
+        List<ReservationResDto> resDtos = reservationService.createReservation(roomId, reqDto, loginId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDtos);
     }
 
@@ -41,7 +41,7 @@ public class ReservationSlotController {
             @PathVariable(name = "roomId") Long roomId,
             @RequestParam(value = "date", required = false) String date
     ) {
-        List<ReservationResDto> reservations = reservationSlotService.getReservationsByRoomAndDate(roomId, date);
+        List<ReservationResDto> reservations = reservationService.getReservationsByRoomAndDate(roomId, date);
         return ResponseEntity.ok(reservations);
     }
 
@@ -51,9 +51,9 @@ public class ReservationSlotController {
             @RequestParam(required = false) String yearMonth) {
         List<ReservationResDto> reservations;
         if (yearMonth == null) {
-            reservations = reservationSlotService.getCurrentMonthReservations(roomId);
+            reservations = reservationService.getCurrentMonthReservations(roomId);
         } else {
-            reservations = reservationSlotService.getMonthReservations(roomId, yearMonth);
+            reservations = reservationService.getMonthReservations(roomId, yearMonth);
         }
         return ResponseEntity.ok(reservations);
     }
@@ -64,7 +64,7 @@ public class ReservationSlotController {
             @PathVariable(value = "roomId") Long roomId,
             @PathVariable(value = "reservationId") Long reservationId,
             @LoginUser String loginId) {
-        reservationSlotService.deleteReservation(reservationId, loginId);
+        reservationService.deleteReservation(reservationId, loginId);
         return ResponseEntity.ok().build();
     }
 

@@ -1,4 +1,4 @@
-package org.example.backend.reservationslot.domain;
+package org.example.backend.reservation.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,14 +17,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
-import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.room.domain.Room;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "reservation_slot")
-public class ReservationSlot extends BaseEntity {
+@Table(name = "reservation")
+public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
@@ -50,39 +50,33 @@ public class ReservationSlot extends BaseEntity {
     @Column(name = "login_id")
     private String loginId;
 
-    @Column(name = "reserved")
-    private boolean reserved;
-
 
     @Builder
-    private ReservationSlot(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, String loginId, boolean reserved) {
+    private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
+                        String etc, Room room, String loginId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.room = room;
         this.loginId = loginId;
-        this.reserved = reserved;
     }
 
     public void reserve(ReservationReqDto dto, String loginId) {
         this.purpose = ReservationPurpose.valueOf(dto.getPurpose());
         this.etc = dto.getEtc();
         this.loginId = loginId;
-        this.reserved = true;
     }
 
-    public static ReservationSlot of(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                                     String etc, Room room, String loginId, boolean reserved){
-        return ReservationSlot.builder()
+    public static Reservation of(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
+                                 String etc, Room room, String loginId){
+        return Reservation.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .purpose(purpose)
                 .etc(etc)
                 .room(room)
                 .loginId(loginId)
-                .reserved(reserved)
                 .build();
     }
 }

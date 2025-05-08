@@ -1,4 +1,4 @@
-package org.example.backend.reservationslot.exception;
+package org.example.backend.reservation.exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

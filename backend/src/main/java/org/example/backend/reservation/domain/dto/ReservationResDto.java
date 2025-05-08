@@ -1,4 +1,4 @@
-package org.example.backend.reservationslot.domain.dto;
+package org.example.backend.reservation.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
@@ -8,8 +8,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservationslot.domain.ReservationSlot;
-import org.example.backend.reservationslot.domain.ReservationPurpose;
+import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.reservation.domain.ReservationPurpose;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,7 +33,7 @@ public class ReservationResDto {
 
     }
 
-    public static ReservationResDto of(ReservationSlot reservation) {
+    public static ReservationResDto of(Reservation reservation) {
         return ReservationResDto.builder()
                 .id(reservation.getId())
                 .startTime(reservation.getStartTime())
@@ -43,7 +43,7 @@ public class ReservationResDto {
                 .build();
     }
 
-    public static List<ReservationResDto> of (List<ReservationSlot> reservations) {
+    public static List<ReservationResDto> of (List<Reservation> reservations) {
         return reservations.stream()
                 .map(ReservationResDto::of)
                 .toList();

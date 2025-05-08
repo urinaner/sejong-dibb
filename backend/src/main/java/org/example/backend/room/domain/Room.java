@@ -14,7 +14,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservationslot.domain.Reservation;
+import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.reservation.domain.Slot;
 import org.example.backend.room.domain.dto.RoomReqDto;
 
 @Entity
@@ -40,7 +41,7 @@ public class Room {
     private String image;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<Slot> slots = new ArrayList<>();
 
     @Builder
     public Room(String name, Integer personCapacity, String place, String image) {

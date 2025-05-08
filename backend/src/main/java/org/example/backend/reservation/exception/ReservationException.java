@@ -1,4 +1,4 @@
-package org.example.backend.reservationslot.exception;
+package org.example.backend.reservation.exception;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.exception.BaseException;

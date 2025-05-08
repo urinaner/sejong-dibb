@@ -1,4 +1,4 @@
-package org.example.backend.reservationslot.domain.dto;
+package org.example.backend.reservation.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
@@ -7,9 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.backend.reservationslot.exception.ReservationException;
-
-import static org.example.backend.reservationslot.exception.ReservationExceptionType.INVALID_TIME_ORDER;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

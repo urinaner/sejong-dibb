@@ -1,21 +1,20 @@
-package org.example.backend.reservationslot.service;
+package org.example.backend.reservation.service;
 
-import static org.example.backend.reservationslot.exception.ReservationExceptionType.*;
+import static org.example.backend.reservation.exception.ReservationExceptionType.*;
 import static org.example.backend.room.exception.RoomExceptionType.*;
 import static org.example.backend.users.exception.member.MemberExceptionType.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.reservationslot.domain.ReservationSlot;
-import org.example.backend.reservationslot.domain.dto.ReservationReqDto;
-import org.example.backend.reservationslot.domain.dto.ReservationResDto;
-import org.example.backend.reservationslot.exception.ReservationException;
-import org.example.backend.reservationslot.repository.ReservationSlotRepository;
+import org.example.backend.reservation.domain.Reservation;
+import org.example.backend.reservation.domain.dto.ReservationReqDto;
+import org.example.backend.reservation.domain.dto.ReservationResDto;
+import org.example.backend.reservation.exception.ReservationException;
+import org.example.backend.reservation.repository.ReservationSlotRepository;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.exception.RoomException;
 import org.example.backend.room.repository.RoomRepository;
@@ -28,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ReservationSlotService {
+public class ReservationService {
     private final ReservationSlotRepository reservationSlotRepository;
     private final RoomRepository roomRepository;
     private final UsersRepository usersRepository;
@@ -36,12 +35,12 @@ public class ReservationSlotService {
     @Transactional
     public List<ReservationResDto> createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
         validateReservationRequest(reqDto);
-        List<ReservationSlot> slots = reservationSlotRepository.findSlotsForUpdate(
+        List<Reservation> slots = reservationSlotRepository.findSlotsForUpdate(
                 roomId, reqDto.getStartTime(), reqDto.getEndTime());
 
         // 검증: 슬롯 개수가 부족하거나 하나라도 이미 예약된 경우
         int expectedSlotCount = (int) (Duration.between(reqDto.getStartTime(), reqDto.getEndTime()).toMinutes() / 30);
-        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(ReservationSlot::isReserved)) {
+        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(Reservation::isReserved)) {
             throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
 
@@ -71,14 +70,14 @@ public class ReservationSlotService {
 
     @Transactional
     public void deleteReservation(Long id, String loginId) {
-        ReservationSlot reservation = getReservationById(id);
+        Reservation reservation = getReservationById(id);
 
         if (!reservation.getLoginId().equals(loginId)) {
             throw new ReservationException(FORBIDDEN_OPERATION);
         }
         reservationSlotRepository.delete(reservation);
     }
-    private ReservationSlot getReservationById(Long id) {
+    private Reservation getReservationById(Long id) {
         return reservationSlotRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
