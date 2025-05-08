@@ -59,14 +59,14 @@ public class ReservationService {
     }
 
     public List<ReservationResDto> getMonthReservations(Long roomId, String yearMonth) {
-        return reservationSlotRepository.findAllByRoomAndYearMonth(roomId, yearMonth).stream()
+        return reservationRepository.findAllByRoomAndYearMonth(roomId, yearMonth).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
 
     public List<ReservationResDto> getReservationsByRoomAndDate(Long seminarRoomId, String date) {
         getReservationById(seminarRoomId);
-        return reservationSlotRepository.findAllByDateAndStatus(seminarRoomId, date).stream()
+        return reservationRepository.findAllByDateAndStatus(seminarRoomId, date).stream()
                 .map(ReservationResDto::of)
                 .collect(Collectors.toList());
     }
@@ -83,14 +83,5 @@ public class ReservationService {
     private Reservation getReservationById(Long id) {
         return reservationSlotRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
-    }
-
-    private Room getSeminarRoomById(Long seminarRoomId) {
-        return roomRepository.findRoomForUpdate(seminarRoomId)
-                .orElseThrow(() -> new RoomException(NOT_FOUND_SEMINAR_ROOM));
-    }
-
-    private Users getUserByLoginId(String loginId) {
-        return usersRepository.findByLoginId(loginId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
     }
 }

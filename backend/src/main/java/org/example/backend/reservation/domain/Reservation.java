@@ -43,15 +43,20 @@ public class Reservation extends BaseEntity {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<Slot> slots;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "room_id")
+    private Room room;
+
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, String loginId, List<Slot> slots) {
+                        String etc, String loginId, List<Slot> slots, Room room) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
         this.loginId = loginId;
         this.slots = slots;
+        this.room = room;
     }
 
     public static Reservation of(ReservationReqDto reqDto, String loginId, List<Slot> slots){
@@ -62,6 +67,7 @@ public class Reservation extends BaseEntity {
                 .etc(reqDto.getEtc())
                 .loginId(loginId)
                 .slots(slots)
+                .room(slots.getFirst().getRoom())
                 .build();
     }
 }
