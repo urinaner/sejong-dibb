@@ -1,17 +1,11 @@
 package org.example.backend.reservation.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,22 +37,19 @@ public class Reservation extends BaseEntity {
     @Column(name = "etc")
     private String etc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
-
     @Column(name = "login_id")
     private String loginId;
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<Slot> slots = new ArrayList<>();
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, String loginId) {
+                        String etc, String loginId) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.room = room;
         this.loginId = loginId;
     }
 
@@ -69,13 +60,12 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation of(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                                 String etc, Room room, String loginId){
+                                 String etc, String loginId){
         return Reservation.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .purpose(purpose)
                 .etc(etc)
-                .room(room)
                 .loginId(loginId)
                 .build();
     }

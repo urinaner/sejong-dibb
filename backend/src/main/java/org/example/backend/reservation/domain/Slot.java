@@ -10,6 +10,8 @@ import org.example.backend.room.domain.Room;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +21,7 @@ public class Slot extends BaseEntity {
     @Column(name = "slot_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
@@ -29,14 +31,24 @@ public class Slot extends BaseEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @Column(name = "reserved")
-    private boolean reserved;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation; // 예약이 붙어 있지 않으면 null
 
     @Builder
-    private Slot(Room room, LocalDateTime startTime, LocalDateTime endTime, boolean reserved) {
+    private Slot(Room room, LocalDateTime startTime, LocalDateTime endTime, Reservation reservation) {
         this.room = room;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.reserved = reserved;
+        this.reservation = reservation;
+    }
+
+    public static Slot of(Room room, LocalDateTime startTime, LocalDateTime endTime, Reservation reservation) {
+        return Slot.builder()
+                .room(room)
+                .startTime(startTime)
+                .endTime(endTime)
+                .reservation(reservation)
+                .build();
     }
 }
