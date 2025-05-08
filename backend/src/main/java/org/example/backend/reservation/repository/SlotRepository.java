@@ -20,7 +20,7 @@ public interface SlotRepository extends JpaRepository <Slot, Long> {
             "WHERE s.room.id = :roomId " +
             "AND s.startTime >= :startTime " +
             "AND s.endTime <= :endTime " +
-            "AND s.reservation = null " +
+            "AND s.reservation IS NULL " +
             "ORDER BY s.startTime")
     List<Slot> findSlotsForUpdate(
             @Param("roomId") Long roomId,
