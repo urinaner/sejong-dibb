@@ -46,7 +46,7 @@ public class ReservationService {
             throw new ReservationException(EXIST_ALREADY_RESERVATION);
         }
 
-        // 예약 처리
+        // 슬롯 예약 처리
         Reservation reservation = reservationRepository.save(Reservation.of(reqDto, loginId, slots));
         slots.forEach(slot -> slot.reserve(reservation));
         return ReservationResDto.of(reservation);
@@ -78,10 +78,13 @@ public class ReservationService {
         if (!reservation.getLoginId().equals(loginId)) {
             throw new ReservationException(FORBIDDEN_OPERATION);
         }
-        reservationSlotRepository.delete(reservation);
+
+        // 슬롯 취소 처리
+        reservation.getSlots().forEach(Slot::cancle);
+        reservationRepository.delete(reservation);
     }
     private Reservation getReservationById(Long id) {
-        return reservationSlotRepository.findById(id)
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(NOT_FOUND_RESERVATION));
     }
 }

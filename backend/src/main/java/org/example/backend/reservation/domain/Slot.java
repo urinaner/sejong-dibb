@@ -59,4 +59,8 @@ public class Slot extends BaseEntity {
     public void reserve(Reservation reservation) {
         this.reservation = reservation;
     }
+
+    public void cancle() {
+        this.reservation = null;
+    }
 }

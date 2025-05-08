@@ -12,17 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT r FROM Reservation r " +
-            "WHERE r.room.id = :roomId " +
-            "AND r.startTime >= :startTime " +
-            "AND r.endTime <= :endTime " +
-            "ORDER BY r.startTime")
-    List<Reservation> findSlotsForUpdate(
-            @Param("roomId") Long roomId,
-            @Param("startTime") LocalDateTime startTime,
-            @Param("endTime") LocalDateTime endTime);
-
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.room.id = :roomId " +
             "AND DATE_FORMAT(r.startTime, '%Y-%m-%d') = :date")
