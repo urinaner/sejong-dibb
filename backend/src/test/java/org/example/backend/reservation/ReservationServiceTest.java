@@ -40,8 +40,8 @@ public class ReservationServiceTest {
         // Given
         Long roomId = 1L;
         ReservationReqDto reqDto = ReservationReqDto.of(
-                LocalDateTime.of(2025, 5, 9, 10, 0),
-                LocalDateTime.of(2025, 5, 9, 11, 0),
+                LocalDateTime.of(2099, 12, 31, 10, 0),
+                LocalDateTime.of(2099, 12, 31, 11, 0),
                 "MEETTING",
                 "Test"
         );
