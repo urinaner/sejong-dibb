@@ -1,13 +1,5 @@
 package org.example.backend.reservation.service;
 
-import static org.example.backend.reservation.exception.ReservationExceptionType.*;
-
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.Slot;
@@ -19,18 +11,28 @@ import org.example.backend.reservation.repository.SlotRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.example.backend.reservation.exception.ReservationExceptionType.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReservationService {
     private final SlotRepository slotRepository;
     private final ReservationRepository reservationRepository;
+    private static final int OPERATING_START_HOUR = 9;
+    private static final int OPERATING_END_HOUR = 18;
 
     @Transactional
     public ReservationResDto createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
-        if (isWeekend(reqDto.getStartTime().toLocalDate()) || KoreanHoliday.isHoliday(reqDto.getStartTime().toLocalDate())) {
-            throw new ReservationException(WEEKEND_OR_HOLIDAY);
-        }
+        validate(reqDto.getStartTime(), reqDto.getEndTime());
 
         List<Slot> slots = slotRepository.findSlotsForUpdate(
                 roomId, reqDto.getStartTime(), reqDto.getEndTime());
@@ -46,6 +48,16 @@ public class ReservationService {
         slots.forEach(slot -> slot.reserve(reservation));
         return ReservationResDto.of(reservation);
 
+    }
+
+    private void validate(LocalDateTime startTime, LocalDateTime endTime) {
+        if (isWeekend(startTime.toLocalDate()) || KoreanHoliday.isHoliday(startTime.toLocalDate())) {
+            throw new ReservationException(WEEKEND_OR_HOLIDAY);
+        }
+
+        if (startTime.getHour() < OPERATING_START_HOUR || endTime.getHour() > OPERATING_END_HOUR) {
+            throw new ReservationException(OUT_OF_OPERATING_HOURS);
+        }
     }
 
     private boolean isWeekend(LocalDate date) {
