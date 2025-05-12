@@ -35,6 +35,7 @@ import Curriculum from '../pages/Undergraduate/Curriculum/Curriculum';
 import Calendar from '../features/calendarReservation/components/Calendar';
 import ChangeAdminPassword from '../pages/Admin/ChangeAdminPassword/ChangeAdminPassword';
 import NotFound from '../components/Notfound/NotFound';
+import Reservation from '../pages/SeminarRoom/Reservation';
 
 export const AppRoutes: React.FC = ({}) => {
   return (
@@ -75,7 +76,7 @@ export const AppRoutes: React.FC = ({}) => {
         path="/seminar-rooms/reservation"
         element={
           <ProtectedRoute requireAuth>
-            <Calendar />
+            <Reservation />
           </ProtectedRoute>
         }
       />

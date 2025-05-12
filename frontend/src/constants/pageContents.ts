@@ -107,8 +107,8 @@ export const PAGE_CONTENTS = {
     path: '/seminar-rooms',
     subPages: {
       reservation: {
-        title: '세미나실 예약',
-        description: '세미나실 예약 현황을 확인하고 예약하실 수 있습니다',
+        title: '예약 센터',
+        description: '캘린더를 통해 예약 서비스를 이용하실 수 있습니다.',
         image: aboutImg,
         path: '/seminar-rooms/reservation',
       },
