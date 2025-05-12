@@ -71,7 +71,7 @@ const ButtonItem = styled(Card, {
   borderLeft: `1px solid #ddd`,
   cursor: 'pointer',
   position: 'relative',
-  backgroundColor: isSeminar ? '#a30027' : '#fafafa',
+  backgroundColor: isSeminar ? '#a30027' : '#ffffff',
   color: isSeminar ? '#fff' : 'inherit',
   overflow: 'hidden',
   '&:first-of-type': {
@@ -84,7 +84,7 @@ const ButtonItem = styled(Card, {
     left: '50%',
     width: '100%',
     height: '100%',
-    backgroundColor: isSeminar ? '#d92c4c' : '#e8f4f9',
+    backgroundColor: isSeminar ? '#e61c42' : '#d0e7f5',
     borderRadius: '50%',
     transform: 'translate(-50%, -50%) scale(0)',
     opacity: 0,
@@ -97,8 +97,8 @@ const ButtonItem = styled(Card, {
       transform: 'translate(-50%, -50%) scale(2.5)',
       opacity: 0.9,
     },
-    '& .icon-wrapper': {
-      transform: 'scale(1.1)',
+    '& .icon-wrapper svg': {
+      animation: `${flipAnimation} 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards`,
       color: isSeminar ? '#ffffff' : '#a30027',
     },
     '& .button-title': {
@@ -138,6 +138,19 @@ const ButtonContent = styled(Box)(({ theme }) => ({
   },
 }));
 
+// 페이지 넘김 애니메이션 정의
+const flipAnimation = keyframes`
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(1000px) rotateY(180deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(360deg);
+  }
+`;
+
 const IconWrapper = styled(Box)(({ theme }) => ({
   width: '6rem',
   height: '6rem',
@@ -145,11 +158,15 @@ const IconWrapper = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   marginBottom: '0.5rem',
-  transition: 'transform 0.3s ease, color 0.3s ease',
+  perspective: '1000px',
+  transformStyle: 'preserve-3d',
   zIndex: 2,
   '& svg': {
     width: '6rem',
     height: '6rem',
+    transition: 'transform 0.3s ease, color 0.3s ease',
+    transformStyle: 'preserve-3d',
+    backfaceVisibility: 'visible',
   },
   [theme.breakpoints.down('md')]: {
     '& svg': {
