@@ -19,16 +19,15 @@ public class SlotScheduler {
    private final SlotRepository slotRepository;
    private final RoomRepository roomRepository;
 
-   @Scheduled(cron = "0 0 3 * * *")
+   @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
    @Transactional
    public void generateSlots() {
       LocalDate startDate = LocalDate.now().plusDays(1);
       LocalDate endDate = startDate.plusWeeks(4);
       for (Room room : roomRepository.findAll()) {
          for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            if (date.getDayOfWeek().getValue() >= 6) continue; // 주말 skip
-            for (int min = 0; min < 9 * 60 ; min += 30) {
-               LocalDateTime start = date.atTime(9, 0).plusMinutes(min);
+            for (int min = 0; min < 24 * 60 ; min += 30) {
+               LocalDateTime start = date.atTime(0, 0).plusMinutes(min);
                LocalDateTime end = start.plusMinutes(30);
                if (!slotRepository.existsByRoomAndStartTime(room, start)) {
                   Slot slot = Slot.of(room, start, end, null);
