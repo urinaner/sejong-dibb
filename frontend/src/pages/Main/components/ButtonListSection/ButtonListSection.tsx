@@ -97,9 +97,9 @@ const ButtonItem = styled(Card, {
       transform: 'translate(-50%, -50%) scale(2.5)',
       opacity: 0.9,
     },
-    '& .icon-wrapper svg': {
+    '& .icon-wrapper img': {
       animation: `${flipAnimation} 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards`,
-      color: isSeminar ? '#ffffff' : '#a30027',
+      filter: `brightness(${isSeminar ? '1' : '0'}) saturate(100%) invert(${isSeminar ? '0' : '19%'}) sepia(${isSeminar ? '0' : '98%'}) saturate(${isSeminar ? '100%' : '7152%'}) hue-rotate(${isSeminar ? '0deg' : '338deg'}) brightness(${isSeminar ? '100%' : '89%'}) contrast(${isSeminar ? '100%' : '87%'})`,
     },
     '& .button-title': {
       color: isSeminar ? '#fff' : '#a30027',
@@ -161,15 +161,15 @@ const IconWrapper = styled(Box)(({ theme }) => ({
   perspective: '1000px',
   transformStyle: 'preserve-3d',
   zIndex: 2,
-  '& svg': {
-    width: '6rem',
-    height: '6rem',
+  '& img': {
+    width: '5rem',
+    height: '5rem',
     transition: 'transform 0.3s ease, color 0.3s ease',
     transformStyle: 'preserve-3d',
     backfaceVisibility: 'visible',
   },
   [theme.breakpoints.down('md')]: {
-    '& svg': {
+    '& img': {
       width: '3rem',
       height: '3rem',
     },
@@ -330,8 +330,7 @@ const ButtonListSection: React.FC = () => {
               <ButtonContent>
                 <IconWrapper className="icon-wrapper">
                   {React.createElement(getIcon(item.icon), {
-                    fontSize: 'inherit',
-                    color: 'inherit',
+                    fontSize: 'large',
                   })}
                 </IconWrapper>
                 <ButtonTitle className="button-title">{item.title}</ButtonTitle>
