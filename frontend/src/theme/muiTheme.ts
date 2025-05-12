@@ -3,6 +3,10 @@ import { createTheme } from '@mui/material/styles';
 import styledTheme from './theme';
 import { typography } from '../styles/typography';
 
+// 플랫폼 감지 함수 (실제 사용시에는 클라이언트 사이드에서만 실행되어야 함)
+const isWindowsPlatform =
+  typeof navigator !== 'undefined' && navigator.platform.indexOf('Win') > -1;
+
 // MUI 테마 생성
 const muiTheme = createTheme({
   palette: {
@@ -33,14 +37,17 @@ const muiTheme = createTheme({
     h1: {
       fontSize: styledTheme.fontSizes['3xl'],
       fontWeight: typography.fontWeights.bold,
+      letterSpacing: '-0.01em',
     },
     h2: {
       fontSize: styledTheme.fontSizes['2xl'],
       fontWeight: typography.fontWeights.bold,
+      letterSpacing: '-0.01em',
     },
     h3: {
       fontSize: styledTheme.fontSizes.xl,
       fontWeight: typography.fontWeights.bold,
+      letterSpacing: '-0.01em',
     },
     body1: {
       fontSize: styledTheme.fontSizes.base,
@@ -62,6 +69,66 @@ const muiTheme = createTheme({
     },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+    @font-face {
+      font-family: 'NanumSquare';
+      font-style: normal;
+      font-weight: 400;
+      src: local('NanumSquare Regular'), 
+           url('/fonts/NanumSquareR.otf') format('opentype'),
+           url('/fonts/NanumSquareR.ttf') format('truetype');
+      font-display: block;
+    }
+    
+    @font-face {
+      font-family: 'NanumSquare';
+      font-style: normal;
+      font-weight: 700;
+      src: local('NanumSquare Bold'), 
+           url('/fonts/NanumSquareB.otf') format('opentype'),
+           url('/fonts/NanumSquareB.ttf') format('truetype');
+      font-display: block;
+    }
+    
+    @font-face {
+      font-family: 'NanumSquare';
+      font-style: normal;
+      font-weight: 800;
+      src: local('NanumSquare ExtraBold'), 
+           url('/fonts/NanumSquareEB.otf') format('opentype'),
+           url('/fonts/NanumSquareEB.ttf') format('truetype');
+      font-display: block;
+    }
+    
+    @font-face {
+      font-family: 'NanumSquare';
+      font-style: normal;
+      font-weight: 300;
+      src: local('NanumSquare Light'), 
+           url('/fonts/NanumSquareL.otf') format('opentype'),
+           url('/fonts/NanumSquareL.ttf') format('truetype');
+      font-display: block;
+    }
+    
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    
+    /* Windows 환경 폰트 최적화 */
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none), (min--moz-device-pixel-ratio:0) {
+      body, button, input, select, textarea {
+        letter-spacing: -0.02em;
+      }
+      
+      h1, h2, h3, h4, h5, h6, strong, b {
+        font-weight: 800 !important;
+      }
+    }
+  `,
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -70,6 +137,8 @@ const muiTheme = createTheme({
           padding: `${styledTheme.spacing.sm} ${styledTheme.spacing.base}`,
           transition: `all ${styledTheme.transitions.base}`,
           fontFamily: typography.fontFamily,
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
         },
         contained: {
           boxShadow: 'none',
@@ -96,6 +165,42 @@ const muiTheme = createTheme({
       styleOverrides: {
         root: {
           fontFamily: typography.fontFamily,
+        },
+        h1: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+        h2: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+        h3: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+        h4: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+        h5: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+        h6: {
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          fontFamily: typography.fontFamily,
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+          '&.Mui-selected': {
+            fontWeight: 800,
+          },
         },
       },
     },

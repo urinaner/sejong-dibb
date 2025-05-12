@@ -176,7 +176,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
           <Typography variant="h5" component="h2" sx={{ fontWeight: 500 }}>
             {getPurposeTitle(reservation.purpose)}
           </Typography>
-          {getStatusChip(reservation.status)}
+          {/*{getStatusChip(reservation.status)}*/}
         </Box>
 
         <DetailCard>
