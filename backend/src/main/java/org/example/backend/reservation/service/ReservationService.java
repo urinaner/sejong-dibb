@@ -1,9 +1,8 @@
 package org.example.backend.reservation.service;
 
 import static org.example.backend.reservation.exception.ReservationExceptionType.*;
-import static org.example.backend.room.exception.RoomExceptionType.*;
-import static org.example.backend.users.exception.member.MemberExceptionType.*;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,12 +16,6 @@ import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.exception.ReservationException;
 import org.example.backend.reservation.repository.ReservationRepository;
 import org.example.backend.reservation.repository.SlotRepository;
-import org.example.backend.room.domain.Room;
-import org.example.backend.room.exception.RoomException;
-import org.example.backend.room.repository.RoomRepository;
-import org.example.backend.users.domain.entity.Users;
-import org.example.backend.users.exception.member.MemberException;
-import org.example.backend.users.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationService {
     private final SlotRepository slotRepository;
     private final ReservationRepository reservationRepository;
-    private final RoomRepository roomRepository;
-    private final UsersRepository usersRepository;
 
     @Transactional
     public ReservationResDto createReservation(Long roomId, ReservationReqDto reqDto, String loginId) {
+        if (isWeekend(reqDto.getStartTime().toLocalDate()) || KoreanHoliday.isHoliday(reqDto.getStartTime().toLocalDate())) {
+            throw new ReservationException(WEEKEND_OR_HOLIDAY);
+        }
+
         List<Slot> slots = slotRepository.findSlotsForUpdate(
                 roomId, reqDto.getStartTime(), reqDto.getEndTime());
 
@@ -51,6 +46,10 @@ public class ReservationService {
         slots.forEach(slot -> slot.reserve(reservation));
         return ReservationResDto.of(reservation);
 
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        return date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
     }
 
     public List<ReservationResDto> getCurrentMonthReservations(Long roomId) {
