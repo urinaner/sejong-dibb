@@ -1,25 +1,18 @@
 package org.example.backend.reservation.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.backend.common.domain.BaseEntity;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
+import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.room.domain.Room;
-import org.example.backend.users.domain.entity.Users;
 
 @Entity
 @Getter
@@ -44,35 +37,37 @@ public class Reservation extends BaseEntity {
     @Column(name = "etc")
     private String etc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
-
     @Column(name = "login_id")
     private String loginId;
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<Slot> slots;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "room_id")
+    private Room room;
 
     @Builder
     private Reservation(LocalDateTime startTime, LocalDateTime endTime, ReservationPurpose purpose,
-                        String etc, Room room, String loginId) {
+                        String etc, String loginId, List<Slot> slots, Room room) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.purpose = purpose;
         this.etc = etc;
-        this.room = room;
         this.loginId = loginId;
-
+        this.slots = slots;
+        this.room = room;
     }
 
-    public static Reservation of(ReservationCreateDto dto, Room room, String loginId) {
+    public static Reservation of(ReservationReqDto reqDto, String loginId, List<Slot> slots){
         return Reservation.builder()
-                .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
-                .purpose(ReservationPurpose.valueOf(dto.getPurpose()))
-                .etc(dto.getEtc())
-                .room(room)
+                .startTime(reqDto.getStartTime())
+                .endTime(reqDto.getEndTime())
+                .purpose(ReservationPurpose.valueOf(reqDto.getPurpose()))
+                .etc(reqDto.getEtc())
                 .loginId(loginId)
+                .slots(slots)
+                .room(slots.getFirst().getRoom())
                 .build();
     }
-
 }

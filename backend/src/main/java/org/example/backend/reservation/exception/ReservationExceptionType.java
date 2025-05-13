@@ -1,11 +1,11 @@
 package org.example.backend.reservation.exception;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
 public enum ReservationExceptionType implements BaseExceptionType {
@@ -16,7 +16,9 @@ public enum ReservationExceptionType implements BaseExceptionType {
     INVALID_TIME_ORDER(BAD_REQUEST, "시작시간과 종료시간이 유효하지 않습니다."),
     EXCEEDS_MAX_DURATION(BAD_REQUEST, "예약은 최대 2시간까지만 가능합니다."),
     PAST_TIME_RESERVATION(BAD_REQUEST, "과거의 시간으로 예약할 수 없습니다."),
-    FORBIDDEN_OPERATION(BAD_REQUEST, "다른 사용자의 예약입니다.")
+    FORBIDDEN_OPERATION(BAD_REQUEST, "다른 사용자의 예약입니다."),
+    WEEKEND_OR_HOLIDAY(BAD_REQUEST, "주말이나 공휴일은 예약할 수 없습니다."),
+    OUT_OF_OPERATING_HOURS(BAD_REQUEST, "운영시간이 아닙니다."),
     ;
 
     private final HttpStatus httpStatus;

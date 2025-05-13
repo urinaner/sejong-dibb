@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.common.aop.auth.LoginUser;
-import org.example.backend.reservation.domain.dto.ReservationCreateDto;
+import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
 import org.example.backend.reservation.service.ReservationService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class ReservationController {
     @PostMapping("/{roomId}/reservation")
     public ResponseEntity<ReservationResDto> createReservation(
             @PathVariable(value = "roomId") Long roomId,
-            @RequestBody @Valid ReservationCreateDto reqDto,
+            @RequestBody @Valid ReservationReqDto reqDto,
             @LoginUser String loginId) {
         ReservationResDto resDto = reservationService.createReservation(roomId, reqDto, loginId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
