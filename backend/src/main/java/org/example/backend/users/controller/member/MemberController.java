@@ -1,19 +1,17 @@
 package org.example.backend.users.controller.member;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
-import java.util.Map;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.users.domain.dto.LoginReqDto;
 import org.example.backend.users.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RestController
@@ -23,7 +21,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginReqDto dto) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginReqDto dto) {
         return memberService.authenticateAndGenerateToken(dto);
     }
 
