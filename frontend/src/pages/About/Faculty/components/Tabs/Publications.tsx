@@ -50,7 +50,7 @@ const SearchWrapper = styled.div`
   }
 `;
 
-const SearchInput = styled.input`
+const SearchInput = styled.input.attrs({ autoComplete: 'on' })`
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.75rem;
   border: 1px solid ${(props) => props.theme.colors.grey[200]};
