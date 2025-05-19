@@ -29,7 +29,7 @@ public class RedisBlacklistService implements BlacklistService {
 
         // 남은 유효 기간보다 0이 크면 Redis에 저장(만료 시간 설정)
         if (remainMillis > 0) {
-            redisTemplate.opsForValue().set(tokenKey, expiredTime.toString(), Duration.ofMillis(remainMillis));
+            redisTemplate.opsForValue().set(tokenKey, "_", Duration.ofMillis(remainMillis));
             log.debug("Redis에 블랙리스트 등록 완료: {}", tokenKey);
         } else {
             log.debug("이미 만료되었거나 유효기간이 지났습니다: {}", tokenKey);
