@@ -1,7 +1,8 @@
 # **🚀 세종대학교 바이오융합공학전공 홈페이지**  
 <p align="center">
-  <img src="https://i.namu.wiki/i/rl9I96qi24PeIr4GIPjgN_l0Wv1IvxFBpFTnDpsBrjFnNDEVNboPf00htpycOlrlilpk1iJMbVWsn5VyAkF8Mss1XSWV9DGyIPBE2ttkrCNF8zowi94BEEHyXDbOkd6q72PEucaRPi6KQ_ZmqM058g.svg" alt="세종대학교 바이오융합공학전공 로고" width="200">
-</p>
+  
+
+<img src="https://github.com/user-attachments/assets/035fb5c5-5483-470e-98fe-43f4c85cb8bb" alt="세종대_로고" width="200" />
 
 <p align="center">
   🎓 세종대학교 바이오융합공학전공의 공식 웹사이트입니다.<br>
