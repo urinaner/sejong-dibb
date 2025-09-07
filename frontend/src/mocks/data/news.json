@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "News 1",
+    "content": "Content of news 1",
+    "view": 10,
+    "createDate": "2023-10-27",
+    "link": "http://example.com/news/1",
+    "image": "http://example.com/image1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "News 2",
+    "content": "Content of news 2",
+    "view": 20,
+    "createDate": "2023-10-26",
+    "link": "http://example.com/news/2",
+    "image": "http://example.com/image2.jpg"
+  }
+]

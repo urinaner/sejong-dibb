@@ -130,7 +130,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const payload = decodeJWT(accessToken);
         if (payload.exp * 1000 < Date.now()) {
           // 토큰 갱신
-          const response = await axiosInstance.post('api/member/refresh', {
+          const response = await axiosInstance.post('/api/member/refresh', {
             refreshToken,
           });
 
@@ -174,7 +174,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       const response = await axiosInstance.post(
-        isAdminLogin ? 'api/admin/login' : 'api/member/login',
+        isAdminLogin ? '/api/admin/login' : '/api/member/login',
         credentials,
         {
           headers: {
@@ -223,7 +223,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (refreshToken && accessToken) {
         await axiosInstance.post(
-          'api/member/logout',
+          '/api/member/logout',
           { refreshToken },
           {
             headers: {

@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Thesis 1",
+    "author": "Author 1",
+    "journal": "Journal 1",
+    "content": "Content of thesis 1",
+    "link": "http://example.com/thesis/1",
+    "publicationDate": "2023-01-01",
+    "thesisImage": "http://example.com/image1.jpg",
+    "publicationCollection": "Collection 1",
+    "publicationIssue": "Issue 1",
+    "publicationPage": "1-10",
+    "issn": "1234-5678",
+    "professorId": 1
+  },
+  {
+    "id": 2,
+    "title": "Thesis 2",
+    "author": "Author 2",
+    "journal": "Journal 2",
+    "content": "Content of thesis 2",
+    "link": "http://example.com/thesis/2",
+    "publicationDate": "2023-02-01",
+    "thesisImage": "http://example.com/image2.jpg",
+    "publicationCollection": "Collection 2",
+    "publicationIssue": "Issue 2",
+    "publicationPage": "11-20",
+    "issn": "1234-5679",
+    "professorId": 2
+  }
+]

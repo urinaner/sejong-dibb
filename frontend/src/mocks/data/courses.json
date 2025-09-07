@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "courseType": "BS",
+    "courseNumber": "12345",
+    "courseName": "소프트웨어공학",
+    "courseNameEn": "Software Engineering",
+    "creditTime": 3,
+    "year": 2023,
+    "semester": 1,
+    "grade": 3,
+    "classification": "전공필수",
+    "courseDescription": "소프트웨어 공학의 원리를 배웁니다.",
+    "courseDescriptionEn": "Learn the principles of software engineering."
+  },
+  {
+    "id": 2,
+    "courseType": "BS",
+    "courseNumber": "23456",
+    "courseName": "컴퓨터네트워크",
+    "courseNameEn": "Computer Networks",
+    "creditTime": 3,
+    "year": 2023,
+    "semester": 1,
+    "grade": 3,
+    "classification": "전공선택",
+    "courseDescription": "컴퓨터 네트워크의 원리를 배웁니다.",
+    "courseDescriptionEn": "Learn the principles of computer networks."
+  },
+  {
+    "id": 3,
+    "courseType": "MS",
+    "courseNumber": "54321",
+    "courseName": "인공지능",
+    "courseNameEn": "Artificial Intelligence",
+    "creditTime": 3,
+    "year": 2023,
+    "semester": 1,
+    "courseDescription": "인공지능의 원리를 배웁니다.",
+    "courseDescriptionEn": "Learn the principles of artificial intelligence."
+  }
+]

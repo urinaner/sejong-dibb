@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Professor 1",
+    "major": "Computer Science",
+    "phoneN": "123-456-7890",
+    "email": "prof1@test.com",
+    "position": "Professor",
+    "homepage": "http://prof1.test.com",
+    "lab": "Lab 1",
+    "profileImage": null,
+    "academicBackground": "PhD in CS"
+  },
+  {
+    "id": 2,
+    "name": "Professor 2",
+    "major": "Computer Science",
+    "phoneN": "123-456-7891",
+    "email": "prof2@test.com",
+    "position": "Associate Professor",
+    "homepage": "http://prof2.test.com",
+    "lab": "Lab 2",
+    "profileImage": null,
+    "academicBackground": "PhD in CS"
+  }
+]

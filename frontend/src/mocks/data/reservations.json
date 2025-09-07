@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "roomId": 1,
+    "startTime": "2023-10-27T10:00:00",
+    "endTime": "2023-10-27T12:00:00",
+    "purpose": "SEMINAR",
+    "userId": 1,
+    "status": "CONFIRMED",
+    "createdAt": "2023-10-26T10:00:00",
+    "updatedAt": "2023-10-26T10:00:00"
+  },
+  {
+    "id": 2,
+    "roomId": 2,
+    "startTime": "2023-10-28T14:00:00",
+    "endTime": "2023-10-28T15:00:00",
+    "purpose": "MEETING",
+    "userId": 2,
+    "status": "PENDING",
+    "createdAt": "2023-10-27T10:00:00",
+    "updatedAt": "2023-10-27T10:00:00"
+  }
+]

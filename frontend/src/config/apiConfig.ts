@@ -1,10 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 
 // 환경에 따른 baseURL 설정
+const isMockingEnabled = process.env.REACT_APP_API_MOCKING === 'enabled';
 const BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? '' // 프로덕션 환경에서는 상대 경로를 위해 빈 문자열 사용
-    : process.env.REACT_APP_API_URL;
+    ? ''
+    : isMockingEnabled
+      ? ''
+      : process.env.REACT_APP_API_URL || '';
 // axios 인스턴스 생성
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -124,7 +127,12 @@ export interface SeminarDto {
 }
 
 const createEndpoint = (path: string) => {
-  return `${BASE_URL}${path}`;
+  // 항상 절대 경로로 보장
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  // 개발 환경에서 BASE_URL이 비어있으면 절대 경로만 사용하여 MSW가 인터셉트 가능
+  if (!BASE_URL) return normalizedPath;
+  // BASE_URL이 완전한 절대 URL인 경우에도 중복 슬래시 방지
+  return `${BASE_URL.replace(/\/$/, '')}${normalizedPath}`;
 };
 
 // API Endpoints

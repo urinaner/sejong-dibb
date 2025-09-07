@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Seminar 1",
+    "writer": "Admin",
+    "place": "Room 101",
+    "startTime": "2023-11-01T10:00:00",
+    "endTime": "2023-11-01T12:00:00",
+    "speaker": "Speaker 1",
+    "company": "Company 1"
+  },
+  {
+    "id": 2,
+    "name": "Seminar 2",
+    "writer": "Admin",
+    "place": "Room 102",
+    "startTime": "2023-11-02T14:00:00",
+    "endTime": "2023-11-02T16:00:00",
+    "speaker": "Speaker 2",
+    "company": "Company 2"
+  }
+]
