@@ -6,6 +6,7 @@ import org.example.backend.reservation.domain.Slot;
 import org.example.backend.reservation.repository.SlotRepository;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.repository.RoomRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,11 @@ public class SlotScheduler {
             for (int min = 0; min < 24 * 60 ; min += 30) {
                LocalDateTime start = date.atTime(0, 0).plusMinutes(min);
                LocalDateTime end = start.plusMinutes(30);
-               if (!slotRepository.existsByRoomAndStartTime(room, start)) {
+               try {
                   Slot slot = Slot.of(room, start, end, null);
                   slotRepository.save(slot);
+               } catch (DataIntegrityViolationException e) {
+                  // 이미 존재하는 슬롯이면 무시
                }
             }
          }

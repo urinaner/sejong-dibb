@@ -15,7 +15,12 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "slot")
+@Table(name = "slot", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_slot_room_time",
+                columnNames = {"room_id", "start_time", "end_time"}
+        )
+})
 public class Slot extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
