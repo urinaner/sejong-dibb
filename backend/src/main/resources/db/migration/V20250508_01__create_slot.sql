@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS slot
     updated_date          DATETIME,
     PRIMARY KEY (slot_id),
     FOREIGN KEY (room_id) REFERENCES room (room_id),
-    FOREIGN KEY (reservation_id) REFERENCES reservation (reservation_id)
+    FOREIGN KEY (reservation_id) REFERENCES reservation (reservation_id),
+    CONSTRAINT uk_slot_room_time UNIQUE (room_id, start_time, end_time)
 ) ENGINE = InnoDB
 DEFAULT CHARSET = utf8mb4;
 
