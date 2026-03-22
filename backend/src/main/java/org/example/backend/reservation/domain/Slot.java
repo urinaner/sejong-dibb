@@ -41,6 +41,9 @@ public class Slot extends BaseEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Version
+    private Integer version;
+
     @Builder
     private Slot(Room room, LocalDateTime startTime, LocalDateTime endTime, Reservation reservation) {
         this.room = room;

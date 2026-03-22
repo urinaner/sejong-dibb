@@ -50,6 +50,23 @@ public class ReservationService {
 
     }
 
+    @Transactional
+    public ReservationResDto createReservationOptimistic(Long roomId, ReservationReqDto reqDto, String loginId) {
+        validate(reqDto.getStartTime(), reqDto.getEndTime());
+
+        List<Slot> slots = slotRepository.findSlotsOptimistic(
+                roomId, reqDto.getStartTime(), reqDto.getEndTime());
+
+        int expectedSlotCount = (int) (Duration.between(reqDto.getStartTime(), reqDto.getEndTime()).toMinutes() / 30);
+        if (slots.size() != expectedSlotCount || slots.stream().anyMatch(slot -> !slot.isAvailable())) {
+            throw new ReservationException(EXIST_ALREADY_RESERVATION);
+        }
+
+        Reservation reservation = reservationRepository.save(Reservation.of(reqDto, loginId, slots));
+        slots.forEach(slot -> slot.reserve(reservation));
+        return ReservationResDto.of(reservation);
+    }
+
     private void validate(LocalDateTime startTime, LocalDateTime endTime) {
         if (isWeekend(startTime.toLocalDate()) || KoreanHoliday.isHoliday(startTime.toLocalDate())) {
             throw new ReservationException(WEEKEND_OR_HOLIDAY);

@@ -39,6 +39,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 "010-1234-5678",
                 "younghan@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 401호"
         );
@@ -64,6 +65,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 "010-1234-5678",
                 "younghan@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 401호"
         );
@@ -87,6 +89,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 duplicatePhone,
                 "younghan@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 401호"
         );
@@ -97,6 +100,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 duplicatePhone,
                 "yj@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 402호"
         );
@@ -121,6 +125,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 "010-1234-5678",
                 "younghan@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 401호"
         );
@@ -146,6 +151,7 @@ public class ProfessorServiceTest extends IntegrationTestSupport {
                 "010-5678-1234",
                 "lee@sejong.ac.kr",
                 "정교수",
+                null,
                 "https://prof.sejong.ac.kr",
                 "충무관 403호"
         );

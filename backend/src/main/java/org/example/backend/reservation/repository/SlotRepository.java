@@ -22,4 +22,16 @@ public interface SlotRepository extends JpaRepository <Slot, Long> {
             @Param("roomId") Long roomId,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
+
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT s FROM Slot s " +
+            "WHERE s.room.id = :roomId " +
+            "AND s.startTime >= :startTime " +
+            "AND s.endTime <= :endTime " +
+            "AND s.reservation IS NULL " +
+            "ORDER BY s.startTime")
+    List<Slot> findSlotsOptimistic(
+            @Param("roomId") Long roomId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
 }

@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import org.example.backend.reservation.domain.Reservation;
 import org.example.backend.reservation.domain.dto.ReservationReqDto;
 import org.example.backend.reservation.domain.dto.ReservationResDto;
-import org.example.backend.reservation.repository.ReservationSlotRepository;
+import org.example.backend.reservation.repository.ReservationRepository;
 import org.example.backend.reservation.service.ReservationService;
 import org.example.backend.room.domain.Room;
 import org.example.backend.room.repository.RoomRepository;
@@ -34,7 +34,7 @@ public class ConcurrencyReservationTest {
     private ReservationService reservationService;
 
     @Autowired
-    private ReservationSlotRepository reservationRepository;
+    private ReservationRepository reservationRepository;
 
     @Autowired
     private UsersRepository usersRepository;
